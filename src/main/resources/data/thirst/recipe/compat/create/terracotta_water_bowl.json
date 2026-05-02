@@ -11,13 +11,14 @@
       "item": "thirst:terracotta_bowl"
     },
     {
+      "type": "neoforge:single",
       "amount": 250,
       "fluid": "minecraft:water"
     }
   ],
   "results": [
     {
-      "item": "thirst:terracotta_water_bowl"
+      "id": "thirst:terracotta_water_bowl"
     }
   ]
 }

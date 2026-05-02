@@ -7,10 +7,10 @@
   ],
   "type": "toughasnails:water_purifying",
   "input": {
-    "Count": 1,
-    "id": "minecraft:potion",
+    "type": "neoforge:components",
+    "items": "minecraft:potion",
     "components": {
-      "potion_contents": {
+      "minecraft:potion_contents": {
         "potion": "minecraft:water"
       },
       "thirst:purity": 0
@@ -18,11 +18,13 @@
   },
   "purifytime": 200,
   "result": {
-    "Count": 1,
     "id": "minecraft:potion",
-    "tag": {
-      "Potion": "minecraft:water",
-      "Purity": 2
+    "count": 1,
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:water"
+      },
+      "thirst:purity": 2
     }
   }
 }
