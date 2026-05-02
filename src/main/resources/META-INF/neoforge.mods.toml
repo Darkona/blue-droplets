@@ -3,7 +3,7 @@ modLoader="javafml" #mandatory
 loaderVersion="${loader_version_range}" #mandatory
 license="${mod_license}"
 
-issueTrackerURL="https://github.com/ghen-git/Thirst-Mod/issues"
+issueTrackerURL="https://github.com/Darkona/thirst-was-taken/issues"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
@@ -12,7 +12,7 @@ displayName="${mod_name}"
 # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 
-displayURL="https://github.com/ghen-git/Thirst-Mod"
+displayURL="https://github.com/Darkona/thirst-was-taken"
 logoFile="thirstwastaken.png"
 credits="Cold Sweat, Create, Farmer's Delight and all the mods' sources that helped me actually program this."
 authors="${mod_authors}"
@@ -60,6 +60,63 @@ side="BOTH"
 modId="minecraft"
 type="required"
 versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.thirst]]
+modId="create"
+type="optional"
+versionRange="[6.0.6,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.thirst]]
+modId="jade"
+type="optional"
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.thirst]]
+modId="appleskin"
+type="optional"
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.thirst]]
+modId="supernatural"
+type="optional"
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.thirst]]
+modId="farmersdelight"
+type="optional"
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.thirst]]
+modId="coldsweat"
+type="optional"
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.thirst]]
+modId="vampirism"
+type="optional"
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.thirst]]
+modId="toughasnails"
+type="incompatible"
+reason="Tough As Nails has its own thirst system. Use Tough As Nails' thirst or this mod, not both."
+versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
