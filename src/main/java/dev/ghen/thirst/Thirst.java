@@ -11,7 +11,6 @@ import dev.ghen.thirst.content.registry.ThirstComponent;
 import dev.ghen.thirst.content.thirst.PlayerThirst;
 import dev.ghen.thirst.foundation.common.capability.ModAttachment;
 import dev.ghen.thirst.foundation.config.*;
-import dev.ghen.thirst.foundation.gui.ThirstBarRenderer;
 import dev.ghen.thirst.foundation.gui.appleskin.HUDOverlayHandler;
 import dev.ghen.thirst.foundation.gui.appleskin.OverlayRegister;
 import dev.ghen.thirst.foundation.gui.appleskin.TooltipOverlayHandler;
@@ -79,9 +78,6 @@ public class Thirst
         if(ModList.get().isLoaded("tombstone"))
             PlayerThirst.checkTombstoneEffects = true;
 
-        if(ModList.get().isLoaded("vampirism"))
-            PlayerThirst.checkVampirismEffects = true;
-
         if(ModList.get().isLoaded("farmersdelight"))
             PlayerThirst.checkFDEffects = true;
 
@@ -101,11 +97,6 @@ public class Thirst
                     PonderIndex.addPlugin(new ThirstPonderPlugin());
                 }
             }.registerPonderPlugin());
-        }
-
-        if(ModList.get().isLoaded("vampirism"))
-        {
-            ThirstBarRenderer.checkIfPlayerIsVampire = true;
         }
     }
 

@@ -1,9 +1,9 @@
 package dev.ghen.thirst.foundation.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.vampirism.util.Helper;
 import dev.ghen.thirst.Thirst;
 import dev.ghen.thirst.compat.supernatural.SupernaturalHelper;
+import dev.ghen.thirst.compat.vampirism.VampirismCompat;
 import dev.ghen.thirst.foundation.common.capability.IThirst;
 import dev.ghen.thirst.foundation.common.capability.ModAttachment;
 import dev.ghen.thirst.foundation.config.ClientConfig;
@@ -25,7 +25,6 @@ public class ThirstBarRenderer
     public static IThirst PLAYER_THIRST = null;
     public static ResourceLocation THIRST_ICONS = Thirst.asResource("textures/gui/thirst_icons.png");
     public static Boolean cancelRender = false;
-    public static Boolean checkIfPlayerIsVampire = false;
     static Minecraft minecraft = Minecraft.getInstance();
     protected final static RandomSource random = RandomSource.create();
 
@@ -40,13 +39,10 @@ public class ThirstBarRenderer
         cancelRender =false;
         if (!isMounted && !minecraft.options.hideGui && HUDOverlayHandler.shouldDrawSurvivalElements(minecraft))
         {
-            if(checkIfPlayerIsVampire)
+            if(VampirismCompat.isVampire(minecraft.player))
             {
-                if(Helper.isVampire(minecraft.player))
-                {
-                    cancelRender =true;
-                    return;
-                }
+                cancelRender =true;
+                return;
             }
 
             if(minecraft.player.isAlive() && !minecraft.player.getData(ModAttachment.PLAYER_THIRST).getShouldTickThirst()){

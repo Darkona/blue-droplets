@@ -1,7 +1,7 @@
 package dev.ghen.thirst.content.thirst;
 
-import de.teamlapen.vampirism.util.Helper;
 import dev.ghen.thirst.api.ThirstHelper;
+import dev.ghen.thirst.compat.vampirism.VampirismCompat;
 import dev.ghen.thirst.foundation.common.capability.IThirst;
 import dev.ghen.thirst.foundation.common.capability.ModAttachment;
 import dev.ghen.thirst.foundation.common.damagesource.ModDamageSource;
@@ -28,7 +28,6 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     public static boolean checkFDEffects = false;
     public static boolean checkLetsDoBakeryEffects = false;
     public static boolean checkLetsDoBreweryEffects = false;
-    public static boolean checkVampirismEffects = false;
 
     int thirst = 20;
     int quenched = 5;
@@ -121,7 +120,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         if(checkTombstoneEffects && player.getActiveEffects().stream().anyMatch(e -> e.getDescriptionId().contains("ghostly_shape")))
             return;
 
-        if(checkVampirismEffects && Helper.isVampire(player))
+        if(VampirismCompat.isVampire(player))
             return;
 
         AtomicBoolean isNourished = new AtomicBoolean(false);
