@@ -1,6 +1,5 @@
 package dev.ghen.thirst;
 
-import dev.ghen.thirst.api.ThirstHelper;
 import dev.ghen.thirst.compat.create.CreateRegistry;
 import dev.ghen.thirst.compat.create.ponder.ThirstPonderPlugin;
 import dev.ghen.thirst.content.purity.WaterPurity;
@@ -71,9 +70,6 @@ public class Thirst
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         WaterPurity.init();
-
-        if(ModList.get().isLoaded("coldsweat"))
-            ThirstHelper.shouldUseColdSweatCaps(true);
 
         if(ModList.get().isLoaded("tombstone"))
             PlayerThirst.checkTombstoneEffects = true;

@@ -1,6 +1,6 @@
 package dev.ghen.thirst.api;
 
-import com.momosoftworks.coldsweat.api.util.Temperature;
+import dev.ghen.thirst.compat.coldsweat.ColdSweatCompat;
 import dev.ghen.thirst.compat.supernatural.SupernaturalHelper;
 import dev.ghen.thirst.content.purity.ContainerWithPurity;
 import dev.ghen.thirst.content.purity.WaterPurity;
@@ -34,7 +34,6 @@ import static dev.ghen.thirst.content.purity.WaterPurity.hasPurity;
 
 public class ThirstHelper
 {
-    private static boolean useColdSweatCaps = false;
     private static final float MODIFIER_HARSHNESS = 0.5f;
     public static Map<Item, Number[]> VALID_DRINKS = LoadedValue.of(() -> ConfigHelper
             .getItemsWithValues(ItemSettingsConfig.DRINKS.get()))
@@ -132,10 +131,6 @@ public class ThirstHelper
         }
     }
 
-    public static void shouldUseColdSweatCaps(boolean should)
-    {
-        useColdSweatCaps = should;
-    }
     public static float getExhaustionFireProtModifier(Player player)
     {
         final float perLevelMultiplier = 0.0625f;
@@ -176,9 +171,9 @@ public class ThirstHelper
             //temperature range: -0.8 - 2 == 2.8 midpoint: 0.8
             float temp = biome.getBaseTemperature() + 0.2f;
 
-            if(useColdSweatCaps)
+            if(ColdSweatCompat.LOADED)
                 {
-                    temp = (float) (Temperature.get(player, Temperature.Trait.BODY) / 100f);
+                    temp = (float) (ColdSweatCompat.bodyTemperature(player) / 100f);
                 }
             else
             {

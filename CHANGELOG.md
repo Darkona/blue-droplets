@@ -11,6 +11,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - The published jar no longer declares Create, Farmer's Delight, Cold Sweat, Jade or AppleSkin as transitive dependencies (thirst#218). `[1.21.1]`
 - Create: compacting a cactus now gives 250 mB of purified water plus green dye; the recipe failed to load on Create 6 (thirst#214). The terracotta bowl filling recipe uses Create 6's current format. `[1.21.1]`
 - Brewin' and Chewin' and Farmer's Respite chest loot is only added when those mods are installed. `[1.21.1]`
+- Playing without Vampirism or Cold Sweat can no longer crash with `NoClassDefFoundError`: code that talks to those mods is only loaded when they are installed (thirst#251). `[1.21.1]`
 - Tough As Nails is now marked incompatible: the game refuses to start with both mods and explains why. `[1.21.1]`
 
 ### Project
