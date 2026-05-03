@@ -1,4 +1,4 @@
-package dev.ghen.thirst.foundation.gui.appleskin;
+package dev.ghen.thirst.compat.appleskin;
 
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;

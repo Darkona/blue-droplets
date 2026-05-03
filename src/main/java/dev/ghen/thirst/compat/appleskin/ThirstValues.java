@@ -1,4 +1,4 @@
-package dev.ghen.thirst.foundation.gui.appleskin;
+package dev.ghen.thirst.compat.appleskin;
 
 public class ThirstValues
 {

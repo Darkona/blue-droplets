@@ -1,4 +1,4 @@
-package dev.ghen.thirst.foundation.gui.appleskin;
+package dev.ghen.thirst.compat.appleskin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

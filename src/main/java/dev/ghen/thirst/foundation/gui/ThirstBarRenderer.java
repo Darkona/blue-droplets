@@ -7,7 +7,6 @@ import dev.ghen.thirst.compat.vampirism.VampirismCompat;
 import dev.ghen.thirst.foundation.common.capability.IThirst;
 import dev.ghen.thirst.foundation.common.capability.ModAttachment;
 import dev.ghen.thirst.foundation.config.ClientConfig;
-import dev.ghen.thirst.foundation.gui.appleskin.HUDOverlayHandler;
 import net.neoforged.fml.ModList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -37,7 +37,7 @@ public class ThirstBarRenderer
         Entity vehicle = minecraft.player.getVehicle();
         boolean isMounted = vehicle != null && vehicle.showVehicleHealth();
         cancelRender =false;
-        if (!isMounted && !minecraft.options.hideGui && HUDOverlayHandler.shouldDrawSurvivalElements(minecraft))
+        if (!isMounted && !minecraft.options.hideGui && shouldDrawSurvivalElements(minecraft))
         {
             if(VampirismCompat.isVampire(minecraft.player))
             {
@@ -54,6 +54,11 @@ public class ThirstBarRenderer
 
             render(event.getScreenWidth(),event.getScreenHeight(),event.getGuiGraphics());
         }
+    }
+
+    public static boolean shouldDrawSurvivalElements(Minecraft minecraft)
+    {
+        return minecraft.gameMode.canHurtPlayer() && minecraft.getCameraEntity() instanceof Player;
     }
 
     public static void setupOverlayRenderState(boolean blend, boolean depthTest)

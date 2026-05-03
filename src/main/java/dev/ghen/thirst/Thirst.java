@@ -1,5 +1,6 @@
 package dev.ghen.thirst;
 
+import dev.ghen.thirst.compat.appleskin.AppleSkinCompat;
 import dev.ghen.thirst.compat.create.CreateRegistry;
 import dev.ghen.thirst.compat.create.ponder.ThirstPonderPlugin;
 import dev.ghen.thirst.content.purity.WaterPurity;
@@ -10,9 +11,6 @@ import dev.ghen.thirst.content.registry.ThirstComponent;
 import dev.ghen.thirst.content.thirst.PlayerThirst;
 import dev.ghen.thirst.foundation.common.capability.ModAttachment;
 import dev.ghen.thirst.foundation.config.*;
-import dev.ghen.thirst.foundation.gui.appleskin.HUDOverlayHandler;
-import dev.ghen.thirst.foundation.gui.appleskin.OverlayRegister;
-import dev.ghen.thirst.foundation.gui.appleskin.TooltipOverlayHandler;
 import dev.ghen.thirst.foundation.tab.ThirstTab;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +21,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 
 
 @Mod(Thirst.ID)
@@ -39,15 +36,8 @@ public class Thirst
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 
-        if(FMLEnvironment.dist.isClient()){
-            if(ModList.get().isLoaded("appleskin"))
-            {
-                HUDOverlayHandler.init();
-                TooltipOverlayHandler.init();
-                modBus.addListener(this::onRegisterClientTooltipComponentFactories);
-                modBus.addListener(OverlayRegister::onRenderGuiOverlayPost);
-            }
-        }
+        if(FMLEnvironment.dist.isClient())
+            AppleSkinCompat.initClient(modBus);
 
         ItemInit.register(modBus);
         EffectInit.register(modBus);
@@ -99,9 +89,5 @@ public class Thirst
     public static ResourceLocation asResource(String path)
     {
         return ResourceLocation.fromNamespaceAndPath(ID, path);
-    }
-
-    private void onRegisterClientTooltipComponentFactories(RegisterClientTooltipComponentFactoriesEvent event) {
-        TooltipOverlayHandler.register(event);
     }
 }

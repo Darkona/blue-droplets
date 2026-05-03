@@ -1,4 +1,4 @@
-package dev.ghen.thirst.foundation.gui.appleskin;
+package dev.ghen.thirst.compat.appleskin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.ghen.thirst.Thirst;
@@ -45,10 +45,6 @@ public class HUDOverlayHandler {
         NeoForge.EVENT_BUS.register(new HUDOverlayHandler());
     }
 
-    public static boolean shouldDrawSurvivalElements(Minecraft minecraft) {
-        return minecraft.gameMode.canHurtPlayer() && minecraft.getCameraEntity() instanceof Player;
-    }
-
     public static class ExhaustionOverlay extends squeek.appleskin.client.HUDOverlayHandler.Overlay{
         public static final ResourceLocation ID = Thirst.asResource("exhaustion_overlay");
         public ExhaustionOverlay() {}
@@ -58,7 +54,7 @@ public class HUDOverlayHandler {
             boolean isMounted = mc.player.getVehicle() instanceof LivingEntity;
             boolean isAlive = mc.player.isAlive();
 
-            if (isAlive && !isMounted && !mc.options.hideGui && shouldDrawSurvivalElements(mc) && !ThirstBarRenderer.cancelRender) {
+            if (isAlive && !isMounted && !mc.options.hideGui && ThirstBarRenderer.shouldDrawSurvivalElements(mc) && !ThirstBarRenderer.cancelRender) {
                 if(ModConfig.SHOW_FOOD_EXHAUSTION_UNDERLAY.get()){
                     renderExhaustion(mc.gui,guiGraphics);
                 }
@@ -75,7 +71,7 @@ public class HUDOverlayHandler {
             boolean isMounted = mc.player.getVehicle() instanceof LivingEntity;
             boolean isAlive = mc.player.isAlive();
 
-            if (isAlive && !isMounted && !mc.options.hideGui && shouldDrawSurvivalElements(mc) && !ThirstBarRenderer.cancelRender) {
+            if (isAlive && !isMounted && !mc.options.hideGui && ThirstBarRenderer.shouldDrawSurvivalElements(mc) && !ThirstBarRenderer.cancelRender) {
                 renderThirstOverlay(guiGraphics);
             }
         }
