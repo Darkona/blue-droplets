@@ -14,6 +14,10 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Playing without Vampirism, Cold Sweat, AppleSkin or Supernatural can no longer crash with `NoClassDefFoundError`: code that talks to those mods is only loaded when they are installed (thirst#251). `[1.21.1]`
 - Tough As Nails is now marked incompatible: the game refuses to start with both mods and explains why. `[1.21.1]`
 
+### API
+
+- Removed `ThirstHelper.shouldUseColdSweatCaps`, `PlayerThirst.checkVampirismEffects`, `ThirstBarRenderer.checkIfPlayerIsVampire` and `compat.supernatural.SupernaturalHelper`; mod detection is now internal. The AppleSkin overlay classes moved from `foundation.gui.appleskin` to `compat.appleskin`. `[1.21.1]`
+
 ### Project
 
 - Removed the empty access transformer file and its declaration (thirst#234). `[1.21.1]`
