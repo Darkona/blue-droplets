@@ -4,13 +4,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
 import dev.ghen.thirst.Thirst;
-import dev.ghen.thirst.compat.supernatural.SupernaturalHelper;
+import dev.ghen.thirst.compat.supernatural.SupernaturalCompat;
 import dev.ghen.thirst.foundation.gui.ThirstBarRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -190,10 +189,7 @@ public class TooltipOverlayHandler {
             // Render from right to left so that the icons 'face' the right way
             offsetX += (foodTooltip.hungerBars - 1) * 9;
 
-            ResourceLocation icons = ThirstBarRenderer.THIRST_ICONS;
-            if (ModList.get().isLoaded("supernatural")) {
-                icons = SupernaturalHelper.getVampireIcons(icons, itemStack);
-            }
+            ResourceLocation icons = SupernaturalCompat.getVampireIcons(ThirstBarRenderer.THIRST_ICONS, itemStack);
             RenderSystem.setShaderTexture(0, icons);
             for (int i = 0; i < foodTooltip.hungerBars * 2; i += 2)
             {
@@ -224,10 +220,7 @@ public class TooltipOverlayHandler {
             // Render from right to left so that the icons 'face' the right way
             offsetX += (foodTooltip.saturationBars - 1) * 7;
 
-            ResourceLocation appleskinIcons = modIcons;
-            if (ModList.get().isLoaded("supernatural")) {
-                appleskinIcons = SupernaturalHelper.getVampireAppleskinIcons(appleskinIcons, itemStack);
-            }
+            ResourceLocation appleskinIcons = SupernaturalCompat.getVampireAppleskinIcons(modIcons, itemStack);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, appleskinIcons);
             for (int i = 0; i < foodTooltip.saturationBars * 2; i += 2)

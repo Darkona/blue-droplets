@@ -2,12 +2,11 @@ package dev.ghen.thirst.foundation.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.ghen.thirst.Thirst;
-import dev.ghen.thirst.compat.supernatural.SupernaturalHelper;
+import dev.ghen.thirst.compat.supernatural.SupernaturalCompat;
 import dev.ghen.thirst.compat.vampirism.VampirismCompat;
 import dev.ghen.thirst.foundation.common.capability.IThirst;
 import dev.ghen.thirst.foundation.common.capability.ModAttachment;
 import dev.ghen.thirst.foundation.config.ClientConfig;
-import net.neoforged.fml.ModList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -87,10 +86,7 @@ public class ThirstBarRenderer
             PLAYER_THIRST = minecraft.player.getData(ModAttachment.PLAYER_THIRST);
         }
 
-        ResourceLocation thirst_icons = THIRST_ICONS;
-        if (ModList.get().isLoaded("supernatural")) {
-            thirst_icons = SupernaturalHelper.getVampireIcons(thirst_icons, minecraft.player);
-        }
+        ResourceLocation thirst_icons = SupernaturalCompat.getVampireIcons(THIRST_ICONS, minecraft.player);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, thirst_icons);

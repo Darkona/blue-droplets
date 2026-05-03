@@ -1,7 +1,7 @@
 package dev.ghen.thirst.api;
 
 import dev.ghen.thirst.compat.coldsweat.ColdSweatCompat;
-import dev.ghen.thirst.compat.supernatural.SupernaturalHelper;
+import dev.ghen.thirst.compat.supernatural.SupernaturalCompat;
 import dev.ghen.thirst.content.purity.ContainerWithPurity;
 import dev.ghen.thirst.content.purity.WaterPurity;
 import dev.ghen.thirst.content.registry.ThirstComponent;
@@ -23,7 +23,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.neoforged.fml.ModList;
 
 import java.util.List;
 import java.util.Map;
@@ -68,11 +67,7 @@ public class ThirstHelper
 
     public static boolean playerRestoresThirst(ItemStack itemStack, Player player)
     {
-        if (ModList.get().isLoaded("supernatural"))
-        {
-            return SupernaturalHelper.canDrinkItem(itemStack, player);
-        }
-        return true;
+        return SupernaturalCompat.canDrinkItem(itemStack, player);
     }
 
     public static boolean isDrink(ItemStack itemStack)
