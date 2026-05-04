@@ -18,10 +18,10 @@ tasks.named('wrapper', Wrapper).configure {
 
 
 version = "${mod_version}"
-group = 'dev.ghen.thirst'
+group = 'com.darkona.droplets'
 
 base {
-    archivesName = 'ThirstWasTaken'
+    archivesName = 'BlueDroplets'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -173,7 +173,7 @@ publishing {
     publications {
         mavenJava(MavenPublication.class) {
             groupId = group
-            artifactId = "ThirstWasTaken"
+            artifactId = "BlueDroplets"
             version = "${mod_version}"
             from components.java
         }

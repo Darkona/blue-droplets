@@ -37,7 +37,7 @@ config="${mod_id}.compat.mixins.json"
 
 # The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="neoforge"
 # The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
 # 'required' requires the mod to exist, 'optional' does not
@@ -53,63 +53,63 @@ versionRange="${neo_version_range}"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="minecraft"
 type="required"
 versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="create"
 type="optional"
 versionRange="[6.0.6,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="jade"
 type="optional"
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="appleskin"
 type="optional"
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="supernatural"
 type="optional"
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="farmersdelight"
 type="optional"
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="coldsweat"
 type="optional"
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="vampirism"
 type="optional"
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.thirst]]
+[[dependencies.${mod_id}]]
 modId="toughasnails"
 type="incompatible"
 reason="Tough As Nails has its own thirst system. Use Tough As Nails' thirst or this mod, not both."

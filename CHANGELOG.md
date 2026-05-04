@@ -4,6 +4,10 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ## Unreleased (Minecraft 1.21.1, NeoForge)
 
+### Rebrand: Blue Droplets
+
+- The mod is now **Blue Droplets** (mod id `bluedroplets`, package `com.darkona.droplets`), a continuation of ghen's Thirst Was Taken. The jar is `BlueDroplets-<version>.jar`. `[1.21.1]`
+
 ### Mod compatibility
 
 - Mixins into Create, Jade, Farmer's Delight and Tough As Nails live in a separate optional mixin config and are only applied when that mod is installed; if one no longer matches the installed version it is logged and skipped instead of crashing the game (thirst#280). `[1.21.1]`
