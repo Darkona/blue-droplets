@@ -14,7 +14,7 @@ displayName="${mod_name}"
 
 displayURL="https://github.com/Darkona/thirst-was-taken"
 logoFile="thirstwastaken.png"
-credits="Cold Sweat, Create, Farmer's Delight and all the mods' sources that helped me actually program this."
+credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka and the Thirst Was Taken contributors. Thanks to Cold Sweat, Create and Farmer's Delight, whose sources helped build the original."
 authors="${mod_authors}"
 
 # Display Test controls the display for your mod in the server connection screen
@@ -112,7 +112,15 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="toughasnails"
 type="incompatible"
-reason="Tough As Nails has its own thirst system. Use Tough As Nails' thirst or this mod, not both."
+reason="Tough As Nails has its own thirst system. Blue Droplets replaces it: use one or the other, not both."
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="thirst"
+type="incompatible"
+reason="Blue Droplets is the continuation of Thirst Was Taken. Remove Thirst Was Taken / Thirst Was Reclaimed (mod id 'thirst'). Worlds and configs from Thirst Was Taken are migrated automatically."
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
