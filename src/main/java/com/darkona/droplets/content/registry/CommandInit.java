@@ -3,6 +3,7 @@ package com.darkona.droplets.content.registry;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
@@ -29,7 +30,7 @@ public class CommandInit {
     @SubscribeEvent
     public static void RegisterCommand(RegisterCommandsEvent event){
         CommandDispatcher<CommandSourceStack> dispatcher=event.getDispatcher();
-        dispatcher.register(Commands.literal("thirst")
+        LiteralCommandNode<CommandSourceStack> root = dispatcher.register(Commands.literal(BlueDroplets.ID)
                 .requires(cs->cs.hasPermission(2))
                 .then(Commands.literal("query").then(Commands.argument("Player", EntityArgument.player())
                         .executes(context -> {
@@ -38,7 +39,7 @@ public class CommandInit {
                                     Object[] arg =new Object[2];
                                     arg[0]=iThirst.getThirst();
                                     arg[1]=iThirst.getQuenched();
-                                    context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.thirst.query","command.thirst.query",arg)),false);
+                                    context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.query","command.bluedroplets.query",arg)),false);
                                     return 0;
                                 }
                         )))
@@ -54,7 +55,7 @@ public class CommandInit {
 
                                             iThirst.setThirst((Integer) arg[0]);
                                             iThirst.setQuenched((Integer) arg[1]);
-                                            context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.thirst.set","command.thirst.set",arg)),false);
+                                            context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.set","command.bluedroplets.set",arg)),false);
                                             return 0;
                                         })))
                 ))
@@ -72,13 +73,14 @@ public class CommandInit {
                                     }
 
                                     if(shouldTick){
-                                        context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.thirst.enable","command.thirst.enable",playersName.toArray())),false);
+                                        context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.enable","command.bluedroplets.enable",playersName.toArray())),false);
                                     }else {
-                                        context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.thirst.disable","command.thirst.disable",playersName.toArray())),false);
+                                        context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.disable","command.bluedroplets.disable",playersName.toArray())),false);
                                     }
 
                                     return 0;
                                 }))))
         );
+        dispatcher.register(Commands.literal("thirst").requires(cs->cs.hasPermission(2)).redirect(root));
     }
 }

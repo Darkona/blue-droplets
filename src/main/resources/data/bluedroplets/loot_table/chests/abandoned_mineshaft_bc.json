@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "bluedroplets:loot_config"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "brewinandchewin"
+    }
+  ],
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {"bluedroplets:purity":3}
+            }
+          ],
+          "name": "brewinandchewin:beer",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 10
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}

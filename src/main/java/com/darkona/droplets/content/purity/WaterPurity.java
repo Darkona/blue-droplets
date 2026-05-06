@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.purity;
 
+import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
@@ -417,7 +418,7 @@ public class WaterPurity
                 purity == 1 ? "slightly_dirty" :
                         purity == 2 ? "acceptable" : "purified";
 
-        return MutableComponent.create(new TranslatableContents("thirst.purity." + purityText,purityText,TranslatableContents.NO_ARGS)).getString();
+        return MutableComponent.create(new TranslatableContents(BlueDroplets.ID + ".purity." + purityText,purityText,TranslatableContents.NO_ARGS)).getString();
     }
 
     /**

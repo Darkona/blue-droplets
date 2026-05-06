@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "bluedroplets:item/wooden_water_bowl"
+  }
+}

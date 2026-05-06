@@ -23,9 +23,9 @@ public class ThirstTab
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, BlueDroplets.ID);
 
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> THIRST_TAB = TAB_REGISTER.register("thirst",
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> THIRST_TAB = TAB_REGISTER.register(BlueDroplets.ID,
             () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.thirst"))
+                    .title(Component.translatable("itemGroup." + BlueDroplets.ID))
                     .icon(ItemInit.TERRACOTTA_WATER_BOWL.get()::getDefaultInstance)
                     .displayItems((displayParameters, output) -> output.acceptAll(DisplayItems()))
                     .build());

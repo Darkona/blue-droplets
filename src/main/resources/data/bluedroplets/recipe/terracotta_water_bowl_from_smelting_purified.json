@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient":[
+    {
+      "type": "neoforge:components",
+      "items": "bluedroplets:terracotta_water_bowl",
+      "components": {
+        "bluedroplets:purity": 1
+      }
+    },
+    {
+      "type": "neoforge:components",
+      "items": "bluedroplets:terracotta_water_bowl",
+      "components": {
+        "bluedroplets:purity": 2
+      }
+    }
+  ],
+  "result": {
+    "id": "bluedroplets:terracotta_water_bowl",
+    "count": 1,
+    "components": {
+      "bluedroplets:purity": 3
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 200
+}

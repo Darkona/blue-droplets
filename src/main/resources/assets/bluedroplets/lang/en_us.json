@@ -1,0 +1,23 @@
+{
+  "death.attack.dehydrate": "%1$s died from dehydration",
+  "death.attack.dehydrate.player": "%1$s died from dehydration while fighting %2$s",
+  "item.bluedroplets.wooden_water_bowl": "Wooden Water Bowl",
+  "item.bluedroplets.terracotta_water_bowl": "Terracotta Water Bowl",
+  "item.bluedroplets.terracotta_bowl": "Terracotta Bowl",
+  "item.bluedroplets.clay_bowl": "Clay Bowl",
+  "itemGroup.bluedroplets": "Blue Droplets",
+  "bluedroplets.purity.dirty": "Dirty",
+  "bluedroplets.purity.slightly_dirty": "Slightly Dirty",
+  "bluedroplets.purity.acceptable": "Acceptable",
+  "bluedroplets.purity.purified": "Purified",
+  "block.bluedroplets.sand_filter": "Sand Filter",
+
+  "bluedroplets.ponder.sand_filter.header": "Purifying Water with a Sand Filter",
+  "bluedroplets.ponder.sand_filter.text_1": "A Sand Filter purifies by one step water pumped through it",
+  "bluedroplets.ponder.sand_filter.text_2": "Dirty Water needs to be pumped in from the top...",
+  "bluedroplets.ponder.sand_filter.text_3": "and Purified Water can be pumped out from the bottom",
+  "command.bluedroplets.query": "Current Thirst: %1$s, Current Quenched: %2$s",
+  "command.bluedroplets.set": "set thirst to %1$s, set quenched to %2$s",
+  "command.bluedroplets.enable": "Enable tick Thirst for %1$s",
+  "command.bluedroplets.disable": "Disable tick Thirst for %1$s"
+}

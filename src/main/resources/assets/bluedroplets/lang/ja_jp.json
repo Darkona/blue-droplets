@@ -1,0 +1,19 @@
+{
+  "death.attack.dehydrate": "%1$s が脱水で死亡しました。",
+  "death.attack.dehydrate.player": "%1$s が %2$s と戦って脱水で死亡しました。",
+  "item.bluedroplets.wooden_water_bowl": "木の水入れ",
+  "item.bluedroplets.terracotta_water_bowl": "テラコッタ 水入れ",
+  "item.bluedroplets.terracotta_bowl": "テラコッタ 器",
+  "item.bluedroplets.clay_bowl": "粘土の器",
+  "itemGroup.bluedroplets": "Blue Droplets",
+  "bluedroplets.purity.dirty": "汚れ",
+  "bluedroplets.purity.slightly_dirty": "やや汚れ",
+  "bluedroplets.purity.acceptable": "許容",
+  "bluedroplets.purity.purified": "精製された",
+  "block.bluedroplets.sand_filter": "砂フィルター",
+
+  "bluedroplets.ponder.sand_filter.header": "Purifying Water with a Sand Filter",
+  "bluedroplets.ponder.sand_filter.text_1": "A Sand Filter purifies by one step water pumped through it",
+  "bluedroplets.ponder.sand_filter.text_2": "Dirty Water needs to be pumped in from the top...",
+  "bluedroplets.ponder.sand_filter.text_3": "and Purified Water can be pumped out from the bottom"
+}

@@ -7,6 +7,8 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 ### Rebrand: Blue Droplets
 
 - The mod is now **Blue Droplets** (mod id `bluedroplets`, package `com.darkona.droplets`), a continuation of ghen's Thirst Was Taken. The jar is `BlueDroplets-<version>.jar`. `[1.21.1]`
+- All ids moved from `thirst:` to `bluedroplets:` (items, blocks, effects, recipes, loot tables, loot modifiers, damage type, the `loot_config` condition, translation keys). Datapacks and resource packs that target `thirst:` ids need updating. `[1.21.1]`
+- The command is now `/bluedroplets`; `/thirst` still works as an alias. `[1.21.1]`
 
 ### Mod compatibility
 

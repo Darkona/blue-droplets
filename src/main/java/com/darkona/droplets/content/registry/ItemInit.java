@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.registry;
 
+import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.common.item.DrinkableItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -18,7 +19,7 @@ public class ItemInit {
     }
 
     static {
-        ITEMS = DeferredRegister.createItems("thirst");
+        ITEMS = DeferredRegister.createItems(BlueDroplets.ID);
         CLAY_BOWL = ITEMS.register("clay_bowl", () -> new Item((new Item.Properties())
                 .stacksTo(64)
         ));

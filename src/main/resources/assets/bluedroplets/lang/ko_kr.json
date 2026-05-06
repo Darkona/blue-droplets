@@ -1,0 +1,19 @@
+{
+  "death.attack.dehydrate": "%1$s 이(가) 탈수로 사망했습니다.",
+  "death.attack.dehydrate.player": "%1$s 이(가) %2$s 와 싸우다가 탈수로 사망했습니다.",
+  "item.bluedroplets.wooden_water_bowl": "나무 물그릇",
+  "item.bluedroplets.terracotta_water_bowl": "테라코타 물그릇",
+  "item.bluedroplets.terracotta_bowl": "테라코타 그릇",
+  "item.bluedroplets.clay_bowl": "점토 그릇",
+  "itemGroup.bluedroplets": "Blue Droplets",
+  "bluedroplets.purity.dirty": "더러움",
+  "bluedroplets.purity.slightly_dirty": "약간 더러움",
+  "bluedroplets.purity.acceptable": "허용",
+  "bluedroplets.purity.purified": "정제된",
+  "block.bluedroplets.sand_filter": "모래 필터",
+
+  "bluedroplets.ponder.sand_filter.header": "Purifying Water with a Sand Filter",
+  "bluedroplets.ponder.sand_filter.text_1": "A Sand Filter purifies by one step water pumped through it",
+  "bluedroplets.ponder.sand_filter.text_2": "Dirty Water needs to be pumped in from the top...",
+  "bluedroplets.ponder.sand_filter.text_3": "and Purified Water can be pumped out from the bottom"
+}
