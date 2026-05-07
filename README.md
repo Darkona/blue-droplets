@@ -1,14 +1,65 @@
-<p align="center"><img src="https://i.imgur.com/4IBZaA4.png"/></p>
-<h1 align="center">
-	<a href="https://www.curseforge.com/minecraft/mc-mods/thirst-was-taken/files"><img src="https://cf.way2muchnoise.eu/versions/679270(c70039).svg" alt="Supported Versions"></a>
-	<a href="https://discord.gg/hmaD7Se"><img src="https://img.shields.io/discord/1025703064742678630?color=5865f2&label=Discord&style=flat" alt="Discord"></a>
-	<a href="https://www.curseforge.com/minecraft/mc-mods/thirst-was-taken"><img src="http://cf.way2muchnoise.eu/679270.svg" alt="CF"></a>
-    <a href="https://modrinth.com/mod/thirst-was-taken"><img src="https://img.shields.io/modrinth/dt/thirst-was-taken?logo=modrinth&label=&suffix=%20&style=flat&color=242629&labelColor=5ca424&logoColor=1c1c1c" alt="Modrinth"></a>
-    <br><br>
-</h1>
+# Blue Droplets
 
-**Thirst was Taken** is a simple mod that adds a thirst mechanic to the game, but that fits well in modpacks (especially **aesthetics**-oriented ones) by adding diverse features and compatibility with a lot of often-used mods.
+**Blue Droplets** adds a thirst bar and water purity to Minecraft, built to fit modpacks: it works with many popular mods and aims to be highly configurable, with sensible defaults.
 
-This mod is heavily inspired by the other thirst/survival mods out there, including Dehydration, Tough as Nails, and Cold Sweat.
+It is the continuation of **[Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod)** by **ghen**, released under the MIT license. Existing Thirst Was Taken worlds and configs are migrated automatically (see below).
 
-To learn more about this mod, you can visit the [Wiki](https://github.com/ghen-git/Thirst-Mod/wiki).
+> The current logo is a **temporary placeholder** and will be replaced by artwork from a human artist.
+
+## Features
+
+- Thirst bar next to the hunger bar, with a hidden "quenched" value (like saturation). Thirst drains with activity and hot biomes; at zero you take damage.
+- Water purity in four levels (dirty, slightly dirty, acceptable, purified) on buckets, bottles, bowls, fluids and cauldrons. Drinking impure water can make you sick.
+- Purify water by smelting or campfire cooking, or with Create's Sand Filter.
+- Drink directly from water sources by hand.
+- Terracotta and clay bowls as early-game water containers.
+- `/bluedroplets` command (`/thirst` still works) to query or set thirst.
+
+## Moving from Thirst Was Taken
+
+Blue Droplets uses the mod id `bluedroplets` and cannot be installed together with Thirst Was Taken or Thirst Was Reclaimed (mod id `thirst`); the game will tell you if both are present.
+
+- **Worlds**: items, blocks, effects, thirst data and purity saved with `thirst:` ids load under `bluedroplets:` ids. Nothing needs to be done.
+- **Config**: on first start, `config/thirst/` is copied to `config/bluedroplets/`. Modpacks shipping `defaultconfigs/thirst/` should rename it to `defaultconfigs/bluedroplets/`.
+- **Datapacks and resource packs** that target `thirst:` ids or translation keys need to be updated to `bluedroplets:`.
+
+## Compatibility
+
+Current (1.21.1, all optional):
+
+- Create 6.0.6+ (Sand Filter, purity kept through pumps, tanks and basins, Ponder scene)
+- Jade (purity in fluid tooltips)
+- AppleSkin (thirst preview and exhaustion overlay)
+- Farmer's Delight, Brewin' and Chewin', Farmer's Respite, Let's Do Bakery / Brewery (drinks and loot)
+- Cold Sweat (body temperature drives thirst)
+- Vampirism and Supernatural (vampires do not get thirsty)
+
+Incompatible: Tough As Nails (it has its own thirst system).
+
+Planned: Create fan purification, the wider Farmer's Delight ecosystem, Traveler's Backpack, Serene Seasons, JEI/EMI purification pages, Reliquary, Curios canteen slot, and a public API for other mods.
+
+## Versions
+
+Development happens on Minecraft 1.21.1 (NeoForge) first. Ports follow, each one once the previous version is stable:
+
+1. 1.21.1 (NeoForge) - current
+2. 26.3 (NeoForge)
+3. 1.20.1 (one jar for Forge and NeoForge)
+4. 1.19.2 (Forge)
+5. 1.18.2 (Forge)
+6. 1.12.2 (Forge)
+7. 1.7.10 (Forge)
+
+## Links
+
+- [Changelog](CHANGELOG.md)
+- Wiki: coming soon
+- [Issues](https://github.com/Darkona/thirst-was-taken/issues)
+
+## Credits and license
+
+- **ghen** created Thirst Was Taken; this mod is built on its code.
+- **mlus-asuka** and the other Thirst Was Taken contributors ported and maintained it for 1.21.
+- Maintained by **Darkona**.
+
+Blue Droplets is released under the [MIT license](LICENSE), which keeps the original Thirst Was Taken copyright notice.
