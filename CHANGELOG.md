@@ -11,6 +11,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - The command is now `/bluedroplets`; `/thirst` still works as an alias. `[1.21.1]`
 - Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) are marked incompatible: the game refuses to start with both installed and explains why. `[1.21.1]`
 - Credits now name ghen's Thirst Was Taken as the original mod. `[1.21.1]`
+- Worlds from Thirst Was Taken load without losing anything: old `thirst:` items, blocks, block entities (Sand Filter), effects, the purity component and the player thirst data are mapped to the new ids and saved under them from then on. `[1.21.1]`
 
 ### Mod compatibility
 
