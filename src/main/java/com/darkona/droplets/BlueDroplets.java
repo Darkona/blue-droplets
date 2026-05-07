@@ -52,6 +52,7 @@ public class BlueDroplets
 
         ThirstTab.register(modBus);
         //configs
+        LegacyConfigMigration.run();
         ItemSettingsConfig.setup(modContainer);
         CommonConfig.setup(modContainer);
         ClientConfig.setup(modContainer);

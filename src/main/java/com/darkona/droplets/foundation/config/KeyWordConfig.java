@@ -1,6 +1,7 @@
 package com.darkona.droplets.foundation.config;
 
 
+import com.darkona.droplets.BlueDroplets;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLPaths;
@@ -79,7 +80,7 @@ public class KeyWordConfig {
     public static void setup(ModContainer modContainer)
     {
         Path configPath = FMLPaths.CONFIGDIR.get();
-        Path configFolder = Paths.get(configPath.toAbsolutePath().toString(), "thirst");
+        Path configFolder = Paths.get(configPath.toAbsolutePath().toString(), BlueDroplets.ID);
 
         try
         {
@@ -87,7 +88,7 @@ public class KeyWordConfig {
         }
         catch (Exception ignored) {}
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, SPEC, "thirst/keyword.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, SPEC, BlueDroplets.ID + "/keyword.toml");
     }
 
     public static int getDrinkHydration()
