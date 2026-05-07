@@ -14,6 +14,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Worlds from Thirst Was Taken load without losing anything: old `thirst:` items, blocks, block entities (Sand Filter), effects, the purity component and the player thirst data are mapped to the new ids and saved under them from then on. `[1.21.1]`
 - Player thirst, quenched and the per-player "thirst enabled" flag, water purity on items and fluids, and cauldron purity all carry over from Thirst Was Taken saves. `[1.21.1]`
 - Config files moved to `config/bluedroplets/`. On first start, if that folder does not exist and `config/thirst/` does, the old files are copied over and a warning is logged. Modpacks that ship `defaultconfigs/thirst/` must rename it to `defaultconfigs/bluedroplets/`. `[1.21.1]`
+- Added an MIT `LICENSE` that keeps the original Thirst Was Taken copyright notice; it is also shipped inside the jar. `[1.21.1]`
 
 ### Mod compatibility
 

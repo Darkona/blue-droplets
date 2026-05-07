@@ -191,6 +191,10 @@ publishing {
     }
 }
 
+tasks.named('jar', Jar).configure {
+    from('LICENSE')
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
