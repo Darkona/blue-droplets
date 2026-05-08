@@ -13,7 +13,7 @@ displayName="${mod_name}"
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 
 displayURL="https://github.com/Darkona/thirst-was-taken"
-logoFile="thirstwastaken.png"
+logoFile="logo.png"
 credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka and the Thirst Was Taken contributors. Thanks to Cold Sweat, Create and Farmer's Delight, whose sources helped build the original."
 authors="${mod_authors}"
 

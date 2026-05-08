@@ -1,10 +1,12 @@
+<p align="center"><img src="art/logo-placeholder-256.png" width="128" alt="Blue Droplets logo (temporary placeholder)"/></p>
+
 # Blue Droplets
 
 **Blue Droplets** adds a thirst bar and water purity to Minecraft, built to fit modpacks: it works with many popular mods and aims to be highly configurable, with sensible defaults.
 
 It is the continuation of **[Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod)** by **ghen**, released under the MIT license. Existing Thirst Was Taken worlds and configs are migrated automatically (see below).
 
-> The current logo is a **temporary placeholder** and will be replaced by artwork from a human artist.
+> The current logo is a **temporary placeholder** (see [art/README.md](art/README.md)) and will be replaced by artwork from a human artist.
 
 ## Features
 
@@ -29,8 +31,9 @@ Current (1.21.1, all optional):
 
 - Create 6.0.6+ (Sand Filter, purity kept through pumps, tanks and basins, Ponder scene)
 - Jade (purity in fluid tooltips)
-- AppleSkin (thirst preview and exhaustion overlay)
-- Farmer's Delight, Brewin' and Chewin', Farmer's Respite, Let's Do Bakery / Brewery (drinks and loot)
+- Farmer's Delight Nourishment, Let's Do Bakery's Stuffed, Let's Do Brewery's Saturated and Tombstone's ghostly shape pause thirst drain
+- Farmer's Delight, Brewin' and Chewin', Farmer's Respite (drinks and loot)
+- Farmer's Delight Nourishment, Let's Do Bakery's Stuffed and Let's Do Brewery's Saturated effects slow thirst; Tombstone's ghostly shape pauses it
 - Cold Sweat (body temperature drives thirst)
 - Vampirism and Supernatural (vampires do not get thirsty)
 

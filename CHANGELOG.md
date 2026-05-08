@@ -16,6 +16,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Config files moved to `config/bluedroplets/`. On first start, if that folder does not exist and `config/thirst/` does, the old files are copied over and a warning is logged. Modpacks that ship `defaultconfigs/thirst/` must rename it to `defaultconfigs/bluedroplets/`. `[1.21.1]`
 - Added an MIT `LICENSE` that keeps the original Thirst Was Taken copyright notice; it is also shipped inside the jar. `[1.21.1]`
 - New English README: credits, migration notes, compatibility and version roadmap. `[1.21.1]`
+- Temporary placeholder logo (a blue droplet) replaces the Thirst Was Taken logo until the final artwork is ready. `[1.21.1]`
 
 ### Mod compatibility
 
