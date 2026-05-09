@@ -35,9 +35,18 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 - Nausea, Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated and Corail Tombstone Ghostly Shape now work whatever other effects the player has; before, only the first active effect was checked. Effects are matched by id (`farmersdelight:nourishment`, `bakery:stuffed`, `brewery:saturated`, `tombstone:ghostly_shape`), no longer by name fragments. `[1.21.1]`
 
+- Drink, food and container lists (`item_settings.toml`, `container.toml`, `keyword.toml`) are read when the world loads and again on `/reload`, after tags are loaded: `#namespace:tag` entries now work and config edits apply with `/reload` instead of a restart (thirst#153, thirst#155). `[1.21.1]`
+- Unknown item or tag ids in those lists are skipped with one warning per id instead of silently becoming air (thirst#272); ids from mods that are not installed are only logged at debug level. `[1.21.1]`
+- Asking for the thirst values of an item that has none returns 0 instead of crashing (thirst#239). `[1.21.1]`
+- Reopening a singleplayer world no longer registers the config containers again. `[1.21.1]`
+- Keyword matching (`keyword.toml`) runs once over all items when the lists are built, instead of on every tooltip and use; this also removes a rare crash when the client and the integrated server checked items at the same time. `[1.21.1]`
+- `itemsBlacklist` now also removes items added by the config lists or by keywords, not only those added by other mods' code. `[1.21.1]`
+
 ### API
 
 - All classes moved from `dev.ghen.thirst` to `com.darkona.droplets` (main class `Thirst` is now `BlueDroplets`) and there is no compatibility shim: addons that call Thirst Was Taken classes directly, such as Green Feathers, need a version built for Blue Droplets. A stable public API is planned. `[1.21.1]`
+- `RegisterThirstValueEvent` is now posted every time the tables are built (world load and `/reload`), on the game bus, from the logical side that owns the data; `addDrink`, `addFood` and both `addContainer` methods keep their signatures. Its constructor changed and `ThirstEventFactory` was removed. `[1.21.1]`
+- Removed `ThirstHelper.VALID_DRINKS`, `VALID_FOODS`, `containers`, `init()` and the `keyword*` fields, plus `LoadedValue` and `ConfigHelper`; use `ThirstHelper.isDrink/isFood/getThirst/getQuenched`. `WaterPurity.addContainer` still works (deprecated). `[1.21.1]`
 - Removed the public flags `PlayerThirst.checkTombstoneEffects`, `checkFDEffects`, `checkLetsDoBakeryEffects` and `checkLetsDoBreweryEffects`. `[1.21.1]`
 - Removed `ThirstHelper.shouldUseColdSweatCaps`, `PlayerThirst.checkVampirismEffects`, `ThirstBarRenderer.checkIfPlayerIsVampire` and `compat.supernatural.SupernaturalHelper`; mod detection is now internal. The AppleSkin overlay classes moved from `foundation.gui.appleskin` to `compat.appleskin`. `[1.21.1]`
 

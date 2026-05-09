@@ -124,6 +124,15 @@ public class ItemSettingsConfig
         SPEC = BUILDER.build();
     }
 
+    /**
+     * {@code ["namespace:item" or "#namespace:tag", thirst, quenched]}
+     */
+    public static boolean isValidEntry(Object entry)
+    {
+        return entry instanceof List<?> list && list.size() == 3
+                && list.get(0) instanceof String && list.get(1) instanceof Number && list.get(2) instanceof Number;
+    }
+
     public static void setup(ModContainer modContainer)
     {
         Path configPath = FMLPaths.CONFIGDIR.get();

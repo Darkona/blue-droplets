@@ -6,15 +6,19 @@ import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
-import com.darkona.droplets.foundation.common.event.ThirstEventFactory;
 import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.foundation.config.ContainerConfig;
 import com.darkona.droplets.foundation.config.ItemSettingsConfig;
 import com.darkona.droplets.foundation.config.KeyWordConfig;
-import com.darkona.droplets.foundation.util.ConfigHelper;
-import com.darkona.droplets.foundation.util.LoadedValue;
+import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -23,46 +27,159 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.NeoForge;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import static com.darkona.droplets.content.purity.WaterPurity.hasPurity;
 
 public class ThirstHelper
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final float MODIFIER_HARSHNESS = 0.5f;
-    public static Map<Item, Number[]> VALID_DRINKS = LoadedValue.of(() -> ConfigHelper
-            .getItemsWithValues(ItemSettingsConfig.DRINKS.get()))
-            .get();
-    public static Map<Item, Number[]> VALID_FOODS = LoadedValue.of(() -> ConfigHelper
-            .getItemsWithValues(ItemSettingsConfig.FOODS.get()))
-            .get();
+    private static final Set<String> WARNED = ConcurrentHashMap.newKeySet();
 
-    public static List<Item> containers = LoadedValue.of(() -> ConfigHelper
-                    .getItems(ContainerConfig.CONTAINERS.get()))
-            .get();
+    private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods) {}
 
-    public static void init(){
-        ThirstEventFactory.onRegisterThirstValue();
-        for (Item item : containers){
-            if(item.equals(Items.AIR))
+    private static volatile Table table = new Table(Map.of(), Map.of());
+
+    /**
+     * Rebuilds the drink/food tables and the purity containers from config, {@link RegisterThirstValueEvent}
+     * and keywords. Call once tags are bound; the tables are replaced as a whole, never mutated.
+     */
+    public static void rebuild()
+    {
+        Map<Item, int[]> drinks = new HashMap<>();
+        Map<Item, int[]> foods = new HashMap<>();
+        List<ContainerWithPurity> containers = new ArrayList<>();
+
+        readValues(ItemSettingsConfig.DRINKS.get(), drinks);
+        readValues(ItemSettingsConfig.FOODS.get(), foods);
+        for (String id : ContainerConfig.CONTAINERS.get())
+            resolve(id, item -> containers.add(new ContainerWithPurity(item)));
+
+        NeoForge.EVENT_BUS.post(new RegisterThirstValueEvent(drinks, foods, containers));
+
+        if (KeyWordConfig.ENABLE_KEYWORD_CONFIG.get())
+            addKeywordItems(drinks, foods);
+
+        for (String id : ItemSettingsConfig.ITEMS_BLACKLIST.get())
+            resolve(id, item -> {
+                drinks.remove(item);
+                foods.remove(item);
+            });
+
+        table = new Table(Map.copyOf(drinks), Map.copyOf(foods));
+        WaterPurity.setContainers(containers);
+    }
+
+    private static void readValues(List<? extends List<?>> entries, Map<Item, int[]> target)
+    {
+        for (List<?> entry : entries)
+        {
+            if (!ItemSettingsConfig.isValidEntry(entry))
                 continue;
-            WaterPurity.addContainer(new ContainerWithPurity(item));
+            int[] values = {((Number) entry.get(1)).intValue(), ((Number) entry.get(2)).intValue()};
+            resolve((String) entry.get(0), item -> target.put(item, values));
         }
     }
 
-    public static String keywordBlackList = KeyWordConfig.KEYWORD_BLACKLIST.get();
-    public static String keywordDrink = KeyWordConfig.KEYWORD_DRINK.get();
-    public static String keywordSoup = KeyWordConfig.KEYWORD_SOUP.get();
-    public static String keywordFruit = KeyWordConfig.KEYWORD_FRUIT.get();
+    private static void resolve(String id, Consumer<Item> sink)
+    {
+        boolean isTag = id.startsWith("#");
+        ResourceLocation location = ResourceLocation.tryParse(isTag ? id.substring(1) : id);
+        if (location != null)
+        {
+            if (isTag)
+            {
+                Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, location));
+                if (tag.isPresent())
+                {
+                    for (Holder<Item> item : tag.get())
+                        sink.accept(item.value());
+                    return;
+                }
+            }
+            else
+            {
+                Optional<Holder.Reference<Item>> item = BuiltInRegistries.ITEM.getHolder(location);
+                if (item.isPresent())
+                {
+                    if (item.get().value() != Items.AIR)
+                        sink.accept(item.get().value());
+                    return;
+                }
+            }
+        }
+
+        if (!WARNED.add(id))
+            return;
+        if (location != null && !ModList.get().isLoaded(location.getNamespace()))
+            LOGGER.debug("Skipping config entry '{}': mod '{}' is not installed", id, location.getNamespace());
+        else
+            LOGGER.warn("Skipping config entry '{}': no such item or tag", id);
+    }
+
+    private static void addKeywordItems(Map<Item, int[]> drinks, Map<Item, int[]> foods)
+    {
+        Pattern blacklist = keyword(KeyWordConfig.KEYWORD_BLACKLIST.get());
+        Pattern drink = keyword(KeyWordConfig.KEYWORD_DRINK.get());
+        Pattern soup = keyword(KeyWordConfig.KEYWORD_SOUP.get());
+        Pattern fruit = keyword(KeyWordConfig.KEYWORD_FRUIT.get());
+        int[] drinkValues = {KeyWordConfig.getDrinkHydration(), KeyWordConfig.getDrinkQuenchness()};
+        int[] soupValues = {KeyWordConfig.getSoupHydration(), KeyWordConfig.getSoupQuenchness()};
+        int[] fruitValues = {KeyWordConfig.getFruitHydration(), KeyWordConfig.getFruitQuenchness()};
+
+        for (Item item : BuiltInRegistries.ITEM)
+        {
+            if (drinks.containsKey(item) || foods.containsKey(item) || item.getDefaultInstance().getFoodProperties(null) != null)
+                continue;
+
+            String name = item.getDescriptionId();
+            if (matches(blacklist, name))
+                continue;
+            if (matches(drink, name))
+                drinks.put(item, drinkValues);
+            else if (matches(soup, name))
+                foods.put(item, soupValues);
+            else if (matches(fruit, name))
+                foods.put(item, fruitValues);
+        }
+    }
+
+    private static @Nullable Pattern keyword(String regex)
+    {
+        try
+        {
+            return Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        }
+        catch (PatternSyntaxException e)
+        {
+            LOGGER.warn("Ignoring invalid keyword pattern '{}': {}", regex, e.getDescription());
+            return null;
+        }
+    }
+
+    private static boolean matches(@Nullable Pattern pattern, String name)
+    {
+        return pattern != null && pattern.matcher(name).find();
+    }
 
     public static boolean itemRestoresThirst(ItemStack itemStack)
     {
-        return isDrink(itemStack) ||
-                isFood(itemStack) || checkKeywords(itemStack);
+        return values(itemStack.getItem()) != null;
     }
 
     public static boolean playerRestoresThirst(ItemStack itemStack, Player player)
@@ -72,15 +189,12 @@ public class ThirstHelper
 
     public static boolean isDrink(ItemStack itemStack)
     {
-        return !ItemSettingsConfig.ITEMS_BLACKLIST.get().contains(itemStack.getItem().toString()) &&
-                VALID_DRINKS.containsKey(itemStack.getItem());
+        return table.drinks().containsKey(itemStack.getItem());
     }
-
 
     public static boolean isFood(ItemStack itemStack)
     {
-        return !ItemSettingsConfig.ITEMS_BLACKLIST.get().contains(itemStack.getItem().toString()) &&
-                VALID_FOODS.containsKey(itemStack.getItem());
+        return table.foods().containsKey(itemStack.getItem());
     }
 
     /**
@@ -99,22 +213,21 @@ public class ThirstHelper
 
     public static int getThirst(ItemStack itemStack)
     {
-        Item item = itemStack.getItem();
-        if(VALID_DRINKS.containsKey(item)) {
-            return VALID_DRINKS.get(item)[0].intValue();
-        }
-        else
-            return VALID_FOODS.get(item)[0].intValue();
+        int[] values = values(itemStack.getItem());
+        return values == null ? 0 : values[0];
     }
 
     public static int getQuenched(ItemStack itemStack)
     {
-        Item item = itemStack.getItem();
+        int[] values = values(itemStack.getItem());
+        return values == null ? 0 : values[1];
+    }
 
-        if(VALID_DRINKS.containsKey(item))
-            return VALID_DRINKS.get(item)[1].intValue();
-        else
-            return VALID_FOODS.get(item)[1].intValue();
+    private static int[] values(Item item)
+    {
+        Table current = table;
+        int[] values = current.drinks().get(item);
+        return values != null ? values : current.foods().get(item);
     }
 
     public static int getPurity(ItemStack item)
@@ -189,69 +302,5 @@ public class ThirstHelper
 
             return thirstModifier;
         }
-    }
-
-    /**
-     * Function from Thirst Was Remade, handles water items added from the
-     * keyword config file
-     * @param itemStack item to be checked
-     * @return if the item contains water
-     */
-
-    private static boolean checkKeywords(ItemStack itemStack)
-    {
-        if(!KeyWordConfig.ENABLE_KEYWORD_CONFIG.get())
-            return false;
-
-        if(itemStack.getFoodProperties(null) != null)
-            return false;
-
-        String pattern = keywordBlackList;
-        Matcher matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                .matcher(itemStack.getDescriptionId());
-
-        if(matcher.find())
-            return false;
-
-        pattern = keywordDrink;
-        matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                .matcher(itemStack.getDescriptionId());
-
-        boolean hasWater=matcher.find();
-        if(hasWater)
-        {
-            VALID_DRINKS.put(itemStack.getItem(), new Number[]{
-                    KeyWordConfig.getDrinkHydration(),
-                    KeyWordConfig.getDrinkQuenchness()
-            });
-            return true;
-        }
-
-        pattern = keywordSoup;
-        matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                .matcher(itemStack.getDescriptionId());
-
-        hasWater=matcher.find();
-        if(hasWater)
-        {
-            VALID_FOODS.put(itemStack.getItem(), new Number[]{
-                    KeyWordConfig.getSoupHydration(),
-                    KeyWordConfig.getSoupQuenchness()
-            });
-            return true;
-        }
-
-        pattern = keywordFruit;
-        matcher = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)
-                .matcher(itemStack.getDescriptionId());
-
-        hasWater = matcher.find();
-        if(hasWater)
-            VALID_FOODS.put(itemStack.getItem(), new Number[]{
-                    KeyWordConfig.getFruitHydration(),
-                    KeyWordConfig.getFruitQuenchness()
-            });
-
-        return hasWater;
     }
 }

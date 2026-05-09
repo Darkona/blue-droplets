@@ -27,6 +27,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
@@ -52,7 +53,10 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Random;
 
 
@@ -60,7 +64,8 @@ import java.util.Random;
 @EventBusSubscriber
 public class WaterPurity
 {
-    private static final List<ContainerWithPurity> waterContainers = new ArrayList<>();
+    private static final List<ContainerWithPurity> codeContainers = new CopyOnWriteArrayList<>();
+    private static volatile List<ContainerWithPurity> waterContainers = List.of();
     private static final List<Block> fillablesWithPurity = new ArrayList<>();
     public static final int MIN_PURITY = 0;
     public static final int MAX_PURITY = 3;
@@ -97,12 +102,12 @@ public class WaterPurity
 
     private static void registerContainers()
     {
-        waterContainers.add(new ContainerWithPurity(Items.GLASS_BOTTLE,
+        addContainer(new ContainerWithPurity(Items.GLASS_BOTTLE,
                 PotionContents.createItemStack(Items.POTION,Potions.WATER).getItem()).setEqualsFilled(itemStack ->
                 itemStack.is(Items.POTION) && itemStack.get(DataComponents.POTION_CONTENTS).is(Potions.WATER)));
-        waterContainers.add(new ContainerWithPurity(ItemInit.TERRACOTTA_BOWL.get(),
+        addContainer(new ContainerWithPurity(ItemInit.TERRACOTTA_BOWL.get(),
                 ItemInit.TERRACOTTA_WATER_BOWL.get()));
-        waterContainers.add(new ContainerWithPurity(Items.BUCKET,
+        addContainer(new ContainerWithPurity(Items.BUCKET,
                 Items.WATER_BUCKET, false).canHarvestRunningWater(false));
     }
 
@@ -184,7 +189,27 @@ public class WaterPurity
     @Deprecated
     public static void addContainer(ContainerWithPurity container)
     {
-        waterContainers.add(container);
+        codeContainers.add(container);
+        waterContainers = merge(waterContainers, List.of(container));
+    }
+
+    /**
+     * Replaces the data-driven containers (config and {@link RegisterThirstValueEvent}); code containers are kept.
+     * One container per filled item: the first registered wins.
+     */
+    public static void setContainers(List<ContainerWithPurity> containers)
+    {
+        waterContainers = merge(codeContainers, containers);
+    }
+
+    private static List<ContainerWithPurity> merge(List<ContainerWithPurity> first, List<ContainerWithPurity> second)
+    {
+        Map<Item, ContainerWithPurity> byFilled = new LinkedHashMap<>();
+        for (ContainerWithPurity container : first)
+            byFilled.putIfAbsent(container.getFilledItem(), container);
+        for (ContainerWithPurity container : second)
+            byFilled.putIfAbsent(container.getFilledItem(), container);
+        return List.copyOf(byFilled.values());
     }
 
     /**

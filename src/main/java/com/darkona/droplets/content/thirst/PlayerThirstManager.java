@@ -11,10 +11,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber
@@ -65,8 +65,9 @@ public class PlayerThirstManager {
     }
 
     @SubscribeEvent
-    public static void initDrinks(ServerStartedEvent event){
-        ThirstHelper.init();
+    public static void rebuildDrinks(TagsUpdatedEvent event){
+        if (event.shouldUpdateStaticData())
+            ThirstHelper.rebuild();
     }
 }
 
