@@ -29,6 +29,10 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Tough As Nails is now marked incompatible: the game refuses to start with both mods and explains why. `[1.21.1]`
 - Removed all Tough As Nails integration: canteen filling, turning off TaN's thirst, TaN tooltips, the TaN water bottle recipes and the TaN drinks in the default `item_settings.toml`. This also removes the canteen bugs (filling in protected areas, lost Water Cleansing, filling from flowing water; thirst#269, thirst#265, thirst#174) and the double thirst bar (thirst#232, thirst#173). Existing `toughasnails:*` entries in an old `item_settings.toml` are skipped. `[1.21.1]`
 
+### Bug fixes
+
+- Pouring water with purity into a cauldron or tank now always updates its purity; the old delayed-task helper could skip the update when several happened on consecutive ticks, and kept tasks alive after leaving a singleplayer world. `[1.21.1]`
+
 ### API
 
 - All classes moved from `dev.ghen.thirst` to `com.darkona.droplets` (main class `Thirst` is now `BlueDroplets`) and there is no compatibility shim: addons that call Thirst Was Taken classes directly, such as Green Feathers, need a version built for Blue Droplets. A stable public API is planned. `[1.21.1]`

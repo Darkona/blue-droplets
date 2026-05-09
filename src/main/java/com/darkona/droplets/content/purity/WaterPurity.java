@@ -7,7 +7,6 @@ import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.foundation.util.MathHelper;
-import com.darkona.droplets.foundation.util.TickHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
@@ -17,6 +16,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.TickTask;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -141,10 +143,9 @@ public class WaterPurity
     @SubscribeEvent
     static void fillablesHandler(PlayerInteractEvent.RightClickBlock event)
     {
-        if (event.getEntity() instanceof ServerPlayer && isWaterFilledContainer(event.getItemStack()))
+        if (event.getEntity() instanceof ServerPlayer player && isWaterFilledContainer(event.getItemStack()))
         {
-            Player player = event.getEntity();
-            Level level = player.level();
+            ServerLevel level = player.serverLevel();
             BlockPos pos = event.getHitVec().getBlockPos();
             BlockState blockState = level.getBlockState(pos);
             //Trying to make compat with unregistered fluid container
@@ -158,7 +159,8 @@ public class WaterPurity
                         3 : (blockState.getValue(BLOCK_PURITY) - 1 < 0 ?
                             3 : blockState.getValue(BLOCK_PURITY) - 1);
 
-                TickHelper.nextTick(level, () -> {
+                MinecraftServer server = level.getServer();
+                server.tell(new TickTask(server.getTickCount(), () -> {
                     BlockState blockState1 = level.getBlockState(pos);
 
                     if(!blockState1.hasProperty(BLOCK_PURITY))
@@ -169,7 +171,7 @@ public class WaterPurity
                             blockState1.setValue(BLOCK_PURITY, Math.min(purity, blockPurity) + 1),
                             0
                     );
-                });
+                }));
             }
         }
 
