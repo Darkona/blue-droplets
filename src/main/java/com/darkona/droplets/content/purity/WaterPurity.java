@@ -571,10 +571,11 @@ public class WaterPurity
         {
             Level level = block.level();
             BlockPos blockpos = block.pos().relative(block.state().getValue(DispenserBlock.FACING));
-            if(level.getFluidState(blockpos).is(FluidTags.WATER) && level.getBlockState(blockpos).getFluidState().isSource())
+            BlockState state = level.getBlockState(blockpos);
+            if(state.getFluidState().is(FluidTags.WATER) && state.getFluidState().isSource() && state.getBlock() instanceof BucketPickup pickup)
             {
                 ItemStack result = new ItemStack(Items.WATER_BUCKET);
-                return getStack(block, item, level, blockpos, result,true);
+                return getStack(block, item, level, blockpos, result, pickup);
             }
             else
                 return bucketDefaultBehaviour.dispense(block,item);
@@ -589,7 +590,7 @@ public class WaterPurity
             if(level.getFluidState(blockpos).is(FluidTags.WATER))
             {
                 ItemStack result = PotionContents.createItemStack(Items.POTION,Potions.WATER);
-                return getStack(block, item, level, blockpos, result,false);
+                return getStack(block, item, level, blockpos, result, null);
             }
             else
                 return bottleDefaultBehaviour.dispense(block,item);
@@ -598,12 +599,12 @@ public class WaterPurity
     }
 
     @NotNull
-    private static ItemStack getStack(BlockSource block, ItemStack item, Level level, BlockPos blockpos, ItemStack result, boolean pickupBlock) {
+    private static ItemStack getStack(BlockSource block, ItemStack item, Level level, BlockPos blockpos, ItemStack result, @Nullable BucketPickup pickup) {
         level.gameEvent(null, GameEvent.FLUID_PICKUP, blockpos);
         addPurity(result, blockpos, level);
 
-        if(pickupBlock)
-            ((BucketPickup)level.getBlockState(blockpos).getBlock()).pickupBlock(null,level, blockpos, level.getBlockState(blockpos));
+        if(pickup != null)
+            pickup.pickupBlock(null,level, blockpos, level.getBlockState(blockpos));
 
         item.shrink(1);
         if (item.isEmpty()) {

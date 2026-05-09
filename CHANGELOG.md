@@ -43,6 +43,11 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - `itemsBlacklist` now also removes items added by the config lists or by keywords, not only those added by other mods' code. `[1.21.1]`
 - Looking at a water item's tooltip (or any other read of its purity) no longer adds a purity component to it. That write only happened on the client, so the stack could desync from the server and stop stacking with identical items (thirst#262, thirst#150, thirst#180, thirst#264). `[1.21.1]`
 - A water cauldron with no stored purity now gives water of the default purity (`defaultPurity`, "acceptable" by default) instead of an invalid value; invalid purity values on items and fluids also read as `defaultPurity`. Items or fluids with no purity component read as `defaultPurity`, and both forms are accepted. `[1.21.1]`
+- Quenched can no longer exceed thirst: drinking rain water, commands, syncing and loading old saves all keep `0 <= quenched <= thirst <= 20`. `[1.21.1]`
+- After recovering from zero thirst, the dehydration damage timer starts over; before, the first hit after dropping to zero again could come early. `[1.21.1]`
+- No thirst packets are sent to fake players (machines and automation from other mods) or to players without a connection; this could crash with some mods. `[1.21.1]`
+- Dispensers with an empty bucket facing a water block that cannot be picked up (for example kelp, or a modded block holding water) now use the vanilla behaviour instead of crashing. `[1.21.1]`
+- A potion item without potion contents no longer crashes the water bottle stack size check. `[1.21.1]`
 
 ### API
 

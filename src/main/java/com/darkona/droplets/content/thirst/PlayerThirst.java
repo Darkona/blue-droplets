@@ -19,6 +19,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +71,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
     public void setThirst(int value)
     {
-        thirst = value;
+        thirst = Mth.clamp(value, 0, 20);
+        quenched = Math.min(quenched, thirst);
     }
 
     public int getQuenched()
@@ -80,7 +82,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
     public void setQuenched(int value)
     {
-        quenched = value;
+        quenched = Mth.clamp(value, 0, thirst);
     }
 
     public float getExhaustion()
@@ -116,8 +118,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         int extra_quenched = Math.max(this.thirst + thirst - 20, 0);
         if(!CommonConfig.EXTRA_HYDRATION_CONVERT_TO_QUENCHED.get())
             extra_quenched = 0;
-        this.thirst = Math.min(this.thirst + thirst, 20);
-        this.quenched = Math.min(this.quenched + quenched + extra_quenched, this.thirst);
+        setThirst(this.thirst + thirst);
+        setQuenched(this.quenched + quenched + extra_quenched);
     }
 
     /**
@@ -181,14 +183,14 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         if(syncTimer > 10 && !player.level().isClientSide())
         {
             if(difficulty == Difficulty.PEACEFUL && !CommonConfig.THIRST_DEPLETION_IN_PEACEFUL.get()){
-                thirst = Math.min(thirst + 1,20);
+                setThirst(thirst + 1);
             }
 
             final float angle = Mth.wrapDegrees(player.getXRot());
             if (angle <= -80  && player.level().isRainingAt(player.blockPosition().above()) && CommonConfig.CAN_DRINK_RAIN_WATETR.get())
             {
-                thirst = Math.min(thirst + 1,20);
-                quenched = Math.min(quenched +1,20);
+                setThirst(thirst + 1);
+                setQuenched(quenched + 1);
             }
 
             updateThirstData(player);
@@ -208,6 +210,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
                 damageTimer = 0;
             }
         }
+        else
+            damageTimer = 0;
     }
 
     void updateExhaustion(Player player)
@@ -224,7 +228,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
     public void updateThirstData(Player player)
     {
-        PacketDistributor.sendToPlayer((ServerPlayer) player, new PlayerThirstSyncMessage(thirst, quenched, exhaustion,shouldTickThirst));
+        if(player instanceof ServerPlayer serverPlayer && !(player instanceof FakePlayer) && serverPlayer.connection != null)
+            PacketDistributor.sendToPlayer(serverPlayer, new PlayerThirstSyncMessage(thirst, quenched, exhaustion,shouldTickThirst));
     }
 
     @Override
@@ -239,8 +244,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     @Override
     public void copy(IThirst cap)
     {
-        thirst = cap.getThirst();
-        quenched = cap.getQuenched();
+        setThirst(cap.getThirst());
+        setQuenched(cap.getQuenched());
         exhaustion = cap.getExhaustion();
         shouldTickThirst = cap.getShouldTickThirst();
     }
@@ -279,8 +284,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
-        thirst = nbt.getInt("thirst");
-        quenched = nbt.getInt("quenched");
+        setThirst(nbt.getInt("thirst"));
+        setQuenched(nbt.getInt("quenched"));
         exhaustion = nbt.getFloat("exhaustion");
         shouldTickThirst = !nbt.contains("enable") || nbt.getBoolean("enable");
     }

@@ -235,7 +235,9 @@ public class ThirstHelper
     public static float getExhaustionFireProtModifier(Player player)
     {
         final float perLevelMultiplier = 0.0625f;
-        float totalLevels = EnchantmentHelper.getDamageProtection((ServerLevel) player.level(),player, player.damageSources().onFire()) / 2;
+        if(!(player.level() instanceof ServerLevel level))
+            return 1.0f;
+        float totalLevels = EnchantmentHelper.getDamageProtection(level,player, player.damageSources().onFire()) / 2;
         //In some situations, the player can have more than 12 levels of fire protection due to some bugs
         if(totalLevels>12) totalLevels=12;
         return 1.0f - ((totalLevels * perLevelMultiplier) * 0.75f);

@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,7 +24,10 @@ public abstract class MixinItemStack
     @Inject(method="getMaxStackSize", at = @At("HEAD"), cancellable = true)
     public void changeWaterBottleStackSize(CallbackInfoReturnable<Integer> cir)
     {
-        if(getItem() == Items.POTION && getComponents().get(DataComponents.POTION_CONTENTS).is(Potions.WATER))
+        if(getItem() != Items.POTION)
+            return;
+        PotionContents contents = getComponents().get(DataComponents.POTION_CONTENTS);
+        if(contents != null && contents.is(Potions.WATER))
             cir.setReturnValue(CommonConfig.WATER_BOTTLE_STACKSIZE.get());
     }
 }
