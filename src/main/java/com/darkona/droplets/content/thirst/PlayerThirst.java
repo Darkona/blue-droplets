@@ -7,27 +7,30 @@ import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.common.damagesource.ModDamageSource;
 import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 {
-    public static boolean checkTombstoneEffects = false;
-    public static boolean checkFDEffects = false;
-    public static boolean checkLetsDoBakeryEffects = false;
-    public static boolean checkLetsDoBreweryEffects = false;
+    private static @Nullable Holder<MobEffect> ghostlyShape;
+    private static @Nullable Holder<MobEffect> nourishment;
+    private static @Nullable Holder<MobEffect> stuffed;
+    private static @Nullable Holder<MobEffect> saturated;
 
     int thirst = 20;
     int quenched = 5;
@@ -41,6 +44,24 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     boolean init = true;
 
     public PlayerThirst() {}
+
+    public static void resolveCompatEffects()
+    {
+        ghostlyShape = compatEffect("tombstone", "ghostly_shape");
+        nourishment = compatEffect("farmersdelight", "nourishment");
+        stuffed = compatEffect("bakery", "stuffed");
+        saturated = compatEffect("brewery", "saturated");
+    }
+
+    private static @Nullable Holder<MobEffect> compatEffect(String namespace, String path)
+    {
+        return BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath(namespace, path)).orElse(null);
+    }
+
+    private static boolean has(Player player, @Nullable Holder<MobEffect> effect)
+    {
+        return effect != null && player.hasEffect(effect);
+    }
 
     public int getThirst()
     {
@@ -117,33 +138,16 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
             return;
         }
 
-        if(checkTombstoneEffects && player.getActiveEffects().stream().anyMatch(e -> e.getDescriptionId().contains("ghostly_shape")))
+        if(has(player, ghostlyShape))
             return;
 
         if(VampirismCompat.isVampire(player))
             return;
 
-        AtomicBoolean isNourished = new AtomicBoolean(false);
-        AtomicBoolean isStuffed = new AtomicBoolean(false);
-        AtomicBoolean isSaturated = new AtomicBoolean(false);
+        boolean paused = has(player, nourishment) || has(player, stuffed) || has(player, saturated);
 
-        player.getActiveEffects().stream().anyMatch(mobEffectInstance -> {
-
-            if(checkFDEffects && mobEffectInstance.getDescriptionId().contains("nourishment")){
-                isNourished.set(true);
-            }
-            if(checkLetsDoBakeryEffects && mobEffectInstance.getDescriptionId().contains("stuffed")){
-                isStuffed.set(true);
-            }
-            if(checkLetsDoBreweryEffects && mobEffectInstance.getDescriptionId().contains("saturated")){
-                isSaturated.set(true);
-            }
-            if(CommonConfig.DEPLETES_WHEN_NAUSED.get() && mobEffectInstance.is(MobEffects.CONFUSION)){
-                addExhaustion(player,0.06F);
-            }
-
-            return true;
-        });
+        if(CommonConfig.DEPLETES_WHEN_NAUSED.get() && player.hasEffect(MobEffects.CONFUSION))
+            addExhaustion(player, 0.06F);
 
         boolean isHunger = player.hasEffect(MobEffects.HUNGER);
         boolean isSitting = player.isPassenger();
@@ -155,7 +159,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
                     ThirstHelper.getExhaustionFireResistanceModifier(player);
         }
 
-        if (!isSitting && !isNourished.get() && !isStuffed.get() && !isSaturated.get())
+        if (!isSitting && !paused)
         {
             updateExhaustion(player);
         }

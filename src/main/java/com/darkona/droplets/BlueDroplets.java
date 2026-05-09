@@ -63,18 +63,7 @@ public class BlueDroplets
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         WaterPurity.init();
-
-        if(ModList.get().isLoaded("tombstone"))
-            PlayerThirst.checkTombstoneEffects = true;
-
-        if(ModList.get().isLoaded("farmersdelight"))
-            PlayerThirst.checkFDEffects = true;
-
-        if(ModList.get().isLoaded("bakery"))
-            PlayerThirst.checkLetsDoBakeryEffects = true;
-
-        if(ModList.get().isLoaded("brewery"))
-            PlayerThirst.checkLetsDoBreweryEffects = true;
+        PlayerThirst.resolveCompatEffects();
     }
 
     private void clientSetup(final FMLClientSetupEvent event)

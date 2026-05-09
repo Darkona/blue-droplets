@@ -33,9 +33,12 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 - Pouring water with purity into a cauldron or tank now always updates its purity; the old delayed-task helper could skip the update when several happened on consecutive ticks, and kept tasks alive after leaving a singleplayer world. `[1.21.1]`
 
+- Nausea, Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated and Corail Tombstone Ghostly Shape now work whatever other effects the player has; before, only the first active effect was checked. Effects are matched by id (`farmersdelight:nourishment`, `bakery:stuffed`, `brewery:saturated`, `tombstone:ghostly_shape`), no longer by name fragments. `[1.21.1]`
+
 ### API
 
 - All classes moved from `dev.ghen.thirst` to `com.darkona.droplets` (main class `Thirst` is now `BlueDroplets`) and there is no compatibility shim: addons that call Thirst Was Taken classes directly, such as Green Feathers, need a version built for Blue Droplets. A stable public API is planned. `[1.21.1]`
+- Removed the public flags `PlayerThirst.checkTombstoneEffects`, `checkFDEffects`, `checkLetsDoBakeryEffects` and `checkLetsDoBreweryEffects`. `[1.21.1]`
 - Removed `ThirstHelper.shouldUseColdSweatCaps`, `PlayerThirst.checkVampirismEffects`, `ThirstBarRenderer.checkIfPlayerIsVampire` and `compat.supernatural.SupernaturalHelper`; mod detection is now internal. The AppleSkin overlay classes moved from `foundation.gui.appleskin` to `compat.appleskin`. `[1.21.1]`
 
 ### Project
