@@ -48,12 +48,9 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
-import toughasnails.api.item.TANItems;
-import toughasnails.item.EmptyCanteenItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 
@@ -78,8 +75,6 @@ public class WaterPurity
      * */
     public static final IntegerProperty BLOCK_PURITY = IntegerProperty.create("purity", 0, 4);
 
-    public static boolean tanLoaded = false;
-
     public static void init()
     {
         registerDispenserBehaviours();
@@ -95,12 +90,6 @@ public class WaterPurity
         if(ModList.get().isLoaded("brewinandchewin"))
         {
 //            registerBrewinAndChewinContainers();
-        }
-
-        if(ModList.get().isLoaded("toughasnails"))
-        {
-            registerToughAsNailsContainers();
-            tanLoaded = true;
         }
     }
 
@@ -148,39 +137,6 @@ public class WaterPurity
 //        waterContainers.add(new ContainerWithPurity(BCItems.WITHERING_DROSS.get()));
 //        waterContainers.add(new ContainerWithPurity(BCItems.KOMBUCHA.get()));
 //    }
-
-    private static void registerToughAsNailsContainers()
-    {
-        waterContainers.add(new ContainerWithPurity(TANItems.LEATHER_DIRTY_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.COPPER_DIRTY_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.IRON_DIRTY_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.GOLD_DIRTY_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.DIAMOND_DIRTY_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.NETHERITE_DIRTY_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.LEATHER_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.COPPER_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.IRON_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.GOLD_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.DIAMOND_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.NETHERITE_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.LEATHER_PURIFIED_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.COPPER_PURIFIED_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.IRON_PURIFIED_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.GOLD_PURIFIED_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.DIAMOND_PURIFIED_WATER_CANTEEN));
-        waterContainers.add(new ContainerWithPurity(TANItems.NETHERITE_PURIFIED_WATER_CANTEEN));
-
-
-        waterContainers.add(new ContainerWithPurity(TANItems.PURIFIED_WATER_BOTTLE));
-        waterContainers.add(new ContainerWithPurity(TANItems.DIRTY_WATER_BOTTLE));
-        waterContainers.add(new ContainerWithPurity(TANItems.APPLE_JUICE));
-        waterContainers.add(new ContainerWithPurity(TANItems.CACTUS_JUICE));
-        waterContainers.add(new ContainerWithPurity(TANItems.CHORUS_FRUIT_JUICE));
-        waterContainers.add(new ContainerWithPurity(TANItems.GLOW_BERRY_JUICE));
-        waterContainers.add(new ContainerWithPurity(TANItems.MELON_JUICE));
-        waterContainers.add(new ContainerWithPurity(TANItems.PUMPKIN_JUICE));
-        waterContainers.add(new ContainerWithPurity(TANItems.SWEET_BERRY_JUICE));
-    }
 
     @SubscribeEvent
     static void fillablesHandler(PlayerInteractEvent.RightClickBlock event)
@@ -367,34 +323,9 @@ public class WaterPurity
         {
             purity = CommonConfig.DEFAULT_PURITY.get();
             item.set(ThirstComponent.PURITY, purity);
-            if(tanLoaded && Objects.equals(item.getItem().getCreatorModId(item), "toughasnails")){
-                tanPurity(item);
-                return item.get(ThirstComponent.PURITY);
-            }
-
         }
 
         return purity;
-    }
-
-    /**
-     * Sets the purity of special items in other mods
-     */
-
-    public static void tanPurity(ItemStack item)
-    {
-        item.set(ThirstComponent.PURITY,3);
-
-        if(item.is(TANItems.DIRTY_WATER_BOTTLE))
-            item.set(ThirstComponent.PURITY,0);
-
-        if(item.getItem() instanceof EmptyCanteenItem canteenItem){
-            if(item.getItem().equals(canteenItem.getDirtyWaterCanteen())){
-                item.set(ThirstComponent.PURITY,0);
-            }else if(item.getItem().equals(canteenItem.getWaterCanteen())){
-                item.set(ThirstComponent.PURITY,2);
-            }
-        }
     }
 
     /**

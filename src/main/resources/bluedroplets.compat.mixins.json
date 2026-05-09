@@ -11,14 +11,7 @@
     "create.MixinGenericItemEmptying",
     "create.MixinGenericItemFilling",
     "create.MixinIHaveGoggleInformation",
-    "jade.MixinFluidView",
-    "toughasnails.MixinEmptyCanteenItem",
-    "toughasnails.MixinServerConfig",
-    "toughasnails.MixinThirstHandler",
-    "toughasnails.MixinThirstHelperImpl"
-  ],
-  "client": [
-    "toughasnails.MixinTooltipHandler"
+    "jade.MixinFluidView"
   ],
   "injectors": {
     "defaultRequire": 1

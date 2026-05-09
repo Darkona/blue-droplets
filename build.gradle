@@ -118,8 +118,6 @@ dependencies {
     compileOnly ("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
     compileOnly "com.tterrag.registrate:Registrate:${registrate_version}"
 
-    compileOnly "curse.maven:glitchcore-955399:5429863"
-    compileOnly "curse.maven:tough-as-nails-246391:5429908"
     compileOnly "curse.maven:vampirism-become-a-vampire-233029:5547201"
     compileOnly "curse.maven:farmers-delight-398521:6154807"
     compileOnly "curse.maven:cold-sweat-506194:6991377-sources-6991378"
