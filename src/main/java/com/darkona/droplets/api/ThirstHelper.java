@@ -4,7 +4,6 @@ import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
-import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.foundation.config.ContainerConfig;
@@ -42,8 +41,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import static com.darkona.droplets.content.purity.WaterPurity.hasPurity;
 
 public class ThirstHelper
 {
@@ -232,11 +229,7 @@ public class ThirstHelper
 
     public static int getPurity(ItemStack item)
     {
-        if(!hasPurity(item))
-            return CommonConfig.DEFAULT_PURITY.get();
-        else {
-            return item.get(ThirstComponent.PURITY);
-        }
+        return WaterPurity.getPurity(item);
     }
 
     public static float getExhaustionFireProtModifier(Player player)

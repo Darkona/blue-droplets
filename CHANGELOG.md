@@ -41,6 +41,8 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Reopening a singleplayer world no longer registers the config containers again. `[1.21.1]`
 - Keyword matching (`keyword.toml`) runs once over all items when the lists are built, instead of on every tooltip and use; this also removes a rare crash when the client and the integrated server checked items at the same time. `[1.21.1]`
 - `itemsBlacklist` now also removes items added by the config lists or by keywords, not only those added by other mods' code. `[1.21.1]`
+- Looking at a water item's tooltip (or any other read of its purity) no longer adds a purity component to it. That write only happened on the client, so the stack could desync from the server and stop stacking with identical items (thirst#262, thirst#150, thirst#180, thirst#264). `[1.21.1]`
+- A water cauldron with no stored purity now gives water of the default purity (`defaultPurity`, "acceptable" by default) instead of an invalid value; invalid purity values on items and fluids also read as `defaultPurity`. Items or fluids with no purity component read as `defaultPurity`, and both forms are accepted. `[1.21.1]`
 
 ### API
 

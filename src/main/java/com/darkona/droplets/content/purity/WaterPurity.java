@@ -1,7 +1,6 @@
 package com.darkona.droplets.content.purity;
 
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
@@ -51,6 +50,7 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -341,30 +341,24 @@ public class WaterPurity
     }
 
     /**
-     * Reads the purity from an item
+     * Reads the purity from an item without modifying it; missing or invalid purity reads as the default purity
      */
     public static Integer getPurity(ItemStack item)
     {
-        Integer purity = item.get(ThirstComponent.PURITY);
-        if(purity==null)
-        {
-            purity = CommonConfig.DEFAULT_PURITY.get();
-            item.set(ThirstComponent.PURITY, purity);
-        }
-
-        return purity;
+        return sanitizePurity(item.get(ThirstComponent.PURITY));
     }
 
     /**
-     * Reads the purity from a fluid
+     * Reads the purity from a fluid without modifying it; missing or invalid purity reads as the default purity
      */
     public static Integer getPurity(FluidStack fluid)
     {
-        if(fluid.get(ThirstComponent.PURITY) == null){
-            fluid.set(ThirstComponent.PURITY,CommonConfig.DEFAULT_PURITY.get());
-        }
+        return sanitizePurity(fluid.get(ThirstComponent.PURITY));
+    }
 
-        return fluid.get(ThirstComponent.PURITY);
+    public static int sanitizePurity(@Nullable Integer purity)
+    {
+        return purity == null || purity < MIN_PURITY || purity > MAX_PURITY ? CommonConfig.DEFAULT_PURITY.get() : purity;
     }
 
     /**
@@ -395,7 +389,7 @@ public class WaterPurity
      */
     public static int getBlockPurity(BlockState blockState)
     {
-        return blockState.hasProperty(BLOCK_PURITY) ? blockState.getValue(BLOCK_PURITY) - 1 : -1;
+        return sanitizePurity(blockState.hasProperty(BLOCK_PURITY) ? blockState.getValue(BLOCK_PURITY) - 1 : null);
     }
 
     public static boolean hasPurity(ItemStack item)
@@ -459,7 +453,7 @@ public class WaterPurity
         }
         else if(level.getBlockState(pos).is(Blocks.WATER_CAULDRON))
         {
-            return level.getBlockState(pos).getValue(BLOCK_PURITY) - 1;
+            return getBlockPurity(level.getBlockState(pos));
         }
         else
             return CommonConfig.DEFAULT_PURITY.get();
@@ -473,10 +467,7 @@ public class WaterPurity
     {
         if(!isWaterFilledContainer(item)) return true;
         if(!hasPurity(item)) return true;
-        if(getPurity(item)!=-1)
-            return givePurityEffects(player, ThirstHelper.getPurity(item));
-        else
-            return givePurityEffects(player, CommonConfig.DEFAULT_PURITY.get());
+        return givePurityEffects(player, getPurity(item));
     }
 
     /**
