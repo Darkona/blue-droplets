@@ -49,7 +49,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Dispensers with an empty bucket facing a water block that cannot be picked up (for example kelp, or a modded block holding water) now use the vanilla behaviour instead of crashing. `[1.21.1]`
 - A potion item without potion contents no longer crashes the water bottle stack size check. `[1.21.1]`
 - **Dehydration on Normal difficulty no longer kills**: like vanilla starvation it stops at half a heart. Easy still stops at 5 hearts and Hard can still kill. `[1.21.1]`
-- Only Fire Protection slows thirst while on fire-prone gear; generic Protection no longer counts (thirst#195, thirst#219). The reduction per level and the 12-level cap are unchanged. `[1.21.1]`
+- Only the Fire Protection enchantment on armor slows thirst loss; generic Protection no longer counts (thirst#195, thirst#219). The reduction per level and the 12-level cap are unchanged. `[1.21.1]`
 - The "no sprinting when thirsty" rule now follows the server's `moveSlowWhenThirsty`, sent to the client with the thirst data; before, each client read its own config, so a client could turn it off. Sprinting also checks thirst and food separately, so exactly 6 food no longer lets you sprint when thirst is high. `[1.21.1]`
 - The server now also checks that the hands are empty before drinking by hand. `[1.21.1]`
 
