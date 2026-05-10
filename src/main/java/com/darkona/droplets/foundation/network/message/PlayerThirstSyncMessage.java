@@ -1,7 +1,7 @@
 package com.darkona.droplets.foundation.network.message;
 
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.foundation.common.capability.IThirst;
+import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
-public record PlayerThirstSyncMessage(int thirst,int quenched,float exhaustion,boolean enable) implements CustomPacketPayload
+public record PlayerThirstSyncMessage(int thirst, int quenched, float exhaustion, boolean enable, boolean sprintBlocked, boolean bothHandsToDrink) implements CustomPacketPayload
 {
 
     public static final CustomPacketPayload.Type<PlayerThirstSyncMessage> TYPE = new Type<>(BlueDroplets.asResource("thirstsync"));
@@ -25,6 +25,10 @@ public record PlayerThirstSyncMessage(int thirst,int quenched,float exhaustion,b
             PlayerThirstSyncMessage::exhaustion,
             ByteBufCodecs.BOOL,
             PlayerThirstSyncMessage::enable,
+            ByteBufCodecs.BOOL,
+            PlayerThirstSyncMessage::sprintBlocked,
+            ByteBufCodecs.BOOL,
+            PlayerThirstSyncMessage::bothHandsToDrink,
             PlayerThirstSyncMessage::new
     );
 
@@ -38,11 +42,12 @@ public record PlayerThirstSyncMessage(int thirst,int quenched,float exhaustion,b
     {
         context.enqueueWork(() -> {
             Player player = context.player();
-            IThirst cap = player.getData(ModAttachment.PLAYER_THIRST);
+            PlayerThirst cap = player.getData(ModAttachment.PLAYER_THIRST);
             cap.setThirst(message.thirst);
             cap.setQuenched(message.quenched);
             cap.setExhaustion(message.exhaustion);
             cap.setShouldTickThirst(message.enable);
+            cap.setSyncedRules(message.sprintBlocked, message.bothHandsToDrink);
         });
     }
 

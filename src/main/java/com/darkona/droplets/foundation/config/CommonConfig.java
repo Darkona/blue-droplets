@@ -29,6 +29,7 @@ public class CommonConfig
     public static final ModConfigSpec.ConfigValue<Boolean> HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT;
     public static final ModConfigSpec.ConfigValue<Boolean> HEALTH_REGEN_DEPLETES_HYDRATION;
     public static final ModConfigSpec.ConfigValue<Boolean> CAN_DRINK_BY_HAND;
+    public static final ModConfigSpec.ConfigValue<Boolean> DRINK_BOTH_HAND_NEEDED;
     public static final ModConfigSpec.ConfigValue<Boolean> EXTRA_HYDRATION_CONVERT_TO_QUENCHED;
 
     public static final ModConfigSpec.ConfigValue<Integer> HAND_DRINKING_HYDRATION;
@@ -77,6 +78,7 @@ public class CommonConfig
         HEALTH_REGEN_DEPLETES_HYDRATION = BUILDER.comment("Whether hydration depletes when the player's health is regenerating (like hunger)").define("healthRegenDepletesHydration", true);
         HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT = BUILDER.comment("Whether dehydration from regenerating health (if enabled above) should take into account temperature and humidity").define("healthRegenDehydrationIsBiomeDependent", true);
         CAN_DRINK_BY_HAND = BUILDER.comment("Whether players can drink by shift-right-clicking water with an empty hand").define("canDrinkByHand", false);
+        DRINK_BOTH_HAND_NEEDED = BUILDER.comment("Whether players need both hands empty to drink water by hand (was in client.toml)").define("DrinkBothHandNeeded", true);
         HAND_DRINKING_HYDRATION = BUILDER.comment("How much the player is hydrated when drinking by hand").defineInRange("handDrinkingHydration", 3, 0, 20);
         HAND_DRINKING_QUENCHED = BUILDER.comment("How much the player thirst is quenched when drinking by hand").defineInRange("handDrinkingQuenched", 2, 0, 20);
         EXTRA_HYDRATION_CONVERT_TO_QUENCHED =BUILDER.comment("Whether extra hydration will convert to quenched").define("ExtraHydrationConvertToQuenched",true);

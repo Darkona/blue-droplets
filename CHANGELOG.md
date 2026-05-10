@@ -48,6 +48,10 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - No thirst packets are sent to fake players (machines and automation from other mods) or to players without a connection; this could crash with some mods. `[1.21.1]`
 - Dispensers with an empty bucket facing a water block that cannot be picked up (for example kelp, or a modded block holding water) now use the vanilla behaviour instead of crashing. `[1.21.1]`
 - A potion item without potion contents no longer crashes the water bottle stack size check. `[1.21.1]`
+- **Dehydration on Normal difficulty no longer kills**: like vanilla starvation it stops at half a heart. Easy still stops at 5 hearts and Hard can still kill. `[1.21.1]`
+- Only Fire Protection slows thirst while on fire-prone gear; generic Protection no longer counts (thirst#195, thirst#219). The reduction per level and the 12-level cap are unchanged. `[1.21.1]`
+- The "no sprinting when thirsty" rule now follows the server's `moveSlowWhenThirsty`, sent to the client with the thirst data; before, each client read its own config, so a client could turn it off. Sprinting also checks thirst and food separately, so exactly 6 food no longer lets you sprint when thirst is high. `[1.21.1]`
+- The server now also checks that the hands are empty before drinking by hand. `[1.21.1]`
 
 ### Config
 
@@ -55,12 +59,14 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Numeric options now have ranges: purity values 0-3, percentages 0-100, hand-drinking and keyword values 0-20, water bottle stack size 1-99, `thirstDepletionModifier` 0-10, `sandFilterMbPerTick` 1-1000, `mountainsY`/`cavesY` -2048 to 2048. Out-of-range values are reset to the default with a warning. `[1.21.1]`
 - The drink, food, blacklist and container lists can now be empty; before, an empty list was replaced by the defaults. `[1.21.1]`
 - Removed the duplicate `collectorsreap:pink_limeade` default entry; its value stays 8/13. `[1.21.1]`
+- `DrinkBothHandNeeded` moved from `client.toml` to `common.toml` (section "Drinking Mechanics"): it is a gameplay rule, so the server decides and tells the client. A value set in `client.toml` is dropped; set it again in `common.toml`. `[1.21.1]`
 
 ### API
 
 - All classes moved from `dev.ghen.thirst` to `com.darkona.droplets` (main class `Thirst` is now `BlueDroplets`) and there is no compatibility shim: addons that call Thirst Was Taken classes directly, such as Green Feathers, need a version built for Blue Droplets. A stable public API is planned. `[1.21.1]`
 - `RegisterThirstValueEvent` is now posted every time the tables are built (world load and `/reload`), on the game bus, from the logical side that owns the data; `addDrink`, `addFood` and both `addContainer` methods keep their signatures. Its constructor changed and `ThirstEventFactory` was removed. `[1.21.1]`
 - Removed `ThirstHelper.VALID_DRINKS`, `VALID_FOODS`, `containers`, `init()` and the `keyword*` fields, plus `LoadedValue` and `ConfigHelper`; use `ThirstHelper.isDrink/isFood/getThirst/getQuenched`. `WaterPurity.addContainer` still works (deprecated). `[1.21.1]`
+- Network protocol version bumped to `0.1.4` (the thirst sync packet now carries the sprint and two-hands rules): client and server must run the same Blue Droplets version. `ClientConfig.DRINK_BOTH_HAND_NEEDED` is now `CommonConfig.DRINK_BOTH_HAND_NEEDED`. Fixed gameplay numbers live in `core.ThirstConstants`. `[1.21.1]`
 - Removed the public flags `PlayerThirst.checkTombstoneEffects`, `checkFDEffects`, `checkLetsDoBakeryEffects` and `checkLetsDoBreweryEffects`. `[1.21.1]`
 - Removed `ThirstHelper.shouldUseColdSweatCaps`, `PlayerThirst.checkVampirismEffects`, `ThirstBarRenderer.checkIfPlayerIsVampire` and `compat.supernatural.SupernaturalHelper`; mod detection is now internal. The AppleSkin overlay classes moved from `foundation.gui.appleskin` to `compat.appleskin`. `[1.21.1]`
 

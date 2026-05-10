@@ -5,9 +5,9 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
-import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -18,7 +18,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 
 import java.util.ArrayList;
@@ -44,8 +43,8 @@ public class CommandInit {
                                 }
                         )))
                 .then(Commands.literal("set").then(Commands.argument("Player", EntityArgument.player())
-                        .then(Commands.argument("thirst", IntegerArgumentType.integer(0,20))
-                                .then(Commands.argument("quenched", IntegerArgumentType.integer(0,20))
+                        .then(Commands.argument("thirst", IntegerArgumentType.integer(0, ThirstConstants.MAX_THIRST))
+                                .then(Commands.argument("quenched", IntegerArgumentType.integer(0, ThirstConstants.MAX_THIRST))
                                         .executes(context -> {
                                             ServerPlayer player = EntityArgument.getPlayer(context,"Player");
                                             IThirst iThirst = player.getData(ModAttachment.PLAYER_THIRST);
@@ -68,7 +67,7 @@ public class CommandInit {
                                     for(ServerPlayer player:players){
                                         IThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
                                         thirstData.setShouldTickThirst(shouldTick);
-                                        PacketDistributor.sendToPlayer(player,new PlayerThirstSyncMessage(thirstData.getThirst(),thirstData.getQuenched(),thirstData.getExhaustion(),shouldTick));
+                                        thirstData.updateThirstData(player);
                                         playersName.add(player.getName());
                                     }
 

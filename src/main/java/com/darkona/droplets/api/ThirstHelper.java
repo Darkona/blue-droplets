@@ -4,6 +4,7 @@ import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.foundation.config.ContainerConfig;
@@ -13,17 +14,18 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.neoforged.fml.ModList;
@@ -51,6 +53,8 @@ public class ThirstHelper
     private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods) {}
 
     private static volatile Table table = new Table(Map.of(), Map.of());
+    private static @Nullable RegistryAccess fireProtectionAccess;
+    private static @Nullable Holder<Enchantment> fireProtectionHolder;
 
     /**
      * Rebuilds the drink/food tables and the purity containers from config, {@link RegisterThirstValueEvent}
@@ -234,13 +238,24 @@ public class ThirstHelper
 
     public static float getExhaustionFireProtModifier(Player player)
     {
-        final float perLevelMultiplier = 0.0625f;
-        if(!(player.level() instanceof ServerLevel level))
+        Holder<Enchantment> fireProtection = fireProtection(player.level());
+        if(fireProtection == null)
             return 1.0f;
-        float totalLevels = EnchantmentHelper.getDamageProtection(level,player, player.damageSources().onFire()) / 2;
-        //In some situations, the player can have more than 12 levels of fire protection due to some bugs
-        if(totalLevels>12) totalLevels=12;
-        return 1.0f - ((totalLevels * perLevelMultiplier) * 0.75f);
+        int levels = 0;
+        for(ItemStack armor : player.getArmorSlots())
+            levels += armor.getEnchantmentLevel(fireProtection);
+        return 1.0f - Math.min(levels, ThirstConstants.FIRE_PROTECTION_MAX_LEVELS) * ThirstConstants.FIRE_PROTECTION_REDUCTION_PER_LEVEL;
+    }
+
+    private static @Nullable Holder<Enchantment> fireProtection(Level level)
+    {
+        RegistryAccess access = level.registryAccess();
+        if(access != fireProtectionAccess)
+        {
+            fireProtectionHolder = access.registryOrThrow(Registries.ENCHANTMENT).getHolder(Enchantments.FIRE_PROTECTION).orElse(null);
+            fireProtectionAccess = access;
+        }
+        return fireProtectionHolder;
     }
 
     public static float getExhaustionFireResistanceModifier(Player player){

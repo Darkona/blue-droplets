@@ -1,6 +1,7 @@
 package com.darkona.droplets.foundation.network.message;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
@@ -39,12 +40,15 @@ public record DrinkByHandMessage(Vector3f pos) implements CustomPacketPayload
             {
                 Player player = context.player();
                 Level level = player.level();
-                if(player.getData(ModAttachment.PLAYER_THIRST).getThirst()==20)
+                if(player.getData(ModAttachment.PLAYER_THIRST).getThirst() >= ThirstConstants.MAX_THIRST)
                     return;
 
                 if (SupernaturalCompat.isVampire(player)) {
                     return;
                 }
+
+                if (!player.getMainHandItem().isEmpty() || CommonConfig.DRINK_BOTH_HAND_NEEDED.get() && !player.getOffhandItem().isEmpty())
+                    return;
 
                 int purity = WaterPurity.getBlockPurity(level, new BlockPos((int) data.pos.x, (int) data.pos.y, (int) data.pos.z));
                 level.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.NEUTRAL, 1.0F, 1.0F);

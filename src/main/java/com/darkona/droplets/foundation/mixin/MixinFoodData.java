@@ -1,5 +1,6 @@
 package com.darkona.droplets.foundation.mixin;
 
+import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.CommonConfig;
@@ -35,7 +36,7 @@ public abstract class MixinFoodData
 
         float f = Math.min(foodData.getSaturationLevel(), 6.0F);
 
-        boolean shouldHeal = !CommonConfig.DEHYDRATION_HALTS_HEALTH_REGEN.get() || thirstData.getThirst() >= 20;
+        boolean shouldHeal = !CommonConfig.DEHYDRATION_HALTS_HEALTH_REGEN.get() || thirstData.getThirst() >= ThirstConstants.FULL_REGEN_MIN_THIRST;
 
         if(shouldHeal)
         {
@@ -45,7 +46,7 @@ public abstract class MixinFoodData
         }
 
         dehydratedHealTimer++;
-        if(dehydratedHealTimer >= 8 && thirstData.getThirst() > 18)
+        if(dehydratedHealTimer >= ThirstConstants.SLOW_REGEN_INTERVAL_TICKS && thirstData.getThirst() >= ThirstConstants.SLOW_REGEN_MIN_THIRST)
         {
             player.heal(f / 6.0F);
             thirstData.setJustHealed();
@@ -63,7 +64,7 @@ public abstract class MixinFoodData
     private void healWithHunger(Player player, float amount)
     {
         IThirst thirstData =  player.getData(ModAttachment.PLAYER_THIRST);
-        boolean shouldHeal = !CommonConfig.DEHYDRATION_HALTS_HEALTH_REGEN.get() || thirstData.getThirst() > 18;
+        boolean shouldHeal = !CommonConfig.DEHYDRATION_HALTS_HEALTH_REGEN.get() || thirstData.getThirst() >= ThirstConstants.HUNGER_REGEN_MIN_THIRST;
 
         if(shouldHeal)
         {

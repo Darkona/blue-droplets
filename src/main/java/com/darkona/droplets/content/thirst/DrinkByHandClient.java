@@ -1,6 +1,6 @@
 package com.darkona.droplets.content.thirst;
 
-import com.darkona.droplets.foundation.config.ClientConfig;
+import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.network.message.DrinkByHandMessage;
 import com.darkona.droplets.foundation.util.MathHelper;
 import net.minecraft.client.Minecraft;
@@ -31,7 +31,7 @@ public class DrinkByHandClient
 
         if (level.getFluidState(blockPos).is(FluidTags.WATER) && player.isCrouching() && !player.isInvulnerable()) {
 
-            if(!ClientConfig.DRINK_BOTH_HAND_NEEDED.get()){
+            if(!player.getData(ModAttachment.PLAYER_THIRST).needsBothHandsToDrink()){
                 HandAvailable = player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty();
             }else {
                 HandAvailable = player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.OFF_HAND).isEmpty();

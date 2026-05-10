@@ -2,6 +2,7 @@ package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.common.item.DrinkableItem;
 import com.darkona.droplets.foundation.config.CommonConfig;
@@ -59,8 +60,8 @@ public class PlayerThirstManager {
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event){
         if(event.getEntity() instanceof ServerPlayer player){
-            player.getData(ModAttachment.PLAYER_THIRST).setThirst(20);
-            player.getData(ModAttachment.PLAYER_THIRST).setQuenched(5);
+            player.getData(ModAttachment.PLAYER_THIRST).setThirst(ThirstConstants.RESPAWN_THIRST);
+            player.getData(ModAttachment.PLAYER_THIRST).setQuenched(ThirstConstants.RESPAWN_QUENCHED);
         }
     }
 

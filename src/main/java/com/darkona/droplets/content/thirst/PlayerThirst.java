@@ -26,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
+import static com.darkona.droplets.core.ThirstConstants.*;
+
 public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 {
     private static @Nullable Holder<MobEffect> ghostlyShape;
@@ -33,8 +35,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     private static @Nullable Holder<MobEffect> stuffed;
     private static @Nullable Holder<MobEffect> saturated;
 
-    int thirst = 20;
-    int quenched = 5;
+    int thirst = MAX_THIRST;
+    int quenched = RESPAWN_QUENCHED;
     float exhaustion = 0;
     int damageTimer = 0;
     int syncTimer = 0;
@@ -43,6 +45,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     boolean shouldTickThirst = true;
     boolean exhaustionRecalculate = false;
     boolean init = true;
+    boolean sprintBlocked = true;
+    boolean bothHandsToDrink = true;
 
     public PlayerThirst() {}
 
@@ -71,7 +75,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
     public void setThirst(int value)
     {
-        thirst = Mth.clamp(value, 0, 20);
+        thirst = Mth.clamp(value, 0, MAX_THIRST);
         quenched = Math.min(quenched, thirst);
     }
 
@@ -115,7 +119,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
     public void drink(int thirst, int quenched)
     {
-        int extra_quenched = Math.max(this.thirst + thirst - 20, 0);
+        int extra_quenched = Math.max(this.thirst + thirst - MAX_THIRST, 0);
         if(!CommonConfig.EXTRA_HYDRATION_CONVERT_TO_QUENCHED.get())
             extra_quenched = 0;
         setThirst(this.thirst + thirst);
@@ -149,13 +153,13 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         boolean paused = has(player, nourishment) || has(player, stuffed) || has(player, saturated);
 
         if(CommonConfig.DEPLETES_WHEN_NAUSED.get() && player.hasEffect(MobEffects.CONFUSION))
-            addExhaustion(player, 0.06F);
+            addExhaustion(player, NAUSEA_EXHAUSTION_PER_TICK);
 
         boolean isHunger = player.hasEffect(MobEffects.HUNGER);
         boolean isSitting = player.isPassenger();
 
         if(isHunger){
-            exhaustion -= 0.005F * (float)(player.getEffect(MobEffects.HUNGER).getAmplifier() + 1) *
+            exhaustion -= HUNGER_EXHAUSTION_PER_LEVEL * (float)(player.getEffect(MobEffects.HUNGER).getAmplifier() + 1) *
                     ThirstHelper.getExhaustionBiomeModifier(player) *
                     ThirstHelper.getExhaustionFireProtModifier(player)*
                     ThirstHelper.getExhaustionFireResistanceModifier(player);
@@ -166,9 +170,9 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
             updateExhaustion(player);
         }
 
-        if (exhaustion > 4)
+        if (exhaustion > EXHAUSTION_PER_POINT)
         {
-            exhaustion -= 4;
+            exhaustion -= EXHAUSTION_PER_POINT;
             if (quenched > 0)
             {
                 quenched--;
@@ -180,17 +184,17 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         }
 
         ++syncTimer;
-        if(syncTimer > 10 && !player.level().isClientSide())
+        if(syncTimer > SYNC_INTERVAL_TICKS && !player.level().isClientSide())
         {
             if(difficulty == Difficulty.PEACEFUL && !CommonConfig.THIRST_DEPLETION_IN_PEACEFUL.get()){
-                setThirst(thirst + 1);
+                setThirst(thirst + PEACEFUL_REGEN_AMOUNT);
             }
 
             final float angle = Mth.wrapDegrees(player.getXRot());
-            if (angle <= -80  && player.level().isRainingAt(player.blockPosition().above()) && CommonConfig.CAN_DRINK_RAIN_WATETR.get())
+            if (angle <= RAIN_MAX_PITCH && player.level().isRainingAt(player.blockPosition().above()) && CommonConfig.CAN_DRINK_RAIN_WATETR.get())
             {
-                setThirst(thirst + 1);
-                setQuenched(quenched + 1);
+                setThirst(thirst + RAIN_THIRST);
+                setQuenched(quenched + RAIN_QUENCHED);
             }
 
             updateThirstData(player);
@@ -200,11 +204,11 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         if (thirst <= 0)
         {
             ++damageTimer;
-            if (damageTimer >= 40)
+            if (damageTimer >= DAMAGE_INTERVAL_TICKS)
             {
-                if (player.getHealth() > 10.0F || difficulty == Difficulty.HARD || player.getHealth() > 0 && difficulty == Difficulty.NORMAL)
+                if (player.getHealth() > EASY_MIN_HEALTH || difficulty == Difficulty.HARD || player.getHealth() > NORMAL_MIN_HEALTH && difficulty == Difficulty.NORMAL)
                 {
-                    player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), 1.0F);
+                    player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), DAMAGE_AMOUNT);
                 }
 
                 damageTimer = 0;
@@ -229,7 +233,27 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     public void updateThirstData(Player player)
     {
         if(player instanceof ServerPlayer serverPlayer && !(player instanceof FakePlayer) && serverPlayer.connection != null)
-            PacketDistributor.sendToPlayer(serverPlayer, new PlayerThirstSyncMessage(thirst, quenched, exhaustion,shouldTickThirst));
+            PacketDistributor.sendToPlayer(serverPlayer, new PlayerThirstSyncMessage(thirst, quenched, exhaustion, shouldTickThirst,
+                    CommonConfig.MOVE_SLOW_WHEN_THIRSTY.get(), CommonConfig.DRINK_BOTH_HAND_NEEDED.get()));
+    }
+
+    /**
+     * Server rules received with the last sync; only meaningful on the client.
+     */
+    public void setSyncedRules(boolean sprintBlocked, boolean bothHandsToDrink)
+    {
+        this.sprintBlocked = sprintBlocked;
+        this.bothHandsToDrink = bothHandsToDrink;
+    }
+
+    public boolean isSprintBlocked()
+    {
+        return sprintBlocked;
+    }
+
+    public boolean needsBothHandsToDrink()
+    {
+        return bothHandsToDrink;
     }
 
     @Override
