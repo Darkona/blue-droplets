@@ -23,11 +23,11 @@ public class ContainerConfig {
 
         CONTAINERS = BUILDER.comment("Defineds drinks will be influenced by purity"
                         ,"Format: [\"examplemod:example_item_1\", \"examplemod:example_item_2\"]")
-                .defineList("Containers", Arrays.asList(
+                .<String>defineListAllowEmpty("Containers", Arrays.asList(
                         "collectorsreap:pomegranate_black_tea",
                         "collectorsreap:lime_green_tea",
                         "create:builders_tea"
-                ), it-> it instanceof String);
+                ), () -> "namespace:item", it -> it instanceof String);
 
         BUILDER.pop();
 

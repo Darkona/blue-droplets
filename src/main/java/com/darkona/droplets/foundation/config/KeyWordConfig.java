@@ -16,12 +16,12 @@ public class KeyWordConfig {
     public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.ConfigValue<Boolean> ENABLE_KEYWORD_CONFIG;
 
-    public static final ModConfigSpec.ConfigValue<Number> DEFAULT_DRINK_HYDRATION;
-    public static final ModConfigSpec.ConfigValue<Number> DEFAULT_DRINK_QUENCHNESS;
-    public static final ModConfigSpec.ConfigValue<Number> DEFAULT_SOUP_HYDRATION;
-    public static final ModConfigSpec.ConfigValue<Number> DEFAULT_SOUP_QUENCHNESS;
-    public static final ModConfigSpec.ConfigValue<Number> DEFAULT_FRUIT_HYDRATION;
-    public static final ModConfigSpec.ConfigValue<Number> DEFAULT_FRUIT_QUENCHNESS;
+    public static final ModConfigSpec.ConfigValue<Integer> DEFAULT_DRINK_HYDRATION;
+    public static final ModConfigSpec.ConfigValue<Integer> DEFAULT_DRINK_QUENCHNESS;
+    public static final ModConfigSpec.ConfigValue<Integer> DEFAULT_SOUP_HYDRATION;
+    public static final ModConfigSpec.ConfigValue<Integer> DEFAULT_SOUP_QUENCHNESS;
+    public static final ModConfigSpec.ConfigValue<Integer> DEFAULT_FRUIT_HYDRATION;
+    public static final ModConfigSpec.ConfigValue<Integer> DEFAULT_FRUIT_QUENCHNESS;
     public static final ModConfigSpec.ConfigValue<String> KEYWORD_BLACKLIST;
     public static final ModConfigSpec.ConfigValue<String> KEYWORD_DRINK;
     public static final ModConfigSpec.ConfigValue<String> KEYWORD_SOUP;
@@ -38,17 +38,17 @@ public class KeyWordConfig {
 
         BUILDER.push("Default Hydration values");
         DEFAULT_DRINK_HYDRATION = BUILDER.comment("Default hydration for drinks selected with keywords [0-20]")
-                .define("defaultDrinkHydration", 10);
+                .defineInRange("defaultDrinkHydration", 10, 0, 20);
         DEFAULT_DRINK_QUENCHNESS = BUILDER.comment("Default quenchness for drinks selected with keywords [0-20]")
-                .define("defaultDrinkQuenchness", 14);
+                .defineInRange("defaultDrinkQuenchness", 14, 0, 20);
         DEFAULT_SOUP_HYDRATION = BUILDER.comment("Default hydration for soups selected with keywords [0-20]")
-                .define("defaultSoupHydration", 4);
+                .defineInRange("defaultSoupHydration", 4, 0, 20);
         DEFAULT_SOUP_QUENCHNESS = BUILDER.comment("Default quenchness for soups selected with keywords [0-20]")
-                .define("defaultSoupQuenchness", 5);
+                .defineInRange("defaultSoupQuenchness", 5, 0, 20);
         DEFAULT_FRUIT_HYDRATION = BUILDER.comment("Default hydration for fruits selected with keywords [0-20]")
-                .define("defaultFruitHydration", 2);
+                .defineInRange("defaultFruitHydration", 2, 0, 20);
         DEFAULT_FRUIT_QUENCHNESS = BUILDER.comment("Default quenchness for fruits selected with keywords [0-20]")
-                .define("defaultFruitQuenchness", 3);
+                .defineInRange("defaultFruitQuenchness", 3, 0, 20);
 
         BUILDER.push("Blacklisted Keywords")
                 .comment("The list of items to be ignored if they get selected by mistake by other keywords",

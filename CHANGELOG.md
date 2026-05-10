@@ -49,6 +49,13 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Dispensers with an empty bucket facing a water block that cannot be picked up (for example kelp, or a modded block holding water) now use the vanilla behaviour instead of crashing. `[1.21.1]`
 - A potion item without potion contents no longer crashes the water bottle stack size check. `[1.21.1]`
 
+### Config
+
+- Drink and food entries must be `["namespace:item" or "#namespace:tag", thirst, quenched]` with thirst 0-20 and quenched 0 or more; anything else is skipped with a warning instead of crashing or hanging the game (thirst#178). NeoForge removes invalid entries from the file. `[1.21.1]`
+- Numeric options now have ranges: purity values 0-3, percentages 0-100, hand-drinking and keyword values 0-20, water bottle stack size 1-99, `thirstDepletionModifier` 0-10, `sandFilterMbPerTick` 1-1000, `mountainsY`/`cavesY` -2048 to 2048. Out-of-range values are reset to the default with a warning. `[1.21.1]`
+- The drink, food, blacklist and container lists can now be empty; before, an empty list was replaced by the defaults. `[1.21.1]`
+- Removed the duplicate `collectorsreap:pink_limeade` default entry; its value stays 8/13. `[1.21.1]`
+
 ### API
 
 - All classes moved from `dev.ghen.thirst` to `com.darkona.droplets` (main class `Thirst` is now `BlueDroplets`) and there is no compatibility shim: addons that call Thirst Was Taken classes directly, such as Green Feathers, need a version built for Blue Droplets. A stable public API is planned. `[1.21.1]`

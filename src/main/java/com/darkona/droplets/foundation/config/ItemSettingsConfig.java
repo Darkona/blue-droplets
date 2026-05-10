@@ -2,19 +2,25 @@ package com.darkona.droplets.foundation.config;
 
 
 import com.darkona.droplets.BlueDroplets;
+import com.mojang.logging.LogUtils;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.slf4j.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ItemSettingsConfig
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Set<String> REPORTED = ConcurrentHashMap.newKeySet();
     private static final ModConfigSpec SPEC;
     public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -28,7 +34,7 @@ public class ItemSettingsConfig
                 .comment("Defines items that will recover thirst when drunk",
                         "Format: [[\"item-id-1\", hydration-amount, quenching-amount], [\"item-id-2\", hydration-amount, quenching-amount], ...etc]");
         DRINKS = BUILDER
-                .defineList("drinks", Arrays.asList
+                .<List<?>>defineListAllowEmpty("drinks", Arrays.asList
                                 (
                                         Arrays.asList("minecraft:potion", 6, 8),
                                         Arrays.asList("bluedroplets:terracotta_water_bowl", 4, 5),
@@ -56,7 +62,6 @@ public class ItemSettingsConfig
                                         Arrays.asList("brewinandchewin:kombucha", 14, 22),
                                         Arrays.asList("brewinandchewin:red_rum", 14, 22),
                                         Arrays.asList("brewinandchewin:steel_toe_stout", 14, 22),
-                                        Arrays.asList("collectorsreap:pink_limeade",8,10),
                                         Arrays.asList("collectorsreap:berry_limeade",8,13),
                                         Arrays.asList("collectorsreap:limeade",8,13),
                                         Arrays.asList("collectorsreap:pink_limeade",8,13),
@@ -64,7 +69,7 @@ public class ItemSettingsConfig
                                         Arrays.asList("collectorsreap:lime_green_tea",10,14),
                                         Arrays.asList("supernatural:blood_bottle",9,12)
                                 ),
-                        it -> it instanceof List && ((List<?>) it).getFirst() instanceof String && ((List<?>) it).get(1) instanceof Number);
+                        ItemSettingsConfig::newEntry, ItemSettingsConfig::checkEntry);
 
         BUILDER.pop();
 
@@ -72,7 +77,7 @@ public class ItemSettingsConfig
                 .comment("Defines items that will recover thirst when eaten",
                         "Format: [[\"item-id-1\", hydration-amount, quenching-amount], [\"item-id-2\", hydration-amount, quenching-amount], ...etc]");
         FOODS = BUILDER
-                .defineList("foods", Arrays.asList
+                .<List<?>>defineListAllowEmpty("foods", Arrays.asList
                                 (
                                         Arrays.asList("minecraft:apple", 2, 3),
                                         Arrays.asList("minecraft:golden_apple", 2, 3),
@@ -104,7 +109,7 @@ public class ItemSettingsConfig
                                         Arrays.asList("collectorsreap:portobello_rice_soup",6,8),
                                         Arrays.asList("collectorsreap:lime_popsicle",7,9)
                                 ),
-                        it -> it instanceof List && ((List<?>) it).getFirst() instanceof String && ((List<?>) it).get(1) instanceof Number);
+                        ItemSettingsConfig::newEntry, ItemSettingsConfig::checkEntry);
 
         BUILDER.pop();
 
@@ -113,11 +118,11 @@ public class ItemSettingsConfig
         ITEMS_BLACKLIST = BUILDER.comment("A mod may have added thirst compatibility to an item via code. If you want to edit the thirst values",
                 "of that item, add an entry in one of the first two lists. If instead you want to remove thirst support for that item, add an entry in this list",
                 "Format: [\"examplemod:example_item_1\", \"examplemod:example_item_2\"]")
-                .defineList("itemsBlacklist", Arrays.asList(
+                .<String>defineListAllowEmpty("itemsBlacklist", Arrays.asList(
                                         "examplemod:example_item_1",
                                         "examplemod:example_item_2"
                         ),
-                        it -> it instanceof String);
+                        () -> "namespace:item", it -> it instanceof String);
 
 
 
@@ -125,12 +130,27 @@ public class ItemSettingsConfig
     }
 
     /**
-     * {@code ["namespace:item" or "#namespace:tag", thirst, quenched]}
+     * {@code ["namespace:item" or "#namespace:tag", thirst 0-20, quenched >= 0]}
      */
     public static boolean isValidEntry(Object entry)
     {
-        return entry instanceof List<?> list && list.size() == 3
-                && list.get(0) instanceof String && list.get(1) instanceof Number && list.get(2) instanceof Number;
+        return entry instanceof List<?> list && list.size() == 3 && list.get(0) instanceof String
+                && list.get(1) instanceof Number thirst && thirst.doubleValue() >= 0 && thirst.doubleValue() <= 20
+                && list.get(2) instanceof Number quenched && quenched.doubleValue() >= 0;
+    }
+
+    private static boolean checkEntry(Object entry)
+    {
+        if (isValidEntry(entry))
+            return true;
+        if (REPORTED.add(String.valueOf(entry)))
+            LOGGER.warn("Skipping invalid entry {} in item_settings.toml: expected [\"namespace:item\" or \"#namespace:tag\", thirst 0-20, quenched 0 or more]", entry);
+        return false;
+    }
+
+    private static List<?> newEntry()
+    {
+        return Arrays.asList("namespace:item", 1, 1);
     }
 
     public static void setup(ModContainer modContainer)
