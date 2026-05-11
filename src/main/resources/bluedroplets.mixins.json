@@ -5,8 +5,6 @@
   "refmap": "bluedroplets.refmap.json",
   "mixins": [
     "MixinBootstrap",
-    "MixinBottleItem",
-    "MixinBucketItem",
     "MixinCampfireBlockEntity",
     "MixinFluidBucketWrapper",
     "MixinFluidUtil",

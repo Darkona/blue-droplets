@@ -2,7 +2,7 @@ package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.network.message.DrinkByHandMessage;
-import com.darkona.droplets.foundation.util.MathHelper;
+import com.darkona.droplets.content.purity.WaterPurity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +26,7 @@ public class DrinkByHandClient
 
         Player player = mc.player;
         Level level = mc.level;
-        BlockPos blockPos = MathHelper.getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY).getBlockPos();
+        BlockPos blockPos = WaterPurity.pickFluid(player, ClipContext.Fluid.ANY).getBlockPos();
         boolean HandAvailable;
 
         if (level.getFluidState(blockPos).is(FluidTags.WATER) && player.isCrouching() && !player.isInvulnerable()) {

@@ -5,7 +5,14 @@ import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.darkona.droplets.foundation.config.CommonConfig;
-import com.darkona.droplets.foundation.util.MathHelper;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
@@ -19,7 +26,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
@@ -227,49 +233,67 @@ public class WaterPurity
     }
 
     /**
-     * Gives the ability to certain water containers to pick up water from
-     * non-source blocks
+     * Fills empty buckets, glass bottles and terracotta bowls from water in the world, with the purity of that water.
+     * Replaces vanilla {@code use} for those cases; dragon breath and everything else is left to vanilla.
      */
     @SubscribeEvent
-    static void harvestRunningWater(PlayerInteractEvent.RightClickItem event)
+    static void fillWithPurity(PlayerInteractEvent.RightClickItem event)
     {
         ItemStack item = event.getItemStack();
-
-        if (!canHarvestRunningWater(item))
+        boolean bucket = item.is(Items.BUCKET);
+        boolean bottle = item.is(Items.GLASS_BOTTLE);
+        if (!bucket && !bottle && !item.is(ItemInit.TERRACOTTA_BOWL.get()))
             return;
 
         Player player = event.getEntity();
-        Level level = player.level();
-        BlockPos blockPos = MathHelper.getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY).getBlockPos();
-
-        if (!level.getFluidState(blockPos).is(FluidTags.WATER))
+        Level level = event.getLevel();
+        if (bottle && !level.getEntitiesOfClass(AreaEffectCloud.class, player.getBoundingBox().inflate(2.0),
+                cloud -> cloud.isAlive() && cloud.getOwner() instanceof EnderDragon).isEmpty())
             return;
 
-        SoundEvent sound;
-        ItemStack filledItem;
+        BlockHitResult hit = pickFluid(player, bucket ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.ANY);
+        if (hit.getType() != HitResult.Type.BLOCK)
+            return;
+        BlockPos pos = hit.getBlockPos();
+        BlockState state = level.getBlockState(pos);
+        if (!state.getFluidState().is(FluidTags.WATER) || !level.mayInteract(player, pos))
+            return;
 
-        if(item.getItem() == Items.GLASS_BOTTLE && !level.getFluidState(blockPos).isSource())
+        int purity = getBlockPurity(level, pos);
+        ItemStack filled;
+        if (bucket)
         {
-            sound = SoundEvents.BOTTLE_FILL;
-            filledItem = PotionContents.createItemStack(Items.POTION,Potions.WATER);
-        }
-        else if(item.getItem() == ItemInit.TERRACOTTA_BOWL.get())
-        {
-            sound = SoundEvents.BUCKET_FILL;
-            filledItem = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get());
+            if (!(state.getBlock() instanceof BucketPickup pickup) || !player.mayUseItemAt(pos.relative(hit.getDirection()), hit.getDirection(), item))
+                return;
+            filled = pickup.pickupBlock(player, level, pos, state);
+            if (filled.isEmpty())
+                return;
+            addPurity(filled, purity);
+            pickup.getPickupSound(state).ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
+            if (player instanceof ServerPlayer serverPlayer)
+                CriteriaTriggers.FILLED_BUCKET.trigger(serverPlayer, filled);
         }
         else
-            return;
+        {
+            filled = addPurity(bottle ? PotionContents.createItemStack(Items.POTION, Potions.WATER) : new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), purity);
+            level.playSound(player, player.getX(), player.getY(), player.getZ(), bottle ? SoundEvents.BOTTLE_FILL : SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
+        }
 
-        level.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
-        level.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
-
-        addPurity(filledItem, blockPos, level);
-
-        ItemStack result = ItemUtils.createFilledResult(item, player, filledItem);
-
-        player.setItemInHand(event.getHand(), result);
+        level.gameEvent(player, GameEvent.FLUID_PICKUP, pos);
+        player.awardStat(Stats.ITEM_USED.get(item.getItem()));
+        player.setItemInHand(event.getHand(), ItemUtils.createFilledResult(item, player, filled));
+        event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide()));
         event.setCanceled(true);
+    }
+
+    /**
+     * Same ray as vanilla {@code Item.getPlayerPOVHitResult}: from the eyes, along the view, up to the block interaction range.
+     */
+    public static BlockHitResult pickFluid(Player player, ClipContext.Fluid fluid)
+    {
+        Vec3 eye = player.getEyePosition();
+        Vec3 end = eye.add(player.getViewVector(1.0F).scale(player.blockInteractionRange()));
+        return player.level().clip(new ClipContext(eye, end, ClipContext.Block.OUTLINE, fluid, player));
     }
 
     /**
@@ -329,15 +353,6 @@ public class WaterPurity
     static boolean isFillableBlock(BlockState blockState)
     {
         return isFillableBlock(blockState.getBlock());
-    }
-
-    static boolean canHarvestRunningWater(ItemStack item)
-    {
-        for (ContainerWithPurity waterContainer : waterContainers)
-            if (waterContainer.equalsEmpty(item) && waterContainer.canHarvestRunningWater())
-                return true;
-
-        return false;
     }
 
     /**
