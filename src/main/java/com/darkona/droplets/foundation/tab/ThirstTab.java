@@ -16,6 +16,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class ThirstTab
 {
@@ -35,23 +36,19 @@ public class ThirstTab
     }
 
     public static Collection<ItemStack> DisplayItems() {
-        Collection<ItemStack> list = new ArrayList<>();
+        List<ItemStack> list = new ArrayList<>();
 
-        list.add(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 0));
-        list.add(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 1));
-        list.add(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 2));
-        list.add(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 3));
-        list.add(WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION,Potions.WATER), 0));
-        list.add(WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION,Potions.WATER), 1));
-        list.add(WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION,Potions.WATER), 2));
-        list.add(WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION,Potions.WATER), 3));
+        addPurities(list, new ItemStack(Items.WATER_BUCKET));
+        addPurities(list, PotionContents.createItemStack(Items.POTION, Potions.WATER));
         list.add(ItemInit.CLAY_BOWL.get().getDefaultInstance());
         list.add(ItemInit.TERRACOTTA_BOWL.get().getDefaultInstance());
-        list.add(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), 0));
-        list.add(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), 1));
-        list.add(WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), 2));
-        list.add(ItemInit.TERRACOTTA_WATER_BOWL.get().getDefaultInstance());
+        addPurities(list, new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()));
 
         return list;
+    }
+
+    private static void addPurities(List<ItemStack> list, ItemStack stack) {
+        for (int purity = WaterPurity.MIN_PURITY; purity <= WaterPurity.MAX_PURITY; purity++)
+            list.add(WaterPurity.addPurity(stack.copy(), purity));
     }
 }
