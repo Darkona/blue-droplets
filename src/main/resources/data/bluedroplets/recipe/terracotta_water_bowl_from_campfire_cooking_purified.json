@@ -1,12 +1,18 @@
 {
   "type": "minecraft:campfire_cooking",
-  "ingredient":[
+  "ingredient": [
     {
       "type": "neoforge:components",
       "items": "bluedroplets:terracotta_water_bowl",
       "components": {
         "bluedroplets:purity": 2
       }
+    },
+    {
+      "type": "neoforge:components",
+      "items": "bluedroplets:terracotta_water_bowl",
+      "components": {},
+      "strict": true
     }
   ],
   "result": {

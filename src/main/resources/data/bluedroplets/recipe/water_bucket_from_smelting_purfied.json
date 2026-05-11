@@ -1,6 +1,6 @@
 {
   "type": "minecraft:smelting",
-  "ingredient":[
+  "ingredient": [
     {
       "type": "neoforge:components",
       "items": "minecraft:water_bucket",
@@ -14,6 +14,12 @@
       "components": {
         "bluedroplets:purity": 2
       }
+    },
+    {
+      "type": "neoforge:components",
+      "items": "minecraft:water_bucket",
+      "components": {},
+      "strict": true
     }
   ],
   "result": {

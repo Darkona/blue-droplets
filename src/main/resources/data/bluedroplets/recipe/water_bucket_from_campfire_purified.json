@@ -1,12 +1,18 @@
 {
   "type": "minecraft:campfire_cooking",
-  "ingredient":[
+  "ingredient": [
     {
       "type": "neoforge:components",
       "items": "minecraft:water_bucket",
       "components": {
         "bluedroplets:purity": 2
       }
+    },
+    {
+      "type": "neoforge:components",
+      "items": "minecraft:water_bucket",
+      "components": {},
+      "strict": true
     }
   ],
   "result": {

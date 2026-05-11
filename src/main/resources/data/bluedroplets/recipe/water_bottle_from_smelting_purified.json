@@ -20,10 +20,20 @@
           "potion": "minecraft:water"
         }
       }
+    },
+    {
+      "type": "neoforge:components",
+      "items": "minecraft:potion",
+      "components": {
+        "potion_contents": {
+          "potion": "minecraft:water"
+        }
+      },
+      "strict": true
     }
   ],
   "result": {
-    "id":"minecraft:potion",
+    "id": "minecraft:potion",
     "count": 1,
     "components": {
       "bluedroplets:purity": 3,

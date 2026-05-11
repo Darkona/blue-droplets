@@ -264,7 +264,7 @@ public class WaterPurity
         level.playSound(player, player.getX(), player.getY(), player.getZ(), sound, SoundSource.NEUTRAL, 1.0F, 1.0F);
         level.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
 
-        filledItem.set(ThirstComponent.PURITY,getBlockPurity(level, blockPos));
+        addPurity(filledItem, blockPos, level);
 
         ItemStack result = ItemUtils.createFilledResult(item, player, filledItem);
 
@@ -408,30 +408,27 @@ public class WaterPurity
      */
     public static ItemStack addPurity(ItemStack item, BlockPos pos, Level level)
     {
-        item.set(ThirstComponent.PURITY,getBlockPurity(level, pos));
-        return item;
+        return addPurity(item, getBlockPurity(level, pos));
     }
 
 
     /**
-     * Adds the "Purity" tag to an item
+     * Sets the purity component on an item; it is always stored, also for the default purity.
+     * Invalid values are stored as the default purity.
      */
     public static ItemStack addPurity(ItemStack item, int purity)
     {
-        item.set(ThirstComponent.PURITY,purity);
-        if(purity==CommonConfig.DEFAULT_PURITY.get())
-            item.remove(ThirstComponent.PURITY);
+        item.set(ThirstComponent.PURITY, sanitizePurity(purity));
         return item;
     }
 
     /**
-     * Adds the "Purity" tag to a fluid
+     * Sets the purity component on a fluid; it is always stored, also for the default purity.
+     * Invalid values are stored as the default purity.
      */
     public static FluidStack addPurity(FluidStack fluid, int purity)
     {
-        fluid.set(ThirstComponent.PURITY,purity);
-        if(purity==CommonConfig.DEFAULT_PURITY.get())
-            fluid.remove(ThirstComponent.PURITY);
+        fluid.set(ThirstComponent.PURITY, sanitizePurity(purity));
         return fluid;
     }
 

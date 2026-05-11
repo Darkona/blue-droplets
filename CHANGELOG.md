@@ -52,6 +52,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Only the Fire Protection enchantment on armor slows thirst loss; generic Protection no longer counts (thirst#195, thirst#219). The reduction per level and the 12-level cap are unchanged. `[1.21.1]`
 - The "no sprinting when thirsty" rule now follows the server's `moveSlowWhenThirsty`, sent to the client with the thirst data; before, each client read its own config, so a client could turn it off. Sprinting also checks thirst and food separately, so exactly 6 food no longer lets you sprint when thirst is high. `[1.21.1]`
 - The server now also checks that the hands are empty before drinking by hand. `[1.21.1]`
+- Water purity is now always stored on items and fluids, also for the default purity ("acceptable"). Before, purity 2 was removed, so the "purified" campfire and furnace recipes for buckets, bottles and terracotta bowls never matched water filled from an acceptable cauldron or tank (thirst#259). Those recipes now also accept water with no purity stored (old saves, vanilla sources), which reads as the default purity. `[1.21.1]`
 
 ### Config
 
