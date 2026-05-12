@@ -11,18 +11,15 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 @EventBusSubscriber
 public class ThirstModPacketHandler
 {
-    private static final String PROTOCOL_VERSION = "0.1.4";
+    private static final String PROTOCOL_VERSION = "0.1.5";
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
-        registrar.playBidirectional(
+        registrar.playToServer(
                 DrinkByHandMessage.TYPE,
                 DrinkByHandMessage.STREAM_CODEC,
-                new DirectionalPayloadHandler<>(
-                        DrinkByHandMessage::clientHandle,
-                        DrinkByHandMessage::serverHandle
-                )
+                DrinkByHandMessage::serverHandle
         );
         registrar.playBidirectional(
                 PlayerThirstSyncMessage.TYPE,

@@ -1,60 +1,61 @@
 package com.darkona.droplets.foundation.network.message;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
+import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.CommonConfig;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
-import com.darkona.droplets.content.purity.WaterPurity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
-public record DrinkByHandMessage(Vector3f pos) implements CustomPacketPayload
+/**
+ * "I want to drink by hand": carries no data. The server checks config, hands, cooldown and its own raycast.
+ */
+public record DrinkByHandMessage() implements CustomPacketPayload
 {
-
+    public static final DrinkByHandMessage INSTANCE = new DrinkByHandMessage();
     public static final CustomPacketPayload.Type<DrinkByHandMessage> TYPE = new Type<>(BlueDroplets.asResource("drinkbyhand"));
-
-    public static final StreamCodec<ByteBuf, DrinkByHandMessage> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VECTOR3F,
-            DrinkByHandMessage::pos,
-            DrinkByHandMessage::new
-    );
-
-    public static void clientHandle(final DrinkByHandMessage data, final IPayloadContext context){
-
-    }
-
+    public static final StreamCodec<ByteBuf, DrinkByHandMessage> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     public static void serverHandle(final DrinkByHandMessage data, final IPayloadContext context) {
-            context.enqueueWork(() ->
-            {
-                Player player = context.player();
-                Level level = player.level();
-                if(player.getData(ModAttachment.PLAYER_THIRST).getThirst() >= ThirstConstants.MAX_THIRST)
-                    return;
+        context.enqueueWork(() ->
+        {
+            if (!(context.player() instanceof ServerPlayer player) || !CommonConfig.CAN_DRINK_BY_HAND.get() || !player.isShiftKeyDown())
+                return;
 
-                if (SupernaturalCompat.isVampire(player)) {
-                    return;
-                }
+            PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+            int tick = player.server.getTickCount();
+            if (thirst.getThirst() >= ThirstConstants.MAX_THIRST || !thirst.canDrinkByHand(tick) || SupernaturalCompat.isVampire(player))
+                return;
 
-                if (!player.getMainHandItem().isEmpty() || CommonConfig.DRINK_BOTH_HAND_NEEDED.get() && !player.getOffhandItem().isEmpty())
-                    return;
+            if (!player.getMainHandItem().isEmpty() || CommonConfig.DRINK_BOTH_HAND_NEEDED.get() && !player.getOffhandItem().isEmpty())
+                return;
 
-                int purity = WaterPurity.getBlockPurity(level, new BlockPos((int) data.pos.x, (int) data.pos.y, (int) data.pos.z));
-                level.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.NEUTRAL, 1.0F, 1.0F);
-                if(WaterPurity.givePurityEffects(player, purity))
-                        player.getData(ModAttachment.PLAYER_THIRST).drink(CommonConfig.HAND_DRINKING_HYDRATION.get().intValue(), CommonConfig.HAND_DRINKING_QUENCHED.get().intValue());
-            });
+            ServerLevel level = player.serverLevel();
+            BlockHitResult hit = WaterPurity.pickFluid(player, ClipContext.Fluid.ANY);
+            BlockPos pos = hit.getBlockPos();
+            if (hit.getType() != HitResult.Type.BLOCK || !level.getFluidState(pos).is(FluidTags.WATER) || !level.mayInteract(player, pos))
+                return;
+
+            thirst.startHandDrinkCooldown(tick, CommonConfig.HAND_DRINKING_COOLDOWN.get());
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
+            if (WaterPurity.givePurityEffects(player, WaterPurity.getBlockPurity(level, pos)))
+                thirst.drink(CommonConfig.HAND_DRINKING_HYDRATION.get(), CommonConfig.HAND_DRINKING_QUENCHED.get());
+        });
     }
 
     @Override

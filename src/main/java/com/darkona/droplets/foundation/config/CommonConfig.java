@@ -34,6 +34,7 @@ public class CommonConfig
 
     public static final ModConfigSpec.ConfigValue<Integer> HAND_DRINKING_HYDRATION;
     public static final ModConfigSpec.ConfigValue<Integer> HAND_DRINKING_QUENCHED;
+    public static final ModConfigSpec.IntValue HAND_DRINKING_COOLDOWN;
 
     public static final ModConfigSpec.ConfigValue<Integer> MOUNTAINS_Y;
     public static final ModConfigSpec.ConfigValue<Integer> CAVES_Y;
@@ -81,6 +82,7 @@ public class CommonConfig
         DRINK_BOTH_HAND_NEEDED = BUILDER.comment("Whether players need both hands empty to drink water by hand (was in client.toml)").define("DrinkBothHandNeeded", true);
         HAND_DRINKING_HYDRATION = BUILDER.comment("How much the player is hydrated when drinking by hand").defineInRange("handDrinkingHydration", 3, 0, 20);
         HAND_DRINKING_QUENCHED = BUILDER.comment("How much the player thirst is quenched when drinking by hand").defineInRange("handDrinkingQuenched", 2, 0, 20);
+        HAND_DRINKING_COOLDOWN = BUILDER.comment("Minimum ticks between two sips when drinking by hand (20 ticks = 1 second)").defineInRange("handDrinkingCooldown", 10, 0, 1200);
         EXTRA_HYDRATION_CONVERT_TO_QUENCHED =BUILDER.comment("Whether extra hydration will convert to quenched").define("ExtraHydrationConvertToQuenched",true);
         BUILDER.pop();
 

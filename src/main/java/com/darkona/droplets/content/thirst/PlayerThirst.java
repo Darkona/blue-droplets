@@ -47,6 +47,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     boolean init = true;
     boolean sprintBlocked = true;
     boolean bothHandsToDrink = true;
+    int handDrinkReadyTick = 0;
 
     public PlayerThirst() {}
 
@@ -254,6 +255,16 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     public boolean needsBothHandsToDrink()
     {
         return bothHandsToDrink;
+    }
+
+    public boolean canDrinkByHand(int serverTick)
+    {
+        return serverTick >= handDrinkReadyTick;
+    }
+
+    public void startHandDrinkCooldown(int serverTick, int cooldownTicks)
+    {
+        handDrinkReadyTick = serverTick + cooldownTicks;
     }
 
     @Override

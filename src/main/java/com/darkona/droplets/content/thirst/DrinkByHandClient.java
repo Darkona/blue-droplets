@@ -1,45 +1,30 @@
 package com.darkona.droplets.content.thirst;
 
+import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.network.message.DrinkByHandMessage;
-import com.darkona.droplets.content.purity.WaterPurity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.joml.Vector3f;
 
 @OnlyIn(Dist.CLIENT)
 public class DrinkByHandClient
 {
+    /**
+     * Only a hint to avoid useless packets; the server repeats every check and plays the sound.
+     */
     public static void drinkByHand()
     {
-        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || !player.isCrouching() || !player.getMainHandItem().isEmpty()
+                || player.getData(ModAttachment.PLAYER_THIRST).needsBothHandsToDrink() && !player.getOffhandItem().isEmpty())
+            return;
 
-        Player player = mc.player;
-        Level level = mc.level;
-        BlockPos blockPos = WaterPurity.pickFluid(player, ClipContext.Fluid.ANY).getBlockPos();
-        boolean HandAvailable;
-
-        if (level.getFluidState(blockPos).is(FluidTags.WATER) && player.isCrouching() && !player.isInvulnerable()) {
-
-            if(!player.getData(ModAttachment.PLAYER_THIRST).needsBothHandsToDrink()){
-                HandAvailable = player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty();
-            }else {
-                HandAvailable = player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.OFF_HAND).isEmpty();
-            }
-            if(HandAvailable){
-                level.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.NEUTRAL, 1.0F, 1.0F);
-                PacketDistributor.sendToServer(new DrinkByHandMessage(new Vector3f(blockPos.getX(),blockPos.getY(),blockPos.getZ())));
-            }
-        }
+        if (player.level().getFluidState(WaterPurity.pickFluid(player, ClipContext.Fluid.ANY).getBlockPos()).is(FluidTags.WATER))
+            PacketDistributor.sendToServer(DrinkByHandMessage.INSTANCE);
     }
 }
