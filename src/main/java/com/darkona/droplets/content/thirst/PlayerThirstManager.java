@@ -4,12 +4,9 @@ import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
-import com.darkona.droplets.foundation.common.item.DrinkableItem;
 import com.darkona.droplets.foundation.config.CommonConfig;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
@@ -33,21 +30,19 @@ public class PlayerThirstManager {
             DrinkByHandClient.drinkByHand();
     }
 
+    /**
+     * Single place for purity effects: water containers, and drinks that are not food, hydrate here, once per use,
+     * on the server. Food hydrates in {@code Player#eat} (MixinPlayer).
+     */
     @SubscribeEvent
     public static void drink(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity() instanceof Player && ThirstHelper.itemRestoresThirst(event.getItem())) {
-            ItemStack item = event.getItem();
-            if (WaterPurity.givePurityEffects((Player) event.getEntity(), item)){
-                if(event.getItem().getItem() instanceof PotionItem)
-                    return;
-                if(event.getItem().getFoodProperties(null) != null)
-                    return;
-                if(event.getItem().getItem() instanceof DrinkableItem)
-                    return;
-                event.getEntity().getData(ModAttachment.PLAYER_THIRST).drink(ThirstHelper.getThirst(item), ThirstHelper.getQuenched(item));
-            }
-
-        }
+        if (!(event.getEntity() instanceof ServerPlayer player))
+            return;
+        ItemStack item = event.getItem();
+        if (!ThirstHelper.itemRestoresThirst(item))
+            return;
+        if ((WaterPurity.isWaterFilledContainer(item) || item.getFoodProperties(player) == null) && WaterPurity.givePurityEffects(player, item))
+            PlayerThirst.drink(item, player);
     }
 
     @SubscribeEvent

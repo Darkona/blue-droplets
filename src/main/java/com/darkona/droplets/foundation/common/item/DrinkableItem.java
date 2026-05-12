@@ -1,6 +1,5 @@
 package com.darkona.droplets.foundation.common.item;
 
-import com.darkona.droplets.content.thirst.PlayerThirst;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -44,11 +43,6 @@ public class DrinkableItem extends Item
         {
             CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer)player, item);
         }
-        if(player != null)
-        {
-            PlayerThirst.drink(item, player);
-        }
-
         if (player != null)
         {
             player.awardStat(Stats.ITEM_USED.get(this));

@@ -472,14 +472,12 @@ public class WaterPurity
     }
 
     /**
-     * Gives the player effects based on the purity of the water just drunk
+     * Gives the player effects based on the purity of the water just drunk (missing purity reads as the default)
      * and returns whether thirst and quenched should be added or not
      */
     public static boolean givePurityEffects(Player player, ItemStack item)
     {
-        if(!isWaterFilledContainer(item)) return true;
-        if(!hasPurity(item)) return true;
-        return givePurityEffects(player, getPurity(item));
+        return !isWaterFilledContainer(item) || givePurityEffects(player, getPurity(item));
     }
 
     /**

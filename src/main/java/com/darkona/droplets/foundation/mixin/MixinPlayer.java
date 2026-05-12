@@ -1,5 +1,6 @@
 package com.darkona.droplets.foundation.mixin;
 
+import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -16,8 +17,8 @@ public abstract class MixinPlayer
     @Inject(method = "eat", at = @At("HEAD"))
     public void onEatDrink(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir)
     {
-        Player player = (Player) ((Object) this);
-        PlayerThirst.drink(food, player);
+        if (!WaterPurity.isWaterFilledContainer(food))
+            PlayerThirst.drink(food, (Player) (Object) this);
     }
 
 }

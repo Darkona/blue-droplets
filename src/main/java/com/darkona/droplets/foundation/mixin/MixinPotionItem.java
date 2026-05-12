@@ -1,19 +1,16 @@
 package com.darkona.droplets.foundation.mixin;
 
-import com.darkona.droplets.content.purity.WaterPurity;
-import com.darkona.droplets.content.thirst.PlayerThirst;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/**
+ * Stackable water bottles: vanilla only adds the empty bottle to the inventory and loses it when full; drop it instead.
+ * Purity effects and hydration are in {@code PlayerThirstManager#drink} (LivingEntityUseItemEvent.Finish).
+ */
 @Mixin(PotionItem.class)
 public class MixinPotionItem {
 
@@ -23,18 +20,5 @@ public class MixinPotionItem {
             instance.player.drop(stack, false);
         }
         return true;
-    }
-
-    @Inject(method = "finishUsingItem", at = @At("RETURN"))
-    public void onFinishUsingItem(ItemStack item, Level level, LivingEntity livingEntity, CallbackInfoReturnable<ItemStack> cir)
-    {
-        Player player = livingEntity instanceof Player ? (Player)livingEntity: null;
-        if(player != null)
-        {
-            if (WaterPurity.givePurityEffects((Player) livingEntity, item)){
-                PlayerThirst.drink(item, player);
-            }
-
-        }
     }
 }
