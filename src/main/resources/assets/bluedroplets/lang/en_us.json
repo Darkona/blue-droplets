@@ -10,6 +10,7 @@
   "bluedroplets.purity.slightly_dirty": "Slightly Dirty",
   "bluedroplets.purity.acceptable": "Acceptable",
   "bluedroplets.purity.purified": "Purified",
+  "config.jade.plugin_bluedroplets.purity": "Water purity",
   "block.bluedroplets.sand_filter": "Sand Filter",
 
   "bluedroplets.ponder.sand_filter.header": "Purifying Water with a Sand Filter",

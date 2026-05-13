@@ -10,8 +10,7 @@
     "create.MixinFluidDrainingBehaviour",
     "create.MixinGenericItemEmptying",
     "create.MixinGenericItemFilling",
-    "create.MixinIHaveGoggleInformation",
-    "jade.MixinFluidView"
+    "create.MixinIHaveGoggleInformation"
   ],
   "injectors": {
     "defaultRequire": 1
