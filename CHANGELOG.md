@@ -31,6 +31,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Create Sand Filter: water is no longer destroyed when the purified tank is full or holds water of another purity; the filter now only moves what the lower tank accepts and waits otherwise (thirst#192, thirst#205). Purity is never mixed. `[1.21.1]`
 - Create Sand Filter: the upper (dirty) tank is now saved with the world and shown with goggles; before, both tanks shared one behaviour slot, so the dirty tank was lost on reload. Breaking the filter or picking it up with a wrench keeps both tanks in the item, and placing it restores them. `[1.21.1]`
 - Create goggles: only water and fluids that carry purity show a purity; the purity word uses the same colours as item tooltips. `[1.21.1]`
+- Create basins: fluids made from water with a purity now take that purity only when the recipe output has none, and only in the basin that crafts them; before, the recipe itself was changed, so the purity leaked to every other basin, could become invalid, and was also applied when Create only checked recipes. Which output fluids carry purity is now the fluid tag `bluedroplets:carries_purity` (water and Create's tea by default) instead of any fluid whose name contains "tea" (which also matched "steam"). `[1.21.1]`
 
 ### Bug fixes
 

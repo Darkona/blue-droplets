@@ -1,63 +1,66 @@
 package com.darkona.droplets.foundation.mixin.create;
 
+import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.content.purity.WaterPurity;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import com.darkona.droplets.content.purity.WaterPurity;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
+/**
+ * Basin outputs in {@code bluedroplets:carries_purity} without their own purity take the purity of the input water.
+ * Works on copies in the basin's output list, never on the recipe's shared stacks, and only in the simulated pass
+ * that builds that list (the input is not drained yet); skipped when Create only tests the recipe.
+ */
 @Mixin(BasinRecipe.class)
 public class MixinBasinRecipe {
 
-    @Inject(
-            method = {"apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z"},
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/util/List;addAll(Ljava/util/Collection;)Z",
-                    ordinal = 0
-            ),
+    @Unique
+    private static final TagKey<Fluid> CARRIES_PURITY = TagKey.create(Registries.FLUID, BlueDroplets.asResource("carries_purity"));
+
+    @WrapOperation(
+            method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z",
+            at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;acceptOutputs(Ljava/util/List;Ljava/util/List;Z)Z"),
             remap = false)
-    private static void setPurity(BasinBlockEntity basin, Recipe<?> recipe, boolean test, CallbackInfoReturnable<Boolean> cir)
+    private static boolean bluedroplets$carryPurity(BasinBlockEntity basin, List<ItemStack> items, List<FluidStack> fluids, boolean simulate,
+                                                    Operation<Boolean> original, @Local(argsOnly = true) boolean test)
     {
-        int purity = getWaterPurity(basin);
-        NonNullList<FluidStack> outputFluids = ((BasinRecipe) recipe).getFluidResults();
-
-        Pattern pattern = Pattern.compile("tea", Pattern.CASE_INSENSITIVE);
-
-        outputFluids.forEach(fluid ->
+        if (simulate && !test && !fluids.isEmpty())
         {
-            Matcher matcher =  pattern.matcher(fluid.getDescriptionId());
-            if(matcher.find()) {
-                WaterPurity.addPurity(fluid, Math.min(purity, WaterPurity.MAX_PURITY));
-            }
-        });
+            int purity = bluedroplets$inputPurity(basin);
+            if (purity >= WaterPurity.MIN_PURITY)
+                for (int i = 0; i < fluids.size(); i++)
+                {
+                    FluidStack fluid = fluids.get(i);
+                    if (fluid.is(CARRIES_PURITY) && !WaterPurity.hasPurity(fluid))
+                        fluids.set(i, WaterPurity.addPurity(fluid.copy(), purity));
+                }
+        }
+        return original.call(basin, items, fluids, simulate);
     }
 
-    private static int getWaterPurity(BasinBlockEntity basin)
+    @Unique
+    private static int bluedroplets$inputPurity(BasinBlockEntity basin)
     {
-        IFluidHandler availableFluids = basin.inputTank.getCapability();
-
-
-        if(availableFluids == null)
-            return WaterPurity.MAX_PURITY;
-
-        for (int tank = 0; tank < availableFluids.getTanks(); tank++)
+        IFluidHandler input = basin.inputTank.getCapability();
+        for (int tank = 0; tank < input.getTanks(); tank++)
         {
-            FluidStack fluidStack = availableFluids.getFluidInTank(tank);
-
-            if(WaterPurity.hasPurity(fluidStack))
-                return WaterPurity.getPurity(fluidStack);
+            FluidStack fluid = input.getFluidInTank(tank);
+            if (WaterPurity.hasPurity(fluid))
+                return WaterPurity.getPurity(fluid);
         }
-
         return -1;
     }
 }
