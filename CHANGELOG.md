@@ -28,6 +28,9 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Playing without Vampirism, Cold Sweat, AppleSkin or Supernatural can no longer crash with `NoClassDefFoundError`: code that talks to those mods is only loaded when they are installed (thirst#251). `[1.21.1]`
 - Tough As Nails is now marked incompatible: the game refuses to start with both mods and explains why. `[1.21.1]`
 - Removed all Tough As Nails integration: canteen filling, turning off TaN's thirst, TaN tooltips, the TaN water bottle recipes and the TaN drinks in the default `item_settings.toml`. This also removes the canteen bugs (filling in protected areas, lost Water Cleansing, filling from flowing water; thirst#269, thirst#265, thirst#174) and the double thirst bar (thirst#232, thirst#173). Existing `toughasnails:*` entries in an old `item_settings.toml` are skipped. `[1.21.1]`
+- Create Sand Filter: water is no longer destroyed when the purified tank is full or holds water of another purity; the filter now only moves what the lower tank accepts and waits otherwise (thirst#192, thirst#205). Purity is never mixed. `[1.21.1]`
+- Create Sand Filter: the upper (dirty) tank is now saved with the world and shown with goggles; before, both tanks shared one behaviour slot, so the dirty tank was lost on reload. Breaking the filter or picking it up with a wrench keeps both tanks in the item, and placing it restores them. `[1.21.1]`
+- Create goggles: only water and fluids that carry purity show a purity; the purity word uses the same colours as item tooltips. `[1.21.1]`
 
 ### Bug fixes
 

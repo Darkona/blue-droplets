@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -36,7 +36,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        dirtyTank = SmartFluidTankBehaviour.single(this, TANK_SIZE);
+        dirtyTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 1, TANK_SIZE, false);
         behaviours.add(dirtyTank);
         purifiedTank = SmartFluidTankBehaviour.single(this, TANK_SIZE);
         behaviours.add(purifiedTank);
@@ -64,20 +64,38 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
         );
     }
 
+    /**
+     * Moves up to {@code sandFilterMbPerTick} from the dirty to the purified tank, only what the purified tank accepts:
+     * water of a different purity is not mixed, it waits.
+     */
     public void tick()
     {
         super.tick();
 
-        if(!level.isClientSide() && dirtyTank.getPrimaryHandler().getFluidAmount() >= CommonConfig.SAND_FILTER_MB_PER_TICK.get().intValue() &&
-                purifiedTank.getPrimaryHandler().getFluidAmount() < TANK_SIZE)
-        {
-            FluidStack water = dirtyTank.getPrimaryHandler().drain(CommonConfig.SAND_FILTER_MB_PER_TICK.get().intValue(), IFluidHandler.FluidAction.EXECUTE);
+        if(level.isClientSide())
+            return;
 
-            if(water.getFluid().equals(Fluids.WATER))
-                WaterPurity.addPurity(water, Math.min(WaterPurity.getPurity(water) + CommonConfig.SAND_FILTER_FILTRATION_AMOUNT.get().intValue(), WaterPurity.MAX_PURITY));
+        int rate = CommonConfig.SAND_FILTER_MB_PER_TICK.get();
+        IFluidHandler dirty = dirtyTank.getPrimaryHandler();
+        IFluidHandler purified = purifiedTank.getPrimaryHandler();
+        FluidStack water = dirty.drain(rate, IFluidHandler.FluidAction.SIMULATE);
+        if(water.getAmount() < rate)
+            return;
 
-            purifiedTank.getPrimaryHandler().fill(water, IFluidHandler.FluidAction.EXECUTE);
-        }
+        if(water.is(FluidTags.WATER))
+            WaterPurity.addPurity(water, Math.min(WaterPurity.getPurity(water) + CommonConfig.SAND_FILTER_FILTRATION_AMOUNT.get(), WaterPurity.MAX_PURITY));
+
+        int accepted = purified.fill(water, IFluidHandler.FluidAction.SIMULATE);
+        if(accepted <= 0)
+            return;
+
+        int drained = dirty.drain(accepted, IFluidHandler.FluidAction.EXECUTE).getAmount();
+        purified.fill(water.copyWithAmount(drained), IFluidHandler.FluidAction.EXECUTE);
+    }
+
+    public boolean hasFluid()
+    {
+        return !dirtyTank.isEmpty() || !purifiedTank.isEmpty();
     }
 
     @Override
@@ -103,7 +121,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
                     .forGoggles(tooltip, 1);
         }
 
-        return !dirtyTank.isEmpty() || !purifiedTank.isEmpty();
+        return hasFluid();
     }
 
     private void buildTooltip(List<Component> tooltip, LangBuilder mb, int purifiedWaterAmount, SmartFluidTankBehaviour purifiedTank) {

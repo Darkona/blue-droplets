@@ -14,7 +14,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class SandFilterBlock extends Block implements IWrenchable, IBE<SandFilterBlockEntity> {
 
@@ -35,6 +39,20 @@ public class SandFilterBlock extends Block implements IWrenchable, IBE<SandFilte
     {
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
         AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
+    }
+
+    /**
+     * Keeps the tanks in the dropped item (pickaxe or wrench); the block item loads them back when placed.
+     */
+    @Override
+    public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder params)
+    {
+        List<ItemStack> drops = super.getDrops(state, params);
+        if (params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof SandFilterBlockEntity filter && filter.hasFluid())
+            for (ItemStack drop : drops)
+                if (drop.is(asItem()))
+                    filter.saveToItem(drop, params.getLevel().registryAccess());
+        return drops;
     }
 
     @Override
