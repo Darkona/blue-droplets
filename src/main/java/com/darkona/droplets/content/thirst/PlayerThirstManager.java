@@ -15,6 +15,7 @@ import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -54,6 +55,32 @@ public class PlayerThirstManager {
         if (event.getEntity() instanceof ServerPlayer serverPlayer && serverPlayer.isAlive()) {
             serverPlayer.getData(ModAttachment.PLAYER_THIRST).tick(serverPlayer);
         }
+    }
+
+    /**
+     * The only place that sends thirst data: at most one packet per player and tick, and only when a synced value changed.
+     */
+    @SubscribeEvent
+    public static void syncThirst(PlayerTickEvent.Post event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            PlayerThirst thirst = serverPlayer.getData(ModAttachment.PLAYER_THIRST);
+            if ((serverPlayer.tickCount + serverPlayer.getId()) % ThirstConstants.SAFETY_RESYNC_TICKS == 0)
+                thirst.updateThirstData(serverPlayer);
+            thirst.syncIfChanged(serverPlayer);
+        }
+    }
+
+    /**
+     * The client creates a new player (with default thirst data) on respawn and on every dimension change.
+     */
+    @SubscribeEvent
+    public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        event.getEntity().getData(ModAttachment.PLAYER_THIRST).updateThirstData(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        event.getEntity().getData(ModAttachment.PLAYER_THIRST).updateThirstData(event.getEntity());
     }
 
     @SubscribeEvent

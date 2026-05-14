@@ -13,7 +13,11 @@ public final class ThirstConstants
     public static final float NAUSEA_EXHAUSTION_PER_TICK = 0.06F;
     public static final float HUNGER_EXHAUSTION_PER_LEVEL = 0.005F;
 
-    public static final int SYNC_INTERVAL_TICKS = 10;
+    public static final int PASSIVE_REGEN_INTERVAL_TICKS = 10;
+    /** Exhaustion is sent to the client in steps of 1/this (AppleSkin underlay: about 2 px per step). */
+    public static final int EXHAUSTION_SYNC_STEPS = 10;
+    /** Full resync even without changes, in case the client lost its copy. */
+    public static final int SAFETY_RESYNC_TICKS = 200;
     public static final int PEACEFUL_REGEN_AMOUNT = 1;
 
     public static final float RAIN_MAX_PITCH = -80.0F;

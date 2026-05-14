@@ -65,6 +65,10 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - On a dedicated server, clients now use the server's drink and food values, purity containers, blacklist and `defaultPurity` for tooltips, AppleSkin and the HUD, instead of their own config files (thirst#274, thirst#262, thirst#153). They are sent when joining and again after `/reload`, and dropped when leaving the server. Vanilla water bottles no longer show a purity different from the server's. `[1.21.1]`
 - A potion item without potion contents no longer crashes item tooltips or campfire particles. Thirst no longer ticks (and sends no updates) while the player is dead. `[1.21.1]`
 
+### Performance
+
+- Thirst data is sent to the player only when thirst, quenched, the exhaustion shown by AppleSkin (in steps of 0.1) or a synced rule changes, at most once per tick, plus a full resync every 10 seconds and after respawning or changing dimension. Before, every player got one packet per tick while thirst was ticking. A player standing still now gets almost no thirst packets. `[1.21.1]`
+
 ### Config
 
 - Drink and food entries must be `["namespace:item" or "#namespace:tag", thirst, quenched]` with thirst 0-20 and quenched 0 or more; anything else is skipped with a warning instead of crashing or hanging the game (thirst#178). NeoForge removes invalid entries from the file. `[1.21.1]`
@@ -81,6 +85,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - New `ThirstHelper.drinkTable()`/`foodTable()` (resolved, immutable) and `WaterPurity.defaultPurity()` (the server's value on remote clients). `[1.21.1]`
 - Removed `ThirstHelper.VALID_DRINKS`, `VALID_FOODS`, `containers`, `init()` and the `keyword*` fields, plus `LoadedValue` and `ConfigHelper`; use `ThirstHelper.isDrink/isFood/getThirst/getQuenched`. `WaterPurity.addContainer` still works (deprecated). `[1.21.1]`
 - Network protocol version is now `0.1.6`: the thirst sync packet carries the sprint and two-hands rules, the drink-by-hand packet no longer carries a position, and a new `bluedroplets:thirst_values` packet carries the server's drink tables. Client and server must run the same Blue Droplets version. `ClientConfig.DRINK_BOTH_HAND_NEEDED` is now `CommonConfig.DRINK_BOTH_HAND_NEEDED`. Fixed gameplay numbers live in `core.ThirstConstants`. `[1.21.1]`
+- `IThirst.updateThirstData` no longer sends a packet right away: it asks for a sync at the end of the player's tick. `addExhaustion` no longer syncs. `core.ThirstConstants.SYNC_INTERVAL_TICKS` is now `PASSIVE_REGEN_INTERVAL_TICKS` (rain drinking and Peaceful regeneration). `[1.21.1]`
 - Removed the public flags `PlayerThirst.checkTombstoneEffects`, `checkFDEffects`, `checkLetsDoBakeryEffects` and `checkLetsDoBreweryEffects`. `[1.21.1]`
 - Removed `ThirstHelper.shouldUseColdSweatCaps`, `PlayerThirst.checkVampirismEffects`, `ThirstBarRenderer.checkIfPlayerIsVampire` and `compat.supernatural.SupernaturalHelper`; mod detection is now internal. The AppleSkin overlay classes moved from `foundation.gui.appleskin` to `compat.appleskin`. `[1.21.1]`
 

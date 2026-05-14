@@ -39,12 +39,16 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     int quenched = RESPAWN_QUENCHED;
     float exhaustion = 0;
     int damageTimer = 0;
-    int syncTimer = 0;
+    int regenTimer = 0;
     float prevTickExhaustion = 0.0F;
     boolean justHealed = false;
     boolean shouldTickThirst = true;
     boolean exhaustionRecalculate = false;
-    boolean init = true;
+    boolean forceSync = true;
+    int sentThirst;
+    int sentQuenched;
+    int sentExhaustionStep;
+    int sentFlags;
     boolean sprintBlocked = true;
     boolean bothHandsToDrink = true;
     int handDrinkReadyTick = 0;
@@ -137,13 +141,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         if(player.getAbilities().invulnerable)
             return;
 
-        if(!shouldTickThirst) {
-            if (init) {
-                init = false;
-                updateThirstData(player);
-            }
+        if(!shouldTickThirst)
             return;
-        }
 
         if(has(player, ghostlyShape))
             return;
@@ -184,8 +183,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
             }
         }
 
-        ++syncTimer;
-        if(syncTimer > SYNC_INTERVAL_TICKS && !player.level().isClientSide())
+        ++regenTimer;
+        if(regenTimer > PASSIVE_REGEN_INTERVAL_TICKS)
         {
             if(difficulty == Difficulty.PEACEFUL && !CommonConfig.THIRST_DEPLETION_IN_PEACEFUL.get()){
                 setThirst(thirst + PEACEFUL_REGEN_AMOUNT);
@@ -198,8 +197,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
                 setQuenched(quenched + RAIN_QUENCHED);
             }
 
-            updateThirstData(player);
-            syncTimer = 0;
+            regenTimer = 0;
         }
 
         if (thirst <= 0)
@@ -231,11 +229,35 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         this.prevTickExhaustion = hungerExhaustion;
     }
 
+    /**
+     * Sends the thirst data with the next {@link #syncIfChanged}, even if nothing changed.
+     */
     public void updateThirstData(Player player)
     {
-        if(player instanceof ServerPlayer serverPlayer && !(player instanceof FakePlayer) && serverPlayer.connection != null)
-            PacketDistributor.sendToPlayer(serverPlayer, new PlayerThirstSyncMessage(thirst, quenched, exhaustion, shouldTickThirst,
-                    CommonConfig.MOVE_SLOW_WHEN_THIRSTY.get(), CommonConfig.DRINK_BOTH_HAND_NEEDED.get()));
+        forceSync = true;
+    }
+
+    /**
+     * Sends thirst, quenched, exhaustion (in steps of 1/{@code EXHAUSTION_SYNC_STEPS}) and the synced rules
+     * when one of them differs from the last packet, or when a sync was forced. Called once per player tick.
+     */
+    public void syncIfChanged(ServerPlayer player)
+    {
+        boolean sprint = CommonConfig.MOVE_SLOW_WHEN_THIRSTY.get();
+        boolean bothHands = CommonConfig.DRINK_BOTH_HAND_NEEDED.get();
+        int flags = (shouldTickThirst ? 1 : 0) | (sprint ? 2 : 0) | (bothHands ? 4 : 0);
+        int exhaustionStep = (int) (exhaustion * EXHAUSTION_SYNC_STEPS);
+        if(!forceSync && thirst == sentThirst && quenched == sentQuenched && exhaustionStep == sentExhaustionStep && flags == sentFlags)
+            return;
+        if(player instanceof FakePlayer || player.connection == null)
+            return;
+
+        forceSync = false;
+        sentThirst = thirst;
+        sentQuenched = quenched;
+        sentExhaustionStep = exhaustionStep;
+        sentFlags = flags;
+        PacketDistributor.sendToPlayer(player, new PlayerThirstSyncMessage(thirst, quenched, exhaustion, shouldTickThirst, sprint, bothHands));
     }
 
     /**
@@ -301,8 +323,6 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
         if(justHealed)
             justHealed = false;
-
-        updateThirstData(player);
     }
 
 
