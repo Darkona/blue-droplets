@@ -112,11 +112,16 @@ public class WaterPurity
     {
         addContainer(new ContainerWithPurity(Items.GLASS_BOTTLE,
                 PotionContents.createItemStack(Items.POTION,Potions.WATER).getItem()).setEqualsFilled(itemStack ->
-                itemStack.is(Items.POTION) && itemStack.get(DataComponents.POTION_CONTENTS).is(Potions.WATER)));
+                itemStack.is(Items.POTION) && isWater(itemStack.get(DataComponents.POTION_CONTENTS))));
         addContainer(new ContainerWithPurity(ItemInit.TERRACOTTA_BOWL.get(),
                 ItemInit.TERRACOTTA_WATER_BOWL.get()));
         addContainer(new ContainerWithPurity(Items.BUCKET,
                 Items.WATER_BUCKET, false).canHarvestRunningWater(false));
+    }
+
+    private static boolean isWater(@Nullable PotionContents contents)
+    {
+        return contents != null && contents.is(Potions.WATER);
     }
 
     private static void registerFillables()

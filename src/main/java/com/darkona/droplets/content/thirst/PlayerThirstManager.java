@@ -51,7 +51,7 @@ public class PlayerThirstManager {
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer && serverPlayer.isAlive()) {
             serverPlayer.getData(ModAttachment.PLAYER_THIRST).tick(serverPlayer);
         }
     }
