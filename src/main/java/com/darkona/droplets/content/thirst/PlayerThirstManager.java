@@ -5,16 +5,19 @@ import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.CommonConfig;
+import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber
 public class PlayerThirstManager {
@@ -63,8 +66,20 @@ public class PlayerThirstManager {
 
     @SubscribeEvent
     public static void rebuildDrinks(TagsUpdatedEvent event){
-        if (event.shouldUpdateStaticData())
+        if (event.shouldUpdateStaticData() && !(event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED && ThirstHelper.hasServerTables()))
             ThirstHelper.rebuild();
+    }
+
+    /**
+     * Sends the resolved tables to remote clients on join and after {@code /reload} (after the rebuild above).
+     * Not over the in-memory connection of singleplayer: that client shares the tables with the server.
+     */
+    @SubscribeEvent
+    public static void syncValues(OnDatapackSyncEvent event){
+        ThirstValuesSyncMessage message = ThirstValuesSyncMessage.fromTables();
+        event.getRelevantPlayers()
+                .filter(player -> !player.connection.getConnection().isMemoryConnection())
+                .forEach(player -> PacketDistributor.sendToPlayer(player, message));
     }
 }
 

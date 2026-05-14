@@ -72,6 +72,8 @@ public class WaterPurity
 {
     private static final List<ContainerWithPurity> codeContainers = new CopyOnWriteArrayList<>();
     private static volatile List<ContainerWithPurity> waterContainers = List.of();
+    private static volatile List<ContainerWithPurity> dataContainers = List.of();
+    private static volatile int serverDefaultPurity = -1;
     private static final List<Block> fillablesWithPurity = new ArrayList<>();
     public static final int MIN_PURITY = 0;
     public static final int MAX_PURITY = 3;
@@ -205,7 +207,30 @@ public class WaterPurity
      */
     public static void setContainers(List<ContainerWithPurity> containers)
     {
+        dataContainers = List.copyOf(containers);
         waterContainers = merge(codeContainers, containers);
+    }
+
+    /**
+     * Filled items of the data-driven containers (config and {@link RegisterThirstValueEvent}), as sent to clients.
+     */
+    public static List<Item> dataContainerItems()
+    {
+        return dataContainers.stream().map(ContainerWithPurity::getFilledItem).toList();
+    }
+
+    /**
+     * {@code defaultPurity} of the server; on a client of a remote server it replaces the local config value.
+     */
+    public static int defaultPurity()
+    {
+        int purity = serverDefaultPurity;
+        return purity >= MIN_PURITY ? purity : CommonConfig.DEFAULT_PURITY.get();
+    }
+
+    public static void setServerDefaultPurity(int purity)
+    {
+        serverDefaultPurity = purity;
     }
 
     private static List<ContainerWithPurity> merge(List<ContainerWithPurity> first, List<ContainerWithPurity> second)
@@ -373,7 +398,7 @@ public class WaterPurity
 
     public static int sanitizePurity(@Nullable Integer purity)
     {
-        return purity == null || purity < MIN_PURITY || purity > MAX_PURITY ? CommonConfig.DEFAULT_PURITY.get() : purity;
+        return purity == null || purity < MIN_PURITY || purity > MAX_PURITY ? defaultPurity() : purity;
     }
 
     /**
@@ -468,7 +493,7 @@ public class WaterPurity
             return getBlockPurity(level.getBlockState(pos));
         }
         else
-            return CommonConfig.DEFAULT_PURITY.get();
+            return defaultPurity();
     }
 
     /**

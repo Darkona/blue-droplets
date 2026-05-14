@@ -52,7 +52,9 @@ public class ThirstHelper
 
     private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods) {}
 
-    private static volatile Table table = new Table(Map.of(), Map.of());
+    private static final Table EMPTY = new Table(Map.of(), Map.of());
+    private static volatile Table table = EMPTY;
+    private static volatile boolean serverTables;
     private static @Nullable RegistryAccess fireProtectionAccess;
     private static @Nullable Holder<Enchantment> fireProtectionHolder;
 
@@ -84,6 +86,48 @@ public class ThirstHelper
 
         table = new Table(Map.copyOf(drinks), Map.copyOf(foods));
         WaterPurity.setContainers(containers);
+    }
+
+    /**
+     * Resolved drink values (item → {thirst, quenched}); immutable.
+     */
+    public static Map<Item, int[]> drinkTable()
+    {
+        return table.drinks();
+    }
+
+    /**
+     * Resolved food values (item → {thirst, quenched}); immutable.
+     */
+    public static Map<Item, int[]> foodTable()
+    {
+        return table.foods();
+    }
+
+    /**
+     * Client of a remote server: uses the tables resolved by the server; local rebuilds are skipped until {@link #clearServerTables()}.
+     */
+    public static void useServerTables(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> containers)
+    {
+        table = new Table(Map.copyOf(drinks), Map.copyOf(foods));
+        WaterPurity.setContainers(containers.stream().map(ContainerWithPurity::new).toList());
+        serverTables = true;
+    }
+
+    public static boolean hasServerTables()
+    {
+        return serverTables;
+    }
+
+    /**
+     * Leaving a remote server: drops its tables; the next world or server fills them again.
+     */
+    public static void clearServerTables()
+    {
+        serverTables = false;
+        table = EMPTY;
+        WaterPurity.setContainers(List.of());
+        WaterPurity.setServerDefaultPurity(-1);
     }
 
     private static void readValues(List<? extends List<?>> entries, Map<Item, int[]> target)
