@@ -126,17 +126,14 @@ public class HUDOverlayHandler {
             return;
         }
 
-        ThirstValues thirstValues = new ThirstValues(ThirstHelper.getThirst(heldItem), ThirstHelper.getQuenched(heldItem));
-
-        // calculate the final hunger and saturation
-        int drinkThirst = thirstValues.thirst;
+        int drinkThirst = ThirstHelper.getThirst(heldItem);
 
         // restored hunger/saturation overlay while holding food
         if(thirstData.getThirst() < 20)
             drawHungerOverlay(drinkThirst, thirstData.getThirst(), guiGraphics, right, top, flashAlpha);
         // Redraw saturation overlay for gained
         if(!ThirstHelper.isFood(heldItem) || player.getFoodData().getFoodLevel() < 20)
-            drawSaturationOverlay(thirstValues.quenchedModifier, thirstData.getQuenched(),guiGraphics, right, top, flashAlpha);
+            drawSaturationOverlay(ThirstHelper.getQuenched(heldItem), thirstData.getQuenched(),guiGraphics, right, top, flashAlpha);
     }
 
     public static void drawSaturationOverlay(float saturationGained, float saturationLevel, GuiGraphics guiGraphics, int right, int top, float alpha)

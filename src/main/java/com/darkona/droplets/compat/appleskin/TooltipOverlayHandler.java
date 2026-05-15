@@ -14,6 +14,8 @@ import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactori
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.chat.FormattedText;
 import com.darkona.droplets.api.ThirstHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -31,6 +33,7 @@ public class TooltipOverlayHandler {
     private static final ResourceLocation modIcons;
     private static final TextureOffsets normalBarTextureOffsets;
     private static final TextureOffsets rottenBarTextureOffsets;
+    private static @Nullable FoodTooltip lastTooltip;
 
     public TooltipOverlayHandler() {
     }
@@ -40,7 +43,7 @@ public class TooltipOverlayHandler {
     }
 
     public static void register(RegisterClientTooltipComponentFactoriesEvent event) {
-        event.register(FoodTooltip.class, FoodTooltipRenderer::new);
+        event.register(FoodTooltip.class, tooltip -> tooltip.renderer);
     }
 
     @SubscribeEvent
@@ -49,12 +52,23 @@ public class TooltipOverlayHandler {
             ItemStack hoveredStack = event.getItemStack();
             if (shouldShowTooltip(hoveredStack)) {
 
-                FoodTooltip foodTooltip = new FoodTooltip(hoveredStack);
+                FoodTooltip foodTooltip = tooltipFor(hoveredStack);
                 if (foodTooltip.shouldRenderHungerBars()) {
-                    event.getTooltipElements().add(Either.right(foodTooltip));
+                    event.getTooltipElements().add(foodTooltip.element);
                 }
             }
         }
+    }
+
+    /**
+     * Reuses the last tooltip while the hovered item and its values stay the same (gathered every frame).
+     */
+    private static FoodTooltip tooltipFor(ItemStack stack) {
+        FoodTooltip cached = lastTooltip;
+        if (cached != null && cached.itemStack.is(stack.getItem())
+                && cached.biggestHunger == ThirstHelper.getThirst(stack) && cached.biggestSaturationIncrement == ThirstHelper.getQuenched(stack))
+            return cached;
+        return lastTooltip = new FoodTooltip(stack.copyWithCount(1));
     }
 
     private static boolean shouldShowTooltip(ItemStack hoveredStack) {
@@ -102,6 +116,8 @@ public class TooltipOverlayHandler {
         private int saturationBars;
         private String saturationBarsText;
         private final ItemStack itemStack;
+        private final Either<FormattedText, TooltipComponent> element = Either.right(this);
+        private final FoodTooltipRenderer renderer = new FoodTooltipRenderer(this);
 
         FoodTooltip(ItemStack itemStack) {
             this.itemStack = itemStack;
@@ -184,7 +200,7 @@ public class TooltipOverlayHandler {
             int offsetX = x;
             int offsetY = y;
 
-            int thirst = ThirstHelper.getThirst(itemStack);
+            int thirst = foodTooltip.biggestHunger;
 
             // Render from right to left so that the icons 'face' the right way
             offsetX += (foodTooltip.hungerBars - 1) * 9;
@@ -214,7 +230,7 @@ public class TooltipOverlayHandler {
             offsetX = x;
             offsetY += 10;
 
-            float modifiedSaturationIncrement = ThirstHelper.getQuenched(itemStack);
+            float modifiedSaturationIncrement = foodTooltip.biggestSaturationIncrement;
             float absModifiedSaturationIncrement = Math.abs(modifiedSaturationIncrement);
 
             // Render from right to left so that the icons 'face' the right way

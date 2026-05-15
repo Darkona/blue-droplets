@@ -21,9 +21,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ThirstBarRenderer
 {
-    public static IThirst PLAYER_THIRST = null;
-    public static ResourceLocation THIRST_ICONS = BlueDroplets.asResource("textures/gui/thirst_icons.png");
-    public static Boolean cancelRender = false;
+    public static final ResourceLocation THIRST_ICONS = BlueDroplets.asResource("textures/gui/thirst_icons.png");
+    public static boolean cancelRender = false;
     static Minecraft minecraft = Minecraft.getInstance();
     protected final static RandomSource random = RandomSource.create();
 
@@ -81,10 +80,7 @@ public class ThirstBarRenderer
     public static void render(int width, int height, GuiGraphics guiGraphics)
     {
         minecraft.getProfiler().push("thirst");
-        if (PLAYER_THIRST == null || minecraft.player.tickCount % 40 == 0)
-        {
-            PLAYER_THIRST = minecraft.player.getData(ModAttachment.PLAYER_THIRST);
-        }
+        IThirst thirst = minecraft.player.getData(ModAttachment.PLAYER_THIRST);
 
         ResourceLocation thirst_icons = SupernaturalCompat.getVampireIcons(THIRST_ICONS, minecraft.player);
 
@@ -94,7 +90,8 @@ public class ThirstBarRenderer
         int top = height - minecraft.gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
         minecraft.gui.rightHeight += 10;
 
-        int level = PLAYER_THIRST.getThirst();
+        int level = thirst.getThirst();
+        boolean shake = thirst.getQuenched() <= 0 && minecraft.gui.getGuiTicks() % (level * 3 + 1) == 0;
 
         for (int i = 0; i < 10; ++i)
         {
@@ -102,7 +99,7 @@ public class ThirstBarRenderer
             int x = left - i * 8 - 9;
             int y = top;
 
-            if (PLAYER_THIRST.getQuenched() <= 0.0F && minecraft.gui.getGuiTicks() % (level * 3 + 1) == 0)
+            if (shake)
             {
                 y = top + (random.nextInt(3) - 1);
             }
