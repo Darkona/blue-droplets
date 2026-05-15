@@ -14,6 +14,8 @@ public final class ThirstConstants
     public static final float HUNGER_EXHAUSTION_PER_LEVEL = 0.005F;
 
     public static final int PASSIVE_REGEN_INTERVAL_TICKS = 10;
+    /** The climate/armor/effect exhaustion modifier is recomputed this often (staggered per player). */
+    public static final int MODIFIER_INTERVAL_TICKS = 20;
     /** Exhaustion is sent to the client in steps of 1/this (AppleSkin underlay: about 2 px per step). */
     public static final int EXHAUSTION_SYNC_STEPS = 10;
     /** Full resync even without changes, in case the client lost its copy. */

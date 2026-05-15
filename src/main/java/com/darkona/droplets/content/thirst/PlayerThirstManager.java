@@ -8,12 +8,15 @@ import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -75,12 +78,38 @@ public class PlayerThirstManager {
      */
     @SubscribeEvent
     public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        event.getEntity().getData(ModAttachment.PLAYER_THIRST).updateThirstData(event.getEntity());
+        PlayerThirst thirst = event.getEntity().getData(ModAttachment.PLAYER_THIRST);
+        thirst.updateThirstData(event.getEntity());
+        thirst.invalidateModifier();
     }
 
     @SubscribeEvent
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
         event.getEntity().getData(ModAttachment.PLAYER_THIRST).updateThirstData(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player && event.getSlot().getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
+            player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+    }
+
+    @SubscribeEvent
+    public static void onEffectAdded(MobEffectEvent.Added event) {
+        if (event.getEntity() instanceof ServerPlayer player)
+            player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+    }
+
+    @SubscribeEvent
+    public static void onEffectRemoved(MobEffectEvent.Remove event) {
+        if (event.getEntity() instanceof ServerPlayer player)
+            player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+    }
+
+    @SubscribeEvent
+    public static void onEffectExpired(MobEffectEvent.Expired event) {
+        if (event.getEntity() instanceof ServerPlayer player)
+            player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
     }
 
     @SubscribeEvent

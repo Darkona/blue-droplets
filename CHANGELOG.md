@@ -68,6 +68,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 ### Performance
 
 - Thirst data is sent to the player only when thirst, quenched, the exhaustion shown by AppleSkin (in steps of 0.1) or a synced rule changes, at most once per tick, plus a full resync every 10 seconds and after respawning or changing dimension. Before, every player got one packet per tick while thirst was ticking. A player standing still now gets almost no thirst packets. `[1.21.1]`
+- The thirst loss multiplier from climate (biome temperature and humidity, or Cold Sweat body temperature; Nether), Fire Protection and Fire Resistance is computed once per second per player (players are spread over different ticks), and right away after changing armor, gaining or losing an effect, changing dimension or respawning. Before, it was computed up to three times per tick. Walking into another biome, or a Cold Sweat temperature change, now takes effect within one second. `[1.21.1]`
 
 ### Config
 

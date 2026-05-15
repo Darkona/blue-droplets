@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -44,6 +45,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     boolean justHealed = false;
     boolean shouldTickThirst = true;
     boolean exhaustionRecalculate = false;
+    float exhaustionModifier = 1.0F;
+    boolean modifierDirty = true;
     boolean forceSync = true;
     int sentThirst;
     int sentQuenched;
@@ -136,12 +139,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     */
     public void tick(Player player)
     {
-        Difficulty difficulty = player.level().getDifficulty();
-
-        if(player.getAbilities().invulnerable)
-            return;
-
-        if(!shouldTickThirst)
+        if(player.getAbilities().invulnerable || !shouldTickThirst)
             return;
 
         if(has(player, ghostlyShape))
@@ -150,22 +148,20 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         if(VampirismCompat.isVampire(player))
             return;
 
+        if((player.tickCount + player.getId()) % MODIFIER_INTERVAL_TICKS == 0)
+            modifierDirty = true;
+
+        Difficulty difficulty = player.level().getDifficulty();
         boolean paused = has(player, nourishment) || has(player, stuffed) || has(player, saturated);
 
         if(CommonConfig.DEPLETES_WHEN_NAUSED.get() && player.hasEffect(MobEffects.CONFUSION))
             addExhaustion(player, NAUSEA_EXHAUSTION_PER_TICK);
 
-        boolean isHunger = player.hasEffect(MobEffects.HUNGER);
-        boolean isSitting = player.isPassenger();
+        MobEffectInstance hunger = player.getEffect(MobEffects.HUNGER);
+        if(hunger != null)
+            exhaustion -= HUNGER_EXHAUSTION_PER_LEVEL * (float)(hunger.getAmplifier() + 1) * exhaustionModifier(player);
 
-        if(isHunger){
-            exhaustion -= HUNGER_EXHAUSTION_PER_LEVEL * (float)(player.getEffect(MobEffects.HUNGER).getAmplifier() + 1) *
-                    ThirstHelper.getExhaustionBiomeModifier(player) *
-                    ThirstHelper.getExhaustionFireProtModifier(player)*
-                    ThirstHelper.getExhaustionFireResistanceModifier(player);
-        }
-
-        if (!isSitting && !paused)
+        if (!player.isPassenger() && !paused)
         {
             updateExhaustion(player);
         }
@@ -315,16 +311,35 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         if(!CommonConfig.HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT.get() && justHealed)
             exhaustion += amount;
         else
-            exhaustion += (amount *
-                    ThirstHelper.getExhaustionBiomeModifier(player) *
-                    ThirstHelper.getExhaustionFireProtModifier(player)*
-                    ThirstHelper.getExhaustionFireResistanceModifier(player)
-            );
+            exhaustion += amount * exhaustionModifier(player);
 
         if(justHealed)
             justHealed = false;
     }
 
+    /**
+     * Climate (biome or Cold Sweat, Nether), Fire Protection and Fire Resistance, cached: recomputed every
+     * {@code MODIFIER_INTERVAL_TICKS} (staggered per player) and after {@link #invalidateModifier()}.
+     */
+    private float exhaustionModifier(Player player)
+    {
+        if(modifierDirty)
+        {
+            modifierDirty = false;
+            exhaustionModifier = ThirstHelper.getExhaustionBiomeModifier(player) *
+                    ThirstHelper.getExhaustionFireProtModifier(player) *
+                    ThirstHelper.getExhaustionFireResistanceModifier(player);
+        }
+        return exhaustionModifier;
+    }
+
+    /**
+     * Recomputes the exhaustion modifier on next use: armor or effects changed, dimension change, respawn.
+     */
+    public void invalidateModifier()
+    {
+        modifierDirty = true;
+    }
 
 
     @Override
