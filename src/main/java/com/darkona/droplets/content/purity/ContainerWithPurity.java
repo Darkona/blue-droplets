@@ -76,6 +76,9 @@ public class ContainerWithPurity
         return this;
     }
 
+    /**
+     * Narrows which stacks of the filled item count; it is only tested with stacks of {@link #getFilledItem()}.
+     */
     public ContainerWithPurity setEqualsFilled(Predicate<ItemStack> predicate)
     {
         this.equalsFilled = predicate;

@@ -59,7 +59,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -71,7 +72,7 @@ import java.util.Random;
 public class WaterPurity
 {
     private static final List<ContainerWithPurity> codeContainers = new CopyOnWriteArrayList<>();
-    private static volatile List<ContainerWithPurity> waterContainers = List.of();
+    private static volatile Map<Item, ContainerWithPurity> waterContainers = Map.of();
     private static volatile List<ContainerWithPurity> dataContainers = List.of();
     private static volatile int serverDefaultPurity = -1;
     private static final List<Block> fillablesWithPurity = new ArrayList<>();
@@ -203,7 +204,7 @@ public class WaterPurity
     public static void addContainer(ContainerWithPurity container)
     {
         codeContainers.add(container);
-        waterContainers = merge(waterContainers, List.of(container));
+        waterContainers = merge(waterContainers.values(), List.of(container));
     }
 
     /**
@@ -238,28 +239,14 @@ public class WaterPurity
         serverDefaultPurity = purity;
     }
 
-    private static List<ContainerWithPurity> merge(List<ContainerWithPurity> first, List<ContainerWithPurity> second)
+    private static Map<Item, ContainerWithPurity> merge(Collection<ContainerWithPurity> first, List<ContainerWithPurity> second)
     {
-        Map<Item, ContainerWithPurity> byFilled = new LinkedHashMap<>();
+        Map<Item, ContainerWithPurity> byFilled = new HashMap<>();
         for (ContainerWithPurity container : first)
             byFilled.putIfAbsent(container.getFilledItem(), container);
         for (ContainerWithPurity container : second)
             byFilled.putIfAbsent(container.getFilledItem(), container);
-        return List.copyOf(byFilled.values());
-    }
-
-    /**
-     * Returns the filled equivalent of the water container given in input.
-     * The second parameter specifies if the container inputted is the empty or
-     * filled version
-     */
-    public static ItemStack getFilledContainer(ItemStack container, boolean fromFilled)
-    {
-        for (ContainerWithPurity waterContainer : waterContainers)
-            if ((!fromFilled && waterContainer.equalsEmpty(container)) || (fromFilled && waterContainer.equalsFilled(container)))
-                return waterContainer.getFilledItem().getDefaultInstance();
-
-        return ItemStack.EMPTY.copy();
+        return Map.copyOf(byFilled);
     }
 
     /**
@@ -351,22 +338,13 @@ public class WaterPurity
         }
     }
 
+    /**
+     * One map lookup by the stack's item, then that container's own check (e.g. water bottle vs. other potions).
+     */
     public static boolean isWaterFilledContainer(ItemStack item)
     {
-        for (ContainerWithPurity waterContainer : waterContainers)
-            if (waterContainer.equalsFilled(item))
-                return true;
-
-        return false;
-    }
-
-    public static boolean isEmptyWaterContainer(ItemStack item)
-    {
-        for (ContainerWithPurity waterContainer : waterContainers)
-            if (waterContainer.equalsEmpty(item))
-                return true;
-
-        return false;
+        ContainerWithPurity container = waterContainers.get(item.getItem());
+        return container != null && container.equalsFilled(item);
     }
 
     static boolean isFillableBlock(Block block)
