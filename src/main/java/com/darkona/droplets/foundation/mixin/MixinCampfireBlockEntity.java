@@ -47,7 +47,8 @@ public class MixinCampfireBlockEntity
 
         if (cancel) {
             if (random.nextFloat() < 0.11F) {
-                for(int i = 0; i < random.nextInt(2) + 2; ++i) {
+                int smokes = random.nextInt(2) + 2;
+                for(int i = 0; i < smokes; ++i) {
                     CampfireBlock.makeParticles(level, pos, blockState.getValue(CampfireBlock.SIGNAL_FIRE), false);
                 }
             }

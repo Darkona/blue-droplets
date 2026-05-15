@@ -4,6 +4,7 @@ import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.CommonConfig;
@@ -76,8 +77,11 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
             return;
 
         int rate = CommonConfig.SAND_FILTER_MB_PER_TICK.get();
-        IFluidHandler dirty = dirtyTank.getPrimaryHandler();
-        IFluidHandler purified = purifiedTank.getPrimaryHandler();
+        SmartFluidTank dirty = dirtyTank.getPrimaryHandler();
+        SmartFluidTank purified = purifiedTank.getPrimaryHandler();
+        if(dirty.getFluidAmount() < rate || purified.getSpace() <= 0)
+            return;
+
         FluidStack water = dirty.drain(rate, IFluidHandler.FluidAction.SIMULATE);
         if(water.getAmount() < rate)
             return;

@@ -71,6 +71,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - The thirst loss multiplier from climate (biome temperature and humidity, or Cold Sweat body temperature; Nether), Fire Protection and Fire Resistance is computed once per second per player (players are spread over different ticks), and right away after changing armor, gaining or losing an effect, changing dimension or respawning. Before, it was computed up to three times per tick. Walking into another biome, or a Cold Sweat temperature change, now takes effect within one second. `[1.21.1]`
 - Checking whether an item is a water container with purity (tooltips, drinking, campfires, Create filling) is one map lookup instead of a scan over all containers. `[1.21.1]`
 - The thirst bar always reads the current player's thirst; before, it kept the data of the previous player object for up to 2 seconds after respawning or changing dimension. The thirst bar and the AppleSkin overlays and tooltip no longer create objects every frame. `[1.21.1]`
+- Create Sand Filter: an idle filter (not enough dirty water, or a full purified tank) does no fluid work at all each tick. `[1.21.1]`
 
 ### Config
 
