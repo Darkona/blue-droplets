@@ -2,6 +2,10 @@ package com.darkona.droplets.content.purity;
 
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.ThirstHelper;
+import com.darkona.droplets.content.data.BiomeWater;
+import com.darkona.droplets.content.data.DimensionWater;
+import com.darkona.droplets.content.data.DropletsDataMaps;
+import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
@@ -15,6 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -41,6 +46,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
@@ -49,6 +55,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.FluidState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -469,22 +476,50 @@ public class WaterPurity
      */
     public static int getBlockPurity(Level level, BlockPos pos)
     {
-        int purity = (pos.getY() > CommonConfig.MOUNTAINS_Y.get().intValue() || pos.getY() < CommonConfig.CAVES_Y.get().intValue())
-                && pos.getY() < CommonConfig.MOUNTAINS_Y.get().intValue() - 32 ? 1 : 0;
+        FluidState fluid = level.getFluidState(pos);
+        if (fluid.is(FluidTags.WATER))
+            return getWaterPurity(level, pos, fluid.isSource());
+        BlockState state = level.getBlockState(pos);
+        return state.is(Blocks.WATER_CAULDRON) ? getBlockPurity(state) : defaultPurity();
+    }
 
-        if(level.getFluidState(pos).is(FluidTags.WATER))
-        {
-            if(!level.getFluidState(pos).isSource())
-                purity = Math.min(purity + CommonConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get().intValue(), MAX_PURITY);
+    /**
+     * Purity of water in the world: salt water rule, then base (biome data map, biome tag, dimension data map,
+     * {@code worldWaterBasePurity}), plus altitude, running water and biome deltas, capped by the biome's {@code max}.
+     */
+    public static int getWaterPurity(Level level, BlockPos pos, boolean source)
+    {
+        Holder<Biome> biome = level.getBiome(pos);
+        int salt = CommonConfig.SALT_WATER_PURITY.get();
+        if (salt >= MIN_PURITY && biome.is(DropletsTags.SALT_WATER))
+            return salt;
 
-            return purity;
-        }
-        else if(level.getBlockState(pos).is(Blocks.WATER_CAULDRON))
+        BiomeWater biomeWater = biome.getData(DropletsDataMaps.BIOME_WATER);
+        int purity = basePurity(level, biome, biomeWater);
+        if ((pos.getY() > CommonConfig.MOUNTAINS_Y.get() || pos.getY() < CommonConfig.CAVES_Y.get()) && pos.getY() < CommonConfig.MOUNTAINS_Y.get() - 32)
+            purity++;
+        if (!source)
+            purity += CommonConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get();
+        int max = MAX_PURITY;
+        if (biomeWater != null)
         {
-            return getBlockPurity(level.getBlockState(pos));
+            purity += biomeWater.delta();
+            max = biomeWater.max();
         }
-        else
-            return defaultPurity();
+        return Math.max(MIN_PURITY, Math.min(purity, max));
+    }
+
+    private static int basePurity(Level level, Holder<Biome> biome, @Nullable BiomeWater biomeWater)
+    {
+        if (biomeWater != null && biomeWater.base().isPresent())
+            return biomeWater.base().get();
+        for (int purity = MAX_PURITY; purity >= MIN_PURITY; purity--)
+            if (biome.is(DropletsTags.WATER_PURITY[purity]))
+                return purity;
+        DimensionWater dimensionWater = level.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
+        if (dimensionWater != null && dimensionWater.base().isPresent())
+            return dimensionWater.base().get();
+        return CommonConfig.WORLD_WATER_BASE_PURITY.get();
     }
 
     /**

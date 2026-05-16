@@ -39,6 +39,8 @@ public class CommonConfig
     public static final ModConfigSpec.ConfigValue<Integer> MOUNTAINS_Y;
     public static final ModConfigSpec.ConfigValue<Integer> CAVES_Y;
     public static final ModConfigSpec.ConfigValue<Integer> RUNNING_WATER_PURIFICATION_AMOUNT;
+    public static final ModConfigSpec.IntValue WORLD_WATER_BASE_PURITY;
+    public static final ModConfigSpec.IntValue SALT_WATER_PURITY;
 
     public static final ModConfigSpec.ConfigValue<Integer> DEFAULT_PURITY;
     public static final ModConfigSpec.ConfigValue<Boolean> QUENCH_THIRST_WHEN_DEBUFFED;
@@ -89,6 +91,9 @@ public class CommonConfig
         BUILDER.push("World");
         MOUNTAINS_Y = BUILDER.comment("Y level above which water has 1 more level of purification by default (i.e Mountains)").defineInRange("mountainsY", 100, -2048, 2048);
         CAVES_Y = BUILDER.comment("Y level below which water has 1 more level of purification by default (i.e Caves) (for aquatic biomes, this number will be decreased by 32)").defineInRange("cavesY", 48, -2048, 2048);
+        WORLD_WATER_BASE_PURITY = BUILDER.comment("Base purity of water in the world when neither its biome (bluedroplets:water_purity/N tags, bluedroplets:biome_water data map)",
+                "nor its dimension type (bluedroplets:dimension_water data map) sets one").defineInRange("worldWaterBasePurity", 0, 0, 3);
+        SALT_WATER_PURITY = BUILDER.comment("Fixed purity of water in biomes tagged bluedroplets:salt_water (oceans by default); -1 treats it like any other water").defineInRange("saltWaterPurity", -1, -1, 3);
         RUNNING_WATER_PURIFICATION_AMOUNT = BUILDER.comment("How many levels of purification does running water have compared to still water").defineInRange("runningWaterPurificationAmount", 1, 0, 3);
         BUILDER.pop();
 

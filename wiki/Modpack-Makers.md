@@ -54,3 +54,57 @@ Each item takes its values from the first of these that has it; the others are i
 5. **Keywords** (`keyword.toml`, off by default).
 
 The server resolves this table on world load and on `/reload` and sends it to every client, so all players see the server's values.
+
+## Water purity in the world
+
+Water picked up from the world (buckets, bottles, bowls, drinking by hand, Create pumps and drains) gets a purity from 0 (dirty) to 3 (purified):
+
+1. **Salt water**: if `saltWaterPurity` (`common.toml`, default -1 = off) is 0-3 and the biome is in `#bluedroplets:salt_water`, that fixed value is used and nothing else applies.
+2. **Base purity**, the first that is set:
+   1. `base` of the biome in the `bluedroplets:biome_water` data map;
+   2. biome tags `#bluedroplets:water_purity/3`, `/2`, `/1`, `/0` (checked in that order);
+   3. `base` of the dimension type in the `bluedroplets:dimension_water` data map;
+   4. `worldWaterBasePurity` in `common.toml` (default 0).
+3. Plus altitude, running water and the biome's `delta`; the result is kept between 0 and the biome's `max` (default 3).
+
+### Biome tags
+
+- `data/bluedroplets/tags/worldgen/biome/water_purity/0.json` … `/3.json`: standard biome tags. None ship with Blue Droplets, so by default all water starts at `worldWaterBasePurity`.
+- `data/bluedroplets/tags/worldgen/biome/salt_water.json`: ships with `#minecraft:is_ocean`; only used when `saltWaterPurity` is set.
+
+```json
+{ "values": ["minecraft:cherry_grove", "#c:is_mountain"] }
+```
+
+### `bluedroplets:biome_water`
+
+Biome data map, `data/<namespace>/data_maps/worldgen/biome/biome_water.json`:
+
+```json
+{
+  "values": {
+    "minecraft:swamp": { "base": 0, "max": 1 },
+    "#c:is_snowy": { "delta": 1 }
+  }
+}
+```
+
+| Field | Type | Default | Meaning |
+|---|---|---|---|
+| `base` | int 0-3, optional | — | Base purity; wins over the tags and the dimension |
+| `delta` | int -3 to 3 | 0 | Added after altitude and running water |
+| `max` | int 0-3 | 3 | Highest purity water can have here |
+
+### `bluedroplets:dimension_water`
+
+Dimension type data map, `data/<namespace>/data_maps/dimension_type/dimension_water.json`. It is keyed by **dimension type** (`minecraft:overworld`, `minecraft:the_nether`, a mod's type id), so dimensions that share a type share the value.
+
+```json
+{ "values": { "minecraft:the_end": { "base": 3 } } }
+```
+
+| Field | Type | Meaning |
+|---|---|---|
+| `base` | int 0-3, optional | Base purity for biomes without their own |
+
+Both world data maps are only read on the server.
