@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -132,7 +133,8 @@ public class HUDOverlayHandler {
         if(thirstData.getThirst() < 20)
             drawHungerOverlay(drinkThirst, thirstData.getThirst(), guiGraphics, right, top, flashAlpha);
         // Redraw saturation overlay for gained
-        if(!ThirstHelper.isFood(heldItem) || player.getFoodData().getFoodLevel() < 20)
+        FoodProperties food = heldItem.getFoodProperties(player);
+        if(food == null || player.canEat(food.canAlwaysEat()))
             drawSaturationOverlay(ThirstHelper.getQuenched(heldItem), thirstData.getQuenched(),guiGraphics, right, top, flashAlpha);
     }
 

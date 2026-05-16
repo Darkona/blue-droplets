@@ -83,11 +83,19 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - New `handDrinkingCooldown` (common.toml, "Drinking Mechanics", 0-1200 ticks, default 10): minimum time between two sips when drinking by hand. `[1.21.1]`
 - `DrinkBothHandNeeded` moved from `client.toml` to `common.toml` (section "Drinking Mechanics"): it is a gameplay rule, so the server decides and tells the client. A value set in `client.toml` is dropped; set it again in `common.toml`. `[1.21.1]`
 
+### Datapacks
+
+- New item data map `bluedroplets:drinks` (`data/<namespace>/data_maps/item/drinks.json`, entries `{"thirst": 0-20, "quenched": 0+, "purity": 0-3 optional}`): drink and food values now come from datapacks, reload with `/reload` and are synced to clients. See `wiki/Modpack-Makers.md`. `[1.21.1]`
+- The default values for vanilla items and the terracotta water bowl moved from `item_settings.toml` to Blue Droplets' own `drinks.json`, with the same numbers. The `drinks` and `foods` lists in `item_settings.toml` are now overrides that win over datapacks. **Existing configs** that still contain the old default entries keep working unchanged (they act as overrides with the same values); remove them if a datapack should control those items. `[1.21.1]`
+- A drink with a data map `purity` rolls the purity effects of that purity when drunk or eaten; water containers without a stored purity also use it instead of `defaultPurity`. Without it, nothing changes. `[1.21.1]`
+- AppleSkin: the quenched preview for a held item is hidden only when the item cannot be eaten right now (full hunger and not always edible), instead of whenever the item was listed as a food. `[1.21.1]`
+
 ### API
 
 - All classes moved from `dev.ghen.thirst` to `com.darkona.droplets` (main class `Thirst` is now `BlueDroplets`) and there is no compatibility shim: addons that call Thirst Was Taken classes directly, such as Green Feathers, need a version built for Blue Droplets. A stable public API is planned. `[1.21.1]`
 - `RegisterThirstValueEvent` is now posted every time the tables are built (world load and `/reload`), on the game bus, from the logical side that owns the data; `addDrink`, `addFood` and both `addContainer` methods keep their signatures. Its constructor changed and `ThirstEventFactory` was removed. `[1.21.1]`
 - New `ThirstHelper.drinkTable()`/`foodTable()` (resolved, immutable) and `WaterPurity.defaultPurity()` (the server's value on remote clients). `[1.21.1]`
+- `ThirstHelper.drinkTable()`/`foodTable()` values are now `{thirst, quenched, purity}` (purity -1 when unset); new `ThirstHelper.getDrinkPurity(ItemStack)`. `WaterPurity.getPurity(ItemStack)` falls back to the data map purity when the stack stores none. Network protocol version is now `0.1.7` (the `bluedroplets:thirst_values` packet carries the purity). `[1.21.1]`
 - Removed `ThirstHelper.VALID_DRINKS`, `VALID_FOODS`, `containers`, `init()` and the `keyword*` fields, plus `LoadedValue` and `ConfigHelper`; use `ThirstHelper.isDrink/isFood/getThirst/getQuenched`. `WaterPurity.addContainer` still works (deprecated). `[1.21.1]`
 - Network protocol version is now `0.1.6`: the thirst sync packet carries the sprint and two-hands rules, the drink-by-hand packet no longer carries a position, and a new `bluedroplets:thirst_values` packet carries the server's drink tables. Client and server must run the same Blue Droplets version. `ClientConfig.DRINK_BOTH_HAND_NEEDED` is now `CommonConfig.DRINK_BOTH_HAND_NEEDED`. Fixed gameplay numbers live in `core.ThirstConstants`. `[1.21.1]`
 - Removed `ThirstBarRenderer.PLAYER_THIRST` and `compat.appleskin.ThirstValues`; `ThirstBarRenderer.cancelRender` is a `boolean` and `THIRST_ICONS` is final. `[1.21.1]`

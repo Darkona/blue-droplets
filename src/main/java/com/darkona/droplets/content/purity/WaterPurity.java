@@ -1,6 +1,7 @@
 package com.darkona.droplets.content.purity;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
@@ -363,11 +364,19 @@ public class WaterPurity
     }
 
     /**
-     * Reads the purity from an item without modifying it; missing or invalid purity reads as the default purity
+     * Reads the purity from an item without modifying it; missing purity reads as the drink's data map purity if it has
+     * one, missing or invalid purity as the default purity
      */
     public static Integer getPurity(ItemStack item)
     {
-        return sanitizePurity(item.get(ThirstComponent.PURITY));
+        Integer stored = item.get(ThirstComponent.PURITY);
+        if (stored == null)
+        {
+            int fixed = ThirstHelper.getDrinkPurity(item);
+            if (fixed >= MIN_PURITY)
+                return fixed;
+        }
+        return sanitizePurity(stored);
     }
 
     /**
@@ -479,12 +488,15 @@ public class WaterPurity
     }
 
     /**
-     * Gives the player effects based on the purity of the water just drunk (missing purity reads as the default)
-     * and returns whether thirst and quenched should be added or not
+     * Gives the player effects based on the purity of the water container or drink just consumed and returns whether
+     * thirst and quenched should be added or not. Drinks that are not water containers roll only with a data map purity.
      */
     public static boolean givePurityEffects(Player player, ItemStack item)
     {
-        return !isWaterFilledContainer(item) || givePurityEffects(player, getPurity(item));
+        if (isWaterFilledContainer(item))
+            return givePurityEffects(player, getPurity(item));
+        int fixed = ThirstHelper.getDrinkPurity(item);
+        return fixed < MIN_PURITY || givePurityEffects(player, fixed);
     }
 
     /**

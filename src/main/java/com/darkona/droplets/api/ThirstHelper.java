@@ -2,6 +2,8 @@ package com.darkona.droplets.api;
 
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
+import com.darkona.droplets.content.data.DrinkValues;
+import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
@@ -17,6 +19,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
@@ -58,8 +61,9 @@ public class ThirstHelper
     private static @Nullable Holder<Enchantment> fireProtectionHolder;
 
     /**
-     * Rebuilds the drink/food tables and the purity containers from config, {@link RegisterThirstValueEvent}
-     * and keywords. Call once tags are bound; the tables are replaced as a whole, never mutated.
+     * Rebuilds the drink/food tables and the purity containers from config, the {@code bluedroplets:drinks} data map,
+     * {@link RegisterThirstValueEvent} and keywords. Call once tags and data maps are bound; the tables are replaced
+     * as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
      */
     public static void rebuild()
     {
@@ -71,6 +75,7 @@ public class ThirstHelper
 
         readValues(ItemSettingsConfig.DRINKS.get(), drinks, unknown, absentMods);
         readValues(ItemSettingsConfig.FOODS.get(), foods, unknown, absentMods);
+        addDataMapItems(drinks, foods);
         for (String id : ContainerConfig.CONTAINERS.get())
             resolve(id, item -> containers.add(new ContainerWithPurity(item)), unknown, absentMods);
 
@@ -95,7 +100,7 @@ public class ThirstHelper
     }
 
     /**
-     * Resolved drink values (item → {thirst, quenched}); immutable.
+     * Resolved drink values (item → {thirst, quenched, purity or -1}); immutable.
      */
     public static Map<Item, int[]> drinkTable()
     {
@@ -103,7 +108,7 @@ public class ThirstHelper
     }
 
     /**
-     * Resolved food values (item → {thirst, quenched}); immutable.
+     * Resolved food values (item → {thirst, quenched, purity or -1}); immutable.
      */
     public static Map<Item, int[]> foodTable()
     {
@@ -142,7 +147,7 @@ public class ThirstHelper
         {
             if (!ItemSettingsConfig.isValidEntry(entry))
                 continue;
-            int[] values = {((Number) entry.get(1)).intValue(), ((Number) entry.get(2)).intValue()};
+            int[] values = {((Number) entry.get(1)).intValue(), ((Number) entry.get(2)).intValue(), -1};
             resolve((String) entry.get(0), item -> target.put(item, values), unknown, absentMods);
         }
     }
@@ -181,19 +186,36 @@ public class ThirstHelper
             unknown.add(id);
     }
 
+    private static void addDataMapItems(Map<Item, int[]> drinks, Map<Item, int[]> foods)
+    {
+        for (Map.Entry<ResourceKey<Item>, DrinkValues> entry : BuiltInRegistries.ITEM.getDataMap(DropletsDataMaps.DRINKS).entrySet())
+        {
+            Item item = BuiltInRegistries.ITEM.get(entry.getKey());
+            if (drinks.containsKey(item) || foods.containsKey(item))
+                continue;
+            DrinkValues value = entry.getValue();
+            (isFoodItem(item) ? foods : drinks).put(item, new int[]{value.thirst(), value.quenched(), value.purity().orElse(-1)});
+        }
+    }
+
+    private static boolean isFoodItem(Item item)
+    {
+        return item.getDefaultInstance().getFoodProperties(null) != null;
+    }
+
     private static void addKeywordItems(Map<Item, int[]> drinks, Map<Item, int[]> foods)
     {
         Pattern blacklist = keyword(KeyWordConfig.KEYWORD_BLACKLIST.get());
         Pattern drink = keyword(KeyWordConfig.KEYWORD_DRINK.get());
         Pattern soup = keyword(KeyWordConfig.KEYWORD_SOUP.get());
         Pattern fruit = keyword(KeyWordConfig.KEYWORD_FRUIT.get());
-        int[] drinkValues = {KeyWordConfig.getDrinkHydration(), KeyWordConfig.getDrinkQuenchness()};
-        int[] soupValues = {KeyWordConfig.getSoupHydration(), KeyWordConfig.getSoupQuenchness()};
-        int[] fruitValues = {KeyWordConfig.getFruitHydration(), KeyWordConfig.getFruitQuenchness()};
+        int[] drinkValues = {KeyWordConfig.getDrinkHydration(), KeyWordConfig.getDrinkQuenchness(), -1};
+        int[] soupValues = {KeyWordConfig.getSoupHydration(), KeyWordConfig.getSoupQuenchness(), -1};
+        int[] fruitValues = {KeyWordConfig.getFruitHydration(), KeyWordConfig.getFruitQuenchness(), -1};
 
         for (Item item : BuiltInRegistries.ITEM)
         {
-            if (drinks.containsKey(item) || foods.containsKey(item) || item.getDefaultInstance().getFoodProperties(null) != null)
+            if (drinks.containsKey(item) || foods.containsKey(item) || isFoodItem(item))
                 continue;
 
             String name = item.getDescriptionId();
@@ -270,6 +292,15 @@ public class ThirstHelper
     {
         int[] values = values(itemStack.getItem());
         return values == null ? 0 : values[1];
+    }
+
+    /**
+     * Purity of this drink when the stack stores none ({@code purity} in the data map), or -1.
+     */
+    public static int getDrinkPurity(ItemStack itemStack)
+    {
+        int[] values = values(itemStack.getItem());
+        return values == null ? -1 : values[2];
     }
 
     private static int[] values(Item item)

@@ -17,8 +17,9 @@ public abstract class MixinPlayer
     @Inject(method = "eat", at = @At("HEAD"))
     public void onEatDrink(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir)
     {
-        if (!WaterPurity.isWaterFilledContainer(food))
-            PlayerThirst.drink(food, (Player) (Object) this);
+        Player player = (Player) (Object) this;
+        if (!WaterPurity.isWaterFilledContainer(food) && WaterPurity.givePurityEffects(player, food))
+            PlayerThirst.drink(food, player);
     }
 
 }

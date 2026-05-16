@@ -31,13 +31,12 @@ public class ItemSettingsConfig
     static
     {
         BUILDER.push("Drinks")
-                .comment("Defines items that will recover thirst when drunk",
+                .comment("Overrides: items that recover thirst when drunk. Entries here win over the bluedroplets:drinks data map",
+                        "(datapacks) and over values registered by other mods. Default values live in the data map.",
                         "Format: [[\"item-id-1\", hydration-amount, quenching-amount], [\"item-id-2\", hydration-amount, quenching-amount], ...etc]");
         DRINKS = BUILDER
                 .<List<?>>defineListAllowEmpty("drinks", Arrays.asList
                                 (
-                                        Arrays.asList("minecraft:potion", 6, 8),
-                                        Arrays.asList("bluedroplets:terracotta_water_bowl", 4, 5),
                                         Arrays.asList("farmersrespite:green_tea", 10, 14),
                                         Arrays.asList("farmersrespite:yellow_tea", 10, 14),
                                         Arrays.asList("farmersrespite:black_tea", 10, 14),
@@ -74,23 +73,12 @@ public class ItemSettingsConfig
         BUILDER.pop();
 
         BUILDER.push("Foods")
-                .comment("Defines items that will recover thirst when eaten",
+                .comment("Overrides: items that recover thirst when eaten. Entries here win over the bluedroplets:drinks data map",
+                        "(datapacks) and over values registered by other mods. Default values live in the data map.",
                         "Format: [[\"item-id-1\", hydration-amount, quenching-amount], [\"item-id-2\", hydration-amount, quenching-amount], ...etc]");
         FOODS = BUILDER
                 .<List<?>>defineListAllowEmpty("foods", Arrays.asList
                                 (
-                                        Arrays.asList("minecraft:apple", 2, 3),
-                                        Arrays.asList("minecraft:golden_apple", 2, 3),
-                                        Arrays.asList("minecraft:enchanted_golden_apple", 2, 3),
-                                        Arrays.asList("minecraft:melon_slice", 4, 5),
-                                        Arrays.asList("minecraft:carrot", 1, 2),
-                                        Arrays.asList("minecraft:mushroom_stew", 2, 3),
-                                        Arrays.asList("minecraft:rabbit_stew", 2, 3),
-                                        Arrays.asList("minecraft:beetroot_soup", 5, 7),
-                                        Arrays.asList("minecraft:beetroot", 1, 2),
-                                        Arrays.asList("minecraft:sweet_berries", 1, 2),
-                                        Arrays.asList("minecraft:glow_berries", 1, 2),
-                                        Arrays.asList("minecraft:golden_carrot", 1, 2),
                                         Arrays.asList("farmersdelight:pumpkin_slice", 2, 1),
                                         Arrays.asList("farmersdelight:cabbage_leaf", 1, 2),
                                         Arrays.asList("farmersdelight:melon_popsicle", 7, 9),

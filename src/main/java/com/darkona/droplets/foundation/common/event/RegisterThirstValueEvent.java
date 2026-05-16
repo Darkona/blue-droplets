@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Posted on the game bus every time the thirst tables are rebuilt (world load and {@code /reload}).
- * Values added here can be overridden by the config.
+ * Values added here can be overridden by the config and by the {@code bluedroplets:drinks} data map.
  */
 @SuppressWarnings("unused")
 public class RegisterThirstValueEvent extends Event {
@@ -28,7 +28,7 @@ public class RegisterThirstValueEvent extends Event {
      * */
     public void addFood(Item item, int thirst, int quenched)
     {
-        foods.putIfAbsent(item, new int[]{thirst, quenched});
+        foods.putIfAbsent(item, new int[]{thirst, quenched, -1});
     }
 
     /**
@@ -36,7 +36,7 @@ public class RegisterThirstValueEvent extends Event {
      * */
     public void addDrink(Item item, int thirst, int quenched)
     {
-        drinks.putIfAbsent(item, new int[]{thirst, quenched});
+        drinks.putIfAbsent(item, new int[]{thirst, quenched, -1});
     }
 
     /**

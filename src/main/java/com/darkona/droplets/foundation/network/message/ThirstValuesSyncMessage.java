@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Values resolved by the server (config, tags, keywords, {@code RegisterThirstValueEvent}, blacklist applied):
- * item → {thirst, quenched} for drinks and foods, filled items of data-driven purity containers, and {@code defaultPurity}.
+ * Values resolved by the server (config, data map, tags, keywords, {@code RegisterThirstValueEvent}, blacklist applied):
+ * item → {thirst, quenched, purity} for drinks and foods, filled items of data-driven purity containers, and {@code defaultPurity}.
  */
 public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> containers, int defaultPurity) implements CustomPacketPayload
 {
@@ -29,7 +29,8 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
     private static final StreamCodec<ByteBuf, int[]> VALUES = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, values -> values[0],
             ByteBufCodecs.VAR_INT, values -> values[1],
-            (thirst, quenched) -> new int[]{thirst, quenched});
+            ByteBufCodecs.VAR_INT, values -> values[2],
+            (thirst, quenched, purity) -> new int[]{thirst, quenched, purity});
     private static final StreamCodec<RegistryFriendlyByteBuf, Map<Item, int[]>> TABLE = ByteBufCodecs.map(HashMap::new, ITEM, VALUES);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ThirstValuesSyncMessage> STREAM_CODEC = StreamCodec.composite(

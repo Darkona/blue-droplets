@@ -1,0 +1,18 @@
+{
+  "values": {
+    "minecraft:potion": { "thirst": 6, "quenched": 8 },
+    "bluedroplets:terracotta_water_bowl": { "thirst": 4, "quenched": 5 },
+    "minecraft:apple": { "thirst": 2, "quenched": 3 },
+    "minecraft:golden_apple": { "thirst": 2, "quenched": 3 },
+    "minecraft:enchanted_golden_apple": { "thirst": 2, "quenched": 3 },
+    "minecraft:melon_slice": { "thirst": 4, "quenched": 5 },
+    "minecraft:carrot": { "thirst": 1, "quenched": 2 },
+    "minecraft:mushroom_stew": { "thirst": 2, "quenched": 3 },
+    "minecraft:rabbit_stew": { "thirst": 2, "quenched": 3 },
+    "minecraft:beetroot_soup": { "thirst": 5, "quenched": 7 },
+    "minecraft:beetroot": { "thirst": 1, "quenched": 2 },
+    "minecraft:sweet_berries": { "thirst": 1, "quenched": 2 },
+    "minecraft:glow_berries": { "thirst": 1, "quenched": 2 },
+    "minecraft:golden_carrot": { "thirst": 1, "quenched": 2 }
+  }
+}

@@ -3,6 +3,7 @@ package com.darkona.droplets;
 import com.darkona.droplets.compat.appleskin.AppleSkinCompat;
 import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
+import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ConditionInit;
 import com.darkona.droplets.content.registry.EffectInit;
@@ -34,6 +35,7 @@ public class BlueDroplets
 
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::clientSetup);
+        modBus.addListener(DropletsDataMaps::register);
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 
