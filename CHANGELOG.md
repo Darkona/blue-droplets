@@ -41,7 +41,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Nausea, Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated and Corail Tombstone Ghostly Shape now work whatever other effects the player has; before, only the first active effect was checked. Effects are matched by id (`farmersdelight:nourishment`, `bakery:stuffed`, `brewery:saturated`, `tombstone:ghostly_shape`), no longer by name fragments. `[1.21.1]`
 
 - Drink, food and container lists (`item_settings.toml`, `container.toml`, `keyword.toml`) are read when the world loads and again on `/reload`, after tags are loaded: `#namespace:tag` entries now work and config edits apply with `/reload` instead of a restart (thirst#153, thirst#155). `[1.21.1]`
-- Unknown item or tag ids in those lists are skipped with one warning per id instead of silently becoming air (thirst#272); ids from mods that are not installed are only logged at debug level. `[1.21.1]`
+- Unknown item or tag ids in those lists are skipped instead of silently becoming air, with one warning per load (world load or `/reload`) that lists all of them (thirst#272); ids from mods that are not installed are only listed at debug level. `[1.21.1]`
 - Asking for the thirst values of an item that has none returns 0 instead of crashing (thirst#239). `[1.21.1]`
 - Reopening a singleplayer world no longer registers the config containers again. `[1.21.1]`
 - Keyword matching (`keyword.toml`) runs once over all items when the lists are built, instead of on every tooltip and use; this also removes a rare crash when the client and the integrated server checked items at the same time. `[1.21.1]`
@@ -71,6 +71,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - The thirst loss multiplier from climate (biome temperature and humidity, or Cold Sweat body temperature; Nether), Fire Protection and Fire Resistance is computed once per second per player (players are spread over different ticks), and right away after changing armor, gaining or losing an effect, changing dimension or respawning. Before, it was computed up to three times per tick. Walking into another biome, or a Cold Sweat temperature change, now takes effect within one second. `[1.21.1]`
 - Checking whether an item is a water container with purity (tooltips, drinking, campfires, Create filling) is one map lookup instead of a scan over all containers. `[1.21.1]`
 - The thirst bar always reads the current player's thirst; before, it kept the data of the previous player object for up to 2 seconds after respawning or changing dimension. The thirst bar and the AppleSkin overlays and tooltip no longer create objects every frame. `[1.21.1]`
+- Purity effects use the player's random generator instead of creating a new one for every drink. `[1.21.1]`
 - Create Sand Filter: an idle filter (not enough dirty water, or a full purified tank) does no fluid work at all each tick. `[1.21.1]`
 
 ### Config

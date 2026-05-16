@@ -64,7 +64,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.Random;
 
 
 @SuppressWarnings({"SpellCheckingInspection","unused"})
@@ -494,8 +493,7 @@ public class WaterPurity
     public static boolean givePurityEffects(Player player, int purity)
     {
         boolean shouldRegenerate = true;
-        Random random = new Random();
-        float chance = random.nextFloat();
+        float chance = player.getRandom().nextFloat();
 
         switch (purity) {
             case 0 -> {

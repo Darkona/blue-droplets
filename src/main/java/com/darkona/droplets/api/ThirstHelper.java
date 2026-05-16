@@ -35,11 +35,11 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -48,7 +48,6 @@ public class ThirstHelper
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final float MODIFIER_HARSHNESS = 0.5f;
-    private static final Set<String> WARNED = ConcurrentHashMap.newKeySet();
 
     private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods) {}
 
@@ -67,11 +66,13 @@ public class ThirstHelper
         Map<Item, int[]> drinks = new HashMap<>();
         Map<Item, int[]> foods = new HashMap<>();
         List<ContainerWithPurity> containers = new ArrayList<>();
+        Set<String> unknown = new LinkedHashSet<>();
+        Set<String> absentMods = new LinkedHashSet<>();
 
-        readValues(ItemSettingsConfig.DRINKS.get(), drinks);
-        readValues(ItemSettingsConfig.FOODS.get(), foods);
+        readValues(ItemSettingsConfig.DRINKS.get(), drinks, unknown, absentMods);
+        readValues(ItemSettingsConfig.FOODS.get(), foods, unknown, absentMods);
         for (String id : ContainerConfig.CONTAINERS.get())
-            resolve(id, item -> containers.add(new ContainerWithPurity(item)));
+            resolve(id, item -> containers.add(new ContainerWithPurity(item)), unknown, absentMods);
 
         NeoForge.EVENT_BUS.post(new RegisterThirstValueEvent(drinks, foods, containers));
 
@@ -82,7 +83,12 @@ public class ThirstHelper
             resolve(id, item -> {
                 drinks.remove(item);
                 foods.remove(item);
-            });
+            }, unknown, absentMods);
+
+        if (!unknown.isEmpty())
+            LOGGER.warn("Skipped {} config entries with no such item or tag: {}", unknown.size(), unknown);
+        if (!absentMods.isEmpty())
+            LOGGER.debug("Skipped {} config entries of mods that are not installed: {}", absentMods.size(), absentMods);
 
         table = new Table(Map.copyOf(drinks), Map.copyOf(foods));
         WaterPurity.setContainers(containers);
@@ -130,18 +136,18 @@ public class ThirstHelper
         WaterPurity.setServerDefaultPurity(-1);
     }
 
-    private static void readValues(List<? extends List<?>> entries, Map<Item, int[]> target)
+    private static void readValues(List<? extends List<?>> entries, Map<Item, int[]> target, Set<String> unknown, Set<String> absentMods)
     {
         for (List<?> entry : entries)
         {
             if (!ItemSettingsConfig.isValidEntry(entry))
                 continue;
             int[] values = {((Number) entry.get(1)).intValue(), ((Number) entry.get(2)).intValue()};
-            resolve((String) entry.get(0), item -> target.put(item, values));
+            resolve((String) entry.get(0), item -> target.put(item, values), unknown, absentMods);
         }
     }
 
-    private static void resolve(String id, Consumer<Item> sink)
+    private static void resolve(String id, Consumer<Item> sink, Set<String> unknown, Set<String> absentMods)
     {
         boolean isTag = id.startsWith("#");
         ResourceLocation location = ResourceLocation.tryParse(isTag ? id.substring(1) : id);
@@ -169,12 +175,10 @@ public class ThirstHelper
             }
         }
 
-        if (!WARNED.add(id))
-            return;
         if (location != null && !ModList.get().isLoaded(location.getNamespace()))
-            LOGGER.debug("Skipping config entry '{}': mod '{}' is not installed", id, location.getNamespace());
+            absentMods.add(id);
         else
-            LOGGER.warn("Skipping config entry '{}': no such item or tag", id);
+            unknown.add(id);
     }
 
     private static void addKeywordItems(Map<Item, int[]> drinks, Map<Item, int[]> foods)
