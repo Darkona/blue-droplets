@@ -42,3 +42,15 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
 - Items with food properties (eaten) and items without (drunk) use the same map; Blue Droplets tells them apart by the item itself.
 - Blue Droplets ships its defaults in `data/bluedroplets/data_maps/item/drinks.json`. To change a default, add your own entry (a later pack wins) or `remove` it.
 - The map is synced to clients; tooltips, AppleSkin and the HUD use the server's values.
+
+### Where an item's values come from
+
+Each item takes its values from the first of these that has it; the others are ignored for that item:
+
+1. **Blacklist**: `itemsBlacklist` in `item_settings.toml` (the item restores no thirst at all).
+2. **TOML overrides**: the `drinks` and `foods` lists in `item_settings.toml`.
+3. **Datapacks**: the `bluedroplets:drinks` data map.
+4. **Other mods' code** (`RegisterThirstValueEvent`).
+5. **Keywords** (`keyword.toml`, off by default).
+
+The server resolves this table on world load and on `/reload` and sends it to every client, so all players see the server's values.

@@ -38,6 +38,8 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -61,42 +63,80 @@ public class ThirstHelper
     private static @Nullable Holder<Enchantment> fireProtectionHolder;
 
     /**
-     * Rebuilds the drink/food tables and the purity containers from config, the {@code bluedroplets:drinks} data map,
-     * {@link RegisterThirstValueEvent} and keywords. Call once tags and data maps are bound; the tables are replaced
-     * as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
+     * Rebuilds the drink/food tables and the purity containers. Call once tags and data maps are bound; the tables
+     * are replaced as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
+     * Each item takes its values from the first source that has it: blacklist (no values),
+     * {@code item_settings.toml}, the {@code bluedroplets:drinks} data map, {@link RegisterThirstValueEvent}, keywords.
      */
     public static void rebuild()
     {
-        Map<Item, int[]> drinks = new HashMap<>();
-        Map<Item, int[]> foods = new HashMap<>();
+        Tables tables = new Tables();
         List<ContainerWithPurity> containers = new ArrayList<>();
         Set<String> unknown = new LinkedHashSet<>();
         Set<String> absentMods = new LinkedHashSet<>();
 
-        readValues(ItemSettingsConfig.DRINKS.get(), drinks, unknown, absentMods);
-        readValues(ItemSettingsConfig.FOODS.get(), foods, unknown, absentMods);
-        addDataMapItems(drinks, foods);
+        for (String id : ItemSettingsConfig.ITEMS_BLACKLIST.get())
+            resolve(id, tables.blocked::add, unknown, absentMods);
+
+        readValues(ItemSettingsConfig.DRINKS.get(), tables, false, unknown, absentMods);
+        readValues(ItemSettingsConfig.FOODS.get(), tables, true, unknown, absentMods);
+
+        for (Map.Entry<ResourceKey<Item>, DrinkValues> entry : BuiltInRegistries.ITEM.getDataMap(DropletsDataMaps.DRINKS).entrySet())
+        {
+            Item item = BuiltInRegistries.ITEM.get(entry.getKey());
+            DrinkValues value = entry.getValue();
+            tables.claim(item, new int[]{value.thirst(), value.quenched(), value.purity().orElse(-1)}, isFoodItem(item));
+        }
+
         for (String id : ContainerConfig.CONTAINERS.get())
             resolve(id, item -> containers.add(new ContainerWithPurity(item)), unknown, absentMods);
 
-        NeoForge.EVENT_BUS.post(new RegisterThirstValueEvent(drinks, foods, containers));
+        Map<Item, int[]> codeDrinks = new LinkedHashMap<>();
+        Map<Item, int[]> codeFoods = new LinkedHashMap<>();
+        NeoForge.EVENT_BUS.post(new RegisterThirstValueEvent(codeDrinks, codeFoods, containers));
+        codeDrinks.forEach((item, values) -> tables.claim(item, values, false));
+        codeFoods.forEach((item, values) -> tables.claim(item, values, true));
 
         if (KeyWordConfig.ENABLE_KEYWORD_CONFIG.get())
-            addKeywordItems(drinks, foods);
-
-        for (String id : ItemSettingsConfig.ITEMS_BLACKLIST.get())
-            resolve(id, item -> {
-                drinks.remove(item);
-                foods.remove(item);
-            }, unknown, absentMods);
+            addKeywordItems(tables);
 
         if (!unknown.isEmpty())
             LOGGER.warn("Skipped {} config entries with no such item or tag: {}", unknown.size(), unknown);
         if (!absentMods.isEmpty())
             LOGGER.debug("Skipped {} config entries of mods that are not installed: {}", absentMods.size(), absentMods);
 
-        table = new Table(Map.copyOf(drinks), Map.copyOf(foods));
+        table = new Table(Map.copyOf(tables.drinks), Map.copyOf(tables.foods));
         WaterPurity.setContainers(containers);
+    }
+
+    /**
+     * Tables under construction: an item is in at most one of them, and blocked items in none.
+     */
+    private static final class Tables
+    {
+        final Set<Item> blocked = new HashSet<>();
+        final Map<Item, int[]> drinks = new HashMap<>();
+        final Map<Item, int[]> foods = new HashMap<>();
+
+        boolean has(Item item)
+        {
+            return blocked.contains(item) || drinks.containsKey(item) || foods.containsKey(item);
+        }
+
+        /**
+         * TOML entries: within a list the last entry for an item wins; an item in both lists stays a drink.
+         */
+        void override(Item item, int[] values, boolean food)
+        {
+            if (!blocked.contains(item) && !(food && drinks.containsKey(item)))
+                (food ? foods : drinks).put(item, values);
+        }
+
+        void claim(Item item, int[] values, boolean food)
+        {
+            if (!has(item))
+                (food ? foods : drinks).put(item, values);
+        }
     }
 
     /**
@@ -141,14 +181,14 @@ public class ThirstHelper
         WaterPurity.setServerDefaultPurity(-1);
     }
 
-    private static void readValues(List<? extends List<?>> entries, Map<Item, int[]> target, Set<String> unknown, Set<String> absentMods)
+    private static void readValues(List<? extends List<?>> entries, Tables tables, boolean food, Set<String> unknown, Set<String> absentMods)
     {
         for (List<?> entry : entries)
         {
             if (!ItemSettingsConfig.isValidEntry(entry))
                 continue;
             int[] values = {((Number) entry.get(1)).intValue(), ((Number) entry.get(2)).intValue(), -1};
-            resolve((String) entry.get(0), item -> target.put(item, values), unknown, absentMods);
+            resolve((String) entry.get(0), item -> tables.override(item, values, food), unknown, absentMods);
         }
     }
 
@@ -186,24 +226,12 @@ public class ThirstHelper
             unknown.add(id);
     }
 
-    private static void addDataMapItems(Map<Item, int[]> drinks, Map<Item, int[]> foods)
-    {
-        for (Map.Entry<ResourceKey<Item>, DrinkValues> entry : BuiltInRegistries.ITEM.getDataMap(DropletsDataMaps.DRINKS).entrySet())
-        {
-            Item item = BuiltInRegistries.ITEM.get(entry.getKey());
-            if (drinks.containsKey(item) || foods.containsKey(item))
-                continue;
-            DrinkValues value = entry.getValue();
-            (isFoodItem(item) ? foods : drinks).put(item, new int[]{value.thirst(), value.quenched(), value.purity().orElse(-1)});
-        }
-    }
-
     private static boolean isFoodItem(Item item)
     {
         return item.getDefaultInstance().getFoodProperties(null) != null;
     }
 
-    private static void addKeywordItems(Map<Item, int[]> drinks, Map<Item, int[]> foods)
+    private static void addKeywordItems(Tables tables)
     {
         Pattern blacklist = keyword(KeyWordConfig.KEYWORD_BLACKLIST.get());
         Pattern drink = keyword(KeyWordConfig.KEYWORD_DRINK.get());
@@ -215,18 +243,18 @@ public class ThirstHelper
 
         for (Item item : BuiltInRegistries.ITEM)
         {
-            if (drinks.containsKey(item) || foods.containsKey(item) || isFoodItem(item))
+            if (tables.has(item) || isFoodItem(item))
                 continue;
 
             String name = item.getDescriptionId();
             if (matches(blacklist, name))
                 continue;
             if (matches(drink, name))
-                drinks.put(item, drinkValues);
+                tables.claim(item, drinkValues, false);
             else if (matches(soup, name))
-                foods.put(item, soupValues);
+                tables.claim(item, soupValues, true);
             else if (matches(fruit, name))
-                foods.put(item, fruitValues);
+                tables.claim(item, fruitValues, true);
         }
     }
 
