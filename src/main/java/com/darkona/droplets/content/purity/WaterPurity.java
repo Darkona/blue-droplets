@@ -351,7 +351,7 @@ public class WaterPurity
     public static boolean isWaterFilledContainer(ItemStack item)
     {
         ContainerWithPurity container = waterContainers.get(item.getItem());
-        return container != null && container.equalsFilled(item);
+        return container != null && !item.is(DropletsTags.PURITY_OPT_OUT) && container.equalsFilled(item);
     }
 
     static boolean isFillableBlock(Block block)
@@ -432,7 +432,7 @@ public class WaterPurity
 
     public static boolean hasPurity(ItemStack item)
     {
-        return item.get(ThirstComponent.PURITY) != null;
+        return item.get(ThirstComponent.PURITY) != null && !item.is(DropletsTags.PURITY_OPT_OUT);
     }
 
     public static boolean hasPurity(FluidStack fluid)
@@ -452,11 +452,12 @@ public class WaterPurity
 
     /**
      * Sets the purity component on an item; it is always stored, also for the default purity.
-     * Invalid values are stored as the default purity.
+     * Invalid values are stored as the default purity. Items in {@code bluedroplets:purity_opt_out} are left unchanged.
      */
     public static ItemStack addPurity(ItemStack item, int purity)
     {
-        item.set(ThirstComponent.PURITY, sanitizePurity(purity));
+        if (!item.is(DropletsTags.PURITY_OPT_OUT))
+            item.set(ThirstComponent.PURITY, sanitizePurity(purity));
         return item;
     }
 

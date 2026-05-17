@@ -47,7 +47,7 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
 
 Each item takes its values from the first of these that has it; the others are ignored for that item:
 
-1. **Blacklist**: `itemsBlacklist` in `item_settings.toml` (the item restores no thirst at all).
+1. **Blacklist**: the item tag `#bluedroplets:no_thirst` or `itemsBlacklist` in `item_settings.toml` (the item restores no thirst at all).
 2. **TOML overrides**: the `drinks` and `foods` lists in `item_settings.toml`.
 3. **Datapacks**: the `bluedroplets:drinks` data map.
 4. **Other mods' code** (`RegisterThirstValueEvent`).
@@ -108,3 +108,13 @@ Dimension type data map, `data/<namespace>/data_maps/dimension_type/dimension_wa
 | `base` | int 0-3, optional | Base purity for biomes without their own |
 
 Both world data maps are only read on the server.
+
+## Item and fluid tags
+
+| Tag | Registry | Default | Meaning |
+|---|---|---|---|
+| `bluedroplets:no_thirst` | item | empty | Never restores thirst, whatever the config, datapacks or other mods say |
+| `bluedroplets:purity_opt_out` | item | empty | Never gets a purity: not filled with purity, no purity tooltip, no purity effects, and its fluid is not given one. Use it for other mods' water containers that break when water items carry extra data |
+| `bluedroplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
+
+Files: `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`. Use `{"id": "othermod:item", "required": false}` for optional mods.

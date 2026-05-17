@@ -4,6 +4,7 @@ import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.data.DrinkValues;
 import com.darkona.droplets.content.data.DropletsDataMaps;
+import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
@@ -65,7 +66,7 @@ public class ThirstHelper
     /**
      * Rebuilds the drink/food tables and the purity containers. Call once tags and data maps are bound; the tables
      * are replaced as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
-     * Each item takes its values from the first source that has it: blacklist (no values),
+     * Each item takes its values from the first source that has it: blacklist and {@code bluedroplets:no_thirst} (no values),
      * {@code item_settings.toml}, the {@code bluedroplets:drinks} data map, {@link RegisterThirstValueEvent}, keywords.
      */
     public static void rebuild()
@@ -77,6 +78,8 @@ public class ThirstHelper
 
         for (String id : ItemSettingsConfig.ITEMS_BLACKLIST.get())
             resolve(id, tables.blocked::add, unknown, absentMods);
+        for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(DropletsTags.NO_THIRST))
+            tables.blocked.add(item.value());
 
         readValues(ItemSettingsConfig.DRINKS.get(), tables, false, unknown, absentMods);
         readValues(ItemSettingsConfig.FOODS.get(), tables, true, unknown, absentMods);

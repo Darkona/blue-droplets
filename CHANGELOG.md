@@ -91,6 +91,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Each item now takes its thirst values from exactly one source, the first that has it: blacklist, `item_settings.toml`, the `bluedroplets:drinks` data map, other mods' code (`RegisterThirstValueEvent`), keywords. Before, an item listed as a drink by one source and as a food by another ended up in both lists. `[1.21.1]`
 - Water purity in the world can now be set per biome and per dimension: biome tags `bluedroplets:water_purity/0` to `/3`, the biome data map `bluedroplets:biome_water` (`base`, `delta`, `max`) and the dimension type data map `bluedroplets:dimension_water` (`base`); otherwise `worldWaterBasePurity` (new, `common.toml`, default 0 = as before). Nothing is tagged by default, so purity is unchanged. `[1.21.1]`
 - New biome tag `bluedroplets:salt_water` (oceans by default) and `saltWaterPurity` (`common.toml`, default -1 = off): when set, water in those biomes always has that purity (thirst#268). `[1.21.1]`
+- New item tags `bluedroplets:no_thirst` (never restores thirst, like `itemsBlacklist`) and `bluedroplets:purity_opt_out` (never gets, shows or passes on a purity; for other mods' water containers that compare item data, related to thirst#150, thirst#180, thirst#264). Both are empty by default. `[1.21.1]`
 - AppleSkin: the quenched preview for a held item is hidden only when the item cannot be eaten right now (full hunger and not always edible), instead of whenever the item was listed as a food. `[1.21.1]`
 
 ### API

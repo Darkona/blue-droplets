@@ -1,16 +1,13 @@
 package com.darkona.droplets.foundation.mixin.create;
 
-import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,9 +24,6 @@ import java.util.List;
 @Mixin(BasinRecipe.class)
 public class MixinBasinRecipe {
 
-    @Unique
-    private static final TagKey<Fluid> CARRIES_PURITY = TagKey.create(Registries.FLUID, BlueDroplets.asResource("carries_purity"));
-
     @WrapOperation(
             method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z",
             at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;acceptOutputs(Ljava/util/List;Ljava/util/List;Z)Z"),
@@ -44,7 +38,7 @@ public class MixinBasinRecipe {
                 for (int i = 0; i < fluids.size(); i++)
                 {
                     FluidStack fluid = fluids.get(i);
-                    if (fluid.is(CARRIES_PURITY) && !WaterPurity.hasPurity(fluid))
+                    if (fluid.is(DropletsTags.CARRIES_PURITY) && !WaterPurity.hasPurity(fluid))
                         fluids.set(i, WaterPurity.addPurity(fluid.copy(), purity));
                 }
         }
