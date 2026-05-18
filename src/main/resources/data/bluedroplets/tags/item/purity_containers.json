@@ -1,0 +1,7 @@
+{
+  "values": [
+    { "id": "collectorsreap:pomegranate_black_tea", "required": false },
+    { "id": "collectorsreap:lime_green_tea", "required": false },
+    { "id": "create:builders_tea", "required": false }
+  ]
+}

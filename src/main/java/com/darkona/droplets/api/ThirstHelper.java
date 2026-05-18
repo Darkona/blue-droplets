@@ -93,6 +93,8 @@ public class ThirstHelper
 
         for (String id : ContainerConfig.CONTAINERS.get())
             resolve(id, item -> containers.add(new ContainerWithPurity(item)), unknown, absentMods);
+        for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(DropletsTags.PURITY_CONTAINERS))
+            containers.add(new ContainerWithPurity(item.value()));
 
         Map<Item, int[]> codeDrinks = new LinkedHashMap<>();
         Map<Item, int[]> codeFoods = new LinkedHashMap<>();

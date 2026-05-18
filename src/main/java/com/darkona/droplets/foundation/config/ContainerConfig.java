@@ -10,7 +10,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 
 public class ContainerConfig {
@@ -21,13 +20,9 @@ public class ContainerConfig {
     static {
         BUILDER.push("Container");
 
-        CONTAINERS = BUILDER.comment("Defineds drinks will be influenced by purity"
-                        ,"Format: [\"examplemod:example_item_1\", \"examplemod:example_item_2\"]")
-                .<String>defineListAllowEmpty("Containers", Arrays.asList(
-                        "collectorsreap:pomegranate_black_tea",
-                        "collectorsreap:lime_green_tea",
-                        "create:builders_tea"
-                ), () -> "namespace:item", it -> it instanceof String);
+        CONTAINERS = BUILDER.comment("Drinks that carry a water purity (added to the item tag bluedroplets:purity_containers, where the defaults live)"
+                        ,"Format: [\"examplemod:example_item_1\", \"#examplemod:example_tag\"]")
+                .<String>defineListAllowEmpty("Containers", List.of(), () -> "namespace:item", it -> it instanceof String);
 
         BUILDER.pop();
 

@@ -17,6 +17,8 @@ public final class DropletsTags
     public static final TagKey<Fluid> CARRIES_PURITY = TagKey.create(Registries.FLUID, BlueDroplets.asResource("carries_purity"));
     /** Items that never get or show a purity, e.g. other mods' water containers that compare components. */
     public static final TagKey<Item> PURITY_OPT_OUT = TagKey.create(Registries.ITEM, BlueDroplets.asResource("purity_opt_out"));
+    /** Drinks that carry a water purity (static containers: they can be filled by machines but not from the world). */
+    public static final TagKey<Item> PURITY_CONTAINERS = TagKey.create(Registries.ITEM, BlueDroplets.asResource("purity_containers"));
     /** Items that never restore thirst, whatever the config, datapacks or other mods say. */
     public static final TagKey<Item> NO_THIRST = TagKey.create(Registries.ITEM, BlueDroplets.asResource("no_thirst"));
 

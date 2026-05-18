@@ -40,7 +40,7 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
   ```
 
 - Items with food properties (eaten) and items without (drunk) use the same map; Blue Droplets tells them apart by the item itself.
-- Blue Droplets ships its defaults in `data/bluedroplets/data_maps/item/drinks.json`. To change a default, add your own entry (a later pack wins) or `remove` it.
+- Blue Droplets ships its defaults in `data/bluedroplets/data_maps/item/drinks.json`: vanilla items, its own items and, only when those mods are installed, Farmer's Delight, Farmer's Respite, Brewin' and Chewin', Collector's Reap, Create (builder's tea) and Supernatural. To change a default, add your own entry (a later pack wins) or `remove` it.
 - The map is synced to clients; tooltips, AppleSkin and the HUD use the server's values.
 
 ### Where an item's values come from
@@ -113,8 +113,9 @@ Both world data maps are only read on the server.
 
 | Tag | Registry | Default | Meaning |
 |---|---|---|---|
+| `bluedroplets:purity_containers` | item | Create builder's tea, Collector's Reap teas | Drinks that carry a water purity: filled with purity by machines (Create spouts), show it in the tooltip and roll its effects. They are not filled from the world |
 | `bluedroplets:no_thirst` | item | empty | Never restores thirst, whatever the config, datapacks or other mods say |
 | `bluedroplets:purity_opt_out` | item | empty | Never gets a purity: not filled with purity, no purity tooltip, no purity effects, and its fluid is not given one. Use it for other mods' water containers that break when water items carry extra data |
 | `bluedroplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
 
-Files: `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`. Use `{"id": "othermod:item", "required": false}` for optional mods.
+Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`. Use `{"id": "othermod:item", "required": false}` for optional mods.

@@ -35,39 +35,7 @@ public class ItemSettingsConfig
                         "(datapacks) and over values registered by other mods. Default values live in the data map.",
                         "Format: [[\"item-id-1\", hydration-amount, quenching-amount], [\"item-id-2\", hydration-amount, quenching-amount], ...etc]");
         DRINKS = BUILDER
-                .<List<?>>defineListAllowEmpty("drinks", Arrays.asList
-                                (
-                                        Arrays.asList("farmersrespite:green_tea", 10, 14),
-                                        Arrays.asList("farmersrespite:yellow_tea", 10, 14),
-                                        Arrays.asList("farmersrespite:black_tea", 10, 14),
-                                        Arrays.asList("farmersrespite:rose_hip_tea", 12, 22),
-                                        Arrays.asList("farmersrespite:dandelion_tea", 12, 22),
-                                        Arrays.asList("farmersrespite:coffee",6,11),
-                                        Arrays.asList("create:builders_tea", 12, 22),
-                                        Arrays.asList("farmersdelight:apple_cider", 8, 13),
-                                        Arrays.asList("farmersdelight:melon_juice", 8, 13),
-                                        Arrays.asList("brewinandchewin:beer", 10, 14),
-                                        Arrays.asList("brewinandchewin:vodka", 10, 14),
-                                        Arrays.asList("brewinandchewin:rice_wine", 10, 14),
-                                        Arrays.asList("brewinandchewin:mead", 10, 14),
-                                        Arrays.asList("brewinandchewin:egg_grog", 10, 14),
-                                        Arrays.asList("brewinandchewin:glittering_grenadine", 10, 14),
-                                        Arrays.asList("brewinandchewin:bloody_mary", 12, 22),
-                                        Arrays.asList("brewinandchewin:salty_folly", 12, 22),
-                                        Arrays.asList("brewinandchewin:pale_jane", 12, 22),
-                                        Arrays.asList("brewinandchewin:saccharine_rum", 12, 22),
-                                        Arrays.asList("brewinandchewin:strongroot_ale", 12, 22),
-                                        Arrays.asList("brewinandchewin:dread_nog", 12, 22),
-                                        Arrays.asList("brewinandchewin:kombucha", 14, 22),
-                                        Arrays.asList("brewinandchewin:red_rum", 14, 22),
-                                        Arrays.asList("brewinandchewin:steel_toe_stout", 14, 22),
-                                        Arrays.asList("collectorsreap:berry_limeade",8,13),
-                                        Arrays.asList("collectorsreap:limeade",8,13),
-                                        Arrays.asList("collectorsreap:pink_limeade",8,13),
-                                        Arrays.asList("collectorsreap:pomegranate_black_tea",10,14),
-                                        Arrays.asList("collectorsreap:lime_green_tea",10,14),
-                                        Arrays.asList("supernatural:blood_bottle",9,12)
-                                ),
+                .<List<?>>defineListAllowEmpty("drinks", List.of(),
                         ItemSettingsConfig::newEntry, ItemSettingsConfig::checkEntry);
 
         BUILDER.pop();
@@ -77,26 +45,7 @@ public class ItemSettingsConfig
                         "(datapacks) and over values registered by other mods. Default values live in the data map.",
                         "Format: [[\"item-id-1\", hydration-amount, quenching-amount], [\"item-id-2\", hydration-amount, quenching-amount], ...etc]");
         FOODS = BUILDER
-                .<List<?>>defineListAllowEmpty("foods", Arrays.asList
-                                (
-                                        Arrays.asList("farmersdelight:pumpkin_slice", 2, 1),
-                                        Arrays.asList("farmersdelight:cabbage_leaf", 1, 2),
-                                        Arrays.asList("farmersdelight:melon_popsicle", 7, 9),
-                                        Arrays.asList("farmersdelight:fruit_salad", 6, 8),
-                                        Arrays.asList("farmersdelight:tomato_sauce", 4, 5),
-                                        Arrays.asList("farmersdelight:mixed_salad", 4, 5),
-                                        Arrays.asList("farmersdelight:beef_stew", 4, 5),
-                                        Arrays.asList("farmersdelight:chicken_soup", 4, 5),
-                                        Arrays.asList("farmersdelight:vegetable_soup", 4, 5),
-                                        Arrays.asList("farmersdelight:fish_stew", 4, 5),
-                                        Arrays.asList("farmersdelight:pumpkin_soup", 4, 5),
-                                        Arrays.asList("farmersdelight:baked_cod_stew", 4, 5),
-                                        Arrays.asList("farmersdelight:noodle_soup", 4, 5),
-                                        Arrays.asList("collectorsreap:lime_slice",1,2),
-                                        Arrays.asList("collectorsreap:lime",2,3),
-                                        Arrays.asList("collectorsreap:portobello_rice_soup",6,8),
-                                        Arrays.asList("collectorsreap:lime_popsicle",7,9)
-                                ),
+                .<List<?>>defineListAllowEmpty("foods", List.of(),
                         ItemSettingsConfig::newEntry, ItemSettingsConfig::checkEntry);
 
         BUILDER.pop();
