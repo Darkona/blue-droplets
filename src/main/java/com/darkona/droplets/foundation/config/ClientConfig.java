@@ -1,24 +1,19 @@
 package com.darkona.droplets.foundation.config;
 
-
-import com.darkona.droplets.BlueDroplets;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-public class ClientConfig
+/**
+ * {@code config/bluedroplets/client.toml}: visuals only.
+ */
+public final class ClientConfig
 {
-    private static final ModConfigSpec SPEC;
-    public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ModConfigSpec.ConfigValue<Boolean> ONLY_SHOW_PURITY_WHEN_SHIFTING;
+    public static final ModConfigSpec.BooleanValue ONLY_SHOW_PURITY_WHEN_SHIFTING;
     public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_Y_OFFSET;
     public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_X_OFFSET;
+
+    public static final ModConfigSpec SPEC;
 
     static
     {
@@ -34,17 +29,5 @@ public class ClientConfig
         SPEC = BUILDER.build();
     }
 
-    public static void setup(ModContainer modContainer)
-    {
-        Path configPath = FMLPaths.CONFIGDIR.get();
-        Path configFolder = Paths.get(configPath.toAbsolutePath().toString(), BlueDroplets.ID);
-
-        try
-        {
-            Files.createDirectory(configFolder);
-        }
-        catch (Exception ignored) {}
-
-        modContainer.registerConfig(ModConfig.Type.CLIENT, SPEC, BlueDroplets.ID + "/client.toml");
-    }
+    private ClientConfig() {}
 }

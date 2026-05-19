@@ -1,10 +1,10 @@
 package com.darkona.droplets.content.thirst;
 
+import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
-import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -29,13 +29,13 @@ public class PlayerThirstManager {
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickBlock event) {
-        if (CommonConfig.CAN_DRINK_BY_HAND.get() && event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide)
+        if (GameplayConfig.HAND_DRINKING.get() && event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide)
             DrinkByHandClient.drinkByHand();
     }
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickEmpty event) {
-        if (CommonConfig.CAN_DRINK_BY_HAND.get() && event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide)
+        if (GameplayConfig.HAND_DRINKING.get() && event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide)
             DrinkByHandClient.drinkByHand();
     }
 

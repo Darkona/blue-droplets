@@ -1,9 +1,9 @@
 package com.darkona.droplets.foundation.mixin;
 
+import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
-import com.darkona.droplets.foundation.config.CommonConfig;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,7 +36,7 @@ public abstract class MixinFoodData
 
         float f = Math.min(foodData.getSaturationLevel(), 6.0F);
 
-        boolean shouldHeal = !CommonConfig.DEHYDRATION_HALTS_HEALTH_REGEN.get() || thirstData.getThirst() >= ThirstConstants.FULL_REGEN_MIN_THIRST;
+        boolean shouldHeal = !GameplayConfig.REGEN_HALTED_WHEN_THIRSTY.get() || thirstData.getThirst() >= ThirstConstants.FULL_REGEN_MIN_THIRST;
 
         if(shouldHeal)
         {
@@ -64,7 +64,7 @@ public abstract class MixinFoodData
     private void healWithHunger(Player player, float amount)
     {
         IThirst thirstData =  player.getData(ModAttachment.PLAYER_THIRST);
-        boolean shouldHeal = !CommonConfig.DEHYDRATION_HALTS_HEALTH_REGEN.get() || thirstData.getThirst() >= ThirstConstants.HUNGER_REGEN_MIN_THIRST;
+        boolean shouldHeal = !GameplayConfig.REGEN_HALTED_WHEN_THIRSTY.get() || thirstData.getThirst() >= ThirstConstants.HUNGER_REGEN_MIN_THIRST;
 
         if(shouldHeal)
         {

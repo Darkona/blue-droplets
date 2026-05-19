@@ -22,7 +22,7 @@ It is the continuation of **[Thirst Was Taken](https://github.com/ghen-git/Thirs
 Blue Droplets uses the mod id `bluedroplets` and cannot be installed together with Thirst Was Taken or Thirst Was Reclaimed (mod id `thirst`); the game will tell you if both are present.
 
 - **Worlds**: items, blocks, effects, thirst data and purity saved with `thirst:` ids load under `bluedroplets:` ids. Nothing needs to be done.
-- **Config**: on first start, `config/thirst/` is copied to `config/bluedroplets/`. Modpacks shipping `defaultconfigs/thirst/` should rename it to `defaultconfigs/bluedroplets/`.
+- **Config**: on first start, `config/thirst/` is copied to `config/bluedroplets/` and its files are split by concern (`gameplay.toml`, `purity.toml`, `items.toml`, `compat.toml`, `client.toml`; see `wiki/Configuration.md`). Modpacks shipping `defaultconfigs/thirst/` should rename it to `defaultconfigs/bluedroplets/` and use the new file names.
 - **Datapacks and resource packs** that target `thirst:` ids or translation keys need to be updated to `bluedroplets:`.
 
 ## Compatibility

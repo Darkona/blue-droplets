@@ -1,11 +1,11 @@
 package com.darkona.droplets.content.thirst;
 
+import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.common.damagesource.ModDamageSource;
-import com.darkona.droplets.foundation.config.CommonConfig;
 import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -128,7 +128,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     public void drink(int thirst, int quenched)
     {
         int extra_quenched = Math.max(this.thirst + thirst - MAX_THIRST, 0);
-        if(!CommonConfig.EXTRA_HYDRATION_CONVERT_TO_QUENCHED.get())
+        if(!GameplayConfig.EXTRA_THIRST_TO_QUENCHED.get())
             extra_quenched = 0;
         setThirst(this.thirst + thirst);
         setQuenched(this.quenched + quenched + extra_quenched);
@@ -154,7 +154,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         Difficulty difficulty = player.level().getDifficulty();
         boolean paused = has(player, nourishment) || has(player, stuffed) || has(player, saturated);
 
-        if(CommonConfig.DEPLETES_WHEN_NAUSED.get() && player.hasEffect(MobEffects.CONFUSION))
+        if(GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get() && player.hasEffect(MobEffects.CONFUSION))
             addExhaustion(player, NAUSEA_EXHAUSTION_PER_TICK);
 
         MobEffectInstance hunger = player.getEffect(MobEffects.HUNGER);
@@ -173,7 +173,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
             {
                 quenched--;
             }
-            else if (difficulty != Difficulty.PEACEFUL || CommonConfig.THIRST_DEPLETION_IN_PEACEFUL.get())
+            else if (difficulty != Difficulty.PEACEFUL || GameplayConfig.DEPLETES_IN_PEACEFUL.get())
             {
                 thirst = Math.max(thirst - 1, 0);
             }
@@ -182,12 +182,12 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         ++regenTimer;
         if(regenTimer > PASSIVE_REGEN_INTERVAL_TICKS)
         {
-            if(difficulty == Difficulty.PEACEFUL && !CommonConfig.THIRST_DEPLETION_IN_PEACEFUL.get()){
+            if(difficulty == Difficulty.PEACEFUL && !GameplayConfig.DEPLETES_IN_PEACEFUL.get()){
                 setThirst(thirst + PEACEFUL_REGEN_AMOUNT);
             }
 
             final float angle = Mth.wrapDegrees(player.getXRot());
-            if (angle <= RAIN_MAX_PITCH && player.level().isRainingAt(player.blockPosition().above()) && CommonConfig.CAN_DRINK_RAIN_WATETR.get())
+            if (angle <= RAIN_MAX_PITCH && player.level().isRainingAt(player.blockPosition().above()) && GameplayConfig.RAIN_DRINKING.get())
             {
                 setThirst(thirst + RAIN_THIRST);
                 setQuenched(quenched + RAIN_QUENCHED);
@@ -239,8 +239,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
      */
     public void syncIfChanged(ServerPlayer player)
     {
-        boolean sprint = CommonConfig.MOVE_SLOW_WHEN_THIRSTY.get();
-        boolean bothHands = CommonConfig.DRINK_BOTH_HAND_NEEDED.get();
+        boolean sprint = GameplayConfig.SPRINT_BLOCKED_WHEN_THIRSTY.get();
+        boolean bothHands = GameplayConfig.HAND_DRINKING_BOTH_HANDS.get();
         int flags = (shouldTickThirst ? 1 : 0) | (sprint ? 2 : 0) | (bothHands ? 4 : 0);
         int exhaustionStep = (int) (exhaustion * EXHAUSTION_SYNC_STEPS);
         if(!forceSync && thirst == sentThirst && quenched == sentQuenched && exhaustionStep == sentExhaustionStep && flags == sentFlags)
@@ -305,10 +305,10 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
     public void addExhaustion(Player player, float amount)
     {
-        if(!CommonConfig.HEALTH_REGEN_DEPLETES_HYDRATION.get() && justHealed)
+        if(!GameplayConfig.REGEN_DEPLETES_THIRST.get() && justHealed)
             amount = 0;
 
-        if(!CommonConfig.HEALTH_REGEN_DEHYDRATION_IS_BIOME_DEPENDENT.get() && justHealed)
+        if(!GameplayConfig.REGEN_CLIMATE_DEPENDENT.get() && justHealed)
             exhaustion += amount;
         else
             exhaustion += amount * exhaustionModifier(player);

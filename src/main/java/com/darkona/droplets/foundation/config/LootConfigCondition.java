@@ -11,7 +11,7 @@ public record LootConfigCondition() implements ICondition
 
     @Override
     public boolean test(ICondition.@NotNull IContext context) {
-        return CommonConfig.ENABLE_LOOT.get();
+        return GameplayConfig.LOOT.get();
     }
 
     @Override

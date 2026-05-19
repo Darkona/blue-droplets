@@ -3,7 +3,7 @@
 Blue Droplets is configured in two layers:
 
 - **Datapacks** hold everything that belongs to a registry id: item values, tags, biomes, dimensions. They reload with `/reload` and are sent to clients by the server.
-- **TOML files** in `config/bluedroplets/` hold global numbers and switches, plus a few explicit per-item overrides.
+- **TOML files** in `config/bluedroplets/` hold global numbers and switches, plus a few explicit per-item overrides. See [Configuration](Configuration.md).
 
 All paths below are inside a datapack (`data/<namespace>/...`). Bad entries are logged and skipped; they never crash the game or disconnect players.
 
@@ -47,11 +47,11 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
 
 Each item takes its values from the first of these that has it; the others are ignored for that item:
 
-1. **Blacklist**: the item tag `#bluedroplets:no_thirst` or `itemsBlacklist` in `item_settings.toml` (the item restores no thirst at all).
-2. **TOML overrides**: the `drinks` and `foods` lists in `item_settings.toml`.
+1. **Blacklist**: the item tag `#bluedroplets:no_thirst` or `blacklist` in `items.toml` (the item restores no thirst at all).
+2. **TOML overrides**: the `drinks` and `foods` lists in `items.toml` (section `overrides`).
 3. **Datapacks**: the `bluedroplets:drinks` data map.
 4. **Other mods' code** (`RegisterThirstValueEvent`).
-5. **Keywords** (`keyword.toml`, off by default).
+5. **Keywords** (`items.toml`, section `keywords`, off by default).
 
 The server resolves this table on world load and on `/reload` and sends it to every client, so all players see the server's values.
 
@@ -59,15 +59,15 @@ The server resolves this table on world load and on `/reload` and sends it to ev
 
 Water picked up from the world (buckets, bottles, bowls, drinking by hand, Create pumps and drains) gets a purity from 0 (dirty) to 3 (purified):
 
-1. **Salt water**: if `saltWaterPurity` (`common.toml`, default -1 = off) is 0-3 and the biome is in `#bluedroplets:salt_water`, that fixed value is used and nothing else applies.
+1. **Salt water**: if `saltWaterPurity` (`purity.toml`, default -1 = off) is 0-3 and the biome is in `#bluedroplets:salt_water`, that fixed value is used and nothing else applies.
 2. **Base purity**, the first that is set:
    1. `base` of the biome in the `bluedroplets:biome_water` data map;
    2. biome tags `#bluedroplets:water_purity/3`, `/2`, `/1`, `/0` (checked in that order);
    3. `base` of the dimension type in the `bluedroplets:dimension_water` data map;
-   4. `worldWaterBasePurity` in `common.toml` (default 0).
+   4. `worldWaterBasePurity` in `purity.toml` (default 0).
 3. Plus the **altitude** delta, the **still/running** delta and the biome's `delta`; the result is kept between 0 and the biome's `max` (default 3).
 
-Global settings in `common.toml`, section `World`:
+Global settings in `purity.toml`, section `world`:
 
 | Key | Default | Meaning |
 |---|---|---|

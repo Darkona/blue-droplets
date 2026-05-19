@@ -1,5 +1,6 @@
 package com.darkona.droplets.compat.create;
 
+import com.darkona.droplets.foundation.config.CompatConfig;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -7,7 +8,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.darkona.droplets.content.purity.WaterPurity;
-import com.darkona.droplets.foundation.config.CommonConfig;
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -76,7 +76,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
         if(level.isClientSide())
             return;
 
-        int rate = CommonConfig.SAND_FILTER_MB_PER_TICK.get();
+        int rate = CompatConfig.SAND_FILTER_MB_PER_TICK.get();
         SmartFluidTank dirty = dirtyTank.getPrimaryHandler();
         SmartFluidTank purified = purifiedTank.getPrimaryHandler();
         if(dirty.getFluidAmount() < rate || purified.getSpace() <= 0)
@@ -87,7 +87,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
             return;
 
         if(water.is(FluidTags.WATER))
-            WaterPurity.addPurity(water, Math.min(WaterPurity.getPurity(water) + CommonConfig.SAND_FILTER_FILTRATION_AMOUNT.get(), WaterPurity.MAX_PURITY));
+            WaterPurity.addPurity(water, Math.min(WaterPurity.getPurity(water) + CompatConfig.SAND_FILTER_FILTRATION_AMOUNT.get(), WaterPurity.MAX_PURITY));
 
         int accepted = purified.fill(water, IFluidHandler.FluidAction.SIMULATE);
         if(accepted <= 0)

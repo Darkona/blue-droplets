@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.purity;
 
+import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.data.BiomeWater;
@@ -9,7 +10,6 @@ import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
-import com.darkona.droplets.foundation.config.CommonConfig;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
@@ -199,7 +199,7 @@ public class WaterPurity
     public static int defaultPurity()
     {
         int purity = serverDefaultPurity;
-        return purity >= MIN_PURITY ? purity : CommonConfig.DEFAULT_PURITY.get();
+        return purity >= MIN_PURITY ? purity : PurityConfig.DEFAULT_PURITY.get();
     }
 
     public static void setServerDefaultPurity(int purity)
@@ -452,14 +452,14 @@ public class WaterPurity
     public static int getWaterPurity(Level level, BlockPos pos, boolean source)
     {
         Holder<Biome> biome = level.getBiome(pos);
-        int salt = CommonConfig.SALT_WATER_PURITY.get();
+        int salt = PurityConfig.SALT_WATER_PURITY.get();
         if (salt >= MIN_PURITY && biome.is(DropletsTags.SALT_WATER))
             return salt;
 
         BiomeWater biomeWater = biome.getData(DropletsDataMaps.BIOME_WATER);
         int purity = basePurity(level, biome, biomeWater);
         purity += altitudeDelta(level, pos.getY());
-        purity += source ? CommonConfig.STILL_WATER_PURIFICATION_AMOUNT.get() : CommonConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get();
+        purity += source ? PurityConfig.STILL_WATER_PURIFICATION_AMOUNT.get() : PurityConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get();
         int max = MAX_PURITY;
         if (biomeWater != null)
         {
@@ -479,11 +479,11 @@ public class WaterPurity
      */
     private static int altitudeDelta(Level level, int y)
     {
-        List<? extends String> source = CommonConfig.ALTITUDE_BANDS.get();
+        List<? extends String> source = PurityConfig.ALTITUDE_BANDS.get();
         AltitudeBands cached = altitudeBands;
         if (cached.source() != source)
             altitudeBands = cached = new AltitudeBands(source, parseAltitudeBands(source));
-        if (CommonConfig.ALTITUDE_RELATIVE_TO_SEA_LEVEL.get())
+        if (PurityConfig.ALTITUDE_RELATIVE_TO_SEA_LEVEL.get())
             y -= level.getSeaLevel();
         int[] bands = cached.bands();
         for (int i = 0; i < bands.length; i += 3)
@@ -498,7 +498,7 @@ public class WaterPurity
         int length = 0;
         for (String band : source)
         {
-            if (!CommonConfig.isValidAltitudeBand(band))
+            if (!PurityConfig.isValidAltitudeBand(band))
                 continue;
             for (String part : band.split(","))
                 bands[length++] = Integer.parseInt(part.trim());
@@ -528,7 +528,7 @@ public class WaterPurity
         DimensionWater dimensionWater = level.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
         if (dimensionWater != null && dimensionWater.base().isPresent())
             return dimensionWater.base().get();
-        return CommonConfig.WORLD_WATER_BASE_PURITY.get();
+        return PurityConfig.WORLD_WATER_BASE_PURITY.get();
     }
 
     /**
@@ -553,7 +553,7 @@ public class WaterPurity
 
         switch (purity) {
             case 0 -> {
-                if (chance < CommonConfig.DIRTY_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
+                if (chance < PurityConfig.DIRTY_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
                         player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
@@ -562,7 +562,7 @@ public class WaterPurity
 
                 }
 
-                if (chance <= CommonConfig.DIRTY_POISON_PERCENTAGE.get().intValue() / 100.0f) {
+                if (chance <= PurityConfig.DIRTY_POISON_PERCENTAGE.get().intValue() / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
                         player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 10, 0));
@@ -572,7 +572,7 @@ public class WaterPurity
 
             }
             case 1 -> {
-                if (chance < CommonConfig.SLIGHTLY_DIRTY_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
+                if (chance < PurityConfig.SLIGHTLY_DIRTY_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
                         player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
@@ -581,7 +581,7 @@ public class WaterPurity
 
                 }
 
-                if (chance <= CommonConfig.SLIGHTLY_DIRTY_POISON_PERCENTAGE.get().intValue() / 100.0f) {
+                if (chance <= PurityConfig.SLIGHTLY_DIRTY_POISON_PERCENTAGE.get().intValue() / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
                         player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 10, 0));
@@ -591,7 +591,7 @@ public class WaterPurity
 
             }
             case 2 -> {
-                if (chance < CommonConfig.ACCEPTABLE_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
+                if (chance < PurityConfig.ACCEPTABLE_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
                         player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
@@ -600,7 +600,7 @@ public class WaterPurity
 
                 }
 
-                if (chance <= CommonConfig.ACCEPTABLE_POISON_PERCENTAGE.get().intValue() / 100.0f) {
+                if (chance <= PurityConfig.ACCEPTABLE_POISON_PERCENTAGE.get().intValue() / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
                         player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 10, 0));
@@ -610,7 +610,7 @@ public class WaterPurity
 
             }
             case 3 -> {
-                if (chance < CommonConfig.PURIFIED_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
+                if (chance < PurityConfig.PURIFIED_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
                         player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
@@ -619,7 +619,7 @@ public class WaterPurity
 
                 }
 
-                if (chance <= CommonConfig.PURIFIED_POISON_PERCENTAGE.get().intValue() / 100.0f) {
+                if (chance <= PurityConfig.PURIFIED_POISON_PERCENTAGE.get().intValue() / 100.0f) {
                     if(player instanceof ServerPlayer)
                     {
                         player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 10, 0));
@@ -630,7 +630,7 @@ public class WaterPurity
             }
         }
 
-        return shouldRegenerate || CommonConfig.QUENCH_THIRST_WHEN_DEBUFFED.get();
+        return shouldRegenerate || PurityConfig.QUENCH_WHEN_DEBUFFED.get();
     }
 
 

@@ -1,5 +1,7 @@
 package com.darkona.droplets.api;
 
+import com.darkona.droplets.foundation.config.GameplayConfig;
+import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.data.DrinkValues;
@@ -9,10 +11,6 @@ import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
-import com.darkona.droplets.foundation.config.CommonConfig;
-import com.darkona.droplets.foundation.config.ContainerConfig;
-import com.darkona.droplets.foundation.config.ItemSettingsConfig;
-import com.darkona.droplets.foundation.config.KeyWordConfig;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -67,7 +65,7 @@ public class ThirstHelper
      * Rebuilds the drink/food tables and the purity containers. Call once tags and data maps are bound; the tables
      * are replaced as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
      * Each item takes its values from the first source that has it: blacklist and {@code bluedroplets:no_thirst} (no values),
-     * {@code item_settings.toml}, the {@code bluedroplets:drinks} data map, {@link RegisterThirstValueEvent}, keywords.
+     * {@code items.toml}, the {@code bluedroplets:drinks} data map, {@link RegisterThirstValueEvent}, keywords.
      */
     public static void rebuild()
     {
@@ -76,13 +74,13 @@ public class ThirstHelper
         Set<String> unknown = new LinkedHashSet<>();
         Set<String> absentMods = new LinkedHashSet<>();
 
-        for (String id : ItemSettingsConfig.ITEMS_BLACKLIST.get())
+        for (String id : ItemsConfig.BLACKLIST.get())
             resolve(id, tables.blocked::add, unknown, absentMods);
         for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(DropletsTags.NO_THIRST))
             tables.blocked.add(item.value());
 
-        readValues(ItemSettingsConfig.DRINKS.get(), tables, false, unknown, absentMods);
-        readValues(ItemSettingsConfig.FOODS.get(), tables, true, unknown, absentMods);
+        readValues(ItemsConfig.DRINKS.get(), tables, false, unknown, absentMods);
+        readValues(ItemsConfig.FOODS.get(), tables, true, unknown, absentMods);
 
         for (Map.Entry<ResourceKey<Item>, DrinkValues> entry : BuiltInRegistries.ITEM.getDataMap(DropletsDataMaps.DRINKS).entrySet())
         {
@@ -91,7 +89,7 @@ public class ThirstHelper
             tables.claim(item, new int[]{value.thirst(), value.quenched(), value.purity().orElse(-1)}, isFoodItem(item));
         }
 
-        for (String id : ContainerConfig.CONTAINERS.get())
+        for (String id : ItemsConfig.CONTAINERS.get())
             resolve(id, item -> containers.add(new ContainerWithPurity(item)), unknown, absentMods);
         for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(DropletsTags.PURITY_CONTAINERS))
             containers.add(new ContainerWithPurity(item.value()));
@@ -102,7 +100,7 @@ public class ThirstHelper
         codeDrinks.forEach((item, values) -> tables.claim(item, values, false));
         codeFoods.forEach((item, values) -> tables.claim(item, values, true));
 
-        if (KeyWordConfig.ENABLE_KEYWORD_CONFIG.get())
+        if (ItemsConfig.KEYWORDS.get())
             addKeywordItems(tables);
 
         if (!unknown.isEmpty())
@@ -190,7 +188,7 @@ public class ThirstHelper
     {
         for (List<?> entry : entries)
         {
-            if (!ItemSettingsConfig.isValidEntry(entry))
+            if (!ItemsConfig.isValidEntry(entry))
                 continue;
             int[] values = {((Number) entry.get(1)).intValue(), ((Number) entry.get(2)).intValue(), -1};
             resolve((String) entry.get(0), item -> tables.override(item, values, food), unknown, absentMods);
@@ -238,13 +236,13 @@ public class ThirstHelper
 
     private static void addKeywordItems(Tables tables)
     {
-        Pattern blacklist = keyword(KeyWordConfig.KEYWORD_BLACKLIST.get());
-        Pattern drink = keyword(KeyWordConfig.KEYWORD_DRINK.get());
-        Pattern soup = keyword(KeyWordConfig.KEYWORD_SOUP.get());
-        Pattern fruit = keyword(KeyWordConfig.KEYWORD_FRUIT.get());
-        int[] drinkValues = {KeyWordConfig.getDrinkHydration(), KeyWordConfig.getDrinkQuenchness(), -1};
-        int[] soupValues = {KeyWordConfig.getSoupHydration(), KeyWordConfig.getSoupQuenchness(), -1};
-        int[] fruitValues = {KeyWordConfig.getFruitHydration(), KeyWordConfig.getFruitQuenchness(), -1};
+        Pattern blacklist = keyword(ItemsConfig.KEYWORD_BLACKLIST.get());
+        Pattern drink = keyword(ItemsConfig.KEYWORD_DRINK.get());
+        Pattern soup = keyword(ItemsConfig.KEYWORD_SOUP.get());
+        Pattern fruit = keyword(ItemsConfig.KEYWORD_FRUIT.get());
+        int[] drinkValues = {ItemsConfig.KEYWORD_DRINK_THIRST.get(), ItemsConfig.KEYWORD_DRINK_QUENCHED.get(), -1};
+        int[] soupValues = {ItemsConfig.KEYWORD_SOUP_THIRST.get(), ItemsConfig.KEYWORD_SOUP_QUENCHED.get(), -1};
+        int[] fruitValues = {ItemsConfig.KEYWORD_FRUIT_THIRST.get(), ItemsConfig.KEYWORD_FRUIT_QUENCHED.get(), -1};
 
         for (Item item : BuiltInRegistries.ITEM)
         {
@@ -372,7 +370,7 @@ public class ThirstHelper
 
     public static float getExhaustionFireResistanceModifier(Player player){
         if(player.hasEffect(MobEffects.FIRE_RESISTANCE)){
-            return (float) CommonConfig.FIRE_RESISTANCE_DEHYDRATION.get() /100;
+            return (float) GameplayConfig.FIRE_RESISTANCE_PERCENT.get() /100;
         }else return 1.0f;
     }
 
@@ -388,7 +386,7 @@ public class ThirstHelper
         Level level = player.level();
 
         if(level.dimensionType().ultraWarm())
-            return CommonConfig.NETHER_THIRST_DEPLETION_MODIFIER.get().floatValue();
+            return GameplayConfig.NETHER_MULTIPLIER.get().floatValue();
         else
         {
             Biome biome = level.getBiome(pos).value();
@@ -413,7 +411,7 @@ public class ThirstHelper
                     temp /= 2;
             }
 
-            float thirstModifier = CommonConfig.THIRST_DEPLETION_MODIFIER.get().floatValue() * (temp  / humidity);
+            float thirstModifier = GameplayConfig.DEPLETION_MULTIPLIER.get().floatValue() * (temp  / humidity);
 
             if(thirstModifier < 1)
             {
