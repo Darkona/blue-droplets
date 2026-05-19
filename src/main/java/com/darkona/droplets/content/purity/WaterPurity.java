@@ -67,6 +67,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -497,10 +498,8 @@ public class WaterPurity
 
         BiomeWater biomeWater = biome.getData(DropletsDataMaps.BIOME_WATER);
         int purity = basePurity(level, biome, biomeWater);
-        if ((pos.getY() > CommonConfig.MOUNTAINS_Y.get() || pos.getY() < CommonConfig.CAVES_Y.get()) && pos.getY() < CommonConfig.MOUNTAINS_Y.get() - 32)
-            purity++;
-        if (!source)
-            purity += CommonConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get();
+        purity += altitudeDelta(level, pos.getY());
+        purity += source ? CommonConfig.STILL_WATER_PURIFICATION_AMOUNT.get() : CommonConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get();
         int max = MAX_PURITY;
         if (biomeWater != null)
         {
@@ -508,6 +507,55 @@ public class WaterPurity
             max = biomeWater.max();
         }
         return Math.max(MIN_PURITY, Math.min(purity, max));
+    }
+
+    private record AltitudeBands(List<? extends String> source, int[] bands) {}
+
+    private static volatile AltitudeBands altitudeBands = new AltitudeBands(List.of(), new int[0]);
+
+    /**
+     * Delta of the first {@code altitudeBands} entry containing {@code y}; the parsed bands are cached until the
+     * config value changes.
+     */
+    private static int altitudeDelta(Level level, int y)
+    {
+        List<? extends String> source = CommonConfig.ALTITUDE_BANDS.get();
+        AltitudeBands cached = altitudeBands;
+        if (cached.source() != source)
+            altitudeBands = cached = new AltitudeBands(source, parseAltitudeBands(source));
+        if (CommonConfig.ALTITUDE_RELATIVE_TO_SEA_LEVEL.get())
+            y -= level.getSeaLevel();
+        int[] bands = cached.bands();
+        for (int i = 0; i < bands.length; i += 3)
+            if (y >= bands[i] && y <= bands[i + 1])
+                return bands[i + 2];
+        return 0;
+    }
+
+    private static int[] parseAltitudeBands(List<? extends String> source)
+    {
+        int[] bands = new int[source.size() * 3];
+        int length = 0;
+        for (String band : source)
+        {
+            if (!CommonConfig.isValidAltitudeBand(band))
+                continue;
+            for (String part : band.split(","))
+                bands[length++] = Integer.parseInt(part.trim());
+        }
+        return Arrays.copyOf(bands, length);
+    }
+
+    /**
+     * Purity for a cauldron filled by rain or dripstone: {@code configured} (-1 = unchanged), or the lower of it and
+     * the water already there.
+     */
+    public static BlockState naturalFill(BlockState previous, BlockState filled, int configured)
+    {
+        if (configured < MIN_PURITY || !filled.is(Blocks.WATER_CAULDRON) || !filled.hasProperty(BLOCK_PURITY))
+            return filled;
+        int purity = previous.is(Blocks.WATER_CAULDRON) ? Math.min(getBlockPurity(previous), configured) : configured;
+        return filled.setValue(BLOCK_PURITY, purity + 1);
     }
 
     private static int basePurity(Level level, Holder<Biome> biome, @Nullable BiomeWater biomeWater)

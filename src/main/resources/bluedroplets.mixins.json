@@ -6,6 +6,7 @@
   "mixins": [
     "MixinBootstrap",
     "MixinCampfireBlockEntity",
+    "MixinCauldronBlock",
     "MixinFluidBucketWrapper",
     "MixinFluidUtil",
     "MixinFoodData",

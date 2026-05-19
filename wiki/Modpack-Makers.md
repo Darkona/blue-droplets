@@ -65,7 +65,22 @@ Water picked up from the world (buckets, bottles, bowls, drinking by hand, Creat
    2. biome tags `#bluedroplets:water_purity/3`, `/2`, `/1`, `/0` (checked in that order);
    3. `base` of the dimension type in the `bluedroplets:dimension_water` data map;
    4. `worldWaterBasePurity` in `common.toml` (default 0).
-3. Plus altitude, running water and the biome's `delta`; the result is kept between 0 and the biome's `max` (default 3).
+3. Plus the **altitude** delta, the **still/running** delta and the biome's `delta`; the result is kept between 0 and the biome's `max` (default 3).
+
+Global settings in `common.toml`, section `World`:
+
+| Key | Default | Meaning |
+|---|---|---|
+| `altitudeBands` | `["38,4096,1", "-4096,-16,1"]` | `"minY,maxY,delta"`, both ends included; the first band containing the water's Y adds its delta. Default: +1 in mountains and in caves |
+| `altitudeRelativeToSeaLevel` | `true` | Measure the bands from the dimension's sea level (63 in the Overworld) instead of absolute Y |
+| `stillWaterPurificationAmount` | `0` | Added to source water (-3 to 3) |
+| `runningWaterPurificationAmount` | `1` | Added to flowing water (0 to 3) |
+| `worldWaterBasePurity` | `0` | Base purity when neither biome nor dimension sets one |
+| `saltWaterPurity` | `-1` | Fixed purity in `#bluedroplets:salt_water` biomes; -1 = off |
+| `rainCauldronPurity` | `-1` | Purity of rain collected in a cauldron; -1 = none stored (reads as `defaultPurity`) |
+| `dripstoneCauldronPurity` | `-1` | Purity of water dripped into a cauldron by pointed dripstone; -1 = none stored |
+
+Rain or dripstone adding water to a cauldron that already has water keeps the lower of the two purities.
 
 ### Biome tags
 

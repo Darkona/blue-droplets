@@ -82,6 +82,8 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Removed the duplicate `collectorsreap:pink_limeade` default entry; its value stays 8/13. `[1.21.1]`
 - New `handDrinkingCooldown` (common.toml, "Drinking Mechanics", 0-1200 ticks, default 10): minimum time between two sips when drinking by hand. `[1.21.1]`
 - `DrinkBothHandNeeded` moved from `client.toml` to `common.toml` (section "Drinking Mechanics"): it is a gameplay rule, so the server decides and tells the client. A value set in `client.toml` is dropped; set it again in `common.toml`. `[1.21.1]`
+- **Altitude bonus for water purity fixed and configurable** (thirst#216): `mountainsY` and `cavesY` are replaced by `altitudeBands` (`common.toml`, list of `"minY,maxY,delta"`, default `["38,4096,1", "-4096,-16,1"]`) measured from sea level by default (`altitudeRelativeToSeaLevel`). Caves keep their +1 below Y 48; the mountain +1 above Y 100 now actually applies (before, a wrong check made it impossible). Custom `mountainsY`/`cavesY` values are not migrated: write them as bands. The documented "-32 for aquatic biomes" never existed and is gone; use biome tags or `bluedroplets:biome_water` instead. `[1.21.1]`
+- New `stillWaterPurificationAmount` (default 0), `rainCauldronPurity` and `dripstoneCauldronPurity` (default -1 = as before, no purity stored so the water reads as `defaultPurity`) in `common.toml`. Rain or dripstone adding water to a cauldron keeps the lower of both purities. `[1.21.1]`
 
 ### Datapacks
 
@@ -93,7 +95,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - New biome tag `bluedroplets:salt_water` (oceans by default) and `saltWaterPurity` (`common.toml`, default -1 = off): when set, water in those biomes always has that purity (thirst#268). `[1.21.1]`
 - New item tags `bluedroplets:no_thirst` (never restores thirst, like `itemsBlacklist`) and `bluedroplets:purity_opt_out` (never gets, shows or passes on a purity; for other mods' water containers that compare item data, related to thirst#150, thirst#180, thirst#264). Both are empty by default. `[1.21.1]`
 - The default values for Farmer's Delight, Farmer's Respite, Brewin' and Chewin', Collector's Reap, Create's builder's tea and Supernatural's blood bottle moved from `item_settings.toml` to Blue Droplets' `drinks.json`, each entry with a `neoforge:mod_loaded` condition (same numbers). The default `drinks` and `foods` lists in `item_settings.toml` are now empty. Old configs that still list them keep working as overrides. `[1.21.1]`
-- The default purity containers (Create's builder's tea, Collector's Reap pomegranate black tea and lime green tea) moved from `container.toml` to the new item tag `bluedroplets:purity_containers`; `container.toml` still adds to it and now also accepts `#tags`. The default `Containers` list is empty. `[1.21.1]`
+- The default purity containers (Create's builder's tea, Collector's Reap pomegranate black tea and lime green tea) moved from `container.toml` to the new item tag `bluedroplets:purity_containers`; `container.toml` still adds to it (ids or `#tags`). The default `Containers` list is empty. `[1.21.1]`
 - AppleSkin: the quenched preview for a held item is hidden only when the item cannot be eaten right now (full hunger and not always edible), instead of whenever the item was listed as a food. `[1.21.1]`
 
 ### API

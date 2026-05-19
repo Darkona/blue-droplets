@@ -10,6 +10,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class CommonConfig
 {
@@ -36,9 +37,12 @@ public class CommonConfig
     public static final ModConfigSpec.ConfigValue<Integer> HAND_DRINKING_QUENCHED;
     public static final ModConfigSpec.IntValue HAND_DRINKING_COOLDOWN;
 
-    public static final ModConfigSpec.ConfigValue<Integer> MOUNTAINS_Y;
-    public static final ModConfigSpec.ConfigValue<Integer> CAVES_Y;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> ALTITUDE_BANDS;
+    public static final ModConfigSpec.BooleanValue ALTITUDE_RELATIVE_TO_SEA_LEVEL;
     public static final ModConfigSpec.ConfigValue<Integer> RUNNING_WATER_PURIFICATION_AMOUNT;
+    public static final ModConfigSpec.IntValue STILL_WATER_PURIFICATION_AMOUNT;
+    public static final ModConfigSpec.IntValue RAIN_CAULDRON_PURITY;
+    public static final ModConfigSpec.IntValue DRIPSTONE_CAULDRON_PURITY;
     public static final ModConfigSpec.IntValue WORLD_WATER_BASE_PURITY;
     public static final ModConfigSpec.IntValue SALT_WATER_PURITY;
 
@@ -89,12 +93,17 @@ public class CommonConfig
         BUILDER.pop();
 
         BUILDER.push("World");
-        MOUNTAINS_Y = BUILDER.comment("Y level above which water has 1 more level of purification by default (i.e Mountains)").defineInRange("mountainsY", 100, -2048, 2048);
-        CAVES_Y = BUILDER.comment("Y level below which water has 1 more level of purification by default (i.e Caves) (for aquatic biomes, this number will be decreased by 32)").defineInRange("cavesY", 48, -2048, 2048);
+        ALTITUDE_BANDS = BUILDER.comment("Purity added to water by height: [\"minY,maxY,delta\", ...], both ends included; the first band that matches is used.",
+                        "Default: +1 at 38 or more blocks above sea level (mountains) and at 16 or more below it (caves)")
+                .<String>defineListAllowEmpty("altitudeBands", List.of("38,4096,1", "-4096,-16,1"), () -> "0,0,0", CommonConfig::isValidAltitudeBand);
+        ALTITUDE_RELATIVE_TO_SEA_LEVEL = BUILDER.comment("Whether altitudeBands are measured from the dimension's sea level (true) or are absolute Y levels (false)").define("altitudeRelativeToSeaLevel", true);
         WORLD_WATER_BASE_PURITY = BUILDER.comment("Base purity of water in the world when neither its biome (bluedroplets:water_purity/N tags, bluedroplets:biome_water data map)",
                 "nor its dimension type (bluedroplets:dimension_water data map) sets one").defineInRange("worldWaterBasePurity", 0, 0, 3);
         SALT_WATER_PURITY = BUILDER.comment("Fixed purity of water in biomes tagged bluedroplets:salt_water (oceans by default); -1 treats it like any other water").defineInRange("saltWaterPurity", -1, -1, 3);
         RUNNING_WATER_PURIFICATION_AMOUNT = BUILDER.comment("How many levels of purification does running water have compared to still water").defineInRange("runningWaterPurificationAmount", 1, 0, 3);
+        STILL_WATER_PURIFICATION_AMOUNT = BUILDER.comment("Purity added to still (source) water; negative values make it dirtier").defineInRange("stillWaterPurificationAmount", 0, -3, 3);
+        RAIN_CAULDRON_PURITY = BUILDER.comment("Purity of rain water collected in a cauldron (mixed with water already there: the lower purity wins); -1 leaves it unset, which reads as defaultPurity").defineInRange("rainCauldronPurity", -1, -1, 3);
+        DRIPSTONE_CAULDRON_PURITY = BUILDER.comment("Purity of water dripping from pointed dripstone into a cauldron (mixed as above); -1 leaves it unset, which reads as defaultPurity").defineInRange("dripstoneCauldronPurity", -1, -1, 3);
         BUILDER.pop();
 
         BUILDER.push("Purity-related Effects");
@@ -125,6 +134,29 @@ public class CommonConfig
         BUILDER.pop();
 
         SPEC = BUILDER.build();
+    }
+
+    /**
+     * {@code "minY,maxY,delta"} with minY <= maxY and delta -3..3.
+     */
+    public static boolean isValidAltitudeBand(Object entry)
+    {
+        if (!(entry instanceof String band))
+            return false;
+        String[] parts = band.split(",");
+        if (parts.length != 3)
+            return false;
+        try
+        {
+            int min = Integer.parseInt(parts[0].trim());
+            int max = Integer.parseInt(parts[1].trim());
+            int delta = Integer.parseInt(parts[2].trim());
+            return min <= max && delta >= -3 && delta <= 3;
+        }
+        catch (NumberFormatException e)
+        {
+            return false;
+        }
     }
 
     public static void setup(ModContainer modContainer)
