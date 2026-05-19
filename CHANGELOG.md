@@ -84,6 +84,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - `DrinkBothHandNeeded` moved from `client.toml` to `common.toml` (section "Drinking Mechanics"): it is a gameplay rule, so the server decides and tells the client. A value set in `client.toml` is dropped; set it again in `common.toml`. `[1.21.1]`
 - **Altitude bonus for water purity fixed and configurable** (thirst#216): `mountainsY` and `cavesY` are replaced by `altitudeBands` (`common.toml`, list of `"minY,maxY,delta"`, default `["38,4096,1", "-4096,-16,1"]`) measured from sea level by default (`altitudeRelativeToSeaLevel`). Caves keep their +1 below Y 48; the mountain +1 above Y 100 now actually applies (before, a wrong check made it impossible). Custom `mountainsY`/`cavesY` values are not migrated: write them as bands. The documented "-32 for aquatic biomes" never existed and is gone; use biome tags or `bluedroplets:biome_water` instead. `[1.21.1]`
 - New `stillWaterPurificationAmount` (default 0), `rainCauldronPurity` and `dripstoneCauldronPurity` (default -1 = as before, no purity stored so the water reads as `defaultPurity`) in `common.toml`. Rain or dripstone adding water to a cauldron keeps the lower of both purities. `[1.21.1]`
+- Removed the unused `kettlePurificationLevels`, `fermentationMoldingThreshold` and `fermentationMoldingHarshness` options (sections "Purification levels" and "Fermentation levels" of `common.toml`); they never did anything. Kettle and fermentation purification will come back as datapack recipes. `[1.21.1]`
 
 ### Datapacks
 

@@ -57,7 +57,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -104,17 +103,6 @@ public class WaterPurity
         registerDispenserBehaviours();
         registerContainers();
         registerFillables();
-
-        if(ModList.get().isLoaded("farmersrespite"))
-        {
-            registerFarmersRespiteContainers();
-//            fillablesWithPurity.add(FRBlocks.KETTLE.get());
-        }
-
-        if(ModList.get().isLoaded("brewinandchewin"))
-        {
-//            registerBrewinAndChewinContainers();
-        }
     }
 
     private static void registerContainers()
@@ -138,34 +126,6 @@ public class WaterPurity
         fillablesWithPurity.add(Blocks.CAULDRON);
         fillablesWithPurity.add(Blocks.WATER_CAULDRON);
     }
-
-    private static void registerFarmersRespiteContainers()
-    {
-//        waterContainers.add(new ContainerWithPurity(FRItems.GREEN_TEA));
-//        waterContainers.add(new ContainerWithPurity(FRItems.YELLOW_TEA));
-//        waterContainers.add(new ContainerWithPurity(FRItems.BLACK_TEA));
-//        waterContainers.add(new ContainerWithPurity(FRItems.ROSE_HIP_TEA));
-//        waterContainers.add(new ContainerWithPurity(FRItems.DANDELION_TEA));
-//        waterContainers.add(new ContainerWithPurity(FRItems.COFFEE));
-//        waterContainers.add(new ContainerWithPurity(FRItems.GAMBLERS_TEA));
-//        waterContainers.add(new ContainerWithPurity(FRItems.PURULENT_TEA));
-    }
-
-//    private static void registerBrewinAndChewinContainers()
-//    {
-//        waterContainers.add(new ContainerWithPurity(BCItems.BEER.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.VODKA.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.RICE_WINE.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.STRONGROOT_ALE.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.PALE_JANE.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.SALTY_FOLLY.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.STEEL_TOE_STOUT.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.GLITTERING_GRENADINE.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.BLOODY_MARY.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.RED_RUM.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.WITHERING_DROSS.get()));
-//        waterContainers.add(new ContainerWithPurity(BCItems.KOMBUCHA.get()));
-//    }
 
     @SubscribeEvent
     static void fillablesHandler(PlayerInteractEvent.RightClickBlock event)

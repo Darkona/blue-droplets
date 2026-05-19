@@ -56,10 +56,6 @@ public class CommonConfig
     public static final ModConfigSpec.ConfigValue<Integer> ACCEPTABLE_NAUSEA_PERCENTAGE;
     public static final ModConfigSpec.ConfigValue<Integer> PURIFIED_POISON_PERCENTAGE;
     public static final ModConfigSpec.ConfigValue<Integer> PURIFIED_NAUSEA_PERCENTAGE;
-    public static final ModConfigSpec.ConfigValue<Integer> KETTLE_PURIFICATION_LEVELS;
-
-    public static final ModConfigSpec.ConfigValue<Integer> FERMENTATION_MOLDING_THRESHOLD;
-    public static final ModConfigSpec.ConfigValue<Integer> FERMENTATION_MOLDING_HARSHNESS;
 
     public static final ModConfigSpec.ConfigValue<Integer> SAND_FILTER_FILTRATION_AMOUNT;
     public static final ModConfigSpec.ConfigValue<Integer> SAND_FILTER_MB_PER_TICK;
@@ -117,15 +113,6 @@ public class CommonConfig
         ACCEPTABLE_NAUSEA_PERCENTAGE =  BUILDER.comment("% of getting sick (hunger and nausea) after drinking acceptable water").defineInRange("acceptableNauseaPercentage", 5, 0, 100);
         PURIFIED_POISON_PERCENTAGE =  BUILDER.comment("% of getting poisoned after drinking purified water").defineInRange("purifiedPoisonPercentage", 0, 0, 100);
         PURIFIED_NAUSEA_PERCENTAGE =  BUILDER.comment("% of getting sick (hunger and nausea) after drinking purified water").defineInRange("purifiedNauseaPercentage", 0, 0, 100);
-        BUILDER.pop();
-
-        BUILDER.push("Purification levels");
-        KETTLE_PURIFICATION_LEVELS = BUILDER.comment("How many levels of purification are added after boiling in a kettle").defineInRange("kettlePurificationLevels", 2, 0, 3);
-        BUILDER.pop();
-
-        BUILDER.push("Fermentation levels");
-        FERMENTATION_MOLDING_THRESHOLD = BUILDER.comment("Purification level below which fermented liquids will grow bacteria and get less purified").defineInRange("fermentationMoldingThreshold", 3, 0, 3);
-        FERMENTATION_MOLDING_HARSHNESS = BUILDER.comment("Decrement of purification levels if water isn't purified enough when fermenting").defineInRange("fermentationMoldingHarshness", 2, 0, 3);
         BUILDER.pop();
 
         BUILDER.push("Create compatibility");
