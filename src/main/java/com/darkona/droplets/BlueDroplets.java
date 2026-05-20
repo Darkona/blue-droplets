@@ -11,6 +11,7 @@ import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.LegacyIds;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.content.thirst.PlayerThirstManager;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.*;
 import com.darkona.droplets.foundation.tab.ThirstTab;
@@ -37,6 +38,7 @@ public class BlueDroplets
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::clientSetup);
         modBus.addListener(DropletsDataMaps::register);
+        modBus.addListener(PlayerThirstManager::onConfigReloaded);
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 

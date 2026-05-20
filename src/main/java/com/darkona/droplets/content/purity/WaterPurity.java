@@ -1,6 +1,7 @@
 package com.darkona.droplets.content.purity;
 
 import com.darkona.droplets.foundation.config.PurityConfig;
+import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.data.BiomeWater;
@@ -81,7 +82,6 @@ public class WaterPurity
     private static final List<ContainerWithPurity> codeContainers = new CopyOnWriteArrayList<>();
     private static volatile Map<Item, ContainerWithPurity> waterContainers = Map.of();
     private static volatile List<ContainerWithPurity> dataContainers = List.of();
-    private static volatile int serverDefaultPurity = -1;
     private static final List<Block> fillablesWithPurity = new ArrayList<>();
     public static final int MIN_PURITY = 0;
     public static final int MAX_PURITY = 3;
@@ -198,13 +198,7 @@ public class WaterPurity
      */
     public static int defaultPurity()
     {
-        int purity = serverDefaultPurity;
-        return purity >= MIN_PURITY ? purity : PurityConfig.DEFAULT_PURITY.get();
-    }
-
-    public static void setServerDefaultPurity(int purity)
-    {
-        serverDefaultPurity = purity;
+        return SyncedValues.defaultPurity();
     }
 
     private static Map<Item, ContainerWithPurity> merge(Collection<ContainerWithPurity> first, List<ContainerWithPurity> second)

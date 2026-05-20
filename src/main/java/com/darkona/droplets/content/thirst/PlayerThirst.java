@@ -31,6 +31,11 @@ import static com.darkona.droplets.core.ThirstConstants.*;
 
 public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 {
+    public static final int SYNC_ENABLED = 1;
+    public static final int SYNC_SPRINT_BLOCKED = 2;
+    public static final int SYNC_BOTH_HANDS = 4;
+    public static final int SYNC_HAND_DRINKING = 8;
+
     private static @Nullable Holder<MobEffect> ghostlyShape;
     private static @Nullable Holder<MobEffect> nourishment;
     private static @Nullable Holder<MobEffect> stuffed;
@@ -52,8 +57,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     int sentQuenched;
     int sentExhaustionStep;
     int sentFlags;
-    boolean sprintBlocked = true;
-    boolean bothHandsToDrink = true;
+    int syncedRules = SYNC_SPRINT_BLOCKED | SYNC_BOTH_HANDS;
     int handDrinkReadyTick = 0;
 
     public PlayerThirst() {}
@@ -239,9 +243,10 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
      */
     public void syncIfChanged(ServerPlayer player)
     {
-        boolean sprint = GameplayConfig.SPRINT_BLOCKED_WHEN_THIRSTY.get();
-        boolean bothHands = GameplayConfig.HAND_DRINKING_BOTH_HANDS.get();
-        int flags = (shouldTickThirst ? 1 : 0) | (sprint ? 2 : 0) | (bothHands ? 4 : 0);
+        int flags = (shouldTickThirst ? SYNC_ENABLED : 0)
+                | (GameplayConfig.SPRINT_BLOCKED_WHEN_THIRSTY.get() ? SYNC_SPRINT_BLOCKED : 0)
+                | (GameplayConfig.HAND_DRINKING_BOTH_HANDS.get() ? SYNC_BOTH_HANDS : 0)
+                | (GameplayConfig.HAND_DRINKING.get() ? SYNC_HAND_DRINKING : 0);
         int exhaustionStep = (int) (exhaustion * EXHAUSTION_SYNC_STEPS);
         if(!forceSync && thirst == sentThirst && quenched == sentQuenched && exhaustionStep == sentExhaustionStep && flags == sentFlags)
             return;
@@ -253,26 +258,31 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         sentQuenched = quenched;
         sentExhaustionStep = exhaustionStep;
         sentFlags = flags;
-        PacketDistributor.sendToPlayer(player, new PlayerThirstSyncMessage(thirst, quenched, exhaustion, shouldTickThirst, sprint, bothHands));
+        PacketDistributor.sendToPlayer(player, new PlayerThirstSyncMessage(thirst, quenched, exhaustion, flags));
     }
 
     /**
-     * Server rules received with the last sync; only meaningful on the client.
+     * Server rules received with the last sync ({@code SYNC_*} bits); only meaningful on the client.
      */
-    public void setSyncedRules(boolean sprintBlocked, boolean bothHandsToDrink)
+    public void setSyncedRules(int flags)
     {
-        this.sprintBlocked = sprintBlocked;
-        this.bothHandsToDrink = bothHandsToDrink;
+        syncedRules = flags;
+        shouldTickThirst = (flags & SYNC_ENABLED) != 0;
     }
 
     public boolean isSprintBlocked()
     {
-        return sprintBlocked;
+        return (syncedRules & SYNC_SPRINT_BLOCKED) != 0;
     }
 
     public boolean needsBothHandsToDrink()
     {
-        return bothHandsToDrink;
+        return (syncedRules & SYNC_BOTH_HANDS) != 0;
+    }
+
+    public boolean handDrinkingAllowed()
+    {
+        return (syncedRules & SYNC_HAND_DRINKING) != 0;
     }
 
     public boolean canDrinkByHand(int serverTick)

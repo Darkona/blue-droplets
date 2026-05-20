@@ -1,6 +1,6 @@
 package com.darkona.droplets.foundation.mixin;
 
-import com.darkona.droplets.foundation.config.GameplayConfig;
+import com.darkona.droplets.foundation.config.SyncedValues;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
@@ -28,6 +28,6 @@ public abstract class MixinItemStack
             return;
         PotionContents contents = getComponents().get(DataComponents.POTION_CONTENTS);
         if(contents != null && contents.is(Potions.WATER))
-            cir.setReturnValue(GameplayConfig.WATER_BOTTLE_STACK_SIZE.get());
+            cir.setReturnValue(SyncedValues.waterBottleStackSize());
     }
 }

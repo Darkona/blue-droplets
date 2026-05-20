@@ -3,6 +3,7 @@ package com.darkona.droplets.foundation.network.message;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.foundation.config.SyncedValues;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,9 +20,10 @@ import java.util.Map;
 
 /**
  * Values resolved by the server (config, data map, tags, keywords, {@code RegisterThirstValueEvent}, blacklist applied):
- * item → {thirst, quenched, purity} for drinks and foods, filled items of data-driven purity containers, and {@code defaultPurity}.
+ * item → {thirst, quenched, purity} for drinks and foods, filled items of data-driven purity containers, and the
+ * {@link SyncedValues}. Sent on join, after {@code /reload} and after a config file changes.
  */
-public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> containers, int defaultPurity) implements CustomPacketPayload
+public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> containers, int defaultPurity, int waterBottleStackSize) implements CustomPacketPayload
 {
     public static final CustomPacketPayload.Type<ThirstValuesSyncMessage> TYPE = new Type<>(BlueDroplets.asResource("thirst_values"));
 
@@ -38,18 +40,20 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
             TABLE, ThirstValuesSyncMessage::foods,
             ITEM.apply(ByteBufCodecs.list()), ThirstValuesSyncMessage::containers,
             ByteBufCodecs.VAR_INT, ThirstValuesSyncMessage::defaultPurity,
+            ByteBufCodecs.VAR_INT, ThirstValuesSyncMessage::waterBottleStackSize,
             ThirstValuesSyncMessage::new);
 
     public static ThirstValuesSyncMessage fromTables()
     {
-        return new ThirstValuesSyncMessage(ThirstHelper.drinkTable(), ThirstHelper.foodTable(), WaterPurity.dataContainerItems(), WaterPurity.defaultPurity());
+        return new ThirstValuesSyncMessage(ThirstHelper.drinkTable(), ThirstHelper.foodTable(), WaterPurity.dataContainerItems(),
+                SyncedValues.defaultPurity(), SyncedValues.waterBottleStackSize());
     }
 
     public static void clientHandle(final ThirstValuesSyncMessage message, final IPayloadContext context)
     {
         context.enqueueWork(() -> {
             ThirstHelper.useServerTables(message.drinks, message.foods, message.containers);
-            WaterPurity.setServerDefaultPurity(message.defaultPurity);
+            SyncedValues.useServerValues(message.defaultPurity, message.waterBottleStackSize);
         });
     }
 

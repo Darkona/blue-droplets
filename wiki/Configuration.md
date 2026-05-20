@@ -1,6 +1,6 @@
 # Configuration
 
-All TOML files live in `config/bluedroplets/`. They are NeoForge configs: missing keys are added with their default and a comment, values out of range are reset to the default, invalid list entries are removed, and edits are picked up while the game runs.
+All TOML files live in `config/bluedroplets/`. They are NeoForge configs: missing keys are added with their default and a comment, values out of range are reset to the default, invalid list entries are removed, and edits are picked up while the game runs. When a server's file changes, the server rebuilds the drink tables, recomputes every player's thirst loss and sends the new values to all players; no `/reload` or relog needed.
 
 Per-id data (items, biomes, dimensions) lives in datapacks instead; see [Modpack makers](Modpack-Makers.md).
 
@@ -14,7 +14,7 @@ Per-id data (items, biomes, dimensions) lives in datapacks instead; see [Modpack
 | `compat.toml` | common | One section per optional mod (`[create]`, …) |
 | `client.toml` | client | HUD and tooltips; each player's own |
 
-The gameplay files are **common** configs, not per-world server configs: they exist before a world is loaded (tooltips and stack sizes need them) and one file serves every world. On a dedicated server the server's values win: the ones the client needs (sprint rule, hand drinking, drink tables, default purity) are sent to each player.
+The gameplay files are **common** configs, not per-world server configs: they exist before a world is loaded (tooltips and stack sizes need them) and one file serves every world. On a dedicated server the server's values win: the ones the client needs (sprint rule, hand drinking and its two-hands rule, drink tables, purity containers, `defaultPurity`, water bottle stack size) are sent to each player when joining, after `/reload` and after a config change, and dropped when leaving.
 
 ### Moving from older versions
 

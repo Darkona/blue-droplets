@@ -2,6 +2,7 @@ package com.darkona.droplets.api;
 
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.foundation.config.ItemsConfig;
+import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.data.DrinkValues;
@@ -181,7 +182,7 @@ public class ThirstHelper
         serverTables = false;
         table = EMPTY;
         WaterPurity.setContainers(List.of());
-        WaterPurity.setServerDefaultPurity(-1);
+        SyncedValues.clear();
     }
 
     private static void readValues(List<? extends List<?>> entries, Tables tables, boolean food, Set<String> unknown, Set<String> absentMods)

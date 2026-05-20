@@ -11,7 +11,10 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
-public record PlayerThirstSyncMessage(int thirst, int quenched, float exhaustion, boolean enable, boolean sprintBlocked, boolean bothHandsToDrink) implements CustomPacketPayload
+/**
+ * Thirst data of the receiving player plus the server rules the client applies itself ({@code PlayerThirst.SYNC_*} bits).
+ */
+public record PlayerThirstSyncMessage(int thirst, int quenched, float exhaustion, int flags) implements CustomPacketPayload
 {
 
     public static final CustomPacketPayload.Type<PlayerThirstSyncMessage> TYPE = new Type<>(BlueDroplets.asResource("thirstsync"));
@@ -23,12 +26,8 @@ public record PlayerThirstSyncMessage(int thirst, int quenched, float exhaustion
             PlayerThirstSyncMessage::quenched,
             ByteBufCodecs.FLOAT,
             PlayerThirstSyncMessage::exhaustion,
-            ByteBufCodecs.BOOL,
-            PlayerThirstSyncMessage::enable,
-            ByteBufCodecs.BOOL,
-            PlayerThirstSyncMessage::sprintBlocked,
-            ByteBufCodecs.BOOL,
-            PlayerThirstSyncMessage::bothHandsToDrink,
+            ByteBufCodecs.VAR_INT,
+            PlayerThirstSyncMessage::flags,
             PlayerThirstSyncMessage::new
     );
 
@@ -46,8 +45,7 @@ public record PlayerThirstSyncMessage(int thirst, int quenched, float exhaustion
             cap.setThirst(message.thirst);
             cap.setQuenched(message.quenched);
             cap.setExhaustion(message.exhaustion);
-            cap.setShouldTickThirst(message.enable);
-            cap.setSyncedRules(message.sprintBlocked, message.bothHandsToDrink);
+            cap.setSyncedRules(message.flags);
         });
     }
 
