@@ -132,8 +132,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
         if(!purifiedTank.isEmpty())
         {
             CreateLang.builder()
-                    .text(WaterPurity.getPurityText(WaterPurity.getPurity(purifiedTank.getPrimaryHandler().getFluid())))
-                    .add(CreateLang.text(" "))
+                    .text(WaterPurity.enabled() ? WaterPurity.getPurityText(WaterPurity.getPurity(purifiedTank.getPrimaryHandler().getFluid())) + " " : "")
                     .add(CreateLang.fluidName(purifiedTank.getPrimaryHandler().getFluid()))
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);

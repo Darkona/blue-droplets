@@ -11,6 +11,7 @@ public final class PurityConfig
 {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
+    public static final ModConfigSpec.BooleanValue ENABLED;
     public static final ModConfigSpec.IntValue DEFAULT_PURITY;
     public static final ModConfigSpec.BooleanValue QUENCH_WHEN_DEBUFFED;
 
@@ -37,6 +38,8 @@ public final class PurityConfig
     static
     {
         BUILDER.push("general");
+        ENABLED = BUILDER.comment("Whether water has a purity at all. When false no purity is stored or shown, drinking never gives purity effects",
+                "and the purification recipes are not loaded (after /reload or a restart)").define("enabled", true);
         DEFAULT_PURITY = BUILDER.comment("Purity of water that has none stored (0 dirty, 1 slightly dirty, 2 acceptable, 3 purified)").defineInRange("defaultPurity", 2, 0, 3);
         QUENCH_WHEN_DEBUFFED = BUILDER.comment("Whether drinking still restores thirst when a purity effect blocks hydration").define("quenchWhenDebuffed", true);
         BUILDER.pop();

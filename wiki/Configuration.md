@@ -82,6 +82,7 @@ On first start, if a new file does not exist yet, its values are copied from the
 
 | Key | Default | Meaning |
 |---|---|---|
+| `general.enabled` | `true` | Water has a purity at all. `false`: nothing stores or shows purity (tooltips, Jade, Create goggles), no purity effects, and the purification recipes are not loaded (they are checked when datapacks load: `/reload` or restart) |
 | `general.defaultPurity` | `2` | Purity of water with none stored |
 | `general.quenchWhenDebuffed` | `true` | Drinking still restores thirst when a purity effect blocks hydration |
 | `world.*` | | See [Water purity in the world](Modpack-Makers.md#water-purity-in-the-world) |

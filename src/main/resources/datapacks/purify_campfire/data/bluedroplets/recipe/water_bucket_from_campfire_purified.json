@@ -1,22 +1,27 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "bluedroplets:purity_enabled"
+    }
+  ],
   "type": "minecraft:campfire_cooking",
   "ingredient": [
     {
       "type": "neoforge:components",
-      "items": "bluedroplets:terracotta_water_bowl",
+      "items": "minecraft:water_bucket",
       "components": {
         "bluedroplets:purity": 2
       }
     },
     {
       "type": "neoforge:components",
-      "items": "bluedroplets:terracotta_water_bowl",
+      "items": "minecraft:water_bucket",
       "components": {},
       "strict": true
     }
   ],
   "result": {
-    "id": "bluedroplets:terracotta_water_bowl",
+    "id": "minecraft:water_bucket",
     "count": 1,
     "components": {
       "bluedroplets:purity": 3

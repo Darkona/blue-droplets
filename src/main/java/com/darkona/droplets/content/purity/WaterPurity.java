@@ -130,7 +130,7 @@ public class WaterPurity
     @SubscribeEvent
     static void fillablesHandler(PlayerInteractEvent.RightClickBlock event)
     {
-        if (event.getEntity() instanceof ServerPlayer player && isWaterFilledContainer(event.getItemStack()))
+        if (event.getEntity() instanceof ServerPlayer player && enabled() && isWaterFilledContainer(event.getItemStack()))
         {
             ServerLevel level = player.serverLevel();
             BlockPos pos = event.getHitVec().getBlockPos();
@@ -199,6 +199,14 @@ public class WaterPurity
     public static int defaultPurity()
     {
         return SyncedValues.defaultPurity();
+    }
+
+    /**
+     * {@code purity.enabled} (the server's on remote clients): when false nothing stores, shows or rolls purity.
+     */
+    public static boolean enabled()
+    {
+        return SyncedValues.purityEnabled();
     }
 
     private static Map<Item, ContainerWithPurity> merge(Collection<ContainerWithPurity> first, List<ContainerWithPurity> second)
@@ -282,7 +290,7 @@ public class WaterPurity
     @SubscribeEvent
     static void renderPurityTooltip(ItemTooltipEvent event)
     {
-        if(isWaterFilledContainer(event.getItemStack()))
+        if(enabled() && isWaterFilledContainer(event.getItemStack()))
         {
             int purity = getPurity(event.getItemStack());
             if(purity >= MIN_PURITY && purity <= MAX_PURITY)
@@ -407,22 +415,23 @@ public class WaterPurity
 
     /**
      * Sets the purity component on an item; it is always stored, also for the default purity.
-     * Invalid values are stored as the default purity. Items in {@code bluedroplets:purity_opt_out} are left unchanged.
+     * Invalid values are stored as the default purity. Items in {@code bluedroplets:purity_opt_out}, or any item with {@code purity.enabled=false}, are left unchanged.
      */
     public static ItemStack addPurity(ItemStack item, int purity)
     {
-        if (!item.is(DropletsTags.PURITY_OPT_OUT))
+        if (enabled() && !item.is(DropletsTags.PURITY_OPT_OUT))
             item.set(ThirstComponent.PURITY, sanitizePurity(purity));
         return item;
     }
 
     /**
      * Sets the purity component on a fluid; it is always stored, also for the default purity.
-     * Invalid values are stored as the default purity.
+     * Invalid values are stored as the default purity; nothing is stored with {@code purity.enabled=false}.
      */
     public static FluidStack addPurity(FluidStack fluid, int purity)
     {
-        fluid.set(ThirstComponent.PURITY, sanitizePurity(purity));
+        if (enabled())
+            fluid.set(ThirstComponent.PURITY, sanitizePurity(purity));
         return fluid;
     }
 
@@ -506,7 +515,7 @@ public class WaterPurity
      */
     public static BlockState naturalFill(BlockState previous, BlockState filled, int configured)
     {
-        if (configured < MIN_PURITY || !filled.is(Blocks.WATER_CAULDRON) || !filled.hasProperty(BLOCK_PURITY))
+        if (configured < MIN_PURITY || !enabled() || !filled.is(Blocks.WATER_CAULDRON) || !filled.hasProperty(BLOCK_PURITY))
             return filled;
         int purity = previous.is(Blocks.WATER_CAULDRON) ? Math.min(getBlockPurity(previous), configured) : configured;
         return filled.setValue(BLOCK_PURITY, purity + 1);
@@ -542,6 +551,8 @@ public class WaterPurity
      */
     public static boolean givePurityEffects(Player player, int purity)
     {
+        if (!enabled())
+            return true;
         boolean shouldRegenerate = true;
         float chance = player.getRandom().nextFloat();
 

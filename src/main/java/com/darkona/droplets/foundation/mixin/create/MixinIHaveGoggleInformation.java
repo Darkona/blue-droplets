@@ -40,7 +40,7 @@ public interface MixinIHaveGoggleInformation {
             if (fluidStack.isEmpty())
                 continue;
 
-            if(WaterPurity.hasPurity(fluidStack) || fluidStack.is(FluidTags.WATER)){
+            if(WaterPurity.enabled() && (WaterPurity.hasPurity(fluidStack) || fluidStack.is(FluidTags.WATER))){
                 int purity = WaterPurity.getPurity(fluidStack);
                 CreateLang.builder()
                         .add(Component.literal(WaterPurity.getPurityText(purity) + " ").withColor(WaterPurity.getPurityColor(purity)))

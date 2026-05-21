@@ -1,6 +1,11 @@
 {
-  "type": "minecraft:campfire_cooking",
-  "ingredient":[
+  "neoforge:conditions": [
+    {
+      "type": "bluedroplets:purity_enabled"
+    }
+  ],
+  "type": "minecraft:smelting",
+  "ingredient": [
     {
       "type": "neoforge:components",
       "items": "minecraft:potion",
@@ -13,15 +18,15 @@
     }
   ],
   "result": {
-    "id":"minecraft:potion",
+    "id": "minecraft:potion",
     "count": 1,
     "components": {
-      "bluedroplets:purity": 1,
+      "bluedroplets:purity": 2,
       "potion_contents": {
         "potion": "minecraft:water"
       }
     }
   },
   "experience": 0.35,
-  "cookingtime": 300
+  "cookingtime": 200
 }

@@ -72,6 +72,8 @@ public class JadePlugin implements IWailaPlugin
         @Override
         public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config)
         {
+            if (!WaterPurity.enabled())
+                return;
             BlockState state = accessor.getBlockState();
             if (state.is(Blocks.WATER_CAULDRON))
                 add(tooltip, WaterPurity.getBlockPurity(state));

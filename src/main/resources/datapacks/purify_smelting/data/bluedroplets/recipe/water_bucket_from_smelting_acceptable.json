@@ -1,11 +1,16 @@
 {
-  "type": "minecraft:campfire_cooking",
-  "ingredient":[
+  "neoforge:conditions": [
+    {
+      "type": "bluedroplets:purity_enabled"
+    }
+  ],
+  "type": "minecraft:smelting",
+  "ingredient": [
     {
       "type": "neoforge:components",
       "items": "minecraft:water_bucket",
       "components": {
-        "bluedroplets:purity": 1
+        "bluedroplets:purity": 0
       }
     }
   ],
@@ -17,5 +22,5 @@
     }
   },
   "experience": 0.35,
-  "cookingtime": 300
+  "cookingtime": 200
 }

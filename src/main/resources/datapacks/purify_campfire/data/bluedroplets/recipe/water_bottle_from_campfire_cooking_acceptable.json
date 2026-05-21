@@ -1,32 +1,27 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "bluedroplets:purity_enabled"
+    }
+  ],
   "type": "minecraft:campfire_cooking",
   "ingredient": [
     {
       "type": "neoforge:components",
       "items": "minecraft:potion",
       "components": {
-        "bluedroplets:purity": 2,
+        "bluedroplets:purity": 1,
         "potion_contents": {
           "potion": "minecraft:water"
         }
       }
-    },
-    {
-      "type": "neoforge:components",
-      "items": "minecraft:potion",
-      "components": {
-        "potion_contents": {
-          "potion": "minecraft:water"
-        }
-      },
-      "strict": true
     }
   ],
   "result": {
     "id": "minecraft:potion",
     "count": 1,
     "components": {
-      "bluedroplets:purity": 3,
+      "bluedroplets:purity": 2,
       "potion_contents": {
         "potion": "minecraft:water"
       }

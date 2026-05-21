@@ -88,6 +88,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - **Config files split by concern**: `common.toml`, `item_settings.toml`, `container.toml` and `keyword.toml` are replaced by `gameplay.toml`, `purity.toml`, `items.toml` and `compat.toml` (plus the unchanged `client.toml`), with shorter key names grouped in sections. On first start the values of the old files are copied to the new ones once and the old files are renamed to `*.toml.old`, with a warning in the log. Modpacks that ship `defaultconfigs/` must use the new names; see `wiki/Configuration.md` for the full table. `[1.21.1]`
 - Editing a common config file while a server runs now applies everywhere right away: the drink tables are rebuilt and sent again, and every player's thirst loss multiplier and synced rules are refreshed (before, only `/reload` resent the tables and the multiplier waited up to a second). `[1.21.1]`
 - On a dedicated server, clients now use the server's `hand.enabled` (drinking by hand) and `waterBottleStackSize`; before, a client with a different local value could not drink by hand or saw water bottles stack differently from the server. `[1.21.1]`
+- New `purity.enabled` (`purity.toml`, default `true`): when `false`, water has no purity at all: nothing stores a purity component, tooltips, Jade and Create goggles show none, drinking never gives purity effects, and the purification recipes are not loaded. Synced to clients. `[1.21.1]`
 
 ### Datapacks
 
@@ -101,6 +102,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - The default values for Farmer's Delight, Farmer's Respite, Brewin' and Chewin', Collector's Reap, Create's builder's tea and Supernatural's blood bottle moved from `item_settings.toml` to Blue Droplets' `drinks.json`, each entry with a `neoforge:mod_loaded` condition (same numbers). The default `drinks` and `foods` lists in `item_settings.toml` are now empty. Old configs that still list them keep working as overrides. `[1.21.1]`
 - The default purity containers (Create's builder's tea, Collector's Reap pomegranate black tea and lime green tea) moved from `container.toml` to the new item tag `bluedroplets:purity_containers`; `container.toml` still adds to it (ids or `#tags`). The default `Containers` list is empty. `[1.21.1]`
 - AppleSkin: the quenched preview for a held item is hidden only when the item cannot be eaten right now (full hunger and not always edible), instead of whenever the item was listed as a food. `[1.21.1]`
+- The furnace and campfire water purification recipes moved into optional built-in datapacks, `mod/bluedroplets:datapacks/purify_smelting` and `mod/bluedroplets:datapacks/purify_campfire`, enabled by default (also in existing worlds); a world can turn a method off with `/datapack disable`. Recipe ids are unchanged. New optional pack `mod/bluedroplets:datapacks/purify_smoking`, disabled by default: purifies bottles, buckets and terracotta bowls in a smoker, like the furnace but twice as fast. All purification recipes carry the new condition `bluedroplets:purity_enabled`. `[1.21.1]`
 
 ### API
 

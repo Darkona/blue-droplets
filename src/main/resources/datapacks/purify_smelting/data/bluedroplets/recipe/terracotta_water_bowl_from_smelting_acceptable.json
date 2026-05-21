@@ -1,16 +1,21 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "bluedroplets:purity_enabled"
+    }
+  ],
   "type": "minecraft:smelting",
-  "ingredient":[
+  "ingredient": [
     {
       "type": "neoforge:components",
-      "items": "minecraft:water_bucket",
+      "items": "bluedroplets:terracotta_water_bowl",
       "components": {
         "bluedroplets:purity": 0
       }
     }
   ],
   "result": {
-    "id": "minecraft:water_bucket",
+    "id": "bluedroplets:terracotta_water_bowl",
     "count": 1,
     "components": {
       "bluedroplets:purity": 2

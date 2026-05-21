@@ -16,7 +16,11 @@ import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.*;
 import com.darkona.droplets.foundation.tab.ThirstTab;
 import net.createmod.ponder.foundation.PonderIndex;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -25,6 +29,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 
 @Mod(BlueDroplets.ID)
@@ -39,6 +44,7 @@ public class BlueDroplets
         modBus.addListener(this::clientSetup);
         modBus.addListener(DropletsDataMaps::register);
         modBus.addListener(PlayerThirstManager::onConfigReloaded);
+        modBus.addListener(BlueDroplets::addPacks);
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 
@@ -80,6 +86,22 @@ public class BlueDroplets
                 }
             }.registerPonderPlugin());
         }
+    }
+
+    /**
+     * Optional built-in datapacks under {@code datapacks/} in the jar. {@code BUILT_IN} packs are enabled by default,
+     * also in existing worlds; {@code FEATURE} packs must be enabled when creating the world or with {@code /datapack enable}.
+     */
+    private static void addPacks(AddPackFindersEvent event)
+    {
+        addPack(event, "purify_smelting", "Water purification: furnace", PackSource.BUILT_IN);
+        addPack(event, "purify_campfire", "Water purification: campfire", PackSource.BUILT_IN);
+        addPack(event, "purify_smoking", "Water purification: smoker", PackSource.FEATURE);
+    }
+
+    private static void addPack(AddPackFindersEvent event, String name, String title, PackSource source)
+    {
+        event.addPackFinders(asResource("datapacks/" + name), PackType.SERVER_DATA, Component.literal("Blue Droplets: " + title), source, false, Pack.Position.TOP);
     }
 
     public static ResourceLocation asResource(String path)

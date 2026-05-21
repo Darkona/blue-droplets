@@ -134,3 +134,37 @@ Both world data maps are only read on the server.
 | `bluedroplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
 
 Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`. Use `{"id": "othermod:item", "required": false}` for optional mods.
+
+## Purification recipes
+
+Purifying water uses vanilla recipe types (`minecraft:smelting`, `minecraft:campfire_cooking`, `minecraft:smoking`) with NeoForge component ingredients: the ingredient matches water of a given purity and the result stores a higher one. JEI and other recipe viewers show them like any other recipe.
+
+The recipes ship as optional built-in datapacks, one per method, listed in the datapack screen when creating a world and in `/datapack list`:
+
+| Pack id | Default | Recipes |
+|---|---|---|
+| `mod/bluedroplets:datapacks/purify_smelting` | enabled | Furnace: dirty → acceptable, slightly dirty / acceptable / none stored → purified |
+| `mod/bluedroplets:datapacks/purify_campfire` | enabled | Campfire: one level per cook |
+| `mod/bluedroplets:datapacks/purify_smoking` | disabled | Smoker: same as the furnace, twice as fast |
+
+- Turn a method off or on per world with `/datapack disable "mod/bluedroplets:datapacks/purify_campfire"` / `/datapack enable ...`; the choice is saved with the world.
+- To change a recipe, put a recipe with the same id (`bluedroplets:water_bottle_from_smelting_purified`, …) in your own datapack above it.
+- Every purification recipe carries the condition `{"type": "bluedroplets:purity_enabled"}`, so none load when `purity.enabled` is `false`. Use it in your own purity recipes too.
+
+Example of one level of purification for a modded water container:
+
+```json
+{
+  "neoforge:conditions": [{ "type": "bluedroplets:purity_enabled" }],
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "type": "neoforge:components",
+    "items": "examplemod:canteen",
+    "components": { "bluedroplets:purity": 0 }
+  },
+  "result": { "id": "examplemod:canteen", "count": 1, "components": { "bluedroplets:purity": 1 } },
+  "cookingtime": 300
+}
+```
+
+Water with no purity stored counts as `defaultPurity` (2, acceptable) in the game but does not match a `"bluedroplets:purity": 2` ingredient; match it with `{"type": "neoforge:components", "items": "...", "components": {}, "strict": true}` as the built-in recipes do.

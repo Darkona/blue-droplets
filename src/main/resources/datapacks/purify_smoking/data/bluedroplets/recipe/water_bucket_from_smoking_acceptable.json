@@ -1,27 +1,26 @@
 {
-  "type": "minecraft:campfire_cooking",
+  "neoforge:conditions": [
+    {
+      "type": "bluedroplets:purity_enabled"
+    }
+  ],
+  "type": "minecraft:smoking",
   "ingredient": [
     {
       "type": "neoforge:components",
       "items": "minecraft:water_bucket",
       "components": {
-        "bluedroplets:purity": 2
+        "bluedroplets:purity": 0
       }
-    },
-    {
-      "type": "neoforge:components",
-      "items": "minecraft:water_bucket",
-      "components": {},
-      "strict": true
     }
   ],
   "result": {
     "id": "minecraft:water_bucket",
     "count": 1,
     "components": {
-      "bluedroplets:purity": 3
+      "bluedroplets:purity": 2
     }
   },
   "experience": 0.35,
-  "cookingtime": 300
+  "cookingtime": 100
 }
