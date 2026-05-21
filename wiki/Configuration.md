@@ -38,7 +38,7 @@ On first start, if a new file does not exist yet, its values are copied from the
 | `Drinking Mechanics.canDrinkByHand`, `DrinkBothHandNeeded`, `handDrinkingHydration`, `handDrinkingQuenched`, `handDrinkingCooldown` | `hand.enabled`, `hand.bothHandsEmpty`, `hand.thirst`, `hand.quenched`, `hand.cooldownTicks` |
 | `World.*` | `purity.toml` `world.*` (same key names) |
 | `Purity-related Effects.defaultPurity`, `quenchThirstWhenDebuffed` | `purity.toml` `general.defaultPurity`, `general.quenchWhenDebuffed` |
-| `Purity-related Effects.*Percentage` | `purity.toml` `effects.*` |
+| `Purity-related Effects.*Percentage` (8 values) | `purity.toml` `effects.dirty`, `slightlyDirty`, `acceptable`, `purified` (lists, see below) |
 | `Create compatibility.*` | `compat.toml` `create.*` |
 | `item_settings.toml` `drinks`, `foods`, `itemsBlacklist` | `items.toml` `overrides.drinks`, `overrides.foods`, `overrides.blacklist` |
 | `container.toml` `Containers` | `items.toml` `containers.containers` |
@@ -86,7 +86,22 @@ On first start, if a new file does not exist yet, its values are copied from the
 | `general.defaultPurity` | `2` | Purity of water with none stored |
 | `general.quenchWhenDebuffed` | `true` | Drinking still restores thirst when a purity effect blocks hydration |
 | `world.*` | | See [Water purity in the world](Modpack-Makers.md#water-purity-in-the-world) |
-| `effects.*Percentage` | | Chance of nausea and hunger, or poison, per purity |
+
+### `[effects]`
+
+One list per purity: `dirty`, `slightlyDirty`, `acceptable`, `purified`. Each entry is `"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`.
+
+| Key | Default |
+|---|---|
+| `dirty` | `["minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,30,true"]` |
+| `slightlyDirty` | `["minecraft:nausea,100,0,50", "minecraft:hunger,600,0,50", "minecraft:poison,200,0,10,true"]` |
+| `acceptable` | `["minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5"]` |
+| `purified` | `[]` |
+
+- Any mob effect id works, also from other mods. An unknown id is skipped (listed by `/bluedroplets config check`).
+- **One roll per drink** is shared by the whole list: an entry applies when the roll is below its chance. With the defaults, poisoned water always also gives nausea and hunger, as before.
+- `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
+- Old configs: the eight `*Percentage` values are turned into these lists once, with the old effects and durations (nausea 5 s and hunger 30 s share the nausea chance; poison 10 s blocks hydration).
 
 ## `compat.toml`
 

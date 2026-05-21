@@ -1,5 +1,6 @@
 package com.darkona.droplets.foundation.config;
 
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
@@ -24,14 +25,10 @@ public final class PurityConfig
     public static final ModConfigSpec.IntValue RAIN_CAULDRON_PURITY;
     public static final ModConfigSpec.IntValue DRIPSTONE_CAULDRON_PURITY;
 
-    public static final ModConfigSpec.IntValue DIRTY_POISON_PERCENTAGE;
-    public static final ModConfigSpec.IntValue DIRTY_NAUSEA_PERCENTAGE;
-    public static final ModConfigSpec.IntValue SLIGHTLY_DIRTY_POISON_PERCENTAGE;
-    public static final ModConfigSpec.IntValue SLIGHTLY_DIRTY_NAUSEA_PERCENTAGE;
-    public static final ModConfigSpec.IntValue ACCEPTABLE_POISON_PERCENTAGE;
-    public static final ModConfigSpec.IntValue ACCEPTABLE_NAUSEA_PERCENTAGE;
-    public static final ModConfigSpec.IntValue PURIFIED_POISON_PERCENTAGE;
-    public static final ModConfigSpec.IntValue PURIFIED_NAUSEA_PERCENTAGE;
+    /** Keys of the effect lists in {@code [effects]}, by purity 0-3. */
+    public static final String[] EFFECT_LEVELS = {"dirty", "slightlyDirty", "acceptable", "purified"};
+    /** Effect lists by purity 0-3. */
+    public static final List<ModConfigSpec.ConfigValue<List<? extends String>>> EFFECTS;
 
     public static final ModConfigSpec SPEC;
 
@@ -58,21 +55,52 @@ public final class PurityConfig
         DRIPSTONE_CAULDRON_PURITY = BUILDER.comment("Purity of water dripping from pointed dripstone into a cauldron (mixed as above); -1 leaves it unset, which reads as defaultPurity").defineInRange("dripstoneCauldronPurity", -1, -1, 3);
         BUILDER.pop();
 
-        BUILDER.push("effects");
-        DIRTY_POISON_PERCENTAGE = BUILDER.comment("% of getting poisoned after drinking dirty water").defineInRange("dirtyPoisonPercentage", 30, 0, 100);
-        DIRTY_NAUSEA_PERCENTAGE = BUILDER.comment("% of getting sick (hunger and nausea) after drinking dirty water").defineInRange("dirtyNauseaPercentage", 100, 0, 100);
-        SLIGHTLY_DIRTY_POISON_PERCENTAGE = BUILDER.comment("% of getting poisoned after drinking slightly dirty water").defineInRange("slightlyDirtyPoisonPercentage", 10, 0, 100);
-        SLIGHTLY_DIRTY_NAUSEA_PERCENTAGE = BUILDER.comment("% of getting sick (hunger and nausea) after drinking slightly dirty water").defineInRange("slightlyDirtyNauseaPercentage", 50, 0, 100);
-        ACCEPTABLE_POISON_PERCENTAGE = BUILDER.comment("% of getting poisoned after drinking acceptable water").defineInRange("acceptablePoisonPercentage", 0, 0, 100);
-        ACCEPTABLE_NAUSEA_PERCENTAGE = BUILDER.comment("% of getting sick (hunger and nausea) after drinking acceptable water").defineInRange("acceptableNauseaPercentage", 5, 0, 100);
-        PURIFIED_POISON_PERCENTAGE = BUILDER.comment("% of getting poisoned after drinking purified water").defineInRange("purifiedPoisonPercentage", 0, 0, 100);
-        PURIFIED_NAUSEA_PERCENTAGE = BUILDER.comment("% of getting sick (hunger and nausea) after drinking purified water").defineInRange("purifiedNauseaPercentage", 0, 0, 100);
+        BUILDER.comment("Effects of drinking water (or a drink with a purity) of each purity: [\"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]\", ...].",
+                "One roll per drink is shared by all entries of a list: an entry applies when the roll is below its chance, so a 30% entry",
+                "always comes together with the 100% ones. blocksHydration (default false): the drink restores no thirst unless quenchWhenDebuffed")
+                .push("effects");
+        EFFECTS = List.of(
+                effects(0, List.of("minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,30,true")),
+                effects(1, List.of("minecraft:nausea,100,0,50", "minecraft:hunger,600,0,50", "minecraft:poison,200,0,10,true")),
+                effects(2, List.of("minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5")),
+                effects(3, List.of()));
         BUILDER.pop();
 
         SPEC = BUILDER.build();
     }
 
     private PurityConfig() {}
+
+    private static ModConfigSpec.ConfigValue<List<? extends String>> effects(int purity, List<String> defaults)
+    {
+        return BUILDER.<String>defineListAllowEmpty(EFFECT_LEVELS[purity], defaults, () -> "minecraft:nausea,100,0,100", PurityConfig::isValidEffect);
+    }
+
+    /**
+     * {@code "namespace:effect,durationTicks 1+,amplifier 0-255,chancePercent 0-100[,true|false]"}; the effect id is
+     * checked later, when registries are ready.
+     */
+    public static boolean isValidEffect(Object entry)
+    {
+        if (!(entry instanceof String effect))
+            return false;
+        String[] parts = effect.split(",");
+        if (parts.length < 4 || parts.length > 5 || ResourceLocation.tryParse(parts[0].trim()) == null)
+            return false;
+        if (parts.length == 5 && !parts[4].trim().equals("true") && !parts[4].trim().equals("false"))
+            return false;
+        try
+        {
+            int duration = Integer.parseInt(parts[1].trim());
+            int amplifier = Integer.parseInt(parts[2].trim());
+            double chance = Double.parseDouble(parts[3].trim());
+            return duration >= 1 && amplifier >= 0 && amplifier <= 255 && chance >= 0 && chance <= 100;
+        }
+        catch (NumberFormatException e)
+        {
+            return false;
+        }
+    }
 
     /**
      * {@code "minY,maxY,delta"} with minY <= maxY and delta -3..3.

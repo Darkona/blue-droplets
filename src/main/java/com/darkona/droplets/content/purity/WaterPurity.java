@@ -21,11 +21,13 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -37,7 +39,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -72,6 +74,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -547,97 +550,71 @@ public class WaterPurity
     }
 
     /**
-     * Calculates purity-derived effects
+     * One entry of a {@code purity.toml} effect list; {@code chance} is 0-1.
+     */
+    public record PurityEffect(Holder<MobEffect> effect, int duration, int amplifier, float chance, boolean blocksHydration) {}
+
+    private record EffectTables(List<List<? extends String>> source, PurityEffect[][] byPurity) {}
+
+    private static volatile EffectTables effectTables = new EffectTables(List.of(), new PurityEffect[0][]);
+
+    /**
+     * Rolls once and applies every effect of this purity's list whose chance is above the roll (effects only on the
+     * server). Returns whether the drink should still restore thirst.
      */
     public static boolean givePurityEffects(Player player, int purity)
     {
-        if (!enabled())
+        if (!enabled() || purity < MIN_PURITY || purity > MAX_PURITY)
             return true;
-        boolean shouldRegenerate = true;
-        float chance = player.getRandom().nextFloat();
-
-        switch (purity) {
-            case 0 -> {
-                if (chance < PurityConfig.DIRTY_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
-                    if(player instanceof ServerPlayer)
-                    {
-                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
-                        player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 30, 0));
-                    }
-
-                }
-
-                if (chance <= PurityConfig.DIRTY_POISON_PERCENTAGE.get().intValue() / 100.0f) {
-                    if(player instanceof ServerPlayer)
-                    {
-                        player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 10, 0));
-                    }
-                    shouldRegenerate = false;
-                }
-
-            }
-            case 1 -> {
-                if (chance < PurityConfig.SLIGHTLY_DIRTY_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
-                    if(player instanceof ServerPlayer)
-                    {
-                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
-                        player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 30, 0));
-                    }
-
-                }
-
-                if (chance <= PurityConfig.SLIGHTLY_DIRTY_POISON_PERCENTAGE.get().intValue() / 100.0f) {
-                    if(player instanceof ServerPlayer)
-                    {
-                        player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 10, 0));
-                    }
-                    shouldRegenerate = false;
-                }
-
-            }
-            case 2 -> {
-                if (chance < PurityConfig.ACCEPTABLE_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
-                    if(player instanceof ServerPlayer)
-                    {
-                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
-                        player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 30, 0));
-                    }
-
-                }
-
-                if (chance <= PurityConfig.ACCEPTABLE_POISON_PERCENTAGE.get().intValue() / 100.0f) {
-                    if(player instanceof ServerPlayer)
-                    {
-                        player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 10, 0));
-                    }
-                    shouldRegenerate = false;
-                }
-
-            }
-            case 3 -> {
-                if (chance < PurityConfig.PURIFIED_NAUSEA_PERCENTAGE.get().intValue() / 100.0f) {
-                    if(player instanceof ServerPlayer)
-                    {
-                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0));
-                        player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 20 * 30, 0));
-                    }
-
-                }
-
-                if (chance <= PurityConfig.PURIFIED_POISON_PERCENTAGE.get().intValue() / 100.0f) {
-                    if(player instanceof ServerPlayer)
-                    {
-                        player.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 10, 0));
-                    }
-                    shouldRegenerate = false;
-                }
-
-            }
+        boolean hydrate = true;
+        float roll = player.getRandom().nextFloat();
+        for (PurityEffect effect : effectTable(purity))
+        {
+            if (roll >= effect.chance())
+                continue;
+            if (player instanceof ServerPlayer)
+                player.addEffect(new MobEffectInstance(effect.effect(), effect.duration(), effect.amplifier()));
+            hydrate &= !effect.blocksHydration();
         }
-
-        return shouldRegenerate || PurityConfig.QUENCH_WHEN_DEBUFFED.get();
+        return hydrate || PurityConfig.QUENCH_WHEN_DEBUFFED.get();
     }
 
+    /**
+     * Parsed {@code effects} list of a purity, cached until the config changes; unknown effect ids are left out.
+     */
+    public static PurityEffect[] effectTable(int purity)
+    {
+        EffectTables cached = effectTables;
+        List<List<? extends String>> source = cached.source();
+        boolean stale = source.size() != PurityConfig.EFFECTS.size();
+        for (int i = 0; !stale && i < source.size(); i++)
+            stale = source.get(i) != PurityConfig.EFFECTS.get(i).get();
+        if (stale)
+        {
+            List<List<? extends String>> lists = new ArrayList<>();
+            PurityEffect[][] byPurity = new PurityEffect[PurityConfig.EFFECTS.size()][];
+            for (int i = 0; i < byPurity.length; i++)
+            {
+                List<? extends String> list = PurityConfig.EFFECTS.get(i).get();
+                lists.add(list);
+                byPurity[i] = list.stream().map(WaterPurity::parseEffect).filter(Objects::nonNull).toArray(PurityEffect[]::new);
+            }
+            effectTables = cached = new EffectTables(lists, byPurity);
+        }
+        return cached.byPurity()[purity];
+    }
+
+    private static @Nullable PurityEffect parseEffect(String entry)
+    {
+        if (!PurityConfig.isValidEffect(entry))
+            return null;
+        String[] parts = entry.split(",");
+        Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(parts[0].trim())).orElse(null);
+        if (effect == null)
+            return null;
+        return new PurityEffect(effect, Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim()),
+                (float) (Double.parseDouble(parts[3].trim()) / 100.0), parts.length == 5 && parts[4].trim().equals("true"));
+    }
 
     static void registerDispenserBehaviours()
     {

@@ -89,6 +89,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Editing a common config file while a server runs now applies everywhere right away: the drink tables are rebuilt and sent again, and every player's thirst loss multiplier and synced rules are refreshed (before, only `/reload` resent the tables and the multiplier waited up to a second). `[1.21.1]`
 - On a dedicated server, clients now use the server's `hand.enabled` (drinking by hand) and `waterBottleStackSize`; before, a client with a different local value could not drink by hand or saw water bottles stack differently from the server. `[1.21.1]`
 - New `purity.enabled` (`purity.toml`, default `true`): when `false`, water has no purity at all: nothing stores a purity component, tooltips, Jade and Create goggles show none, drinking never gives purity effects, and the purification recipes are not loaded. Synced to clients. `[1.21.1]`
+- **Purity effects are configurable lists** (`purity.toml`, section `effects`, one list per purity: `"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`): any effect, duration, level and chance, replacing the eight fixed nausea/poison percentages. Defaults are the same effects as before (nausea 5 s and hunger 30 s; poison 10 s, which blocks hydration). Old percentages are converted once. `[1.21.1]`
 
 ### Datapacks
 

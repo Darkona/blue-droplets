@@ -16,6 +16,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -62,14 +63,6 @@ public final class LegacyConfigMigration
             {"common", "World.dripstoneCauldronPurity", "purity", "world.dripstoneCauldronPurity"},
             {"common", "Purity-related Effects.defaultPurity", "purity", "general.defaultPurity"},
             {"common", "Purity-related Effects.quenchThirstWhenDebuffed", "purity", "general.quenchWhenDebuffed"},
-            {"common", "Purity-related Effects.dirtyPoisonPercentage", "purity", "effects.dirtyPoisonPercentage"},
-            {"common", "Purity-related Effects.dirtyNauseaPercentage", "purity", "effects.dirtyNauseaPercentage"},
-            {"common", "Purity-related Effects.slightlyDirtyPoisonPercentage", "purity", "effects.slightlyDirtyPoisonPercentage"},
-            {"common", "Purity-related Effects.slightlyDirtyNauseaPercentage", "purity", "effects.slightlyDirtyNauseaPercentage"},
-            {"common", "Purity-related Effects.acceptablePoisonPercentage", "purity", "effects.acceptablePoisonPercentage"},
-            {"common", "Purity-related Effects.acceptableNauseaPercentage", "purity", "effects.acceptableNauseaPercentage"},
-            {"common", "Purity-related Effects.purifiedPoisonPercentage", "purity", "effects.purifiedPoisonPercentage"},
-            {"common", "Purity-related Effects.purifiedNauseaPercentage", "purity", "effects.purifiedNauseaPercentage"},
             {"common", "Create compatibility.sandFilterFiltrationAmount", "compat", "create.sandFilterFiltrationAmount"},
             {"common", "Create compatibility.sandFilterMbPerTick", "compat", "create.sandFilterMbPerTick"},
             {"item_settings", "Drinks.drinks", "items", "overrides.drinks"},
@@ -137,6 +130,9 @@ public final class LegacyConfigMigration
             if (value != null)
                 newFiles.computeIfAbsent(move[2], name -> TomlFormat.newConfig()).set(path(move[3]), value);
         }
+        if (!Files.exists(dir.resolve("purity.toml")))
+            oldFiles.computeIfAbsent("common", name -> read(dir.resolve(name + ".toml")))
+                    .ifPresent(common -> moveEffectPercentages(common, newFiles));
         if (oldFiles.values().stream().noneMatch(Optional::isPresent))
             return;
 
@@ -156,6 +152,34 @@ public final class LegacyConfigMigration
         catch (IOException e)
         {
             LOGGER.error("Could not move Blue Droplets settings to the new config files in {}; missing values will use defaults.", dir, e);
+        }
+    }
+
+    /**
+     * The eight {@code *NauseaPercentage}/{@code *PoisonPercentage} values become the effect lists of each purity,
+     * with the old fixed effects: nausea 5 s and hunger 30 s sharing the nausea chance, poison 10 s blocking hydration.
+     */
+    private static void moveEffectPercentages(Config common, Map<String, CommentedConfig> newFiles)
+    {
+        int[][] defaults = {{100, 30}, {50, 10}, {5, 0}, {0, 0}};
+        for (int purity = 0; purity < PurityConfig.EFFECT_LEVELS.length; purity++)
+        {
+            String level = PurityConfig.EFFECT_LEVELS[purity];
+            Number nausea = common.get(List.of("Purity-related Effects", level + "NauseaPercentage"));
+            Number poison = common.get(List.of("Purity-related Effects", level + "PoisonPercentage"));
+            if (nausea == null && poison == null)
+                continue;
+            int nauseaChance = nausea == null ? defaults[purity][0] : nausea.intValue();
+            int poisonChance = poison == null ? defaults[purity][1] : poison.intValue();
+            List<String> effects = new ArrayList<>();
+            if (nauseaChance > 0)
+            {
+                effects.add("minecraft:nausea,100,0," + nauseaChance);
+                effects.add("minecraft:hunger,600,0," + nauseaChance);
+            }
+            if (poisonChance > 0)
+                effects.add("minecraft:poison,200,0," + poisonChance + ",true");
+            newFiles.computeIfAbsent("purity", name -> TomlFormat.newConfig()).set(List.of("effects", level), effects);
         }
     }
 
