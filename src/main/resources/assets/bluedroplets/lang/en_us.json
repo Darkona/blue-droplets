@@ -11,6 +11,7 @@
   "bluedroplets.purity.acceptable": "Acceptable",
   "bluedroplets.purity.purified": "Purified",
   "config.jade.plugin_bluedroplets.purity": "Water purity",
+  "attribute.name.bluedroplets.thirst_drain": "Thirst Drain",
   "block.bluedroplets.sand_filter": "Sand Filter",
 
   "bluedroplets.ponder.sand_filter.header": "Purifying Water with a Sand Filter",

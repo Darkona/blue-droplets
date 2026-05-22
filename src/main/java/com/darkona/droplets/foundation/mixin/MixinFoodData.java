@@ -2,7 +2,7 @@ package com.darkona.droplets.foundation.mixin;
 
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.core.ThirstConstants;
-import com.darkona.droplets.foundation.common.capability.IThirst;
+import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -32,7 +32,7 @@ public abstract class MixinFoodData
     private void healWithSaturation(Player player, float amount)
     {
         FoodData foodData = player.getFoodData();
-        IThirst thirstData =  player.getData(ModAttachment.PLAYER_THIRST);
+        PlayerThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
 
         float f = Math.min(foodData.getSaturationLevel(), 6.0F);
 
@@ -41,7 +41,7 @@ public abstract class MixinFoodData
         if(shouldHeal)
         {
             player.heal(f / 6.0F);
-            thirstData.setJustHealed();
+            thirstData.onFoodHeal(f / 6.0F);
             return;
         }
 
@@ -49,7 +49,7 @@ public abstract class MixinFoodData
         if(dehydratedHealTimer >= ThirstConstants.SLOW_REGEN_INTERVAL_TICKS && thirstData.getThirst() >= ThirstConstants.SLOW_REGEN_MIN_THIRST)
         {
             player.heal(f / 6.0F);
-            thirstData.setJustHealed();
+            thirstData.onFoodHeal(f / 6.0F);
             dehydratedHealTimer = 0;
             return;
         }
@@ -63,13 +63,13 @@ public abstract class MixinFoodData
     )
     private void healWithHunger(Player player, float amount)
     {
-        IThirst thirstData =  player.getData(ModAttachment.PLAYER_THIRST);
+        PlayerThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
         boolean shouldHeal = !GameplayConfig.REGEN_HALTED_WHEN_THIRSTY.get() || thirstData.getThirst() >= ThirstConstants.HUNGER_REGEN_MIN_THIRST;
 
         if(shouldHeal)
         {
             player.heal(1.0F);
-            thirstData.setJustHealed();
+            thirstData.onFoodHeal(1.0F);
         }
         else
             this.addExhaustion(-6.0F);

@@ -3,6 +3,7 @@ package com.darkona.droplets.content.thirst;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
+import com.darkona.droplets.content.registry.AttributeInit;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.common.damagesource.ModDamageSource;
@@ -15,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -35,6 +37,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     public static final int SYNC_SPRINT_BLOCKED = 2;
     public static final int SYNC_BOTH_HANDS = 4;
     public static final int SYNC_HAND_DRINKING = 8;
+    private static final double MAX_STEP = 10.0;
 
     private static @Nullable Holder<MobEffect> ghostlyShape;
     private static @Nullable Holder<MobEffect> nourishment;
@@ -50,6 +53,12 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     boolean justHealed = false;
     boolean shouldTickThirst = true;
     boolean exhaustionRecalculate = false;
+    float pendingActivity;
+    float pendingRegen;
+    double lastX;
+    double lastY;
+    double lastZ;
+    boolean hasLastPosition;
     float exhaustionModifier = 1.0F;
     boolean modifierDirty = true;
     boolean forceSync = true;
@@ -159,15 +168,35 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         boolean paused = has(player, nourishment) || has(player, stuffed) || has(player, saturated);
 
         if(GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get() && player.hasEffect(MobEffects.CONFUSION))
-            addExhaustion(player, NAUSEA_EXHAUSTION_PER_TICK);
+            exhaustion += NAUSEA_EXHAUSTION_PER_TICK * exhaustionModifier(player);
 
-        MobEffectInstance hunger = player.getEffect(MobEffects.HUNGER);
-        if(hunger != null)
-            exhaustion -= HUNGER_EXHAUSTION_PER_LEVEL * (float)(hunger.getAmplifier() + 1) * exhaustionModifier(player);
-
-        if (!player.isPassenger() && !paused)
+        float activity;
+        if(GameplayConfig.MODE.get() == GameplayConfig.Mode.OWN)
         {
-            updateExhaustion(player);
+            activity = pendingActivity + movementExhaustion(player);
+            pendingActivity = 0;
+        }
+        else
+        {
+            activity = mirroredFoodExhaustion(player);
+            MobEffectInstance hunger = player.getEffect(MobEffects.HUNGER);
+            if(hunger != null)
+                activity -= HUNGER_EXHAUSTION_PER_LEVEL * (float)(hunger.getAmplifier() + 1);
+        }
+        activity += GameplayConfig.BASAL_PER_TICK.get().floatValue();
+
+        float scale = paused ? 0.0F : 1.0F;
+        if(player.isPassenger())
+            scale *= GameplayConfig.RIDING_MULTIPLIER.get().floatValue();
+        if(player.isSleeping())
+            scale *= GameplayConfig.SLEEPING_MULTIPLIER.get().floatValue();
+        addExhaustion(player, activity * scale);
+
+        if(pendingRegen > 0)
+        {
+            if(GameplayConfig.REGEN_DEPLETES_THIRST.get())
+                exhaustion += pendingRegen * scale * (GameplayConfig.REGEN_CLIMATE_DEPENDENT.get() ? exhaustionModifier(player) : 1.0F);
+            pendingRegen = 0;
         }
 
         if (exhaustion > EXHAUSTION_PER_POINT)
@@ -217,16 +246,66 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
             damageTimer = 0;
     }
 
-    void updateExhaustion(Player player)
+    /**
+     * MIRROR_FOOD: what vanilla added to the hunger exhaustion since last tick.
+     */
+    private float mirroredFoodExhaustion(Player player)
     {
         float hungerExhaustion = player.getFoodData().getExhaustionLevel();
         float normalizedHungerExhaustion = hungerExhaustion < this.prevTickExhaustion ? (exhaustionRecalculate ? hungerExhaustion + 4.0F : hungerExhaustion) : hungerExhaustion;
-        if(exhaustionRecalculate){
-            exhaustionRecalculate = false;
-        }
+        exhaustionRecalculate = false;
         float deltaExhaustion = normalizedHungerExhaustion - this.prevTickExhaustion;
-        this.addExhaustion(player, deltaExhaustion);
         this.prevTickExhaustion = hungerExhaustion;
+        return deltaExhaustion;
+    }
+
+    /**
+     * OWN: vanilla's movement exhaustion (swimming or walking in water, sprinting on the ground) from the position
+     * change since last tick; jumps over {@code MAX_STEP} blocks (teleports) and riding count nothing.
+     */
+    private float movementExhaustion(Player player)
+    {
+        double dx = player.getX() - lastX;
+        double dy = player.getY() - lastY;
+        double dz = player.getZ() - lastZ;
+        boolean first = !hasLastPosition;
+        lastX = player.getX();
+        lastY = player.getY();
+        lastZ = player.getZ();
+        hasLastPosition = true;
+
+        double horizontal = dx * dx + dz * dz;
+        double total = horizontal + dy * dy;
+        if(first || total > MAX_STEP * MAX_STEP || player.isPassenger())
+            return 0.0F;
+        if(player.isSwimming() || player.isEyeInFluid(FluidTags.WATER))
+            return (float) (Math.sqrt(total) * GameplayConfig.SWIM_PER_METER.get());
+        if(player.isInWater())
+            return (float) (Math.sqrt(horizontal) * GameplayConfig.SWIM_PER_METER.get());
+        if(player.onGround() && player.isSprinting())
+            return (float) (Math.sqrt(horizontal) * GameplayConfig.SPRINT_PER_METER.get());
+        return 0.0F;
+    }
+
+    /**
+     * OWN: exhaustion of a jump, attack, broken block or damage, added on the next tick.
+     */
+    public void addActivity(Player player, float amount)
+    {
+        if(!player.getAbilities().invulnerable && shouldTickThirst)
+            pendingActivity += amount;
+    }
+
+    /**
+     * Health regenerated from food: in MIRROR_FOOD the next exhaustion delta is treated as regeneration; in OWN it
+     * costs {@code healPerHealth} per point.
+     */
+    public void onFoodHeal(float amount)
+    {
+        if(GameplayConfig.MODE.get() == GameplayConfig.Mode.OWN)
+            pendingRegen += amount * GameplayConfig.HEAL_PER_HEALTH.get().floatValue();
+        else
+            justHealed = true;
     }
 
     /**
@@ -328,19 +407,17 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     }
 
     /**
-     * Climate (biome or Cold Sweat, Nether), Fire Protection and Fire Resistance, cached: recomputed every
-     * {@code MODIFIER_INTERVAL_TICKS} (staggered per player) and after {@link #invalidateModifier()}.
+     * {@link ExhaustionModifier} cached (recomputed every {@code MODIFIER_INTERVAL_TICKS}, staggered per player, and
+     * after {@link #invalidateModifier()}) times the {@code bluedroplets:thirst_drain} attribute (cached by vanilla).
      */
-    private float exhaustionModifier(Player player)
+    public float exhaustionModifier(Player player)
     {
         if(modifierDirty)
         {
             modifierDirty = false;
-            exhaustionModifier = ThirstHelper.getExhaustionBiomeModifier(player) *
-                    ThirstHelper.getExhaustionFireProtModifier(player) *
-                    ThirstHelper.getExhaustionFireResistanceModifier(player);
+            exhaustionModifier = ExhaustionModifier.compute(player, null);
         }
-        return exhaustionModifier;
+        return exhaustionModifier * (float) player.getAttributeValue(AttributeInit.THIRST_DRAIN);
     }
 
     /**

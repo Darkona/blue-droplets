@@ -40,8 +40,5 @@ public final class ThirstConstants
     public static final int SLOW_REGEN_INTERVAL_TICKS = 8;
     public static final int HUNGER_REGEN_MIN_THIRST = 19;
 
-    public static final float FIRE_PROTECTION_REDUCTION_PER_LEVEL = 0.0625F * 0.75F;
-    public static final int FIRE_PROTECTION_MAX_LEVELS = 12;
-
     private ThirstConstants() {}
 }

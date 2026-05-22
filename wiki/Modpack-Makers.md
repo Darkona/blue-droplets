@@ -121,8 +121,26 @@ Dimension type data map, `data/<namespace>/data_maps/dimension_type/dimension_wa
 | Field | Type | Meaning |
 |---|---|---|
 | `base` | int 0-3, optional | Base purity for biomes without their own |
+| `thirst_multiplier` | float 0-10, optional | Replaces the climate multiplier of thirst loss in this dimension type (the Nether uses `netherMultiplier` from `gameplay.toml` unless set here) |
 
 Both world data maps are only read on the server.
+
+## Thirst drain attribute: `bluedroplets:thirst_drain`
+
+Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). Thirst loss is multiplied by it, so anything that can carry attribute modifiers can change thirst without code:
+
+- items: the vanilla `minecraft:attribute_modifiers` component (`/give`, loot tables, other mods);
+- enchantments (datapack): the `minecraft:attributes` effect component;
+- effects, Curios, other mods: ordinary `AttributeModifier`s;
+- commands: `/attribute @s bluedroplets:thirst_drain base set 0.5`.
+
+```json
+"minecraft:attribute_modifiers": {
+  "modifiers": [{ "type": "bluedroplets:thirst_drain", "id": "examplemod:cooling_helmet", "amount": -0.25,
+                  "operation": "add_multiplied_base", "slot": "head" }]
+}
+```
+
 
 ## Item and fluid tags
 

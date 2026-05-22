@@ -4,6 +4,7 @@ import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
+import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
 import com.darkona.droplets.BlueDroplets;
 import net.minecraft.server.MinecraftServer;
@@ -16,7 +17,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
@@ -118,6 +124,38 @@ public class PlayerThirstManager {
     public static void onEffectExpired(MobEffectEvent.Expired event) {
         if (event.getEntity() instanceof ServerPlayer player)
             player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+    }
+
+    @SubscribeEvent
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player)
+            activity(player, player.isSprinting() ? GameplayConfig.SPRINT_JUMP : GameplayConfig.JUMP, 1.0F);
+    }
+
+    @SubscribeEvent
+    public static void onAttack(AttackEntityEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player)
+            activity(player, GameplayConfig.ATTACK, 1.0F);
+    }
+
+    @SubscribeEvent
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
+        if (event.getPlayer() instanceof ServerPlayer player)
+            activity(player, GameplayConfig.BLOCK_BREAK, 1.0F);
+    }
+
+    @SubscribeEvent
+    public static void onDamaged(LivingDamageEvent.Post event) {
+        if (event.getEntity() instanceof ServerPlayer player && event.getNewDamage() > 0)
+            activity(player, GameplayConfig.DAMAGE_MULTIPLIER, event.getSource().getFoodExhaustion());
+    }
+
+    /**
+     * OWN mode only: the same activities vanilla charges to hunger.
+     */
+    private static void activity(ServerPlayer player, ModConfigSpec.DoubleValue value, float factor) {
+        if (GameplayConfig.MODE.get() == GameplayConfig.Mode.OWN)
+            player.getData(ModAttachment.PLAYER_THIRST).addActivity(player, value.get().floatValue() * factor);
     }
 
     @SubscribeEvent

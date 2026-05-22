@@ -48,13 +48,50 @@ On first start, if a new file does not exist yet, its values are copied from the
 
 ### `[depletion]`
 
+Thirst loss per tick is `activity × scale × M`, where `M = climate × fire protection × fire resistance × rain/thunder × day/night × sun × altitude × water × bluedroplets:thirst_drain`. Every 4.0 of exhaustion removes one quenched point, or one thirst point when quenched is 0. `M` (except the attribute) is recomputed every second per player and right away after armor, effect, dimension or config changes; `/bluedroplets debug exhaustion` shows each factor.
+
 | Key | Default | Meaning |
 |---|---|---|
-| `multiplier` | `1.2` | How much faster thirst goes down than hunger |
+| `mode` | `MIRROR_FOOD` | Where activity comes from. `MIRROR_FOOD`: the exhaustion vanilla adds to hunger (as before; includes other mods that exhaust hunger). `OWN`: Blue Droplets counts the activities of `[depletion.activity]` itself, with vanilla's numbers by default, without reading hunger |
+| `basalPerTick` | `0.0` | Exhaustion added every tick even when idle |
+| `multiplier` | `1.2` | How much faster thirst goes down than hunger (inside the climate multiplier) |
 | `inPeaceful` | `false` | Thirst goes down in Peaceful |
-| `netherMultiplier` | `3.0` | Replaces the climate multiplier in ultra-warm dimensions |
+| `netherMultiplier` | `3.0` | Replaces the climate multiplier in ultra-warm dimensions without their own `thirst_multiplier` |
 | `fireResistancePercent` | `0` | Thirst loss with Fire Resistance, in percent |
 | `nauseaDepletes` | `true` | Nausea makes thirst go down |
+| `fireProtectionPerLevel` / `fireProtectionMaxLevels` | `0.046875` / `12` | Thirst loss removed per level of Fire Protection on armor, and the most levels counted |
+
+`MIRROR_FOOD` stays the default: it also counts exhaustion from other mods and from vanilla actions `OWN` does not see, so switching would change the balance of existing packs.
+
+### `[depletion.climate]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| `formula` | `LEGACY` | `LEGACY`: `multiplier × temperature / humidity` of the biome, softened below 1 (as before). `CURVE`: `multiplier × temperatureCurve(temperature) × humidityCurve(downfall)`. With Cold Sweat (`compat.toml` `coldsweat.useBodyTemperature`) the body temperature / 100 is used as temperature |
+| `legacyHarshness` | `0.5` | LEGACY: part of a multiplier below 1 that is kept |
+| `temperatureCurve` | `["-0.5,0.7", "0.8,1.0", "2.0,1.5"]` | CURVE: `"x,multiplier"` points in ascending x, straight lines between them |
+| `humidityCurve` | `["0.0,1.2", "0.4,1.0", "1.0,0.8"]` | CURVE: same for the biome's downfall |
+| `rain` / `thunder` | `1.0` / `1.0` | When rain falls on the player (thunder replaces rain in a storm) |
+| `day` / `night` | `1.0` / `1.0` | In dimensions with a day cycle |
+| `sun` | `1.0` | Day, not raining, sky visible |
+| `inWater` / `underwater` | `1.0` / `1.0` | In water with the head out / fully underwater |
+| `altitude` | `[]` | `"minY,maxY,multiplier"` from sea level; the first band containing the player applies |
+
+A dimension type can replace the climate multiplier with `thirst_multiplier` in the `bluedroplets:dimension_water` data map (see [Modpack makers](Modpack-Makers.md)).
+
+### `[depletion.activity]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| `sprintPerMeter` | `0.1` | OWN: per meter sprinted on the ground |
+| `swimPerMeter` | `0.01` | OWN: per meter swum or walked in water |
+| `jump` / `sprintJump` | `0.05` / `0.2` | OWN: per jump |
+| `attack` | `0.1` | OWN: per attack |
+| `blockBreak` | `0.005` | OWN: per block broken |
+| `damageMultiplier` | `1.0` | OWN: times the damage type's exhaustion |
+| `healPerHealth` | `6.0` | OWN: per health point regenerated from food |
+| `ridingMultiplier` | `0.0` | Both modes: activity while riding (0 = none, as before) |
+| `sleepingMultiplier` | `1.0` | Both modes: activity while sleeping |
 
 ### `[regeneration]`
 
@@ -109,6 +146,7 @@ One list per purity: `dirty`, `slightlyDirty`, `acceptable`, `purified`. Each en
 |---|---|---|
 | `create.sandFilterFiltrationAmount` | `1` | Purity levels gained in a Sand Filter |
 | `create.sandFilterMbPerTick` | `10` | Millibuckets filtered per tick |
+| `coldsweat.useBodyTemperature` | `true` | The climate multiplier uses Cold Sweat's body temperature instead of the biome's |
 
 ## `items.toml`
 

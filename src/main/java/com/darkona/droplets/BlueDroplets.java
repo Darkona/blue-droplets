@@ -5,6 +5,7 @@ import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.content.registry.AttributeInit;
 import com.darkona.droplets.content.registry.ConditionInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.registry.ItemInit;
@@ -53,6 +54,7 @@ public class BlueDroplets
 
         ItemInit.register(modBus);
         EffectInit.register(modBus);
+        AttributeInit.register(modBus);
         ConditionInit.CONDITION_CODECS.register(modBus);
         LegacyIds.register(modBus);
 

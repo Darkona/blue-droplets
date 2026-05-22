@@ -10,6 +10,7 @@ import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
+import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.stats.Stats;
@@ -69,7 +70,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -475,41 +475,16 @@ public class WaterPurity
         return Math.max(MIN_PURITY, Math.min(purity, max));
     }
 
-    private record AltitudeBands(List<? extends String> source, int[] bands) {}
-
-    private static volatile AltitudeBands altitudeBands = new AltitudeBands(List.of(), new int[0]);
+    private static final NumberRows ALTITUDE_BANDS = new NumberRows(3);
 
     /**
-     * Delta of the first {@code altitudeBands} entry containing {@code y}; the parsed bands are cached until the
-     * config value changes.
+     * Delta of the first {@code altitudeBands} entry containing {@code y}; parsed once per config value.
      */
     private static int altitudeDelta(Level level, int y)
     {
-        List<? extends String> source = PurityConfig.ALTITUDE_BANDS.get();
-        AltitudeBands cached = altitudeBands;
-        if (cached.source() != source)
-            altitudeBands = cached = new AltitudeBands(source, parseAltitudeBands(source));
         if (PurityConfig.ALTITUDE_RELATIVE_TO_SEA_LEVEL.get())
             y -= level.getSeaLevel();
-        int[] bands = cached.bands();
-        for (int i = 0; i < bands.length; i += 3)
-            if (y >= bands[i] && y <= bands[i + 1])
-                return bands[i + 2];
-        return 0;
-    }
-
-    private static int[] parseAltitudeBands(List<? extends String> source)
-    {
-        int[] bands = new int[source.size() * 3];
-        int length = 0;
-        for (String band : source)
-        {
-            if (!PurityConfig.isValidAltitudeBand(band))
-                continue;
-            for (String part : band.split(","))
-                bands[length++] = Integer.parseInt(part.trim());
-        }
-        return Arrays.copyOf(bands, length);
+        return (int) NumberRows.band(ALTITUDE_BANDS.get(PurityConfig.ALTITUDE_BANDS.get()), y, 0);
     }
 
     /**

@@ -1,19 +1,20 @@
 package com.darkona.droplets.api;
 
+import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
+import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DrinkValues;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
-import com.darkona.droplets.core.ThirstConstants;
+import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
@@ -52,7 +53,8 @@ import java.util.regex.PatternSyntaxException;
 public class ThirstHelper
 {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final float MODIFIER_HARSHNESS = 0.5f;
+    private static final NumberRows TEMPERATURE_CURVE = new NumberRows(2);
+    private static final NumberRows HUMIDITY_CURVE = new NumberRows(2);
 
     private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods) {}
 
@@ -355,7 +357,7 @@ public class ThirstHelper
         int levels = 0;
         for(ItemStack armor : player.getArmorSlots())
             levels += armor.getEnchantmentLevel(fireProtection);
-        return 1.0f - Math.min(levels, ThirstConstants.FIRE_PROTECTION_MAX_LEVELS) * ThirstConstants.FIRE_PROTECTION_REDUCTION_PER_LEVEL;
+        return Math.max(0.0f, 1.0f - Math.min(levels, GameplayConfig.FIRE_PROTECTION_MAX_LEVELS.get()) * GameplayConfig.FIRE_PROTECTION_PER_LEVEL.get().floatValue());
     }
 
     private static @Nullable Holder<Enchantment> fireProtection(Level level)
@@ -376,52 +378,48 @@ public class ThirstHelper
     }
 
     /**
-     * Calculates the thirst depletion speed modifier based on the player's
-     * temperature and humidity. If the mod "Cold Sweat" is present, the temperature used is
-     * the one calculated from the mod, otherwise both parameters are entirely
-     * dependent on the biome the player is standing in.
+     * Climate multiplier: the dimension type's {@code thirst_multiplier} ({@code bluedroplets:dimension_water}) or
+     * {@code netherMultiplier} in ultra-warm dimensions replace it; otherwise {@code depletion.multiplier} times the
+     * LEGACY formula or the CURVE multipliers of biome temperature (Cold Sweat: body temperature / 100) and downfall.
      */
     public static float getExhaustionBiomeModifier(Player player)
     {
-        BlockPos pos = player.getOnPos();
         Level level = player.level();
-
-        if(level.dimensionType().ultraWarm())
+        DimensionWater dimension = level.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
+        if (dimension != null && dimension.thirstMultiplier().isPresent())
+            return dimension.thirstMultiplier().get();
+        if (level.dimensionType().ultraWarm())
             return GameplayConfig.NETHER_MULTIPLIER.get().floatValue();
-        else
+
+        Biome biome = level.getBiome(player.getOnPos()).value();
+        float downfall = biome.getModifiedClimateSettings().downfall();
+        boolean bodyTemperature = ColdSweatCompat.LOADED && CompatConfig.COLD_SWEAT_BODY_TEMPERATURE.get();
+        float multiplier = GameplayConfig.DEPLETION_MULTIPLIER.get().floatValue();
+
+        if (GameplayConfig.CLIMATE_FORMULA.get() == GameplayConfig.ClimateFormula.CURVE)
         {
-            Biome biome = level.getBiome(pos).value();
-
-            //humidity range: 0 - 0.8 == 0.8 midpoint: 0.4
-            float humidity = biome.getModifiedClimateSettings().downfall() + 0.6f;
-            if(humidity <= 0.6)
-                humidity += 0.5;
-
-            //temperature range: -0.8 - 2 == 2.8 midpoint: 0.8
-            float temp = biome.getBaseTemperature() + 0.2f;
-
-            if(ColdSweatCompat.LOADED)
-                {
-                    temp = (float) (ColdSweatCompat.bodyTemperature(player) / 100f);
-                }
-            else
-            {
-                if(temp <= 0)
-                    temp = (float) Math.exp(temp);
-                else if(temp > 1)
-                    temp /= 2;
-            }
-
-            float thirstModifier = GameplayConfig.DEPLETION_MULTIPLIER.get().floatValue() * (temp  / humidity);
-
-            if(thirstModifier < 1)
-            {
-                float modifierOffset = 1 - thirstModifier;
-                modifierOffset *= MODIFIER_HARSHNESS;
-                thirstModifier = 1 - modifierOffset;
-            }
-
-            return thirstModifier;
+            float temp = bodyTemperature ? (float) (ColdSweatCompat.bodyTemperature(player) / 100f) : biome.getBaseTemperature();
+            return multiplier * (float) (NumberRows.curve(TEMPERATURE_CURVE.get(GameplayConfig.TEMPERATURE_CURVE.get()), temp)
+                    * NumberRows.curve(HUMIDITY_CURVE.get(GameplayConfig.HUMIDITY_CURVE.get()), downfall));
         }
+
+        //humidity range: 0 - 0.8 == 0.8 midpoint: 0.4
+        float humidity = downfall + 0.6f;
+        if(humidity <= 0.6)
+            humidity += 0.5;
+
+        //temperature range: -0.8 - 2 == 2.8 midpoint: 0.8
+        float temp = biome.getBaseTemperature() + 0.2f;
+        if(bodyTemperature)
+            temp = (float) (ColdSweatCompat.bodyTemperature(player) / 100f);
+        else if(temp <= 0)
+            temp = (float) Math.exp(temp);
+        else if(temp > 1)
+            temp /= 2;
+
+        float thirstModifier = multiplier * (temp / humidity);
+        if(thirstModifier < 1)
+            thirstModifier = 1 - (1 - thirstModifier) * GameplayConfig.LEGACY_HARSHNESS.get().floatValue();
+        return thirstModifier;
     }
 }
