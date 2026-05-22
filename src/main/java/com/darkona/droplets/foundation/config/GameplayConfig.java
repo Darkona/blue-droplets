@@ -18,6 +18,8 @@ public final class GameplayConfig
 
     public static final ModConfigSpec.EnumValue<Mode> MODE;
     public static final ModConfigSpec.DoubleValue BASAL_PER_TICK;
+    public static final ModConfigSpec.DoubleValue EXHAUSTION_PER_POINT;
+    public static final ModConfigSpec.DoubleValue NAUSEA_PER_TICK;
     public static final ModConfigSpec.DoubleValue DEPLETION_MULTIPLIER;
     public static final ModConfigSpec.BooleanValue DEPLETES_IN_PEACEFUL;
     public static final ModConfigSpec.DoubleValue NETHER_MULTIPLIER;
@@ -53,17 +55,38 @@ public final class GameplayConfig
     public static final ModConfigSpec.BooleanValue REGEN_HALTED_WHEN_THIRSTY;
     public static final ModConfigSpec.BooleanValue REGEN_DEPLETES_THIRST;
     public static final ModConfigSpec.BooleanValue REGEN_CLIMATE_DEPENDENT;
+    public static final ModConfigSpec.IntValue FULL_REGEN_MIN_THIRST;
+    public static final ModConfigSpec.IntValue SLOW_REGEN_MIN_THIRST;
+    public static final ModConfigSpec.IntValue SLOW_REGEN_INTERVAL_TICKS;
+    public static final ModConfigSpec.IntValue HUNGER_REGEN_MIN_THIRST;
+    public static final ModConfigSpec.IntValue PEACEFUL_REGEN_AMOUNT;
+    public static final ModConfigSpec.IntValue PEACEFUL_REGEN_INTERVAL_TICKS;
+
+    public static final ModConfigSpec.DoubleValue DAMAGE_AMOUNT;
+    public static final ModConfigSpec.IntValue DAMAGE_INTERVAL_TICKS;
+    public static final ModConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_EASY;
+    public static final ModConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_NORMAL;
+    public static final ModConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_HARD;
+    public static final ModConfigSpec.BooleanValue DAMAGE_CAN_KILL;
 
     public static final ModConfigSpec.BooleanValue SPRINT_BLOCKED_WHEN_THIRSTY;
+    public static final ModConfigSpec.IntValue SPRINT_MIN_THIRST;
 
     public static final ModConfigSpec.BooleanValue EXTRA_THIRST_TO_QUENCHED;
     public static final ModConfigSpec.IntValue WATER_BOTTLE_STACK_SIZE;
     public static final ModConfigSpec.BooleanValue RAIN_DRINKING;
+    public static final ModConfigSpec.DoubleValue RAIN_MAX_PITCH;
+    public static final ModConfigSpec.IntValue RAIN_INTERVAL_TICKS;
+    public static final ModConfigSpec.IntValue RAIN_THIRST;
+    public static final ModConfigSpec.IntValue RAIN_QUENCHED;
     public static final ModConfigSpec.BooleanValue HAND_DRINKING;
     public static final ModConfigSpec.BooleanValue HAND_DRINKING_BOTH_HANDS;
     public static final ModConfigSpec.IntValue HAND_DRINKING_THIRST;
     public static final ModConfigSpec.IntValue HAND_DRINKING_QUENCHED;
     public static final ModConfigSpec.IntValue HAND_DRINKING_COOLDOWN;
+
+    public static final ModConfigSpec.IntValue RESPAWN_THIRST;
+    public static final ModConfigSpec.IntValue RESPAWN_QUENCHED;
 
     public static final ModConfigSpec.BooleanValue LOOT;
 
@@ -77,6 +100,8 @@ public final class GameplayConfig
                 .defineEnum("mode", Mode.MIRROR_FOOD);
         BASAL_PER_TICK = BUILDER.comment("Exhaustion added every tick even when doing nothing (4.0 = one quenched or thirst point); scaled by the multipliers")
                 .defineInRange("basalPerTick", 0.0, 0.0, 1.0);
+        EXHAUSTION_PER_POINT = BUILDER.comment("Exhaustion that removes one quenched point, or one thirst point when quenched is 0 (hunger: 4.0)").defineInRange("exhaustionPerPoint", 4.0, 0.1, 100.0);
+        NAUSEA_PER_TICK = BUILDER.comment("Exhaustion per tick while nauseous (with nauseaDepletes)").defineInRange("nauseaPerTick", 0.06, 0.0, 1.0);
         DEPLETION_MULTIPLIER = BUILDER.comment("How much faster thirst goes down than hunger (1 = same speed). Was thirstDepletionModifier")
                 .defineInRange("multiplier", 1.2, 0.0, 10.0);
         DEPLETES_IN_PEACEFUL = BUILDER.comment("Whether thirst goes down in Peaceful").define("inPeaceful", false);
@@ -126,16 +151,36 @@ public final class GameplayConfig
         REGEN_HALTED_WHEN_THIRSTY = BUILDER.comment("Whether health regenerates slower (or not at all) when thirst is not full, like hunger").define("haltedWhenThirsty", true);
         REGEN_DEPLETES_THIRST = BUILDER.comment("Whether regenerating health makes thirst go down, like hunger").define("depletesThirst", true);
         REGEN_CLIMATE_DEPENDENT = BUILDER.comment("Whether thirst lost by regenerating health is scaled by the climate multiplier").define("climateDependent", true);
+        FULL_REGEN_MIN_THIRST = BUILDER.comment("With haltedWhenThirsty: thirst needed for fast (saturation) regeneration").defineInRange("fullRegenMinThirst", 20, 0, 20);
+        SLOW_REGEN_MIN_THIRST = BUILDER.comment("With haltedWhenThirsty: below fullRegenMinThirst, saturation still heals every slowRegenIntervalTicks with this much thirst").defineInRange("slowRegenMinThirst", 19, 0, 20);
+        SLOW_REGEN_INTERVAL_TICKS = BUILDER.defineInRange("slowRegenIntervalTicks", 8, 1, 1200);
+        HUNGER_REGEN_MIN_THIRST = BUILDER.comment("With haltedWhenThirsty: thirst needed for normal (food level) regeneration").defineInRange("hungerRegenMinThirst", 19, 0, 20);
+        PEACEFUL_REGEN_AMOUNT = BUILDER.comment("Peaceful without inPeaceful: thirst restored every peacefulRegenIntervalTicks").defineInRange("peacefulRegenAmount", 1, 0, 20);
+        PEACEFUL_REGEN_INTERVAL_TICKS = BUILDER.defineInRange("peacefulRegenIntervalTicks", 11, 1, 1200);
+        BUILDER.pop();
+
+        BUILDER.push("damage");
+        DAMAGE_AMOUNT = BUILDER.comment("Damage taken with no thirst left").defineInRange("amount", 1.0, 0.0, 100.0);
+        DAMAGE_INTERVAL_TICKS = BUILDER.defineInRange("intervalTicks", 40, 1, 12000);
+        DAMAGE_MIN_HEALTH_EASY = BUILDER.comment("Dehydration only hurts above this health (Easy and Peaceful)").defineInRange("minHealthEasy", 10.0, 0.0, 1024.0);
+        DAMAGE_MIN_HEALTH_NORMAL = BUILDER.comment("Same on Normal (like vanilla starvation)").defineInRange("minHealthNormal", 1.0, 0.0, 1024.0);
+        DAMAGE_MIN_HEALTH_HARD = BUILDER.comment("Same on Hard").defineInRange("minHealthHard", 0.0, 0.0, 1024.0);
+        DAMAGE_CAN_KILL = BUILDER.comment("Whether a hit that would kill is dealt; false stops dehydration at the last hit that leaves the player alive").define("canKill", true);
         BUILDER.pop();
 
         BUILDER.push("sprint");
-        SPRINT_BLOCKED_WHEN_THIRSTY = BUILDER.comment("Whether players can't sprint with 3 droplets or less").define("blockedWhenThirsty", true);
+        SPRINT_BLOCKED_WHEN_THIRSTY = BUILDER.comment("Whether players can't sprint with minThirst or less").define("blockedWhenThirsty", true);
+        SPRINT_MIN_THIRST = BUILDER.comment("Sprinting needs more thirst than this (6 = 3 droplets)").defineInRange("minThirst", 6, 0, 20);
         BUILDER.pop();
 
         BUILDER.push("drinking");
         EXTRA_THIRST_TO_QUENCHED = BUILDER.comment("Whether thirst restored above full turns into quenched").define("extraThirstToQuenched", true);
         WATER_BOTTLE_STACK_SIZE = BUILDER.comment("Stack size of water bottles").defineInRange("waterBottleStackSize", 64, 1, 99);
         RAIN_DRINKING = BUILDER.comment("Whether players drink rain by looking up").define("rain", true);
+        RAIN_MAX_PITCH = BUILDER.comment("How far up players must look to drink rain (-90 = straight up)").defineInRange("rainMaxPitch", -80.0, -90.0, 90.0);
+        RAIN_INTERVAL_TICKS = BUILDER.comment("Ticks between two sips of rain").defineInRange("rainIntervalTicks", 11, 1, 1200);
+        RAIN_THIRST = BUILDER.defineInRange("rainThirst", 1, 0, 20);
+        RAIN_QUENCHED = BUILDER.defineInRange("rainQuenched", 1, 0, 20);
         BUILDER.pop();
 
         BUILDER.push("hand");
@@ -144,6 +189,11 @@ public final class GameplayConfig
         HAND_DRINKING_THIRST = BUILDER.comment("Thirst restored per sip").defineInRange("thirst", 3, 0, 20);
         HAND_DRINKING_QUENCHED = BUILDER.comment("Quenched restored per sip").defineInRange("quenched", 2, 0, 20);
         HAND_DRINKING_COOLDOWN = BUILDER.comment("Minimum ticks between two sips (20 ticks = 1 second)").defineInRange("cooldownTicks", 10, 0, 1200);
+        BUILDER.pop();
+
+        BUILDER.push("death");
+        RESPAWN_THIRST = BUILDER.comment("Thirst after respawning; -1 keeps the thirst the player died with").defineInRange("respawnThirst", 20, -1, 20);
+        RESPAWN_QUENCHED = BUILDER.comment("Quenched after respawning (at most the thirst); -1 keeps it").defineInRange("respawnQuenched", 5, -1, 20);
         BUILDER.pop();
 
         BUILDER.push("loot");

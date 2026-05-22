@@ -37,6 +37,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     public static final int SYNC_SPRINT_BLOCKED = 2;
     public static final int SYNC_BOTH_HANDS = 4;
     public static final int SYNC_HAND_DRINKING = 8;
+    /** Bits 8-15 of the synced rules: {@code sprint.minThirst}. */
+    public static final int SYNC_SPRINT_MIN_SHIFT = 8;
     private static final double MAX_STEP = 10.0;
 
     private static @Nullable Holder<MobEffect> ghostlyShape;
@@ -48,7 +50,6 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     int quenched = RESPAWN_QUENCHED;
     float exhaustion = 0;
     int damageTimer = 0;
-    int regenTimer = 0;
     float prevTickExhaustion = 0.0F;
     boolean justHealed = false;
     boolean shouldTickThirst = true;
@@ -66,7 +67,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     int sentQuenched;
     int sentExhaustionStep;
     int sentFlags;
-    int syncedRules = SYNC_SPRINT_BLOCKED | SYNC_BOTH_HANDS;
+    int syncedRules = SYNC_SPRINT_BLOCKED | SYNC_BOTH_HANDS | SPRINT_MIN_THIRST << SYNC_SPRINT_MIN_SHIFT;
     int handDrinkReadyTick = 0;
 
     public PlayerThirst() {}
@@ -168,7 +169,7 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         boolean paused = has(player, nourishment) || has(player, stuffed) || has(player, saturated);
 
         if(GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get() && player.hasEffect(MobEffects.CONFUSION))
-            exhaustion += NAUSEA_EXHAUSTION_PER_TICK * exhaustionModifier(player);
+            exhaustion += GameplayConfig.NAUSEA_PER_TICK.get().floatValue() * exhaustionModifier(player);
 
         float activity;
         if(GameplayConfig.MODE.get() == GameplayConfig.Mode.OWN)
@@ -199,9 +200,10 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
             pendingRegen = 0;
         }
 
-        if (exhaustion > EXHAUSTION_PER_POINT)
+        float perPoint = GameplayConfig.EXHAUSTION_PER_POINT.get().floatValue();
+        if (exhaustion > perPoint)
         {
-            exhaustion -= EXHAUSTION_PER_POINT;
+            exhaustion -= perPoint;
             if (quenched > 0)
             {
                 quenched--;
@@ -212,31 +214,26 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
             }
         }
 
-        ++regenTimer;
-        if(regenTimer > PASSIVE_REGEN_INTERVAL_TICKS)
+        if(difficulty == Difficulty.PEACEFUL && !GameplayConfig.DEPLETES_IN_PEACEFUL.get() && player.tickCount % GameplayConfig.PEACEFUL_REGEN_INTERVAL_TICKS.get() == 0)
+            setThirst(thirst + GameplayConfig.PEACEFUL_REGEN_AMOUNT.get());
+
+        if(GameplayConfig.RAIN_DRINKING.get() && player.tickCount % GameplayConfig.RAIN_INTERVAL_TICKS.get() == 0
+                && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above()))
         {
-            if(difficulty == Difficulty.PEACEFUL && !GameplayConfig.DEPLETES_IN_PEACEFUL.get()){
-                setThirst(thirst + PEACEFUL_REGEN_AMOUNT);
-            }
-
-            final float angle = Mth.wrapDegrees(player.getXRot());
-            if (angle <= RAIN_MAX_PITCH && player.level().isRainingAt(player.blockPosition().above()) && GameplayConfig.RAIN_DRINKING.get())
-            {
-                setThirst(thirst + RAIN_THIRST);
-                setQuenched(quenched + RAIN_QUENCHED);
-            }
-
-            regenTimer = 0;
+            setThirst(thirst + GameplayConfig.RAIN_THIRST.get());
+            setQuenched(quenched + GameplayConfig.RAIN_QUENCHED.get());
         }
 
         if (thirst <= 0)
         {
             ++damageTimer;
-            if (damageTimer >= DAMAGE_INTERVAL_TICKS)
+            if (damageTimer >= GameplayConfig.DAMAGE_INTERVAL_TICKS.get())
             {
-                if (player.getHealth() > EASY_MIN_HEALTH || difficulty == Difficulty.HARD || player.getHealth() > NORMAL_MIN_HEALTH && difficulty == Difficulty.NORMAL)
+                float damage = GameplayConfig.DAMAGE_AMOUNT.get().floatValue();
+                float health = player.getHealth();
+                if (health > minHealth(difficulty) && (GameplayConfig.DAMAGE_CAN_KILL.get() || health > damage))
                 {
-                    player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), DAMAGE_AMOUNT);
+                    player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), damage);
                 }
 
                 damageTimer = 0;
@@ -244,6 +241,16 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         }
         else
             damageTimer = 0;
+    }
+
+    private static float minHealth(Difficulty difficulty)
+    {
+        return (switch (difficulty)
+        {
+            case PEACEFUL, EASY -> GameplayConfig.DAMAGE_MIN_HEALTH_EASY;
+            case NORMAL -> GameplayConfig.DAMAGE_MIN_HEALTH_NORMAL;
+            case HARD -> GameplayConfig.DAMAGE_MIN_HEALTH_HARD;
+        }).get().floatValue();
     }
 
     /**
@@ -325,7 +332,8 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         int flags = (shouldTickThirst ? SYNC_ENABLED : 0)
                 | (GameplayConfig.SPRINT_BLOCKED_WHEN_THIRSTY.get() ? SYNC_SPRINT_BLOCKED : 0)
                 | (GameplayConfig.HAND_DRINKING_BOTH_HANDS.get() ? SYNC_BOTH_HANDS : 0)
-                | (GameplayConfig.HAND_DRINKING.get() ? SYNC_HAND_DRINKING : 0);
+                | (GameplayConfig.HAND_DRINKING.get() ? SYNC_HAND_DRINKING : 0)
+                | GameplayConfig.SPRINT_MIN_THIRST.get() << SYNC_SPRINT_MIN_SHIFT;
         int exhaustionStep = (int) (exhaustion * EXHAUSTION_SYNC_STEPS);
         if(!forceSync && thirst == sentThirst && quenched == sentQuenched && exhaustionStep == sentExhaustionStep && flags == sentFlags)
             return;
@@ -352,6 +360,11 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     public boolean isSprintBlocked()
     {
         return (syncedRules & SYNC_SPRINT_BLOCKED) != 0;
+    }
+
+    public int sprintMinThirst()
+    {
+        return syncedRules >>> SYNC_SPRINT_MIN_SHIFT & 0xFF;
     }
 
     public boolean needsBothHandsToDrink()

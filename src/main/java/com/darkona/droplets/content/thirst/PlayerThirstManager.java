@@ -161,8 +161,13 @@ public class PlayerThirstManager {
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event){
         if(event.getEntity() instanceof ServerPlayer player){
-            player.getData(ModAttachment.PLAYER_THIRST).setThirst(ThirstConstants.RESPAWN_THIRST);
-            player.getData(ModAttachment.PLAYER_THIRST).setQuenched(ThirstConstants.RESPAWN_QUENCHED);
+            PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+            int respawnThirst = GameplayConfig.RESPAWN_THIRST.get();
+            int respawnQuenched = GameplayConfig.RESPAWN_QUENCHED.get();
+            if (respawnThirst >= 0)
+                thirst.setThirst(respawnThirst);
+            if (respawnQuenched >= 0)
+                thirst.setQuenched(respawnQuenched);
         }
     }
 

@@ -93,6 +93,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - **Thirst loss model is configurable** (`gameplay.toml`, `[depletion]`, `[depletion.climate]`, `[depletion.activity]`); all defaults keep the current behaviour. New: `mode` (`MIRROR_FOOD`, the default, follows hunger exhaustion as before; `OWN` counts sprinting, swimming, jumping, attacking, mining, damage and food regeneration itself with vanilla's numbers, so mods that reset or change hunger exhaustion no longer affect thirst, thirst#271), `basalPerTick`, climate `formula` (`LEGACY` or `CURVE` with temperature and humidity curves), `legacyHarshness`, rain, thunder, day, night, sun, in-water, underwater and altitude multipliers, `ridingMultiplier` (0 = as before), `sleepingMultiplier`, and the Fire Protection amount and cap. `[1.21.1]`
 - Riding or having Nourishment (and similar effects) no longer stores up thirst loss that is then applied all at once when it ends, and the Hunger effect no longer lowers thirst exhaustion while riding. Nausea thirst loss is no longer mistaken for health regeneration by `regeneration.depletesThirst`/`climateDependent`. `[1.21.1]`
 - New `compat.toml` `coldsweat.useBodyTemperature` (default `true`, as before). `[1.21.1]`
+- More gameplay numbers are configurable in `gameplay.toml` (defaults = current behaviour): `exhaustionPerPoint`, `nauseaPerTick`; dehydration damage `amount`, `intervalTicks`, minimum health per difficulty and `canKill`; regeneration thresholds (`fullRegenMinThirst`, `slowRegenMinThirst`, `slowRegenIntervalTicks`, `hungerRegenMinThirst`) and Peaceful regeneration; `sprint.minThirst` (sent to clients); rain drinking pitch, interval and amounts; `death.respawnThirst`/`respawnQuenched` (-1 keeps the values the player died with). `[1.21.1]`
 
 ### Datapacks
 
@@ -125,6 +126,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - `IThirst.updateThirstData` no longer sends a packet right away: it asks for a sync at the end of the player's tick. `addExhaustion` no longer syncs. `core.ThirstConstants.SYNC_INTERVAL_TICKS` is now `PASSIVE_REGEN_INTERVAL_TICKS` (rain drinking and Peaceful regeneration). `[1.21.1]`
 - Removed the public flags `PlayerThirst.checkTombstoneEffects`, `checkFDEffects`, `checkLetsDoBakeryEffects` and `checkLetsDoBreweryEffects`. `[1.21.1]`
 - Removed `ThirstHelper.shouldUseColdSweatCaps`, `PlayerThirst.checkVampirismEffects`, `ThirstBarRenderer.checkIfPlayerIsVampire` and `compat.supernatural.SupernaturalHelper`; mod detection is now internal. The AppleSkin overlay classes moved from `foundation.gui.appleskin` to `compat.appleskin`. `[1.21.1]`
+- `core.ThirstConstants` only keeps fixed technical numbers; the gameplay constants moved to `GameplayConfig` (`PASSIVE_REGEN_INTERVAL_TICKS`, `EXHAUSTION_PER_POINT`, `DAMAGE_*`, `*_MIN_HEALTH`, `*_REGEN_*`, `RAIN_*`, `FIRE_PROTECTION_*`, `NAUSEA_EXHAUSTION_PER_TICK`, `PEACEFUL_REGEN_AMOUNT` removed). `[1.21.1]`
 
 ### Project
 

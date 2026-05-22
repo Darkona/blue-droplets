@@ -24,7 +24,7 @@ public final class ExhaustionModifier
     /**
      * Product of all factors; when {@code breakdown} is given (length {@link #FACTORS}) each factor is written to it.
      */
-    public static float compute(Player player, float @Nullable [] breakdown)
+    public static float compute(Player player, @Nullable float[] breakdown)
     {
         Level level = player.level();
         BlockPos eyes = BlockPos.containing(player.getEyePosition());

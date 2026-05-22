@@ -54,6 +54,8 @@ Thirst loss per tick is `activity × scale × M`, where `M = climate × fire pro
 |---|---|---|
 | `mode` | `MIRROR_FOOD` | Where activity comes from. `MIRROR_FOOD`: the exhaustion vanilla adds to hunger (as before; includes other mods that exhaust hunger). `OWN`: Blue Droplets counts the activities of `[depletion.activity]` itself, with vanilla's numbers by default, without reading hunger |
 | `basalPerTick` | `0.0` | Exhaustion added every tick even when idle |
+| `exhaustionPerPoint` | `4.0` | Exhaustion that removes one point |
+| `nauseaPerTick` | `0.06` | Exhaustion per tick while nauseous |
 | `multiplier` | `1.2` | How much faster thirst goes down than hunger (inside the climate multiplier) |
 | `inPeaceful` | `false` | Thirst goes down in Peaceful |
 | `netherMultiplier` | `3.0` | Replaces the climate multiplier in ultra-warm dimensions without their own `thirst_multiplier` |
@@ -100,20 +102,39 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 | `haltedWhenThirsty` | `true` | Health regenerates slower or not at all when thirst is not full |
 | `depletesThirst` | `true` | Regenerating health makes thirst go down |
 | `climateDependent` | `true` | That loss is scaled by the climate multiplier |
+| `fullRegenMinThirst` | `20` | With `haltedWhenThirsty`: thirst needed for fast (saturation) regeneration |
+| `slowRegenMinThirst` / `slowRegenIntervalTicks` | `19` / `8` | Below that, saturation still heals every 8 ticks with at least 19 thirst |
+| `hungerRegenMinThirst` | `19` | Thirst needed for normal (food level) regeneration |
+| `peacefulRegenAmount` / `peacefulRegenIntervalTicks` | `1` / `11` | Thirst restored in Peaceful (unless `depletion.inPeaceful`) |
 
-### `[sprint]`, `[drinking]`, `[hand]`, `[loot]`
+### `[damage]`
 
 | Key | Default | Meaning |
 |---|---|---|
-| `sprint.blockedWhenThirsty` | `true` | No sprinting with 3 droplets or less |
+| `amount` / `intervalTicks` | `1.0` / `40` | Damage with no thirst left, and how often |
+| `minHealthEasy` / `minHealthNormal` / `minHealthHard` | `10` / `1` / `0` | Dehydration only hurts above this health (Peaceful uses Easy) |
+| `canKill` | `true` | `false`: a hit that would kill is skipped |
+
+### `[sprint]`, `[drinking]`, `[hand]`, `[death]`, `[loot]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| `sprint.blockedWhenThirsty` | `true` | No sprinting with `minThirst` or less |
+| `sprint.minThirst` | `6` | 3 droplets (sent to clients) |
 | `drinking.extraThirstToQuenched` | `true` | Thirst restored above full turns into quenched |
 | `drinking.waterBottleStackSize` | `64` | Stack size of water bottles |
 | `drinking.rain` | `true` | Drink rain by looking up |
+| `drinking.rainMaxPitch` | `-80` | How far up to look (-90 = straight up) |
+| `drinking.rainIntervalTicks` | `11` | Ticks between two sips |
+| `drinking.rainThirst` / `rainQuenched` | `1` / `1` | Restored per sip |
 | `hand.enabled` | `false` | Drink water in the world by sneaking and right-clicking with an empty hand |
 | `hand.bothHandsEmpty` | `true` | Both hands must be empty |
 | `hand.thirst` / `hand.quenched` | `3` / `2` | Restored per sip |
 | `hand.cooldownTicks` | `10` | Minimum ticks between two sips |
+| `death.respawnThirst` / `respawnQuenched` | `20` / `5` | Values after respawning; `-1` keeps what the player died with |
 | `loot.enabled` | `true` | Drinks are added to vanilla chest loot |
+
+The maximum thirst stays 20: the HUD, AppleSkin overlays and commands assume it.
 
 ## `purity.toml`
 
