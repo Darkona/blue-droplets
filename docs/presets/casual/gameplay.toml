@@ -1,0 +1,15 @@
+# Blue Droplets "casual" preset: copy these keys into config/bluedroplets/gameplay.toml.
+# Pair with the built-in datapack mod/bluedroplets:datapacks/preset_casual (Nether x1.5).
+
+[depletion]
+multiplier = 0.8
+
+[depletion.activity]
+ridingMultiplier = 0.5
+
+[damage]
+minHealthNormal = 10.0
+canKill = false
+
+[hand]
+enabled = true

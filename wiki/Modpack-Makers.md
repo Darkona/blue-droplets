@@ -186,3 +186,14 @@ Example of one level of purification for a modded water container:
 ```
 
 Water with no purity stored counts as `defaultPurity` (2, acceptable) in the game but does not match a `"bluedroplets:purity": 2` ingredient; match it with `{"type": "neoforge:components", "items": "...", "components": {}, "strict": true}` as the built-in recipes do.
+
+## Presets
+
+Two optional presets change the balance; the default is Blue Droplets' own behaviour. Each has two parts, applied by hand (nothing rewrites your config):
+
+| Part | casual | hardcore |
+|---|---|---|
+| Built-in datapack (disabled by default; enable when creating the world or with `/datapack enable`) | `mod/bluedroplets:datapacks/preset_casual`: Nether climate ×1.5 | `mod/bluedroplets:datapacks/preset_hardcore`: Nether climate ×4 |
+| TOML keys to copy into `config/bluedroplets/` ([`docs/presets/`](../docs/presets/) in the repository) | `multiplier` 0.8, riding ×0.5, dehydration stops at 5 hearts on Normal and never kills, drinking by hand on, dirty water: 50% nausea and hunger, no poison | `multiplier` 1.6, weather/day/sun/water multipliers, riding ×1, rain every 2 s, drinking by hand with a 1 s cooldown, no running water bonus, dirty water: 60% poison |
+
+The TOML files only list the keys they change; Blue Droplets adds the rest with their defaults.

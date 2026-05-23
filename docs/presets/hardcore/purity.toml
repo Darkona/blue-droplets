@@ -1,0 +1,8 @@
+# Blue Droplets "hardcore" preset: copy these keys into config/bluedroplets/purity.toml.
+
+[world]
+worldWaterBasePurity = 0
+runningWaterPurificationAmount = 0
+
+[effects]
+dirty = ["minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,60,true"]

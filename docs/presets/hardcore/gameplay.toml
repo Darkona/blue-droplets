@@ -1,0 +1,24 @@
+# Blue Droplets "hardcore" preset: copy these keys into config/bluedroplets/gameplay.toml.
+# Pair with the built-in datapack mod/bluedroplets:datapacks/preset_hardcore (Nether x4).
+
+[depletion]
+multiplier = 1.6
+
+[depletion.climate]
+rain = 0.9
+thunder = 0.9
+day = 1.1
+night = 0.9
+sun = 1.2
+inWater = 0.7
+underwater = 0.5
+
+[depletion.activity]
+ridingMultiplier = 1.0
+
+[drinking]
+rainIntervalTicks = 40
+
+[hand]
+enabled = true
+cooldownTicks = 20

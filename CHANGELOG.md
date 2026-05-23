@@ -110,6 +110,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - The furnace and campfire water purification recipes moved into optional built-in datapacks, `mod/bluedroplets:datapacks/purify_smelting` and `mod/bluedroplets:datapacks/purify_campfire`, enabled by default (also in existing worlds); a world can turn a method off with `/datapack disable`. Recipe ids are unchanged. New optional pack `mod/bluedroplets:datapacks/purify_smoking`, disabled by default: purifies bottles, buckets and terracotta bowls in a smoker, like the furnace but twice as fast. All purification recipes carry the new condition `bluedroplets:purity_enabled`. `[1.21.1]`
 - New player attribute `bluedroplets:thirst_drain` (base 1.0, 0-10, synced): thirst loss is multiplied by it, so items (`attribute_modifiers`), datapack enchantments (`minecraft:attributes`), effects, Curios and `/attribute` can change thirst loss without code (thirst#195, thirst#219). `[1.21.1]`
 - `bluedroplets:dimension_water` has a new optional `thirst_multiplier` (0-10) that replaces the climate multiplier in that dimension type. `[1.21.1]`
+- Optional presets `casual` and `hardcore`: built-in datapacks `mod/bluedroplets:datapacks/preset_casual` and `preset_hardcore` (disabled by default; they set the Nether's thirst multiplier) plus example `gameplay.toml`/`purity.toml` keys in `docs/presets/` to copy by hand. See `wiki/Modpack-Makers.md`. `[1.21.1]`
 
 ### API
 
