@@ -7,14 +7,18 @@ import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
 import com.darkona.droplets.BlueDroplets;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -27,6 +31,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.fml.config.ModConfig;
@@ -39,6 +44,7 @@ import java.util.stream.Stream;
 
 @EventBusSubscriber
 public class PlayerThirstManager {
+    private static volatile RecipeManager reloadingRecipes;
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickBlock event) {
@@ -172,12 +178,32 @@ public class PlayerThirstManager {
     }
 
     /**
+     * The recipes of the data reload in progress: its {@code TagsUpdatedEvent} comes before the server exists on world load.
+     */
+    @SubscribeEvent
+    public static void captureRecipes(AddReloadListenerEvent event){
+        reloadingRecipes = event.getServerResources().getRecipeManager();
+    }
+
+    /**
      * Lowest priority: NeoForge applies the reloaded data maps in its own {@code TagsUpdatedEvent} listener.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void rebuildDrinks(TagsUpdatedEvent event){
-        if (event.shouldUpdateStaticData() && !(event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED && ThirstHelper.hasServerTables()))
-            ThirstHelper.rebuild();
+        if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
+            RecipeManager recipes = reloadingRecipes;
+            reloadingRecipes = null;
+            ThirstHelper.rebuild(recipes, event.getRegistryAccess());
+        }
+        else if (event.shouldUpdateStaticData() && !ThirstHelper.hasServerTables())
+            ThirstHelper.rebuild(null, null);
+    }
+
+    @SubscribeEvent
+    public static void estimatedTooltip(ItemTooltipEvent event){
+        ItemStack stack = event.getItemStack();
+        if (ThirstHelper.isEstimated(stack))
+            event.getToolTip().add(Component.translatable("bluedroplets.tooltip.estimated", ThirstHelper.getThirst(stack), ThirstHelper.getQuenched(stack)).withStyle(ChatFormatting.GRAY));
     }
 
     /**
@@ -204,7 +230,7 @@ public class PlayerThirstManager {
         if (server == null || event.getConfig().getType() == ModConfig.Type.CLIENT || !BlueDroplets.ID.equals(event.getConfig().getModId()))
             return;
         server.execute(() -> {
-            ThirstHelper.rebuild();
+            ThirstHelper.rebuild(server.getRecipeManager(), server.registryAccess());
             List<ServerPlayer> players = server.getPlayerList().getPlayers();
             for (ServerPlayer player : players) {
                 PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);

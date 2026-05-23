@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * {@code config/bluedroplets/items.toml}: per-item overrides, purity containers and keywords (was item_settings.toml,
+ * {@code config/bluedroplets/items.toml}: per-item overrides, purity containers, keywords and recipe inference (was item_settings.toml,
  * container.toml and keyword.toml).
  */
 public final class ItemsConfig
@@ -35,6 +35,18 @@ public final class ItemsConfig
     public static final ModConfigSpec.ConfigValue<String> KEYWORD_DRINK;
     public static final ModConfigSpec.ConfigValue<String> KEYWORD_SOUP;
     public static final ModConfigSpec.ConfigValue<String> KEYWORD_FRUIT;
+
+    public static final ModConfigSpec.BooleanValue INFERENCE;
+    public static final ModConfigSpec.BooleanValue INFERENCE_ONLY_CONSUMABLES;
+    public static final ModConfigSpec.IntValue INFERENCE_MAX_DEPTH;
+    public static final ModConfigSpec.DoubleValue INFERENCE_CRAFTING;
+    public static final ModConfigSpec.DoubleValue INFERENCE_COOKING;
+    public static final ModConfigSpec.DoubleValue INFERENCE_OTHER;
+    public static final ModConfigSpec.IntValue INFERENCE_MAX_THIRST;
+    public static final ModConfigSpec.IntValue INFERENCE_MAX_QUENCHED;
+    public static final ModConfigSpec.IntValue INFERENCE_MIN_THIRST;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> INFERENCE_BLACKLIST;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> INFERENCE_IGNORED_RECIPE_TYPES;
 
     public static final ModConfigSpec SPEC;
 
@@ -66,6 +78,24 @@ public final class ItemsConfig
         KEYWORD_DRINK = BUILDER.define("drink", "(?:\\b|[^a-zA-Z])(drink|juice|tea|soda|coffee|wine|beer|cider|yogurt|milkshake|smoothie)(?:\\b|[^a-zA-Z])");
         KEYWORD_SOUP = BUILDER.define("soup", "(?:\\b|[^a-zA-Z])(soup|stew|porridge)(?:\\b|[^a-zA-Z])");
         KEYWORD_FRUIT = BUILDER.define("fruit", "(?:\\b|[^a-zA-Z])(fruit|berry|berries|grape|orange|peach|pear|coconut|lemon|melon|cherry|apple)(?:\\b|[^a-zA-Z])");
+        BUILDER.pop();
+
+        BUILDER.comment("Estimates thirst values from recipe ingredients for items that have none from any other source (shown as \"est.\").",
+                "Computed when the world loads, on /reload and when this file changes; /bluedroplets infer <item> explains a result").push("inference");
+        INFERENCE = BUILDER.comment("Whether values are estimated").define("enabled", false);
+        INFERENCE_ONLY_CONSUMABLES = BUILDER.comment("Only items that are eaten or drunk get an estimate; other items still pass their value on to recipes that use them")
+                .define("onlyConsumables", true);
+        INFERENCE_MAX_DEPTH = BUILDER.comment("How many recipe steps are followed down from an item").defineInRange("maxDepth", 4, 1, 16);
+        INFERENCE_CRAFTING = BUILDER.comment("Multiplier of crafting table recipes").defineInRange("craftingMultiplier", 1.0, 0.0, 10.0);
+        INFERENCE_COOKING = BUILDER.comment("Multiplier of furnace, blast furnace, smoker and campfire recipes").defineInRange("cookingMultiplier", 1.0, 0.0, 10.0);
+        INFERENCE_OTHER = BUILDER.comment("Multiplier of every other recipe type (other mods' machines and pots)").defineInRange("otherMultiplier", 1.0, 0.0, 10.0);
+        INFERENCE_MAX_THIRST = BUILDER.comment("Highest estimated thirst").defineInRange("maxThirst", 8, 0, 20);
+        INFERENCE_MAX_QUENCHED = BUILDER.comment("Highest estimated quenched").defineInRange("maxQuenched", 10, 0, 40);
+        INFERENCE_MIN_THIRST = BUILDER.comment("Estimates below this thirst are dropped").defineInRange("minThirst", 1, 1, 20);
+        INFERENCE_BLACKLIST = BUILDER.comment("Items never estimated nor passed on: [\"namespace:item\", \"#namespace:tag\", \"@namespace\"]")
+                .<String>defineListAllowEmpty("blacklist", List.of(), () -> "namespace:item", it -> it instanceof String);
+        INFERENCE_IGNORED_RECIPE_TYPES = BUILDER.comment("Recipe types that are not used: [\"namespace:type\"]")
+                .<String>defineListAllowEmpty("ignoredRecipeTypes", List.of("minecraft:stonecutting", "minecraft:smithing"), () -> "namespace:type", it -> it instanceof String);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

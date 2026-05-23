@@ -15,6 +15,7 @@ Commands (operators, permission level 2):
 | `/bluedroplets config check` | The same list of problems, or "no problems found" |
 | `/bluedroplets debug exhaustion [player]` | Mode, every factor of the thirst loss multiplier (and where the climate factor comes from), the `thirst_drain` attribute, the total, exhaustion, thirst and quenched |
 | `/bluedroplets debug purity` | Purity of the water you look at (or the block at your feet): salt water rule, base and where it comes from, altitude, still/running and biome deltas, cap |
+| `/bluedroplets infer <item>` | How recipe inference would estimate the item: every recipe that makes it, each ingredient's value, multiplier, result count, the estimate and why it would not be used |
 
 ## Files
 
@@ -189,6 +190,26 @@ One list per purity: `dirty`, `slightlyDirty`, `acceptable`, `purified`. Each en
 | `overrides.blacklist` | `[]` | Items that never restore thirst |
 | `containers.containers` | `[]` | Drinks that carry a water purity |
 | `keywords.enabled` | `false` | Give values to items by name patterns |
+| `inference.enabled` | `false` | Estimate values from recipe ingredients (see below) |
+| `inference.onlyConsumables` | `true` | Only items that are eaten or drunk get an estimate; others still pass their value on |
+| `inference.maxDepth` | `4` | Recipe steps followed down from an item (1-16) |
+| `inference.craftingMultiplier` / `cookingMultiplier` / `otherMultiplier` | `1.0` | Multiplier of crafting table recipes, of furnace/blast furnace/smoker/campfire recipes, and of every other recipe type |
+| `inference.maxThirst` / `maxQuenched` | `8` / `10` | Caps of an estimate |
+| `inference.minThirst` | `1` | Estimates below this thirst are dropped |
+| `inference.blacklist` | `[]` | `"namespace:item"`, `"#namespace:tag"` or `"@namespace"`: never estimated and worth 0 as an ingredient |
+| `inference.ignoredRecipeTypes` | `["minecraft:stonecutting", "minecraft:smithing"]` | Recipe types that are not used |
+
+### Recipe inference
+
+Off by default. When on, the server gives values to items that have none from any other source (blacklist, overrides, datapacks, other mods' code, keywords always win) by looking at the recipes that make them:
+
+- An ingredient is worth the average thirst and quenched of the items it accepts that have values (explicit or estimated themselves). Ingredients worth nothing (a bowl, a glass bottle) add nothing.
+- A recipe is worth the sum of its ingredients times the multiplier of its category, divided by how many items it makes, capped by `maxThirst`/`maxQuenched`. When several recipes make the item, the highest one wins.
+- Any recipe type works, also other mods' machines, as long as the recipe lists its item ingredients and result the standard way. Fluids used by recipes (Create mixing, pots with water) are not seen. Special recipes (suspicious stew, fireworks) are skipped.
+- Loops (ingot to block to ingot) are cut, and so is anything deeper than `maxDepth`.
+- Items that are drunk go to the drink table and the rest to the food table; tooltips show "Thirst N, quenched M (est.)". The values are sent to clients like the rest of the table.
+
+It runs when the world loads, after `/reload` and when `items.toml` changes, never while playing. The log shows one line with how many items were estimated and how long it took. Recipes that could not be read are listed in the config warning and in `/bluedroplets config check`.
 
 ## `client.toml`
 

@@ -52,6 +52,7 @@ Each item takes its values from the first of these that has it; the others are i
 3. **Datapacks**: the `bluedroplets:drinks` data map.
 4. **Other mods' code** (`RegisterThirstValueEvent`).
 5. **Keywords** (`items.toml`, section `keywords`, off by default).
+6. **Estimated from recipes** (`items.toml`, section `inference`, off by default): only for items none of the above gives values. Tooltips add "(est.)"; `/bluedroplets infer <item>` shows how the number was made. See [Configuration](Configuration.md#recipe-inference).
 
 The server resolves this table on world load and on `/reload` and sends it to every client, so all players see the server's values.
 

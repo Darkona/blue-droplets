@@ -13,10 +13,12 @@ import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.content.thirst.RecipeInference;
 import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -57,12 +60,14 @@ public class ThirstHelper
     private static final NumberRows TEMPERATURE_CURVE = new NumberRows(2);
     private static final NumberRows HUMIDITY_CURVE = new NumberRows(2);
 
-    private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods) {}
+    private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods, Set<Item> estimated) {}
 
-    private static final Table EMPTY = new Table(Map.of(), Map.of());
+    private static final Table EMPTY = new Table(Map.of(), Map.of(), Set.of());
     private static volatile Table table = EMPTY;
     private static volatile boolean serverTables;
     private static volatile List<String> unknownConfigIds = List.of();
+    private static volatile RecipeInference.Inputs inferenceInputs = RecipeInference.Inputs.EMPTY;
+    private static volatile RecipeInference.Result estimates = RecipeInference.Result.EMPTY;
     private static @Nullable RegistryAccess fireProtectionAccess;
     private static @Nullable Holder<Enchantment> fireProtectionHolder;
 
@@ -70,9 +75,10 @@ public class ThirstHelper
      * Rebuilds the drink/food tables and the purity containers. Call once tags and data maps are bound; the tables
      * are replaced as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
      * Each item takes its values from the first source that has it: blacklist and {@code bluedroplets:no_thirst} (no values),
-     * {@code items.toml}, the {@code bluedroplets:drinks} data map, {@link RegisterThirstValueEvent}, keywords.
+     * {@code items.toml}, the {@code bluedroplets:drinks} data map, {@link RegisterThirstValueEvent}, keywords, and last
+     * the values estimated from recipes ({@link RecipeInference}, server only: {@code recipes} is null on a remote client).
      */
-    public static void rebuild()
+    public static void rebuild(@Nullable RecipeManager recipes, @Nullable HolderLookup.Provider registries)
     {
         Tables tables = new Tables();
         List<ContainerWithPurity> containers = new ArrayList<>();
@@ -108,11 +114,28 @@ public class ThirstHelper
         if (ItemsConfig.KEYWORDS.get())
             addKeywordItems(tables);
 
+        Set<Item> estimated = new HashSet<>();
+        if (recipes != null && registries != null)
+        {
+            Map<Item, int[]> known = new HashMap<>(tables.drinks);
+            known.putAll(tables.foods);
+            Set<Item> excluded = new HashSet<>(tables.blocked);
+            for (String id : ItemsConfig.INFERENCE_BLACKLIST.get())
+                if (!id.startsWith("@"))
+                    resolve(id, excluded::add, unknown, absentMods);
+            inferenceInputs = new RecipeInference.Inputs(known, excluded);
+            estimates = ItemsConfig.INFERENCE.get() ? RecipeInference.run(inferenceInputs, recipes, registries) : RecipeInference.Result.EMPTY;
+            estimates.drinks().forEach((item, values) -> tables.claim(item, values, false));
+            estimates.foods().forEach((item, values) -> tables.claim(item, values, true));
+            estimated.addAll(estimates.drinks().keySet());
+            estimated.addAll(estimates.foods().keySet());
+        }
+
         unknownConfigIds = List.copyOf(unknown);
         if (!absentMods.isEmpty())
             LOGGER.debug("Skipped {} config entries of mods that are not installed: {}", absentMods.size(), absentMods);
 
-        table = new Table(Map.copyOf(tables.drinks), Map.copyOf(tables.foods));
+        table = new Table(Map.copyOf(tables.drinks), Map.copyOf(tables.foods), Set.copyOf(estimated));
         WaterPurity.setContainers(containers);
         ConfigCheck.report();
     }
@@ -156,6 +179,35 @@ public class ThirstHelper
     }
 
     /**
+     * Problems of the last recipe inference (unreadable recipes, unknown recipe types).
+     */
+    public static List<String> inferenceProblems()
+    {
+        return estimates.problems();
+    }
+
+    /**
+     * Values and blacklists the last server-side rebuild gave the recipe inference; for {@code /bluedroplets infer}.
+     */
+    public static RecipeInference.Inputs inferenceInputs()
+    {
+        return inferenceInputs;
+    }
+
+    /**
+     * Whether the item's values were estimated from recipes rather than given by a config, datapack or mod.
+     */
+    public static boolean isEstimated(ItemStack stack)
+    {
+        return table.estimated().contains(stack.getItem());
+    }
+
+    public static Set<Item> estimatedItems()
+    {
+        return table.estimated();
+    }
+
+    /**
      * Resolved drink values (item → {thirst, quenched, purity or -1}); immutable.
      */
     public static Map<Item, int[]> drinkTable()
@@ -174,9 +226,9 @@ public class ThirstHelper
     /**
      * Client of a remote server: uses the tables resolved by the server; local rebuilds are skipped until {@link #clearServerTables()}.
      */
-    public static void useServerTables(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> containers)
+    public static void useServerTables(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> containers, List<Item> estimated)
     {
-        table = new Table(Map.copyOf(drinks), Map.copyOf(foods));
+        table = new Table(Map.copyOf(drinks), Map.copyOf(foods), Set.copyOf(estimated));
         WaterPurity.setContainers(containers.stream().map(ContainerWithPurity::new).toList());
         serverTables = true;
     }

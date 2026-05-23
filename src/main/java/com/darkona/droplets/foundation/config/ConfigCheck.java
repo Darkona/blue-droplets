@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
- * Problems NeoForge's per-key validation cannot see (unknown ids, overlapping bands, unordered curves, bad patterns).
+ * Problems NeoForge's per-key validation cannot see (unknown ids, overlapping bands, unordered curves, bad patterns,
+ * recipes the inference could not read).
  * Reported as one warning each time the tables are rebuilt (world load, {@code /reload}, config file change) and by
  * {@code /bluedroplets config check}. Nothing here stops loading: bad entries are skipped where they are used.
  */
@@ -46,6 +47,7 @@ public final class ConfigCheck
         List<String> unknown = ThirstHelper.unknownConfigIds();
         if (!unknown.isEmpty())
             problems.add("items.toml: " + unknown.size() + " entries with no such item or tag (skipped): " + unknown);
+        problems.addAll(ThirstHelper.inferenceProblems());
         return problems;
     }
 

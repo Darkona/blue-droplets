@@ -10,6 +10,8 @@ import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.ExhaustionModifier;
 import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.content.thirst.RecipeInference;
+import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.foundation.config.ConfigCheck;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.core.ThirstConstants;
@@ -18,12 +20,15 @@ import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -106,6 +111,9 @@ public class CommandInit {
                 .then(Commands.literal("config")
                         .then(Commands.literal("check")
                                 .executes(context -> configCheck(context.getSource()))))
+                .then(Commands.literal("infer")
+                        .then(Commands.argument("item", ItemArgument.item(event.getBuildContext()))
+                                .executes(context -> infer(context.getSource(), ItemArgument.getItem(context, "item").getItem()))))
         );
         dispatcher.register(Commands.literal("thirst").requires(cs->cs.hasPermission(2)).redirect(root));
     }
@@ -178,6 +186,17 @@ public class CommandInit {
         source.sendSuccess(() -> Component.literal(problems.isEmpty() ? "Blue Droplets config: no problems found"
                 : "Blue Droplets config: " + problems.size() + " problem(s)\n  " + String.join("\n  ", problems)), false);
         return problems.size();
+    }
+
+    /**
+     * Recomputes the estimate of one item from the current recipes and explains it; nothing is stored.
+     */
+    private static int infer(CommandSourceStack source, Item item)
+    {
+        MinecraftServer server = source.getServer();
+        List<String> lines = RecipeInference.explain(item, ThirstHelper.inferenceInputs(), server.getRecipeManager(), server.registryAccess());
+        source.sendSuccess(() -> Component.literal(String.join("\n", lines)), false);
+        return lines.size();
     }
 
     private static String format(double value)

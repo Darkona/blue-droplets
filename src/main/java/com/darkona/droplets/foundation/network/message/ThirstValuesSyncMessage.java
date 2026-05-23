@@ -21,10 +21,10 @@ import java.util.Map;
 
 /**
  * Values resolved by the server (config, data map, tags, keywords, {@code RegisterThirstValueEvent}, blacklist applied):
- * item → {thirst, quenched, purity} for drinks and foods, filled items of data-driven purity containers, and the
- * {@link SyncedValues}. Sent on join, after {@code /reload} and after a config file changes.
+ * item → {thirst, quenched, purity} for drinks and foods, the items whose values are estimated from recipes, filled
+ * items of data-driven purity containers, and the {@link SyncedValues}. Sent on join, after {@code /reload} and after a config file changes.
  */
-public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> containers, int defaultPurity, int waterBottleStackSize, boolean purityEnabled) implements CustomPacketPayload
+public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> estimated, List<Item> containers, int defaultPurity, int waterBottleStackSize, boolean purityEnabled) implements CustomPacketPayload
 {
     public static final CustomPacketPayload.Type<ThirstValuesSyncMessage> TYPE = new Type<>(BlueDroplets.asResource("thirst_values"));
 
@@ -39,6 +39,7 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
     public static final StreamCodec<RegistryFriendlyByteBuf, ThirstValuesSyncMessage> STREAM_CODEC = NeoForgeStreamCodecs.composite(
             TABLE, ThirstValuesSyncMessage::drinks,
             TABLE, ThirstValuesSyncMessage::foods,
+            ITEM.apply(ByteBufCodecs.list()), ThirstValuesSyncMessage::estimated,
             ITEM.apply(ByteBufCodecs.list()), ThirstValuesSyncMessage::containers,
             ByteBufCodecs.VAR_INT, ThirstValuesSyncMessage::defaultPurity,
             ByteBufCodecs.VAR_INT, ThirstValuesSyncMessage::waterBottleStackSize,
@@ -47,14 +48,14 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
 
     public static ThirstValuesSyncMessage fromTables()
     {
-        return new ThirstValuesSyncMessage(ThirstHelper.drinkTable(), ThirstHelper.foodTable(), WaterPurity.dataContainerItems(),
+        return new ThirstValuesSyncMessage(ThirstHelper.drinkTable(), ThirstHelper.foodTable(), List.copyOf(ThirstHelper.estimatedItems()), WaterPurity.dataContainerItems(),
                 SyncedValues.defaultPurity(), SyncedValues.waterBottleStackSize(), SyncedValues.purityEnabled());
     }
 
     public static void clientHandle(final ThirstValuesSyncMessage message, final IPayloadContext context)
     {
         context.enqueueWork(() -> {
-            ThirstHelper.useServerTables(message.drinks, message.foods, message.containers);
+            ThirstHelper.useServerTables(message.drinks, message.foods, message.containers, message.estimated);
             SyncedValues.useServerValues(message.defaultPurity, message.waterBottleStackSize, message.purityEnabled);
         });
     }

@@ -19,5 +19,6 @@
   "command.bluedroplets.query": "當前口渴值: %1$s, 當前解渴值: %2$s",
   "command.bluedroplets.set": "設置口渴值为 %1$s,解渴值为 %2$s",
   "command.bluedroplets.enable": "已為玩家 %1$s 啟用口渴",
-  "command.bluedroplets.disable": "已為玩家 %1$s 禁用口渴"
+  "command.bluedroplets.disable": "已為玩家 %1$s 禁用口渴",
+  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)"
 }

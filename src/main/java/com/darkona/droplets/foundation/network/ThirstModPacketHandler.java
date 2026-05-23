@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 @EventBusSubscriber
 public class ThirstModPacketHandler
 {
-    private static final String PROTOCOL_VERSION = "0.1.8";
+    private static final String PROTOCOL_VERSION = "0.1.9";
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
