@@ -1,6 +1,7 @@
 package com.darkona.droplets.api;
 
 import com.darkona.droplets.foundation.config.CompatConfig;
+import com.darkona.droplets.foundation.config.ConfigCheck;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
@@ -61,6 +62,7 @@ public class ThirstHelper
     private static final Table EMPTY = new Table(Map.of(), Map.of());
     private static volatile Table table = EMPTY;
     private static volatile boolean serverTables;
+    private static volatile List<String> unknownConfigIds = List.of();
     private static @Nullable RegistryAccess fireProtectionAccess;
     private static @Nullable Holder<Enchantment> fireProtectionHolder;
 
@@ -106,13 +108,13 @@ public class ThirstHelper
         if (ItemsConfig.KEYWORDS.get())
             addKeywordItems(tables);
 
-        if (!unknown.isEmpty())
-            LOGGER.warn("Skipped {} config entries with no such item or tag: {}", unknown.size(), unknown);
+        unknownConfigIds = List.copyOf(unknown);
         if (!absentMods.isEmpty())
             LOGGER.debug("Skipped {} config entries of mods that are not installed: {}", absentMods.size(), absentMods);
 
         table = new Table(Map.copyOf(tables.drinks), Map.copyOf(tables.foods));
         WaterPurity.setContainers(containers);
+        ConfigCheck.report();
     }
 
     /**
@@ -143,6 +145,14 @@ public class ThirstHelper
             if (!has(item))
                 (food ? foods : drinks).put(item, values);
         }
+    }
+
+    /**
+     * Ids and tags in the {@code items.toml} lists that matched nothing at the last rebuild.
+     */
+    public static List<String> unknownConfigIds()
+    {
+        return unknownConfigIds;
     }
 
     /**
@@ -272,7 +282,6 @@ public class ThirstHelper
         }
         catch (PatternSyntaxException e)
         {
-            LOGGER.warn("Ignoring invalid keyword pattern '{}': {}", regex, e.getDescription());
             return null;
         }
     }

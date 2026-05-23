@@ -457,22 +457,41 @@ public class WaterPurity
      */
     public static int getWaterPurity(Level level, BlockPos pos, boolean source)
     {
+        return getWaterPurity(level, pos, source, null);
+    }
+
+    /**
+     * Same, writing each step to {@code trace} when given ({@code /bluedroplets debug purity}).
+     */
+    public static int getWaterPurity(Level level, BlockPos pos, boolean source, @Nullable List<String> trace)
+    {
         Holder<Biome> biome = level.getBiome(pos);
         int salt = PurityConfig.SALT_WATER_PURITY.get();
         if (salt >= MIN_PURITY && biome.is(DropletsTags.SALT_WATER))
+        {
+            if (trace != null)
+                trace.add("salt water biome: fixed " + salt);
             return salt;
+        }
 
         BiomeWater biomeWater = biome.getData(DropletsDataMaps.BIOME_WATER);
-        int purity = basePurity(level, biome, biomeWater);
-        purity += altitudeDelta(level, pos.getY());
-        purity += source ? PurityConfig.STILL_WATER_PURIFICATION_AMOUNT.get() : PurityConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get();
-        int max = MAX_PURITY;
-        if (biomeWater != null)
+        int purity = basePurity(level, biome, biomeWater, trace);
+        int altitude = altitudeDelta(level, pos.getY());
+        int flow = source ? PurityConfig.STILL_WATER_PURIFICATION_AMOUNT.get() : PurityConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get();
+        int delta = biomeWater != null ? biomeWater.delta() : 0;
+        int max = biomeWater != null ? biomeWater.max() : MAX_PURITY;
+        if (trace != null)
         {
-            purity += biomeWater.delta();
-            max = biomeWater.max();
+            trace.add("altitude band: " + signed(altitude));
+            trace.add((source ? "still" : "running") + " water: " + signed(flow));
+            trace.add("biome_water delta: " + signed(delta) + ", max " + max);
         }
-        return Math.max(MIN_PURITY, Math.min(purity, max));
+        return Math.max(MIN_PURITY, Math.min(purity + altitude + flow + delta, max));
+    }
+
+    private static String signed(int value)
+    {
+        return value >= 0 ? "+" + value : String.valueOf(value);
     }
 
     private static final NumberRows ALTITUDE_BANDS = new NumberRows(3);
@@ -499,17 +518,39 @@ public class WaterPurity
         return filled.setValue(BLOCK_PURITY, purity + 1);
     }
 
-    private static int basePurity(Level level, Holder<Biome> biome, @Nullable BiomeWater biomeWater)
+    private static int basePurity(Level level, Holder<Biome> biome, @Nullable BiomeWater biomeWater, @Nullable List<String> trace)
     {
+        String from;
+        int purity;
+        DimensionWater dimensionWater;
         if (biomeWater != null && biomeWater.base().isPresent())
-            return biomeWater.base().get();
+        {
+            from = "biome_water data map";
+            purity = biomeWater.base().get();
+        }
+        else if ((purity = taggedPurity(biome)) >= MIN_PURITY)
+            from = "biome tag bluedroplets:water_purity/" + purity;
+        else if ((dimensionWater = level.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER)) != null && dimensionWater.base().isPresent())
+        {
+            from = "dimension_water data map";
+            purity = dimensionWater.base().get();
+        }
+        else
+        {
+            from = "worldWaterBasePurity";
+            purity = PurityConfig.WORLD_WATER_BASE_PURITY.get();
+        }
+        if (trace != null)
+            trace.add("base " + purity + " from " + from);
+        return purity;
+    }
+
+    private static int taggedPurity(Holder<Biome> biome)
+    {
         for (int purity = MAX_PURITY; purity >= MIN_PURITY; purity--)
             if (biome.is(DropletsTags.WATER_PURITY[purity]))
                 return purity;
-        DimensionWater dimensionWater = level.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
-        if (dimensionWater != null && dimensionWater.base().isPresent())
-            return dimensionWater.base().get();
-        return PurityConfig.WORLD_WATER_BASE_PURITY.get();
+        return -1;
     }
 
     /**

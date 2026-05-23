@@ -4,6 +4,18 @@ All TOML files live in `config/bluedroplets/`. They are NeoForge configs: missin
 
 Per-id data (items, biomes, dimensions) lives in datapacks instead; see [Modpack makers](Modpack-Makers.md).
 
+## Checking a config
+
+Problems that single keys cannot show (unknown effect or item ids, overlapping altitude bands, curve points out of order, invalid keyword patterns, `slowRegenMinThirst` above `fullRegenMinThirst`) are logged as **one warning** each time the world loads, after `/reload` and after a config file changes. Bad entries are skipped; nothing crashes.
+
+Commands (operators, permission level 2):
+
+| Command | Shows |
+|---|---|
+| `/bluedroplets config check` | The same list of problems, or "no problems found" |
+| `/bluedroplets debug exhaustion [player]` | Mode, every factor of the thirst loss multiplier (and where the climate factor comes from), the `thirst_drain` attribute, the total, exhaustion, thirst and quenched |
+| `/bluedroplets debug purity` | Purity of the water you look at (or the block at your feet): salt water rule, base and where it comes from, altitude, still/running and biome deltas, cap |
+
 ## Files
 
 | File | Type | Content |
