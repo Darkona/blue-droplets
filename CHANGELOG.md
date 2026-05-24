@@ -117,6 +117,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### API
 
+- New public API in `com.darkona.droplets.api`, built from its own source set: it ships inside the mod jar and alone as `com.darkona.droplets:bluedroplets-api` (with a sources jar) for other mods to compile against. Start at `DropletsAPI`; see the wiki page Mod Developers. `ThirstHelper` moved to `com.darkona.droplets.content.thirst` and is internal. `[1.21.1]`
 - All classes moved from `dev.ghen.thirst` to `com.darkona.droplets` (main class `Thirst` is now `BlueDroplets`) and there is no compatibility shim: addons that call Thirst Was Taken classes directly, such as Green Feathers, need a version built for Blue Droplets. A stable public API is planned. `[1.21.1]`
 - `RegisterThirstValueEvent` is now posted every time the tables are built (world load and `/reload`), on the game bus, from the logical side that owns the data; `addDrink`, `addFood` and both `addContainer` methods keep their signatures. Its constructor changed and `ThirstEventFactory` was removed. `[1.21.1]`
 - New `ThirstHelper.drinkTable()`/`foodTable()` (resolved, immutable) and `WaterPurity.defaultPurity()` (the server's value on remote clients). `[1.21.1]`

@@ -1,6 +1,5 @@
 package com.darkona.droplets.content.thirst;
 
-import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.core.BlockPos;

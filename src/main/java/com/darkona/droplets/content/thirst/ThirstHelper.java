@@ -1,4 +1,4 @@
-package com.darkona.droplets.api;
+package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.ConfigCheck;
@@ -13,7 +13,6 @@ import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
-import com.darkona.droplets.content.thirst.RecipeInference;
 import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.mojang.logging.LogUtils;
@@ -54,6 +53,9 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * Internal drink and food tables. Other mods use {@link com.darkona.droplets.api.DropletsAPI}.
+ */
 public class ThirstHelper
 {
     private static final Logger LOGGER = LogUtils.getLogger();

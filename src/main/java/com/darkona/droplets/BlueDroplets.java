@@ -1,8 +1,10 @@
 package com.darkona.droplets;
 
+import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.compat.appleskin.AppleSkinCompat;
 import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
+import com.darkona.droplets.content.DropletsServiceImpl;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.AttributeInit;
@@ -36,11 +38,11 @@ import net.neoforged.neoforge.event.AddPackFindersEvent;
 @Mod(BlueDroplets.ID)
 public class BlueDroplets
 {
-    public static final String ID = "bluedroplets";
+    public static final String ID = DropletsAPI.MOD_ID;
 
     public BlueDroplets(IEventBus modBus, ModContainer modContainer)
     {
-
+        DropletsAPI.setService(DropletsServiceImpl.INSTANCE);
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::clientSetup);
         modBus.addListener(DropletsDataMaps::register);

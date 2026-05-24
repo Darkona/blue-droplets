@@ -1,7 +1,6 @@
 package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.foundation.config.GameplayConfig;
-import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.registry.AttributeInit;
 import com.darkona.droplets.foundation.common.capability.IThirst;

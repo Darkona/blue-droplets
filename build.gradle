@@ -25,6 +25,13 @@ base {
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.withSourcesJar()
+
+// The public API (com.darkona.droplets.api) lives in its own source set and ships twice: inside the mod jar, and
+// alone as bluedroplets-api for other mods to compile against. It may only use Minecraft and NeoForge.
+sourceSets {
+    api
+}
 
 // Default run configurations.
 // These can be tweaked, removed, or duplicated as needed.
@@ -44,6 +51,7 @@ runs {
         systemProperty 'forge.logging.console.level', 'debug'
 
         modSource project.sourceSets.main
+        modSource project.sourceSets.api
     }
 
     client {
@@ -112,6 +120,8 @@ dependencies {
     // And its provides the option to then use net.minecraft as the group, and one of; client, server or joined as the module name, plus the game version as version.
     // For all intends and purposes: You can treat this dependency as if it is a normal library you would use.
     implementation "net.neoforged:neoforge:${neo_version}"
+    apiImplementation "net.neoforged:neoforge:${neo_version}"
+    implementation sourceSets.api.output
 
     compileOnly ("com.simibubi.create:create-${minecraft_version}:${create_version}:slim"){transitive=false}
     compileOnly ("net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}"){transitive=false}
@@ -167,6 +177,19 @@ tasks.withType(ProcessResources).configureEach {
     }
 }
 
+var apiJar = tasks.register('apiJar', Jar) {
+    archiveBaseName = "${mod_id}-api"
+    from sourceSets.api.output
+    from('LICENSE')
+}
+var apiSourcesJar = tasks.register('apiSourcesJar', Jar) {
+    archiveBaseName = "${mod_id}-api"
+    archiveClassifier = 'sources'
+    from sourceSets.api.allSource
+}
+tasks.named('assemble') { dependsOn apiJar, apiSourcesJar }
+
+// D14: only the local repository below for now; a public Maven is still to be decided.
 publishing {
     publications {
         mavenJava(MavenPublication.class) {
@@ -174,6 +197,13 @@ publishing {
             artifactId = "BlueDroplets"
             version = "${mod_version}"
             from components.java
+        }
+        register('api', MavenPublication) {
+            groupId = group
+            artifactId = "${mod_id}-api"
+            version = "${mod_version}"
+            artifact apiJar
+            artifact apiSourcesJar
         }
     }
     repositories {
@@ -191,6 +221,10 @@ publishing {
 
 tasks.named('jar', Jar).configure {
     from('LICENSE')
+    from sourceSets.api.output
+}
+tasks.named('sourcesJar', Jar).configure {
+    from sourceSets.api.allSource
 }
 
 tasks.withType(JavaCompile).configureEach {

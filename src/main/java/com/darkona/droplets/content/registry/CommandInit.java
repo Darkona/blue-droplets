@@ -11,7 +11,7 @@ import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.ExhaustionModifier;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.RecipeInference;
-import com.darkona.droplets.api.ThirstHelper;
+import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.config.ConfigCheck;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.core.ThirstConstants;

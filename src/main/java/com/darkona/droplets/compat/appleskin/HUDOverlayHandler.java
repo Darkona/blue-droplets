@@ -2,7 +2,7 @@ package com.darkona.droplets.compat.appleskin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.api.ThirstHelper;
+import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;

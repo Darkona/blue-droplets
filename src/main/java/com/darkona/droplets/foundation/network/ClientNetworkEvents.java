@@ -1,6 +1,6 @@
 package com.darkona.droplets.foundation.network;
 
-import com.darkona.droplets.api.ThirstHelper;
+import com.darkona.droplets.content.thirst.ThirstHelper;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

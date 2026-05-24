@@ -1,6 +1,5 @@
 package com.darkona.droplets.content.thirst;
 
-import com.darkona.droplets.api.ThirstHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;

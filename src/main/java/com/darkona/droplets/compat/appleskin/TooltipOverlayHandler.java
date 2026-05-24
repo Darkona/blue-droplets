@@ -16,7 +16,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.network.chat.FormattedText;
-import com.darkona.droplets.api.ThirstHelper;
+import com.darkona.droplets.content.thirst.ThirstHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;

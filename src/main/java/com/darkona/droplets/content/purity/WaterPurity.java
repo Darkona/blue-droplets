@@ -3,7 +3,7 @@ package com.darkona.droplets.content.purity;
 import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.api.ThirstHelper;
+import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.content.data.BiomeWater;
 import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DropletsDataMaps;

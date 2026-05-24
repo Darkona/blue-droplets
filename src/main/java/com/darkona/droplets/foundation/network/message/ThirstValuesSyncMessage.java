@@ -1,7 +1,7 @@
 package com.darkona.droplets.foundation.network.message;
 
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.api.ThirstHelper;
+import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import io.netty.buffer.ByteBuf;
