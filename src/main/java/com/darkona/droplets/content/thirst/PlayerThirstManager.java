@@ -66,9 +66,7 @@ public class PlayerThirstManager {
         if (!(event.getEntity() instanceof ServerPlayer player))
             return;
         ItemStack item = event.getItem();
-        if (!ThirstHelper.itemRestoresThirst(item))
-            return;
-        if ((WaterPurity.isWaterFilledContainer(item) || item.getFoodProperties(player) == null) && WaterPurity.givePurityEffects(player, item))
+        if (WaterPurity.isWaterFilledContainer(item) || item.getFoodProperties(player) == null)
             PlayerThirst.drink(item, player);
     }
 
@@ -169,10 +167,7 @@ public class PlayerThirstManager {
             PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
             int respawnThirst = GameplayConfig.RESPAWN_THIRST.get();
             int respawnQuenched = GameplayConfig.RESPAWN_QUENCHED.get();
-            if (respawnThirst >= 0)
-                thirst.setThirst(respawnThirst);
-            if (respawnQuenched >= 0)
-                thirst.setQuenched(respawnQuenched);
+            thirst.change(player, respawnThirst >= 0 ? respawnThirst : thirst.getThirst(), respawnQuenched >= 0 ? respawnQuenched : thirst.getQuenched());
         }
     }
 

@@ -18,7 +18,7 @@ public abstract class MixinPlayer
     public void onEatDrink(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir)
     {
         Player player = (Player) (Object) this;
-        if (!WaterPurity.isWaterFilledContainer(food) && WaterPurity.givePurityEffects(player, food))
+        if (!WaterPurity.isWaterFilledContainer(food))
             PlayerThirst.drink(food, player);
     }
 

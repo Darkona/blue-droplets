@@ -1,5 +1,8 @@
 package com.darkona.droplets.content.thirst;
 
+import com.darkona.droplets.api.DropletsView;
+import com.darkona.droplets.api.ThirstValues;
+import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.registry.AttributeInit;
@@ -30,7 +33,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import static com.darkona.droplets.core.ThirstConstants.*;
 
-public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
+public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<CompoundTag>
 {
     public static final int SYNC_ENABLED = 1;
     public static final int SYNC_SPRINT_BLOCKED = 2;
@@ -121,21 +124,87 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
     }
 
     @Override
+    public int thirst()
+    {
+        return thirst;
+    }
+
+    @Override
+    public int quenched()
+    {
+        return quenched;
+    }
+
+    @Override
+    public float exhaustion()
+    {
+        return exhaustion;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        return shouldTickThirst;
+    }
+
+    @Override
+    public float lastModifier()
+    {
+        return exhaustionModifier;
+    }
+
+    /**
+     * The server-side way thirst changes: clamps, keeps quenched at or below thirst, and returns whether anything changed.
+     */
+    public boolean change(Player player, int newThirst, int newQuenched)
+    {
+        newThirst = Mth.clamp(newThirst, 0, MAX_THIRST);
+        newQuenched = Mth.clamp(newQuenched, 0, newThirst);
+        if (newThirst == thirst && newQuenched == quenched)
+            return false;
+        thirst = newThirst;
+        quenched = newQuenched;
+        return true;
+    }
+
+    @Override
     public void setShouldTickThirst(boolean value){shouldTickThirst = value;}
     @Override
     public boolean getShouldTickThirst(){return shouldTickThirst;}
 
     /**
-     * Attempts to give hydration to player if item restores thirst.
-     * @param item
-     * @param player
+     * Drinking or eating an item with thirst values; nothing for other items.
      */
     public static void drink(ItemStack item, Player player)
     {
-        if(ThirstHelper.itemRestoresThirst(item) && ThirstHelper.playerRestoresThirst(item, player))
+        ThirstValues values = ThirstHelper.valuesOf(item);
+        if (values != null)
         {
-            player.getData(ModAttachment.PLAYER_THIRST).drink(ThirstHelper.getThirst(item),ThirstHelper.getQuenched(item));
+            boolean hydrates = ThirstHelper.playerRestoresThirst(item, player);
+            drink(player, item, hydrates ? values.thirst() : 0, hydrates ? values.quenched() : 0, WaterPurity.drinkPurity(item));
         }
+    }
+
+    /**
+     * Every drink (items, hand drinking, the API), server side only: purity effects, which may prevent hydration,
+     * then hydration. {@code item} is empty for hand drinking and the API.
+     *
+     * @return whether thirst or quenched changed
+     */
+    public static boolean drink(Player player, ItemStack item, int thirst, int quenched, int purity)
+    {
+        if (player.level().isClientSide)
+            return false;
+        return WaterPurity.givePurityEffects(player, purity) && player.getData(ModAttachment.PLAYER_THIRST).drink(player, thirst, quenched);
+    }
+
+    /**
+     * Hydration of a drink: with {@code extraThirstToQuenched}, thirst above the maximum becomes quenched.
+     */
+    public boolean drink(Player player, int thirst, int quenched)
+    {
+        int extra = GameplayConfig.EXTRA_THIRST_TO_QUENCHED.get() ? Math.max(this.thirst + thirst - MAX_THIRST, 0) : 0;
+        return change(player, this.thirst + thirst, this.quenched + quenched + extra);
     }
 
     public void drink(int thirst, int quenched)
@@ -204,24 +273,17 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
         {
             exhaustion -= perPoint;
             if (quenched > 0)
-            {
-                quenched--;
-            }
+                change(player, thirst, quenched - 1);
             else if (difficulty != Difficulty.PEACEFUL || GameplayConfig.DEPLETES_IN_PEACEFUL.get())
-            {
-                thirst = Math.max(thirst - 1, 0);
-            }
+                change(player, thirst - 1, quenched);
         }
 
         if(difficulty == Difficulty.PEACEFUL && !GameplayConfig.DEPLETES_IN_PEACEFUL.get() && player.tickCount % GameplayConfig.PEACEFUL_REGEN_INTERVAL_TICKS.get() == 0)
-            setThirst(thirst + GameplayConfig.PEACEFUL_REGEN_AMOUNT.get());
+            change(player, thirst + GameplayConfig.PEACEFUL_REGEN_AMOUNT.get(), quenched);
 
         if(GameplayConfig.RAIN_DRINKING.get() && player.tickCount % GameplayConfig.RAIN_INTERVAL_TICKS.get() == 0
                 && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above()))
-        {
-            setThirst(thirst + GameplayConfig.RAIN_THIRST.get());
-            setQuenched(quenched + GameplayConfig.RAIN_QUENCHED.get());
-        }
+            change(player, thirst + GameplayConfig.RAIN_THIRST.get(), quenched + GameplayConfig.RAIN_QUENCHED.get());
 
         if (thirst <= 0)
         {
@@ -416,6 +478,15 @@ public class PlayerThirst implements IThirst, INBTSerializable<CompoundTag>
 
         if(justHealed)
             justHealed = false;
+    }
+
+    /**
+     * Exhaustion from another mod, multiplied like the mod's own activities.
+     */
+    public void addScaledExhaustion(Player player, float amount)
+    {
+        if(!player.getAbilities().invulnerable && shouldTickThirst)
+            exhaustion = Math.max(0.0F, exhaustion + amount * exhaustionModifier(player));
     }
 
     /**

@@ -69,13 +69,10 @@ public class CommandInit {
                                 .then(Commands.argument("quenched", IntegerArgumentType.integer(0, ThirstConstants.MAX_THIRST))
                                         .executes(context -> {
                                             ServerPlayer player = EntityArgument.getPlayer(context,"Player");
-                                            IThirst iThirst = player.getData(ModAttachment.PLAYER_THIRST);
                                             Object[] arg =new Object[2];
                                             arg[0]= IntegerArgumentType.getInteger(context,"thirst");
                                             arg[1]= IntegerArgumentType.getInteger(context,"quenched");
-
-                                            iThirst.setThirst((Integer) arg[0]);
-                                            iThirst.setQuenched((Integer) arg[1]);
+                                            player.getData(ModAttachment.PLAYER_THIRST).change(player, (Integer) arg[0], (Integer) arg[1]);
                                             context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.set","command.bluedroplets.set",arg)),false);
                                             return 0;
                                         })))

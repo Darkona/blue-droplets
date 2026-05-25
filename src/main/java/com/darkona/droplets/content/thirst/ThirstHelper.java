@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.thirst;
 
+import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.ConfigCheck;
 import com.darkona.droplets.foundation.config.GameplayConfig;
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -62,9 +64,19 @@ public class ThirstHelper
     private static final NumberRows TEMPERATURE_CURVE = new NumberRows(2);
     private static final NumberRows HUMIDITY_CURVE = new NumberRows(2);
 
-    private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods, Set<Item> estimated) {}
+    private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods, Set<Item> estimated, Map<Item, ThirstValues> values)
+    {
+        static Table of(Map<Item, int[]> drinks, Map<Item, int[]> foods, Collection<Item> estimated)
+        {
+            Map<Item, ThirstValues> values = new HashMap<>();
+            Set<Item> estimates = Set.copyOf(estimated);
+            for (Map<Item, int[]> source : List.of(foods, drinks))
+                source.forEach((item, v) -> values.put(item, new ThirstValues(v[0], v[1], v[2], estimates.contains(item))));
+            return new Table(Map.copyOf(drinks), Map.copyOf(foods), estimates, Map.copyOf(values));
+        }
+    }
 
-    private static final Table EMPTY = new Table(Map.of(), Map.of(), Set.of());
+    private static final Table EMPTY = Table.of(Map.of(), Map.of(), Set.of());
     private static volatile Table table = EMPTY;
     private static volatile boolean serverTables;
     private static volatile List<String> unknownConfigIds = List.of();
@@ -137,7 +149,7 @@ public class ThirstHelper
         if (!absentMods.isEmpty())
             LOGGER.debug("Skipped {} config entries of mods that are not installed: {}", absentMods.size(), absentMods);
 
-        table = new Table(Map.copyOf(tables.drinks), Map.copyOf(tables.foods), Set.copyOf(estimated));
+        table = Table.of(tables.drinks, tables.foods, estimated);
         WaterPurity.setContainers(containers);
         ConfigCheck.report();
     }
@@ -230,7 +242,7 @@ public class ThirstHelper
      */
     public static void useServerTables(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> containers, List<Item> estimated)
     {
-        table = new Table(Map.copyOf(drinks), Map.copyOf(foods), Set.copyOf(estimated));
+        table = Table.of(drinks, foods, estimated);
         WaterPurity.setContainers(containers.stream().map(ContainerWithPurity::new).toList());
         serverTables = true;
     }
@@ -347,7 +359,7 @@ public class ThirstHelper
 
     public static boolean itemRestoresThirst(ItemStack itemStack)
     {
-        return values(itemStack.getItem()) != null;
+        return valuesOf(itemStack) != null;
     }
 
     public static boolean playerRestoresThirst(ItemStack itemStack, Player player)
@@ -381,14 +393,14 @@ public class ThirstHelper
 
     public static int getThirst(ItemStack itemStack)
     {
-        int[] values = values(itemStack.getItem());
-        return values == null ? 0 : values[0];
+        ThirstValues values = valuesOf(itemStack);
+        return values == null ? 0 : values.thirst();
     }
 
     public static int getQuenched(ItemStack itemStack)
     {
-        int[] values = values(itemStack.getItem());
-        return values == null ? 0 : values[1];
+        ThirstValues values = valuesOf(itemStack);
+        return values == null ? 0 : values.quenched();
     }
 
     /**
@@ -396,15 +408,16 @@ public class ThirstHelper
      */
     public static int getDrinkPurity(ItemStack itemStack)
     {
-        int[] values = values(itemStack.getItem());
-        return values == null ? -1 : values[2];
+        ThirstValues values = valuesOf(itemStack);
+        return values == null ? -1 : values.purity();
     }
 
-    private static int[] values(Item item)
+    /**
+     * Resolved values of the stack, or null; no allocation.
+     */
+    public static @Nullable ThirstValues valuesOf(ItemStack stack)
     {
-        Table current = table;
-        int[] values = current.drinks().get(item);
-        return values != null ? values : current.foods().get(item);
+        return table.values().get(stack.getItem());
     }
 
     public static int getPurity(ItemStack item)

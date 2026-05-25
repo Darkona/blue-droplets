@@ -554,15 +554,11 @@ public class WaterPurity
     }
 
     /**
-     * Gives the player effects based on the purity of the water container or drink just consumed and returns whether
-     * thirst and quenched should be added or not. Drinks that are not water containers roll only with a data map purity.
+     * Purity a drink rolls effects for: the stored purity of a water container, the fixed purity of other drinks, or -1.
      */
-    public static boolean givePurityEffects(Player player, ItemStack item)
+    public static int drinkPurity(ItemStack item)
     {
-        if (isWaterFilledContainer(item))
-            return givePurityEffects(player, getPurity(item));
-        int fixed = ThirstHelper.getDrinkPurity(item);
-        return fixed < MIN_PURITY || givePurityEffects(player, fixed);
+        return isWaterFilledContainer(item) ? getPurity(item) : ThirstHelper.getDrinkPurity(item);
     }
 
     /**

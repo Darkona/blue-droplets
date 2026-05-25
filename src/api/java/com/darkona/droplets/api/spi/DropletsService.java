@@ -1,6 +1,14 @@
 package com.darkona.droplets.api.spi;
 
 import com.darkona.droplets.api.DropletsAPI;
+import com.darkona.droplets.api.DropletsView;
+import com.darkona.droplets.api.ThirstValues;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.fluids.FluidStack;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Implemented by Blue Droplets. Use {@link DropletsAPI}; this interface is not meant for other mods to call or
@@ -8,4 +16,29 @@ import com.darkona.droplets.api.DropletsAPI;
  */
 public interface DropletsService
 {
+    DropletsView view(Player player);
+
+    @Nullable ThirstValues getDrinkValues(ItemStack stack);
+
+    boolean setThirst(Player player, int thirst);
+
+    boolean setQuenched(Player player, int quenched);
+
+    boolean addThirst(Player player, int thirst, int quenched);
+
+    boolean drink(Player player, int thirst, int quenched, int purity);
+
+    void addExhaustion(Player player, float amount);
+
+    boolean isPurityEnabled();
+
+    int getPurity(ItemStack stack);
+
+    int getPurity(FluidStack fluid);
+
+    ItemStack withPurity(ItemStack stack, int purity);
+
+    FluidStack withPurity(FluidStack fluid, int purity);
+
+    int getWaterPurity(Level level, BlockPos pos);
 }
