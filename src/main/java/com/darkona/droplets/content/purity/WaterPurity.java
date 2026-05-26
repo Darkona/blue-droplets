@@ -167,9 +167,9 @@ public class WaterPurity
 
     }
     /**
-     * Registers new custom water container
-     * the container will be taken into consider of purity
-     * Don't use it directly. Trying to subscribe #{@link RegisterThirstValueEvent}
+     * Registers a water container for the whole session.
+     *
+     * @deprecated use {@code DropletsAPI.registerContainer}
      */
     @Deprecated
     public static void addContainer(ContainerWithPurity container)

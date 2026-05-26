@@ -23,7 +23,7 @@ public interface DropletsView
     boolean isEnabled();
 
     /**
-     * Last computed multiplier of the surroundings, armor, effects and registered exhaustion modifiers, without
+     * Last computed multiplier of the surroundings, armor, effects and registered {@link ExhaustionModifier}s, without
      * the {@code bluedroplets:thirst_drain} attribute. Refreshed about once a second on the server; 1 on clients.
      */
     float lastModifier();

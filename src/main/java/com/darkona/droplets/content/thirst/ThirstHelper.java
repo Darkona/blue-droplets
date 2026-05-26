@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.thirst;
 
+import com.darkona.droplets.api.DrinkValueProvider;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.ConfigCheck;
@@ -15,6 +16,7 @@ import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.NumberRows;
+import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.Holder;
@@ -26,12 +28,14 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -51,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -64,16 +69,53 @@ public class ThirstHelper
     private static final NumberRows TEMPERATURE_CURVE = new NumberRows(2);
     private static final NumberRows HUMIDITY_CURVE = new NumberRows(2);
 
-    private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods, Set<Item> estimated, Map<Item, ThirstValues> values)
+    private record CodeDrink(ItemLike item, int[] values) {}
+    private record CodeProvider(ItemLike item, DrinkValueProvider provider) {}
+    private record CodeContainer(@Nullable ItemLike empty, ItemLike filled) {}
+
+    private static final List<CodeDrink> CODE_DRINKS = new CopyOnWriteArrayList<>();
+    private static final List<CodeProvider> CODE_PROVIDERS = new CopyOnWriteArrayList<>();
+    private static final List<CodeContainer> CODE_CONTAINERS = new CopyOnWriteArrayList<>();
+
+    /**
+     * Table entry of an item whose values come from its {@link DrinkValueProvider}; synced like any other entry.
+     */
+    private static final int[] PROVIDED = {-1, 0, -1};
+    private static final ThirstValues PROVIDED_VALUES = new ThirstValues(-1, 0, -1, false);
+
+    private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods, Set<Item> estimated, Map<Item, ThirstValues> values, Map<Item, DrinkValueProvider> providers)
     {
         static Table of(Map<Item, int[]> drinks, Map<Item, int[]> foods, Collection<Item> estimated)
         {
             Map<Item, ThirstValues> values = new HashMap<>();
             Set<Item> estimates = Set.copyOf(estimated);
             for (Map<Item, int[]> source : List.of(foods, drinks))
-                source.forEach((item, v) -> values.put(item, new ThirstValues(v[0], v[1], v[2], estimates.contains(item))));
-            return new Table(Map.copyOf(drinks), Map.copyOf(foods), estimates, Map.copyOf(values));
+                source.forEach((item, v) -> values.put(item, v[0] < 0 ? PROVIDED_VALUES : new ThirstValues(v[0], v[1], v[2], estimates.contains(item))));
+            return new Table(Map.copyOf(drinks), Map.copyOf(foods), estimates, Map.copyOf(values), values.containsValue(PROVIDED_VALUES) ? providers() : Map.of());
         }
+    }
+
+    private static Map<Item, DrinkValueProvider> providers()
+    {
+        Map<Item, DrinkValueProvider> providers = new HashMap<>();
+        for (CodeProvider provider : CODE_PROVIDERS)
+            providers.putIfAbsent(provider.item().asItem(), provider.provider());
+        return Map.copyOf(providers);
+    }
+
+    public static void registerDrink(ItemLike item, int thirst, int quenched, int purity)
+    {
+        CODE_DRINKS.add(new CodeDrink(item, new int[]{Mth.clamp(thirst, 0, ThirstConstants.MAX_THIRST), Math.max(quenched, 0), Mth.clamp(purity, -1, WaterPurity.MAX_PURITY)}));
+    }
+
+    public static void registerProvider(ItemLike item, DrinkValueProvider provider)
+    {
+        CODE_PROVIDERS.add(new CodeProvider(item, provider));
+    }
+
+    public static void registerContainer(@Nullable ItemLike empty, ItemLike filled)
+    {
+        CODE_CONTAINERS.add(new CodeContainer(empty, filled));
     }
 
     private static final Table EMPTY = Table.of(Map.of(), Map.of(), Set.of());
@@ -89,9 +131,11 @@ public class ThirstHelper
      * Rebuilds the drink/food tables and the purity containers. Call once tags and data maps are bound; the tables
      * are replaced as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
      * Each item takes its values from the first source that has it: blacklist and {@code bluedroplets:no_thirst} (no values),
-     * {@code items.toml}, the {@code bluedroplets:drinks} data map, {@link RegisterThirstValueEvent}, keywords, and last
-     * the values estimated from recipes ({@link RecipeInference}, server only: {@code recipes} is null on a remote client).
+     * {@code items.toml}, the {@code bluedroplets:drinks} data map, code ({@code DropletsAPI.registerDrink}, then
+     * {@link RegisterThirstValueEvent}), {@link DrinkValueProvider}s, keywords, and last the values estimated from recipes
+     * ({@link RecipeInference}, server only: {@code recipes} is null on a remote client).
      */
+    @SuppressWarnings("deprecation")
     public static void rebuild(@Nullable RecipeManager recipes, @Nullable HolderLookup.Provider registries)
     {
         Tables tables = new Tables();
@@ -122,8 +166,21 @@ public class ThirstHelper
         Map<Item, int[]> codeDrinks = new LinkedHashMap<>();
         Map<Item, int[]> codeFoods = new LinkedHashMap<>();
         NeoForge.EVENT_BUS.post(new RegisterThirstValueEvent(codeDrinks, codeFoods, containers));
+        for (CodeDrink drink : CODE_DRINKS)
+        {
+            Item item = drink.item().asItem();
+            if (item != Items.AIR)
+                tables.claim(item, drink.values(), isFoodItem(item));
+        }
         codeDrinks.forEach((item, values) -> tables.claim(item, values, false));
         codeFoods.forEach((item, values) -> tables.claim(item, values, true));
+        Set<Item> provided = new HashSet<>();
+        for (Item item : providers().keySet())
+            if (item != Items.AIR && tables.claim(item, PROVIDED, isFoodItem(item)))
+                provided.add(item);
+        for (CodeContainer container : CODE_CONTAINERS)
+            containers.add(container.empty() == null ? new ContainerWithPurity(container.filled().asItem())
+                    : new ContainerWithPurity(container.empty().asItem(), container.filled().asItem()));
 
         if (ItemsConfig.KEYWORDS.get())
             addKeywordItems(tables);
@@ -133,7 +190,9 @@ public class ThirstHelper
         {
             Map<Item, int[]> known = new HashMap<>(tables.drinks);
             known.putAll(tables.foods);
+            known.keySet().removeAll(provided);
             Set<Item> excluded = new HashSet<>(tables.blocked);
+            excluded.addAll(provided);
             for (String id : ItemsConfig.INFERENCE_BLACKLIST.get())
                 if (!id.startsWith("@"))
                     resolve(id, excluded::add, unknown, absentMods);
@@ -177,10 +236,12 @@ public class ThirstHelper
                 (food ? foods : drinks).put(item, values);
         }
 
-        void claim(Item item, int[] values, boolean food)
+        boolean claim(Item item, int[] values, boolean food)
         {
-            if (!has(item))
-                (food ? foods : drinks).put(item, values);
+            if (has(item))
+                return false;
+            (food ? foods : drinks).put(item, values);
+            return true;
         }
     }
 
@@ -413,11 +474,16 @@ public class ThirstHelper
     }
 
     /**
-     * Resolved values of the stack, or null; no allocation.
+     * Resolved values of the stack, or null; allocates nothing itself (a {@link DrinkValueProvider} may).
      */
     public static @Nullable ThirstValues valuesOf(ItemStack stack)
     {
-        return table.values().get(stack.getItem());
+        Table current = table;
+        ThirstValues values = current.values().get(stack.getItem());
+        if (values != PROVIDED_VALUES)
+            return values;
+        DrinkValueProvider provider = current.providers().get(stack.getItem());
+        return provider == null ? null : provider.values(stack);
     }
 
     public static int getPurity(ItemStack item)

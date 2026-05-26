@@ -490,7 +490,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     }
 
     /**
-     * {@link ExhaustionModifier} cached (recomputed every {@code MODIFIER_INTERVAL_TICKS}, staggered per player, and
+     * {@link ExhaustionFactors} cached (recomputed every {@code MODIFIER_INTERVAL_TICKS}, staggered per player, and
      * after {@link #invalidateModifier()}) times the {@code bluedroplets:thirst_drain} attribute (cached by vanilla).
      */
     public float exhaustionModifier(Player player)
@@ -498,7 +498,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         if(modifierDirty)
         {
             modifierDirty = false;
-            exhaustionModifier = ExhaustionModifier.compute(player, null);
+            exhaustionModifier = ExhaustionFactors.compute(player, null);
         }
         return exhaustionModifier * (float) player.getAttributeValue(AttributeInit.THIRST_DRAIN);
     }

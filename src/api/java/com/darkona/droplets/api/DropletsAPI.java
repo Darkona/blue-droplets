@@ -2,8 +2,10 @@ package com.darkona.droplets.api;
 
 import com.darkona.droplets.api.spi.DropletsService;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
@@ -170,6 +172,74 @@ public final class DropletsAPI
     public static int getWaterPurity(Level level, BlockPos pos)
     {
         return service().getWaterPurity(level, pos);
+    }
+
+    /* Registering */
+
+    /**
+     * Gives an item thirst values from code. Call any time from mod construction on; items are resolved when the
+     * tables are built (world load, {@code /reload}), so deferred items are fine.
+     * <p>
+     * The config ({@code items.toml}), the {@code bluedroplets:no_thirst} tag and the {@code bluedroplets:drinks}
+     * data map win over code, so players and modpacks can still change or remove it. Whether it counts as food or
+     * drink follows the item: food if it can be eaten.
+     */
+    public static void registerDrink(ItemLike item, int thirst, int quenched)
+    {
+        registerDrink(item, thirst, quenched, NO_PURITY);
+    }
+
+    /**
+     * @param purity purity for the effects rolled when drinking it, or {@link #NO_PURITY}
+     * @see #registerDrink(ItemLike, int, int)
+     */
+    public static void registerDrink(ItemLike item, int thirst, int quenched, int purity)
+    {
+        service().registerDrink(item, thirst, quenched, purity);
+    }
+
+    /**
+     * Values that depend on the stack, for one item. Same precedence as {@link #registerDrink}, after it: the config,
+     * the data map and registered drinks win; keywords and recipe estimates do not apply to the item.
+     */
+    public static void registerDrinkProvider(ItemLike item, DrinkValueProvider provider)
+    {
+        service().registerDrinkProvider(item, provider);
+    }
+
+    /**
+     * An item that holds water with purity and is drunk, but is not filled from the world (e.g. a drink made from
+     * water). Its stacks keep the purity they are given.
+     */
+    public static void registerContainer(ItemLike filled)
+    {
+        service().registerContainer(null, filled);
+    }
+
+    /**
+     * An empty/filled pair that holds water with purity, like the glass bottle and the water bottle.
+     */
+    public static void registerContainer(ItemLike empty, ItemLike filled)
+    {
+        service().registerContainer(empty, filled);
+    }
+
+    /**
+     * Adds a modifier to every player's thirst loss multiplier. Registering the same id again replaces it. Thread
+     * safe; modifiers run in id order.
+     */
+    public static void registerExhaustionModifier(ResourceLocation id, ExhaustionModifier modifier)
+    {
+        service().registerExhaustionModifier(id, modifier);
+    }
+
+    /**
+     * Recomputes the player's thirst loss multiplier on its next use, when something your {@link ExhaustionModifier}
+     * reads changed (a season, a temperature); otherwise it refreshes within a second. Server side.
+     */
+    public static void refreshExhaustionModifier(Player player)
+    {
+        service().refreshExhaustionModifier(player);
     }
 
     /**

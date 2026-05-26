@@ -8,7 +8,7 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
-import com.darkona.droplets.content.thirst.ExhaustionModifier;
+import com.darkona.droplets.content.thirst.ExhaustionFactors;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.RecipeInference;
 import com.darkona.droplets.content.thirst.ThirstHelper;
@@ -118,13 +118,13 @@ public class CommandInit {
     private static int debugExhaustion(CommandSourceStack source, ServerPlayer player)
     {
         PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
-        float[] factors = new float[ExhaustionModifier.FACTORS.length];
-        float cached = ExhaustionModifier.compute(player, factors);
+        float[] factors = new float[ExhaustionFactors.FACTORS.length];
+        float cached = ExhaustionFactors.compute(player, factors);
         double drain = player.getAttributeValue(AttributeInit.THIRST_DRAIN);
         StringBuilder text = new StringBuilder("Thirst loss of ").append(player.getScoreboardName())
                 .append(" (mode ").append(GameplayConfig.MODE.get()).append(")");
         for (int i = 0; i < factors.length; i++)
-            text.append("\n  ").append(ExhaustionModifier.FACTORS[i]).append(": x").append(format(factors[i]))
+            text.append("\n  ").append(ExhaustionFactors.FACTORS[i]).append(": x").append(format(factors[i]))
                     .append(i == 0 ? " (" + climateSource(player) + ")" : "");
         text.append("\n  bluedroplets:thirst_drain: x").append(format(drain))
                 .append("\n  total: x").append(format(cached * drain))
