@@ -50,7 +50,7 @@ Each item takes its values from the first of these that has it; the others are i
 1. **Blacklist**: the item tag `#bluedroplets:no_thirst` or `blacklist` in `items.toml` (the item restores no thirst at all).
 2. **TOML overrides**: the `drinks` and `foods` lists in `items.toml` (section `overrides`).
 3. **Datapacks**: the `bluedroplets:drinks` data map.
-4. **Other mods' code** (`RegisterThirstValueEvent`).
+4. **Other mods' code**: `DropletsAPI.registerDrink` (and the older `RegisterThirstValueEvent`), then per-item value providers of mods whose values depend on the stack. See [Mod developers](Mod-Developers.md).
 5. **Keywords** (`items.toml`, section `keywords`, off by default).
 6. **Estimated from recipes** (`items.toml`, section `inference`, off by default): only for items none of the above gives values. Tooltips add "(est.)"; `/bluedroplets infer <item>` shows how the number was made. See [Configuration](Configuration.md#recipe-inference).
 
