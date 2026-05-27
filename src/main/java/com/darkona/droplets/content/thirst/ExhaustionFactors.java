@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 /**
@@ -27,7 +28,7 @@ public final class ExhaustionFactors
 
     public static synchronized void register(ResourceLocation id, ExhaustionModifier modifier)
     {
-        REGISTERED.put(id, modifier);
+        REGISTERED.put(Objects.requireNonNull(id), Objects.requireNonNull(modifier));
         modifiers = REGISTERED.values().toArray(new ExhaustionModifier[0]);
     }
 

@@ -53,6 +53,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -105,17 +106,17 @@ public class ThirstHelper
 
     public static void registerDrink(ItemLike item, int thirst, int quenched, int purity)
     {
-        CODE_DRINKS.add(new CodeDrink(item, new int[]{Mth.clamp(thirst, 0, ThirstConstants.MAX_THIRST), Math.max(quenched, 0), Mth.clamp(purity, -1, WaterPurity.MAX_PURITY)}));
+        CODE_DRINKS.add(new CodeDrink(Objects.requireNonNull(item), new int[]{Mth.clamp(thirst, 0, ThirstConstants.MAX_THIRST), Math.max(quenched, 0), Mth.clamp(purity, -1, WaterPurity.MAX_PURITY)}));
     }
 
     public static void registerProvider(ItemLike item, DrinkValueProvider provider)
     {
-        CODE_PROVIDERS.add(new CodeProvider(item, provider));
+        CODE_PROVIDERS.add(new CodeProvider(Objects.requireNonNull(item), Objects.requireNonNull(provider)));
     }
 
     public static void registerContainer(@Nullable ItemLike empty, ItemLike filled)
     {
-        CODE_CONTAINERS.add(new CodeContainer(empty, filled));
+        CODE_CONTAINERS.add(new CodeContainer(empty, Objects.requireNonNull(filled)));
     }
 
     private static final Table EMPTY = Table.of(Map.of(), Map.of(), Set.of());
