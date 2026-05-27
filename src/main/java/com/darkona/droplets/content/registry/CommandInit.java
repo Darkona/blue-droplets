@@ -8,6 +8,7 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.thirst.ExhaustionFactors;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.RecipeInference;
@@ -72,7 +73,7 @@ public class CommandInit {
                                             Object[] arg =new Object[2];
                                             arg[0]= IntegerArgumentType.getInteger(context,"thirst");
                                             arg[1]= IntegerArgumentType.getInteger(context,"quenched");
-                                            player.getData(ModAttachment.PLAYER_THIRST).change(player, (Integer) arg[0], (Integer) arg[1]);
+                                            player.getData(ModAttachment.PLAYER_THIRST).change(player, (Integer) arg[0], (Integer) arg[1], ThirstChangeEvent.Cause.COMMAND);
                                             context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.set","command.bluedroplets.set",arg)),false);
                                             return 0;
                                         })))

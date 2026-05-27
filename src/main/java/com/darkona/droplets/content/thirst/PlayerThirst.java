@@ -2,6 +2,9 @@ package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.api.DropletsView;
 import com.darkona.droplets.api.ThirstValues;
+import com.darkona.droplets.api.event.DehydrationDamageEvent;
+import com.darkona.droplets.api.event.DrinkEvent;
+import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
@@ -24,6 +27,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -154,16 +158,29 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     }
 
     /**
-     * The server-side way thirst changes: clamps, keeps quenched at or below thirst, and returns whether anything changed.
+     * The way thirst changes on the server: clamps, keeps quenched at or below thirst and, only when something
+     * changes, posts {@link ThirstChangeEvent.Pre} (which may cancel or change it) and {@link ThirstChangeEvent.Post}.
+     *
+     * @return whether anything changed
      */
-    public boolean change(Player player, int newThirst, int newQuenched)
+    public boolean change(Player player, int newThirst, int newQuenched, ThirstChangeEvent.Cause cause)
     {
         newThirst = Mth.clamp(newThirst, 0, MAX_THIRST);
         newQuenched = Mth.clamp(newQuenched, 0, newThirst);
         if (newThirst == thirst && newQuenched == quenched)
             return false;
+        ThirstChangeEvent.Pre pre = NeoForge.EVENT_BUS.post(new ThirstChangeEvent.Pre(player, cause, thirst, quenched, newThirst, newQuenched));
+        if (pre.isCanceled())
+            return false;
+        newThirst = Mth.clamp(pre.getNewThirst(), 0, MAX_THIRST);
+        newQuenched = Mth.clamp(pre.getNewQuenched(), 0, newThirst);
+        if (newThirst == thirst && newQuenched == quenched)
+            return false;
+        int oldThirst = thirst;
+        int oldQuenched = quenched;
         thirst = newThirst;
         quenched = newQuenched;
+        NeoForge.EVENT_BUS.post(new ThirstChangeEvent.Post(player, cause, oldThirst, oldQuenched, thirst, quenched));
         return true;
     }
 
@@ -186,8 +203,8 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     }
 
     /**
-     * Every drink (items, hand drinking, the API), server side only: purity effects, which may prevent hydration,
-     * then hydration. {@code item} is empty for hand drinking and the API.
+     * Every drink (items, hand drinking, the API), server side only: {@link DrinkEvent.Pre}, purity effects, which may
+     * prevent hydration, hydration, {@link DrinkEvent.Post}. {@code item} is empty for hand drinking and the API.
      *
      * @return whether thirst or quenched changed
      */
@@ -195,7 +212,13 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     {
         if (player.level().isClientSide)
             return false;
-        return WaterPurity.givePurityEffects(player, purity) && player.getData(ModAttachment.PLAYER_THIRST).drink(player, thirst, quenched);
+        DrinkEvent.Pre pre = NeoForge.EVENT_BUS.post(new DrinkEvent.Pre(player, item, thirst, quenched, purity));
+        if (pre.isCanceled())
+            return false;
+        boolean hydrated = WaterPurity.givePurityEffects(player, pre.getPurity())
+                && player.getData(ModAttachment.PLAYER_THIRST).drink(player, pre.getThirst(), pre.getQuenched());
+        NeoForge.EVENT_BUS.post(new DrinkEvent.Post(player, item, pre.getThirst(), pre.getQuenched(), pre.getPurity(), hydrated));
+        return hydrated;
     }
 
     /**
@@ -204,7 +227,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     public boolean drink(Player player, int thirst, int quenched)
     {
         int extra = GameplayConfig.EXTRA_THIRST_TO_QUENCHED.get() ? Math.max(this.thirst + thirst - MAX_THIRST, 0) : 0;
-        return change(player, this.thirst + thirst, this.quenched + quenched + extra);
+        return change(player, this.thirst + thirst, this.quenched + quenched + extra, ThirstChangeEvent.Cause.DRINK);
     }
 
     public void drink(int thirst, int quenched)
@@ -273,17 +296,17 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         {
             exhaustion -= perPoint;
             if (quenched > 0)
-                change(player, thirst, quenched - 1);
+                change(player, thirst, quenched - 1, ThirstChangeEvent.Cause.DEPLETION);
             else if (difficulty != Difficulty.PEACEFUL || GameplayConfig.DEPLETES_IN_PEACEFUL.get())
-                change(player, thirst - 1, quenched);
+                change(player, thirst - 1, quenched, ThirstChangeEvent.Cause.DEPLETION);
         }
 
         if(difficulty == Difficulty.PEACEFUL && !GameplayConfig.DEPLETES_IN_PEACEFUL.get() && player.tickCount % GameplayConfig.PEACEFUL_REGEN_INTERVAL_TICKS.get() == 0)
-            change(player, thirst + GameplayConfig.PEACEFUL_REGEN_AMOUNT.get(), quenched);
+            change(player, thirst + GameplayConfig.PEACEFUL_REGEN_AMOUNT.get(), quenched, ThirstChangeEvent.Cause.PEACEFUL);
 
         if(GameplayConfig.RAIN_DRINKING.get() && player.tickCount % GameplayConfig.RAIN_INTERVAL_TICKS.get() == 0
                 && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above()))
-            change(player, thirst + GameplayConfig.RAIN_THIRST.get(), quenched + GameplayConfig.RAIN_QUENCHED.get());
+            change(player, thirst + GameplayConfig.RAIN_THIRST.get(), quenched + GameplayConfig.RAIN_QUENCHED.get(), ThirstChangeEvent.Cause.RAIN);
 
         if (thirst <= 0)
         {
@@ -294,7 +317,9 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
                 float health = player.getHealth();
                 if (health > minHealth(difficulty) && (GameplayConfig.DAMAGE_CAN_KILL.get() || health > damage))
                 {
-                    player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), damage);
+                    DehydrationDamageEvent event = NeoForge.EVENT_BUS.post(new DehydrationDamageEvent(player, damage));
+                    if (!event.isCanceled() && event.getAmount() > 0)
+                        player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), event.getAmount());
                 }
 
                 damageTimer = 0;

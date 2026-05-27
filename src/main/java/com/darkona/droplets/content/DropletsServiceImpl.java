@@ -4,6 +4,7 @@ import com.darkona.droplets.api.DrinkValueProvider;
 import com.darkona.droplets.api.DropletsView;
 import com.darkona.droplets.api.ExhaustionModifier;
 import com.darkona.droplets.api.ThirstValues;
+import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.api.spi.DropletsService;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.ExhaustionFactors;
@@ -59,21 +60,21 @@ public final class DropletsServiceImpl implements DropletsService
     public boolean setThirst(Player player, int thirst)
     {
         PlayerThirst data = server(player);
-        return data != null && data.change(player, thirst, data.getQuenched());
+        return data != null && data.change(player, thirst, data.getQuenched(), ThirstChangeEvent.Cause.API);
     }
 
     @Override
     public boolean setQuenched(Player player, int quenched)
     {
         PlayerThirst data = server(player);
-        return data != null && data.change(player, data.getThirst(), quenched);
+        return data != null && data.change(player, data.getThirst(), quenched, ThirstChangeEvent.Cause.API);
     }
 
     @Override
     public boolean addThirst(Player player, int thirst, int quenched)
     {
         PlayerThirst data = server(player);
-        return data != null && data.change(player, data.getThirst() + thirst, data.getQuenched() + quenched);
+        return data != null && data.change(player, data.getThirst() + thirst, data.getQuenched() + quenched, ThirstChangeEvent.Cause.API);
     }
 
     @Override

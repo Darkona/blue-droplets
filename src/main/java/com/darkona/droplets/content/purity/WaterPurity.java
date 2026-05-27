@@ -3,6 +3,7 @@ package com.darkona.droplets.content.purity;
 import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.event.PurityEffectEvent;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.content.data.BiomeWater;
 import com.darkona.droplets.content.data.DimensionWater;
@@ -62,6 +63,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -571,24 +573,31 @@ public class WaterPurity
     private static volatile EffectTables effectTables = new EffectTables(List.of(), new PurityEffect[0][]);
 
     /**
-     * Rolls once and applies every effect of this purity's list whose chance is above the roll (effects only on the
-     * server). Returns whether the drink should still restore thirst.
+     * Rolls once, collects every effect of this purity's list whose chance is above the roll, lets
+     * {@link PurityEffectEvent} change them, and applies them (effects only on the server). Returns whether the drink
+     * should still restore thirst.
      */
     public static boolean givePurityEffects(Player player, int purity)
     {
         if (!enabled() || purity < MIN_PURITY || purity > MAX_PURITY)
             return true;
         boolean hydrate = true;
+        List<MobEffectInstance> effects = new ArrayList<>();
         float roll = player.getRandom().nextFloat();
         for (PurityEffect effect : effectTable(purity))
         {
             if (roll >= effect.chance())
                 continue;
-            if (player instanceof ServerPlayer)
-                player.addEffect(new MobEffectInstance(effect.effect(), effect.duration(), effect.amplifier()));
+            effects.add(new MobEffectInstance(effect.effect(), effect.duration(), effect.amplifier()));
             hydrate &= !effect.blocksHydration();
         }
-        return hydrate || PurityConfig.QUENCH_WHEN_DEBUFFED.get();
+        PurityEffectEvent event = NeoForge.EVENT_BUS.post(new PurityEffectEvent(player, purity, effects, hydrate || PurityConfig.QUENCH_WHEN_DEBUFFED.get()));
+        if (event.isCanceled())
+            return true;
+        if (player instanceof ServerPlayer)
+            for (MobEffectInstance effect : event.getEffects())
+                player.addEffect(effect);
+        return event.hydrates();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.thirst;
 
+import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
@@ -167,7 +168,7 @@ public class PlayerThirstManager {
             PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
             int respawnThirst = GameplayConfig.RESPAWN_THIRST.get();
             int respawnQuenched = GameplayConfig.RESPAWN_QUENCHED.get();
-            thirst.change(player, respawnThirst >= 0 ? respawnThirst : thirst.getThirst(), respawnQuenched >= 0 ? respawnQuenched : thirst.getQuenched());
+            thirst.change(player, respawnThirst >= 0 ? respawnThirst : thirst.getThirst(), respawnQuenched >= 0 ? respawnQuenched : thirst.getQuenched(), ThirstChangeEvent.Cause.DEATH);
         }
     }
 
