@@ -2,7 +2,7 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
-## Unreleased (Minecraft 1.21.1, NeoForge)
+## 3.0.0 (Minecraft 1.21.1, NeoForge), unreleased
 
 ### Rebrand: Blue Droplets
 
