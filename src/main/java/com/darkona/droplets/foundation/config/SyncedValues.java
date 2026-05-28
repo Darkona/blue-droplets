@@ -9,6 +9,7 @@ public final class SyncedValues
     private static volatile int defaultPurity = -1;
     private static volatile int waterBottleStackSize = -1;
     private static volatile int purityEnabled = -1;
+    private static volatile int canFillFromFlowingWater = -1;
 
     private SyncedValues() {}
 
@@ -30,11 +31,18 @@ public final class SyncedValues
         return value >= 0 ? value == 1 : PurityConfig.ENABLED.get();
     }
 
-    public static void useServerValues(int defaultPurity, int waterBottleStackSize, boolean purityEnabled)
+    public static boolean canFillFromFlowingWater()
+    {
+        int value = canFillFromFlowingWater;
+        return value >= 0 ? value == 1 : GameplayConfig.CAN_FILL_FROM_FLOWING_WATER.get();
+    }
+
+    public static void useServerValues(int defaultPurity, int waterBottleStackSize, boolean purityEnabled, boolean canFillFromFlowingWater)
     {
         SyncedValues.defaultPurity = defaultPurity;
         SyncedValues.waterBottleStackSize = waterBottleStackSize;
         SyncedValues.purityEnabled = purityEnabled ? 1 : 0;
+        SyncedValues.canFillFromFlowingWater = canFillFromFlowingWater ? 1 : 0;
     }
 
     public static void clear()
@@ -42,5 +50,6 @@ public final class SyncedValues
         defaultPurity = -1;
         waterBottleStackSize = -1;
         purityEnabled = -1;
+        canFillFromFlowingWater = -1;
     }
 }

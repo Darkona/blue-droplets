@@ -74,6 +74,7 @@ public final class GameplayConfig
 
     public static final ModConfigSpec.BooleanValue EXTRA_THIRST_TO_QUENCHED;
     public static final ModConfigSpec.IntValue WATER_BOTTLE_STACK_SIZE;
+    public static final ModConfigSpec.BooleanValue CAN_FILL_FROM_FLOWING_WATER;
     public static final ModConfigSpec.BooleanValue RAIN_DRINKING;
     public static final ModConfigSpec.DoubleValue RAIN_MAX_PITCH;
     public static final ModConfigSpec.IntValue RAIN_INTERVAL_TICKS;
@@ -176,6 +177,7 @@ public final class GameplayConfig
         BUILDER.push("drinking");
         EXTRA_THIRST_TO_QUENCHED = BUILDER.comment("Whether thirst restored above full turns into quenched").define("extraThirstToQuenched", true);
         WATER_BOTTLE_STACK_SIZE = BUILDER.comment("Stack size of water bottles").defineInRange("waterBottleStackSize", 64, 1, 99);
+        CAN_FILL_FROM_FLOWING_WATER = BUILDER.comment("Whether glass bottles and terracotta bowls can be filled from flowing water; if false only source blocks work, as in vanilla. Buckets always need a source").define("canFillFromFlowingWater", true);
         RAIN_DRINKING = BUILDER.comment("Whether players drink rain by looking up").define("rain", true);
         RAIN_MAX_PITCH = BUILDER.comment("How far up players must look to drink rain (-90 = straight up)").defineInRange("rainMaxPitch", -80.0, -90.0, 90.0);
         RAIN_INTERVAL_TICKS = BUILDER.comment("Ticks between two sips of rain").defineInRange("rainIntervalTicks", 11, 1, 1200);

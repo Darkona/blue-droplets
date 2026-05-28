@@ -136,6 +136,7 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 | `sprint.minThirst` | `6` | 3 droplets (sent to clients) |
 | `drinking.extraThirstToQuenched` | `true` | Thirst restored above full turns into quenched |
 | `drinking.waterBottleStackSize` | `64` | Stack size of water bottles |
+| `drinking.canFillFromFlowingWater` | `true` | Glass bottles and terracotta bowls can be filled from flowing water; `false` = source blocks only, as in vanilla. Buckets always need a source (sent to clients) |
 | `drinking.rain` | `true` | Drink rain by looking up |
 | `drinking.rainMaxPitch` | `-80` | How far up to look (-90 = straight up) |
 | `drinking.rainIntervalTicks` | `11` | Ticks between two sips |

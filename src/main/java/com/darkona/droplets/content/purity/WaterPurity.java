@@ -243,7 +243,7 @@ public class WaterPurity
                 cloud -> cloud.isAlive() && cloud.getOwner() instanceof EnderDragon).isEmpty())
             return;
 
-        BlockHitResult hit = pickFluid(player, bucket ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.ANY);
+        BlockHitResult hit = pickFluid(player, bucket || !SyncedValues.canFillFromFlowingWater() ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.ANY);
         if (hit.getType() != HitResult.Type.BLOCK)
             return;
         BlockPos pos = hit.getBlockPos();
