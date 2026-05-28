@@ -92,7 +92,7 @@ public class ThirstHelper
             Set<Item> estimates = Set.copyOf(estimated);
             for (Map<Item, int[]> source : List.of(foods, drinks))
                 source.forEach((item, v) -> values.put(item, v[0] < 0 ? PROVIDED_VALUES : new ThirstValues(v[0], v[1], v[2], estimates.contains(item))));
-            return new Table(Map.copyOf(drinks), Map.copyOf(foods), estimates, Map.copyOf(values), values.containsValue(PROVIDED_VALUES) ? providers() : Map.of());
+            return new Table(Map.copyOf(drinks), Map.copyOf(foods), estimates, Map.copyOf(values), values.containsValue(PROVIDED_VALUES) ? ThirstHelper.providers() : Map.of());
         }
     }
 
