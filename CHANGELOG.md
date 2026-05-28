@@ -140,7 +140,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 ### Project
 
 - Removed the empty access transformer file and its declaration (thirst#234). `[1.21.1]`
-- Issue tracker and homepage links now point to https://github.com/Darkona/thirst-was-taken. `[1.21.1]`
+- Issue tracker and homepage links now point to https://github.com/Darkona/blue-droplets. `[1.21.1]`
 - Added this changelog. `[1.21.1]`
 
 ### For developers

@@ -3,7 +3,7 @@ modLoader="javafml" #mandatory
 loaderVersion="${loader_version_range}" #mandatory
 license="${mod_license}"
 
-issueTrackerURL="https://github.com/Darkona/thirst-was-taken/issues"
+issueTrackerURL="https://github.com/Darkona/blue-droplets/issues"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
@@ -12,7 +12,7 @@ displayName="${mod_name}"
 # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 
-displayURL="https://github.com/Darkona/thirst-was-taken"
+displayURL="https://github.com/Darkona/blue-droplets"
 logoFile="logo.png"
 credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka and the Thirst Was Taken contributors. Thanks to Cold Sweat, Create and Farmer's Delight, whose sources helped build the original."
 authors="${mod_authors}"

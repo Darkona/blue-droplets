@@ -57,7 +57,7 @@ Development happens on Minecraft 1.21.1 (NeoForge) first. Ports follow, each one
 
 - [Changelog](CHANGELOG.md)
 - Wiki: coming soon
-- [Issues](https://github.com/Darkona/thirst-was-taken/issues)
+- [Issues](https://github.com/Darkona/blue-droplets/issues)
 
 ## Credits and license
 
