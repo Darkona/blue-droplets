@@ -143,6 +143,10 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Issue tracker and homepage links now point to https://github.com/Darkona/thirst-was-taken. `[1.21.1]`
 - Added this changelog. `[1.21.1]`
 
+### For developers
+
+- Build moved from NeoGradle to ModDevGradle 2.0.141 on Gradle 9.7.1, built against NeoForge 21.1.252; the minimum NeoForge version is now 21.1.219. `[1.21.1]`
+
 ## Planned
 
 Ports start once the previous version in the chain is stable:
