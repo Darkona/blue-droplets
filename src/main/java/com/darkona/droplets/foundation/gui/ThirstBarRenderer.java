@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
+import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.ClientConfig;
@@ -25,6 +26,7 @@ public class ThirstBarRenderer
     public static boolean cancelRender = false;
     static Minecraft minecraft = Minecraft.getInstance();
     protected final static RandomSource random = RandomSource.create();
+    private static int lastNotFullTick;
 
     @SubscribeEvent
     public static void onBeginRenderAir(RenderGuiEvent.Pre event)
@@ -48,10 +50,35 @@ public class ThirstBarRenderer
                 return;
             }
 
+            if (shouldHideBar())
+            {
+                cancelRender = true;
+                return;
+            }
+
             setupOverlayRenderState(true, false);
 
             render(event.getScreenWidth(),event.getScreenHeight(),event.getGuiGraphics());
         }
+    }
+
+    private static boolean shouldHideBar()
+    {
+        if (!ClientConfig.HIDE_BAR_WHEN_FULL.get())
+            return false;
+
+        Player player = minecraft.player;
+        int ticks = minecraft.gui.getGuiTicks();
+        if (player.getData(ModAttachment.PLAYER_THIRST).getThirst() < 20
+                || ThirstHelper.itemRestoresThirst(player.getMainHandItem())
+                || ThirstHelper.itemRestoresThirst(player.getOffhandItem())
+                || ticks < lastNotFullTick)
+        {
+            lastNotFullTick = ticks;
+            return false;
+        }
+
+        return ticks - lastNotFullTick >= ClientConfig.HIDE_BAR_DELAY_TICKS.get();
     }
 
     public static boolean shouldDrawSurvivalElements(Minecraft minecraft)

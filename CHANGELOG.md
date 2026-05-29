@@ -34,6 +34,10 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Create basins: fluids made from water with a purity now take that purity only when the recipe output has none, and only in the basin that crafts them; before, the recipe itself was changed, so the purity leaked to every other basin, could become invalid, and was also applied when Create only checked recipes. Which output fluids carry purity is now the fluid tag `bluedroplets:carries_purity` (water and Create's tea by default) instead of any fluid whose name contains "tea" (which also matched "steam"). `[1.21.1]`
 - Jade: water purity is now shown by a Jade plugin instead of a mixin into Jade, so new Jade versions (15.10.6 and later) no longer break it (thirst#280). Looking at a water cauldron shows its purity; looking at a tank with water or a purity-carrying fluid shows one purity line per tank (needs Jade on the server for tanks). It can be toggled in Jade's plugin settings ("Water purity"). `[1.21.1]`
 
+### Client
+
+- New client options `Thirst Bar.hideBarWhenFull` (default `false`) and `Thirst Bar.hideBarDelayTicks` (default `60`): the thirst bar is hidden while thirst is full, after the delay, and the air bar and other bars above it move down; it comes back as soon as thirst drops or you hold something that restores thirst. AppleSkin overlays are hidden with it (closes thirst#148, thirst#233)
+
 ### Bug fixes
 
 - Pouring water with purity into a cauldron or tank now always updates its purity; the old delayed-task helper could skip the update when several happened on consecutive ticks, and kept tasks alive after leaving a singleplayer world. `[1.21.1]`

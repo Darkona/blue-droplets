@@ -217,3 +217,5 @@ It runs when the world loads, after `/reload` and when `items.toml` changes, nev
 | Key | Default | Meaning |
 |---|---|---|
 | `Thirst Bar.thirstBarXOffset` / `thirstBarYOffset` | `0` | Moves the thirst bar |
+| `Thirst Bar.hideBarWhenFull` | `false` | Hides the thirst bar while thirst is 20 and the player holds nothing that restores thirst (main or off hand); the bars above it move down and AppleSkin overlays are hidden too |
+| `Thirst Bar.hideBarDelayTicks` | `60` | Ticks the bar stays visible after thirst becomes full (0-1200) |
