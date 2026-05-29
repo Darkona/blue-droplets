@@ -85,6 +85,7 @@ public final class GameplayConfig
     public static final ModConfigSpec.IntValue HAND_DRINKING_THIRST;
     public static final ModConfigSpec.IntValue HAND_DRINKING_QUENCHED;
     public static final ModConfigSpec.IntValue HAND_DRINKING_COOLDOWN;
+    public static final ModConfigSpec.BooleanValue HAND_DRINKING_EFFECTS;
 
     public static final ModConfigSpec.IntValue RESPAWN_THIRST;
     public static final ModConfigSpec.IntValue RESPAWN_QUENCHED;
@@ -191,6 +192,7 @@ public final class GameplayConfig
         HAND_DRINKING_THIRST = BUILDER.comment("Thirst restored per sip").defineInRange("thirst", 3, 0, 20);
         HAND_DRINKING_QUENCHED = BUILDER.comment("Quenched restored per sip").defineInRange("quenched", 2, 0, 20);
         HAND_DRINKING_COOLDOWN = BUILDER.comment("Minimum ticks between two sips (20 ticks = 1 second)").defineInRange("cooldownTicks", 10, 0, 1200);
+        HAND_DRINKING_EFFECTS = BUILDER.comment("Swing the arm and splash water particles when drinking by hand (visual only)").define("effects", true);
         BUILDER.pop();
 
         BUILDER.push("death");

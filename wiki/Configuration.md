@@ -145,6 +145,7 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 | `hand.bothHandsEmpty` | `true` | Both hands must be empty |
 | `hand.thirst` / `hand.quenched` | `3` / `2` | Restored per sip |
 | `hand.cooldownTicks` | `10` | Minimum ticks between two sips |
+| `hand.effects` | `true` | Swing the arm and splash particles when drinking by hand (visual only) |
 | `death.respawnThirst` / `respawnQuenched` | `20` / `5` | Values after respawning; `-1` keeps what the player died with |
 | `loot.enabled` | `true` | Drinks are added to vanilla chest loot |
 

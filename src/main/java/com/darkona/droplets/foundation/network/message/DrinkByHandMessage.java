@@ -9,6 +9,7 @@ import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
@@ -16,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
@@ -54,6 +56,11 @@ public record DrinkByHandMessage() implements CustomPacketPayload
 
             thirst.startHandDrinkCooldown(tick, GameplayConfig.HAND_DRINKING_COOLDOWN.get());
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1.0F, 1.0F);
+            if (GameplayConfig.HAND_DRINKING_EFFECTS.get())
+            {
+                player.swing(InteractionHand.MAIN_HAND, true);
+                level.sendParticles(ParticleTypes.SPLASH, hit.getLocation().x, hit.getLocation().y, hit.getLocation().z, 6, 0.15, 0.05, 0.15, 0.1);
+            }
             PlayerThirst.drink(player, ItemStack.EMPTY, GameplayConfig.HAND_DRINKING_THIRST.get(), GameplayConfig.HAND_DRINKING_QUENCHED.get(), WaterPurity.getBlockPurity(level, pos));
         });
     }
