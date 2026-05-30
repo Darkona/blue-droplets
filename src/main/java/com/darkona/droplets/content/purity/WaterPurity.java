@@ -43,6 +43,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
@@ -62,6 +63,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
@@ -548,6 +550,30 @@ public class WaterPurity
             return filled;
         int purity = previous.is(Blocks.WATER_CAULDRON) ? Math.min(getBlockPurity(previous), configured) : configured;
         return filled.setValue(BLOCK_PURITY, purity + 1);
+    }
+
+    /**
+     * Water cauldrons below purity 3 (stored or unset). Depends on the state only: it decides {@code isRandomlyTicking}.
+     */
+    public static boolean canBoil(BlockState state)
+    {
+        return state.is(Blocks.WATER_CAULDRON) && state.getValue(BLOCK_PURITY) <= MAX_PURITY;
+    }
+
+    /**
+     * Random tick of a water cauldron: with {@code cauldron.boiling}, a chance of +1 purity, up to
+     * {@code cauldron.boilingMaxPurity}, while it stands on a lit block in {@code bluedroplets:cauldron_heat_sources}.
+     */
+    public static void boil(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
+    {
+        if (!PurityConfig.CAULDRON_BOILING.get() || !enabled() || !canBoil(state))
+            return;
+        int purity = getBlockPurity(state);
+        if (purity >= PurityConfig.CAULDRON_BOILING_MAX_PURITY.get() || random.nextDouble() >= PurityConfig.CAULDRON_BOILING_CHANCE.get())
+            return;
+        BlockState below = level.getBlockState(pos.below());
+        if (below.is(DropletsTags.CAULDRON_HEAT_SOURCES) && below.getOptionalValue(BlockStateProperties.LIT).orElse(true))
+            level.setBlock(pos, state.setValue(BLOCK_PURITY, purity + 2), Block.UPDATE_ALL);
     }
 
     private static int basePurity(Level level, Holder<Biome> biome, @Nullable BiomeWater biomeWater, @Nullable List<String> trace)

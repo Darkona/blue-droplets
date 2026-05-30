@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
 public final class DropletsTags
@@ -19,6 +20,8 @@ public final class DropletsTags
     public static final TagKey<Item> PURITY_OPT_OUT = TagKey.create(Registries.ITEM, BlueDroplets.asResource("purity_opt_out"));
     /** Drinks that carry a water purity (static containers: they can be filled by machines but not from the world). */
     public static final TagKey<Item> PURITY_CONTAINERS = TagKey.create(Registries.ITEM, BlueDroplets.asResource("purity_containers"));
+    /** Blocks that boil a water cauldron above them ({@code cauldron.boiling}); blocks with a {@code lit} property only when lit. */
+    public static final TagKey<Block> CAULDRON_HEAT_SOURCES = TagKey.create(Registries.BLOCK, BlueDroplets.asResource("cauldron_heat_sources"));
     /** Items that never restore thirst, whatever the config, datapacks or other mods say. */
     public static final TagKey<Item> NO_THIRST = TagKey.create(Registries.ITEM, BlueDroplets.asResource("no_thirst"));
 

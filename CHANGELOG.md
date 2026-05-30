@@ -109,6 +109,8 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 - **Recipe inference** (`items.toml`, section `inference`, **off by default**): estimates thirst and quenched of items with no values from any other source from the ingredients of the recipes that make them (any recipe type with item ingredients, averaged per ingredient, per-category multipliers, caps, maximum depth, loops cut, blacklist of items, tags, namespaces and recipe types). Explicit values always win. Estimated items show "(est.)" in the tooltip; `/bluedroplets infer <item>` explains an estimate. Computed on the server at world load, `/reload` and config change and sent to clients. `[1.21.1]`
 
+- **Boiling water in a cauldron** (`purity.toml`, `cauldron.boiling`, **off by default**): a water cauldron standing on a heat source slowly gains purity, one level at a time up to `cauldron.boilingMaxPurity` (default 3), with a `cauldron.boilingChance` (default 0.25) on each random tick, about one level every 4.5 minutes at the default `randomTickSpeed`. Heat sources are the block tag `bluedroplets:cauldron_heat_sources` (lit campfires, fire, soul fire, magma blocks and lava); datapacks can add more, and blocks with a `lit` property only count while lit. Adding dirtier water still lowers the purity (closes thirst#170). `[1.21.1]`
+
 ### Datapacks
 
 - New item data map `bluedroplets:drinks` (`data/<namespace>/data_maps/item/drinks.json`, entries `{"thirst": 0-20, "quenched": 0+, "purity": 0-3 optional}`): drink and food values now come from datapacks, reload with `/reload` and are synced to clients. See `wiki/Modpack-Makers.md`. `[1.21.1]`

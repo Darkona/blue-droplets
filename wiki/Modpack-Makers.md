@@ -155,8 +155,9 @@ Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). 
 | `bluedroplets:no_thirst` | item | empty | Never restores thirst, whatever the config, datapacks or other mods say |
 | `bluedroplets:purity_opt_out` | item | empty | Never gets a purity: not filled with purity, no purity tooltip, no purity effects, and its fluid is not given one. Use it for other mods' water containers that break when water items carry extra data |
 | `bluedroplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
+| `bluedroplets:cauldron_heat_sources` | block | `#minecraft:campfires`, `#minecraft:fire`, magma block, lava | Heat sources that boil a water cauldron above them when `purity.toml` `cauldron.boiling` is on. Blocks with a `lit` property (campfires, furnaces) only count while lit |
 
-Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`. Use `{"id": "othermod:item", "required": false}` for optional mods.
+Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`, `data/bluedroplets/tags/block/cauldron_heat_sources.json`. Use `{"id": "othermod:item", "required": false}` for optional mods.
 
 ## Purification recipes
 

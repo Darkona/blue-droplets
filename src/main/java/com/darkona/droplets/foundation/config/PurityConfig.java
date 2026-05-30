@@ -24,6 +24,9 @@ public final class PurityConfig
     public static final ModConfigSpec.IntValue STILL_WATER_PURIFICATION_AMOUNT;
     public static final ModConfigSpec.IntValue RAIN_CAULDRON_PURITY;
     public static final ModConfigSpec.IntValue DRIPSTONE_CAULDRON_PURITY;
+    public static final ModConfigSpec.BooleanValue CAULDRON_BOILING;
+    public static final ModConfigSpec.IntValue CAULDRON_BOILING_MAX_PURITY;
+    public static final ModConfigSpec.DoubleValue CAULDRON_BOILING_CHANCE;
 
     /** Keys of the effect lists in {@code [effects]}, by purity 0-3. */
     public static final String[] EFFECT_LEVELS = {"dirty", "slightlyDirty", "acceptable", "purified"};
@@ -53,6 +56,13 @@ public final class PurityConfig
         STILL_WATER_PURIFICATION_AMOUNT = BUILDER.comment("Purity added to still (source) water; negative values make it dirtier").defineInRange("stillWaterPurificationAmount", 0, -3, 3);
         RAIN_CAULDRON_PURITY = BUILDER.comment("Purity of rain water collected in a cauldron (mixed with water already there: the lower purity wins); -1 leaves it unset, which reads as defaultPurity").defineInRange("rainCauldronPurity", -1, -1, 3);
         DRIPSTONE_CAULDRON_PURITY = BUILDER.comment("Purity of water dripping from pointed dripstone into a cauldron (mixed as above); -1 leaves it unset, which reads as defaultPurity").defineInRange("dripstoneCauldronPurity", -1, -1, 3);
+        BUILDER.pop();
+
+        BUILDER.push("cauldron");
+        CAULDRON_BOILING = BUILDER.comment("Whether a water cauldron on a heat source (block tag bluedroplets:cauldron_heat_sources; blocks with a lit property only when lit) slowly gains purity").define("boiling", false);
+        CAULDRON_BOILING_MAX_PURITY = BUILDER.comment("Purity boiling stops at").defineInRange("boilingMaxPurity", 3, 0, 3);
+        CAULDRON_BOILING_CHANCE = BUILDER.comment("Chance of +1 purity on each random tick of the cauldron. At the default randomTickSpeed (3) a block gets a random tick about every 68 seconds,",
+                "so 0.25 is about +1 purity every 4.5 minutes").defineInRange("boilingChance", 0.25, 0.0, 1.0);
         BUILDER.pop();
 
         BUILDER.comment("Effects of drinking water (or a drink with a purity) of each purity: [\"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]\", ...].",
