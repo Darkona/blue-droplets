@@ -14,6 +14,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Predicate;
+
 /**
  * Implemented by Blue Droplets. Use {@link DropletsAPI}; this interface is not meant for other mods to call or
  * implement and may change between versions.
@@ -55,4 +57,6 @@ public interface DropletsService
     void registerExhaustionModifier(ResourceLocation id, ExhaustionModifier modifier);
 
     void refreshExhaustionModifier(Player player);
+
+    void registerBarStyle(ResourceLocation id, Predicate<Player> active, int rgb, int priority);
 }

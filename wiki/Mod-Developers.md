@@ -153,6 +153,21 @@ DropletsAPI.refreshExhaustionModifier(player);
 
 `/bluedroplets debug exhaustion` shows the combined effect of registered modifiers as "other mods".
 
+## Thirst bar colour
+
+The droplets are tinted while a style is active, like vanilla hunger turns green under Hunger. Built-in styles and
+their priorities: vampire (Vampirism, Supernatural) 400, Dehydration 300, Poison 200, Quenchness 100; the active style
+with the highest priority wins. Add your own on the client, for example in `FMLClientSetupEvent`:
+
+```java
+DropletsAPI.registerBarStyle(ResourceLocation.fromNamespaceAndPath("mymod", "frozen"),
+        player -> player.hasEffect(MyEffects.FROZEN), 0x9FD8FF, 250);
+```
+
+The colour is `0xRRGGBB`. The predicate runs every frame for the local player: keep it cheap and allocation free
+(`hasEffect` with a holder is fine). Registering the same id again replaces the style. On a dedicated server the call
+does nothing useful but is harmless.
+
 ## Events
 
 All on `NeoForge.EVENT_BUS`, in `com.darkona.droplets.api.event`, posted on the server and only when something

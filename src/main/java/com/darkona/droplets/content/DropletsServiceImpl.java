@@ -11,6 +11,7 @@ import com.darkona.droplets.content.thirst.ExhaustionFactors;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
+import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Predicate;
 
 /**
  * What {@link com.darkona.droplets.api.DropletsAPI} calls; set in the mod constructor.
@@ -155,5 +158,12 @@ public final class DropletsServiceImpl implements DropletsService
     public void refreshExhaustionModifier(Player player)
     {
         player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+    }
+
+    @Override
+    public void registerBarStyle(ResourceLocation id, Predicate<Player> active, int rgb, int priority)
+    {
+        int color = rgb & 0xFFFFFF;
+        ThirstBarStyles.register(id, active, () -> color, priority);
     }
 }

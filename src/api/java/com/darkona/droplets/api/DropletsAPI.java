@@ -11,6 +11,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * Blue Droplets: thirst, quenched and water purity for players.
@@ -240,6 +241,17 @@ public final class DropletsAPI
     public static void refreshExhaustionModifier(Player player)
     {
         service().refreshExhaustionModifier(player);
+    }
+
+    /**
+     * Tints the thirst bar's droplets with {@code rgb} ({@code 0xRRGGBB}) while {@code active} is true for the local
+     * player. The active style with the highest priority wins; built-in priorities: vampire 400, Dehydration 300,
+     * Poison 200, Quenchness 100. Registering the same id again replaces it. Client side only (for example in
+     * {@code FMLClientSetupEvent}); {@code active} is tested every frame, so keep it cheap and allocation free.
+     */
+    public static void registerBarStyle(ResourceLocation id, Predicate<Player> active, int rgb, int priority)
+    {
+        service().registerBarStyle(id, active, rgb, priority);
     }
 
     /**
