@@ -43,21 +43,7 @@ public class MixinBootstrap
     )
     private static void modifyCauldronInteractions(CallbackInfo ci) {
         CauldronInteraction.WATER.map().remove(Items.GLASS_BOTTLE);
-        CauldronInteraction.WATER.map().put(Items.GLASS_BOTTLE, (blockState, level, pos, player, hand, itemStack) -> {
-            if (!level.isClientSide()) {
-                Item item = itemStack.getItem();
-                ItemStack result = PotionContents.createItemStack(Items.POTION,Potions.WATER);
-                WaterPurity.addPurity(result, pos, level);
-                player.setItemInHand(hand, ItemUtils.createFilledResult(itemStack, player, result));
-                player.awardStat(Stats.USE_CAULDRON);
-                player.awardStat(Stats.ITEM_USED.get(item));
-                LayeredCauldronBlock.lowerFillLevel(blockState, level, pos);
-                level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
-            }
-
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
-        });
+        CauldronInteraction.WATER.map().put(Items.GLASS_BOTTLE, WaterPurity.fillFromCauldron(() -> PotionContents.createItemStack(Items.POTION, Potions.WATER), SoundEvents.BOTTLE_FILL));
         CauldronInteraction.WATER.map().remove(Items.BUCKET);
         CauldronInteraction.WATER.map().put(Items.BUCKET, (blockState, level, pos, player, hand, item) ->
                 fillBucket(blockState,

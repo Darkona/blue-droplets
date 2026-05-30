@@ -41,6 +41,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 ### Bug fixes
 
 - Pouring water with purity into a cauldron or tank now always updates its purity; the old delayed-task helper could skip the update when several happened on consecutive ticks, and kept tasks alive after leaving a singleplayer world. `[1.21.1]`
+- Water taken from a cauldron keeps the cauldron's purity and gives that purity's effects when drunk (glass bottles and buckets, since the purity rewrite). Terracotta bowls can now also be filled from a water cauldron, with its purity. Pouring water into a cauldron with no stored purity mixes with `defaultPurity` (the lower wins) instead of taking the poured purity, and the new purity now reaches clients, so Jade shows it right away (closes thirst#260). `[1.21.1]`
 
 - Nausea, Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated and Corail Tombstone Ghostly Shape now work whatever other effects the player has; before, only the first active effect was checked. Effects are matched by id (`farmersdelight:nourishment`, `bakery:stuffed`, `brewery:saturated`, `tombstone:ghostly_shape`), no longer by name fragments. `[1.21.1]`
 

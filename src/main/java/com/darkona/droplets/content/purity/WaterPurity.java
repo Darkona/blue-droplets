@@ -16,12 +16,14 @@ import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.component.DataComponents;
@@ -37,6 +39,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
@@ -56,6 +59,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -78,6 +82,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Supplier;
 
 
 @SuppressWarnings({"SpellCheckingInspection","unused"})
@@ -108,6 +113,33 @@ public class WaterPurity
         registerDispenserBehaviours();
         registerContainers();
         registerFillables();
+    }
+
+    /**
+     * Main thread only: the interaction maps are not thread-safe.
+     */
+    public static void registerCauldronInteractions()
+    {
+        CauldronInteraction.WATER.map().put(ItemInit.TERRACOTTA_BOWL.get(), fillFromCauldron(() -> new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), SoundEvents.BUCKET_FILL));
+    }
+
+    /**
+     * Takes one level of water from a water cauldron into {@code filled}, with the cauldron's purity.
+     */
+    public static CauldronInteraction fillFromCauldron(Supplier<ItemStack> filled, SoundEvent sound)
+    {
+        return (state, level, pos, player, hand, stack) -> {
+            if (!level.isClientSide())
+            {
+                player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, addPurity(filled.get(), pos, level)));
+                player.awardStat(Stats.USE_CAULDRON);
+                player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                LayeredCauldronBlock.lowerFillLevel(state, level, pos);
+                level.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        };
     }
 
     private static void registerContainers()
@@ -147,9 +179,7 @@ public class WaterPurity
             {
                 int purity = getPurity(event.getItemStack());
 
-                int blockPurity = !blockState.hasProperty(BLOCK_PURITY) ?
-                        3 : (blockState.getValue(BLOCK_PURITY) - 1 < 0 ?
-                            3 : blockState.getValue(BLOCK_PURITY) - 1);
+                int blockPurity = blockState.is(Blocks.WATER_CAULDRON) ? getBlockPurity(blockState) : MAX_PURITY;
 
                 MinecraftServer server = level.getServer();
                 server.tell(new TickTask(server.getTickCount(), () -> {
@@ -161,7 +191,7 @@ public class WaterPurity
                     level.setBlock(
                             pos,
                             blockState1.setValue(BLOCK_PURITY, Math.min(purity, blockPurity) + 1),
-                            0
+                            Block.UPDATE_CLIENTS
                     );
                 }));
             }

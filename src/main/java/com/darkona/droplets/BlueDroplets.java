@@ -77,6 +77,7 @@ public class BlueDroplets
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         WaterPurity.init();
+        event.enqueueWork(WaterPurity::registerCauldronInteractions);
         PlayerThirst.resolveCompatEffects();
     }
 
