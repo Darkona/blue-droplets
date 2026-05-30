@@ -185,6 +185,22 @@ One list per purity: `dirty`, `slightlyDirty`, `acceptable`, `purified`. Each en
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
 - Old configs: the eight `*Percentage` values are turned into these lists once, with the old effects and durations (nausea 5 s and hunger 30 s share the nausea chance; poison 10 s blocks hydration).
 
+### `[hotDirtyWater]`
+
+Drinking water of low purity (bottle or by hand) in a hot climate also gives `bluedroplets:dehydration`, on top of the `[effects]` list. It is decided at drink time only.
+
+| Key | Default | Meaning |
+|---|---|---|
+| `enabled` | `true` | Turn the mechanic off |
+| `maxPurity` | `0` | Highest purity that counts (0 dirty ... 3 purified) |
+| `durationTicks` | `600` | Duration of the effect |
+| `amplifier` | `0` | Amplifier (0 is level I) |
+| `minBiomeTemperature` | `1.0` | Biome base temperature from which the climate is hot (desert, savanna, badlands 2.0; jungle 0.95) |
+| `useColdSweat` | `true` | With Cold Sweat installed, its body temperature also counts |
+| `coldSweatMinBodyTemp` | `50.0` | Cold Sweat body temperature (its units: 0 neutral, 100 burning, -100 freezing) above which the player is hot |
+
+An ultra-warm dimension (the Nether) always counts as hot.
+
 ## `compat.toml`
 
 | Key | Default | Meaning |

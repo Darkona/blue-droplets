@@ -164,7 +164,7 @@ happens (never once per tick). Listen to `Pre`/`Post`, not to the abstract base 
 | `ThirstChangeEvent.Post` | after the change | read old and new values |
 | `DrinkEvent.Pre` | before a drink's purity effects and hydration; `getItem()` is empty for hand drinking and `DropletsAPI.drink` | cancel, `setThirst`, `setQuenched`, `setPurity` |
 | `DrinkEvent.Post` | after it | read the values and `hydrated()` |
-| `PurityEffectEvent` | purity effects were rolled | cancel (no effects, hydrates), edit `getEffects()`, `setHydrates` |
+| `PurityEffectEvent` | purity effects were rolled; the Dehydration of `hotDirtyWater` (dirty water in a hot climate) is already in `getEffects()` | cancel (no effects, hydrates), edit `getEffects()`, `setHydrates` |
 | `DehydrationDamageEvent` | a player at zero thirst is about to be hurt | cancel, `setAmount` |
 
 ```java

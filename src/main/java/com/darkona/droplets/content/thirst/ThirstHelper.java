@@ -5,6 +5,7 @@ import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.ConfigCheck;
 import com.darkona.droplets.foundation.config.GameplayConfig;
+import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
@@ -564,5 +565,19 @@ public class ThirstHelper
         if(thirstModifier < 1)
             thirstModifier = 1 - (1 - thirstModifier) * GameplayConfig.LEGACY_HARSHNESS.get().floatValue();
         return thirstModifier;
+    }
+
+    /**
+     * Whether the player is in a hot climate for {@code hotDirtyWater}: ultra-warm dimension, warm biome, or Cold Sweat body temperature.
+     */
+    public static boolean isHotClimate(Player player)
+    {
+        Level level = player.level();
+        if (level.dimensionType().ultraWarm())
+            return true;
+        if (level.getBiome(player.getOnPos()).value().getBaseTemperature() >= PurityConfig.HOT_DIRTY_WATER_MIN_BIOME_TEMPERATURE.get())
+            return true;
+        return ColdSweatCompat.LOADED && PurityConfig.HOT_DIRTY_WATER_COLD_SWEAT.get()
+                && ColdSweatCompat.bodyTemperature(player) > PurityConfig.HOT_DIRTY_WATER_COLD_SWEAT_MIN_BODY_TEMP.get();
     }
 }

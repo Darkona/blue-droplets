@@ -81,6 +81,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### Effects
 
+- New mechanic, on by default: drinking dirty water (purity 0) in a hot climate, from a bottle or by hand, also gives **Dehydration** for 30 seconds on top of the usual purity effects. Hot means the Nether, a biome with temperature 1.0 or more (deserts, savanna, badlands; not jungle), or, with Cold Sweat, a body temperature above 50. Configure or disable it with `hotDirtyWater.enabled` and the other `[hotDirtyWater]` keys in `purity.toml`. `PurityEffectEvent` sees the effect and can cancel or change it. `[1.21.1]`
 - New **Dehydration** effect (`bluedroplets:dehydration`), the thirst counterpart of Hunger: while active it drains thirst faster, 0.005 exhaustion per tick per level, scaled by `effects.dehydrationMultiplier` (`gameplay.toml`, default 1.0). Nothing applies it by default; use `/effect give @player bluedroplets:dehydration 30 1` or add it to the purity effect lists in `purity.toml`. Thirst never goes below zero (idea from Thirst Was Reclaimed; unlike theirs it never drives thirst below zero). `[1.21.1]`
 
 ### Config

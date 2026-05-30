@@ -9,6 +9,7 @@ import com.darkona.droplets.content.data.BiomeWater;
 import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.data.DropletsTags;
+import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.core.NumberRows;
@@ -629,7 +630,7 @@ public class WaterPurity
     private static volatile EffectTables effectTables = new EffectTables(List.of(), new PurityEffect[0][]);
 
     /**
-     * Rolls once, collects every effect of this purity's list whose chance is above the roll, lets
+     * Rolls once, collects every effect of this purity's list whose chance is above the roll, adds Dehydration for dirty water in a hot climate ({@code hotDirtyWater}), lets
      * {@link PurityEffectEvent} change them, and applies them (effects only on the server). Returns whether the drink
      * should still restore thirst.
      */
@@ -647,6 +648,8 @@ public class WaterPurity
             effects.add(new MobEffectInstance(effect.effect(), effect.duration(), effect.amplifier()));
             hydrate &= !effect.blocksHydration();
         }
+        if (PurityConfig.HOT_DIRTY_WATER.get() && purity <= PurityConfig.HOT_DIRTY_WATER_MAX_PURITY.get() && player instanceof ServerPlayer && ThirstHelper.isHotClimate(player))
+            effects.add(new MobEffectInstance(EffectInit.DEHYDRATION, PurityConfig.HOT_DIRTY_WATER_DURATION.get(), PurityConfig.HOT_DIRTY_WATER_AMPLIFIER.get()));
         PurityEffectEvent event = NeoForge.EVENT_BUS.post(new PurityEffectEvent(player, purity, effects, hydrate || PurityConfig.QUENCH_WHEN_DEBUFFED.get()));
         if (event.isCanceled())
             return true;

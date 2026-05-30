@@ -33,6 +33,14 @@ public final class PurityConfig
     /** Effect lists by purity 0-3. */
     public static final List<ModConfigSpec.ConfigValue<List<? extends String>>> EFFECTS;
 
+    public static final ModConfigSpec.BooleanValue HOT_DIRTY_WATER;
+    public static final ModConfigSpec.IntValue HOT_DIRTY_WATER_MAX_PURITY;
+    public static final ModConfigSpec.IntValue HOT_DIRTY_WATER_DURATION;
+    public static final ModConfigSpec.IntValue HOT_DIRTY_WATER_AMPLIFIER;
+    public static final ModConfigSpec.DoubleValue HOT_DIRTY_WATER_MIN_BIOME_TEMPERATURE;
+    public static final ModConfigSpec.BooleanValue HOT_DIRTY_WATER_COLD_SWEAT;
+    public static final ModConfigSpec.DoubleValue HOT_DIRTY_WATER_COLD_SWEAT_MIN_BODY_TEMP;
+
     public static final ModConfigSpec SPEC;
 
     static
@@ -74,6 +82,20 @@ public final class PurityConfig
                 effects(1, List.of("minecraft:nausea,100,0,50", "minecraft:hunger,600,0,50", "minecraft:poison,200,0,10,true")),
                 effects(2, List.of("minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5")),
                 effects(3, List.of()));
+        BUILDER.pop();
+
+        BUILDER.comment("Drinking water of low purity in a hot climate also gives Dehydration (added to the effects above, so PurityEffectEvent sees it).",
+                "Hot: an ultra-warm dimension (Nether), a biome temperature at or above minBiomeTemperature (desert, savanna, badlands: 2.0; jungle: 0.95),",
+                "or, with Cold Sweat, a body temperature above coldSweatMinBodyTemp")
+                .push("hotDirtyWater");
+        HOT_DIRTY_WATER = BUILDER.define("enabled", true);
+        HOT_DIRTY_WATER_MAX_PURITY = BUILDER.comment("Highest purity that counts (0 dirty, 1 slightly dirty, 2 acceptable, 3 purified)").defineInRange("maxPurity", 0, 0, 3);
+        HOT_DIRTY_WATER_DURATION = BUILDER.comment("Duration of the Dehydration effect, in ticks").defineInRange("durationTicks", 600, 1, 1_000_000);
+        HOT_DIRTY_WATER_AMPLIFIER = BUILDER.comment("Amplifier of the Dehydration effect (0 is level I)").defineInRange("amplifier", 0, 0, 255);
+        HOT_DIRTY_WATER_MIN_BIOME_TEMPERATURE = BUILDER.comment("Biome base temperature from which the climate is hot").defineInRange("minBiomeTemperature", 1.0, -2.0, 5.0);
+        HOT_DIRTY_WATER_COLD_SWEAT = BUILDER.comment("Whether Cold Sweat's body temperature also counts as hot (when Cold Sweat is installed)").define("useColdSweat", true);
+        HOT_DIRTY_WATER_COLD_SWEAT_MIN_BODY_TEMP = BUILDER.comment("Cold Sweat body temperature (its own units: 0 neutral, 100 burning, -100 freezing) above which the player counts as hot")
+                .defineInRange("coldSweatMinBodyTemp", 50.0, -150.0, 150.0);
         BUILDER.pop();
 
         SPEC = BUILDER.build();
