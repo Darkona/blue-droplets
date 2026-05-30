@@ -63,6 +63,7 @@ Development happens on Minecraft 1.21.1 (NeoForge) first. Ports follow, each one
 
 - **ghen** created Thirst Was Taken; this mod is built on its code.
 - **mlus-asuka** and the other Thirst Was Taken contributors ported and maintained it for 1.21.
+- **Mikul** ([MikulDev](https://github.com/MikulDev)), author of Cold Sweat, made the NeoForge 1.21.1 port this mod starts from and kept the Cold Sweat integration working.
 - Maintained by **Darkona**.
 
 Blue Droplets is released under the [MIT license](LICENSE), which keeps the original Thirst Was Taken copyright notice.

@@ -14,7 +14,7 @@ displayName="${mod_name}"
 
 displayURL="https://github.com/Darkona/blue-droplets"
 logoFile="logo.png"
-credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka and the Thirst Was Taken contributors. Thanks to Cold Sweat, Create and Farmer's Delight, whose sources helped build the original."
+credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka, Mikul (NeoForge 1.21.1 port) and the Thirst Was Taken contributors. Thanks to Cold Sweat, Create and Farmer's Delight, whose sources helped build the original."
 authors="${mod_authors}"
 
 # Display Test controls the display for your mod in the server connection screen
