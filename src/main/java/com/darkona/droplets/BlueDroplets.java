@@ -17,6 +17,7 @@ import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.PlayerThirstManager;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.*;
+import com.darkona.droplets.foundation.gui.ThirstBarRenderer;
 import com.darkona.droplets.foundation.tab.ThirstTab;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.network.chat.Component;
@@ -52,7 +53,10 @@ public class BlueDroplets
         ThirstComponent.DR.register(modBus);
 
         if(FMLEnvironment.dist.isClient())
+        {
+            modBus.addListener(ThirstBarRenderer::registerLayer);
             AppleSkinCompat.initClient(modBus);
+        }
 
         ItemInit.register(modBus);
         EffectInit.register(modBus);

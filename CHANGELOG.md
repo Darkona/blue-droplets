@@ -37,9 +37,11 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 ### Client
 
 - New client options `Thirst Bar.hideBarWhenFull` (default `false`) and `Thirst Bar.hideBarDelayTicks` (default `60`): the thirst bar is hidden while thirst is full, after the delay, and the air bar and other bars above it move down; it comes back as soon as thirst drops or you hold something that restores thirst. AppleSkin overlays are hidden with it (closes thirst#148, thirst#233)
+- The thirst bar is now a regular HUD layer (`bluedroplets:thirst_level`) drawn right above the hunger bar, instead of being drawn from inside the vanilla air bar through mixins. The air bar and bars from other mods stack above it, resource packs and HUD mods can move or hide it like any vanilla layer, and the `thirstBarXOffset`/`thirstBarYOffset` options still apply. `[1.21.1]`
 
 ### Bug fixes
 
+- AppleSkin: the quenched overlay and drink preview are no longer drawn on top of the chat, the F3 screen and other HUD elements, and they always line up with the thirst bar; before, they could end up at the bottom edge of the screen when AppleSkin's exhaustion underlay was turned off (closes thirst#223). `[1.21.1]`
 - Pouring water with purity into a cauldron or tank now always updates its purity; the old delayed-task helper could skip the update when several happened on consecutive ticks, and kept tasks alive after leaving a singleplayer world. `[1.21.1]`
 - Water taken from a cauldron keeps the cauldron's purity and gives that purity's effects when drunk (glass bottles and buckets, since the purity rewrite). Terracotta bowls can now also be filled from a water cauldron, with its purity. Pouring water into a cauldron with no stored purity mixes with `defaultPurity` (the lower wins) instead of taking the poured purity, and the new purity now reaches clients, so Jade shows it right away (closes thirst#260). `[1.21.1]`
 

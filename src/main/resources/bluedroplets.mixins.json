@@ -16,8 +16,6 @@
     "MixinPotionItem"
   ],
   "client": [
-    "MixinGui",
-    "MixinGuiGraphics",
     "MixinLocalPlayer"
   ],
   "injectors": {

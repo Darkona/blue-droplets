@@ -6,13 +6,10 @@ import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
-import com.darkona.droplets.foundation.config.ClientConfig;
 import com.darkona.droplets.foundation.gui.ThirstBarRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +30,6 @@ public class HUDOverlayHandler {
     private static float unclampedFlashAlpha = 0.0F;
     private static float flashAlpha = 0.0F;
     private static byte alphaDir = 1;
-    protected static int foodIconsOffset;
     public static final Vector<squeek.appleskin.util.IntPoint> foodBarOffsets = new Vector<>();
     private static final Random random = new Random();
     private static final ResourceLocation modIcons = BlueDroplets.asResource("textures/gui/appleskin_icons.png");
@@ -50,15 +46,8 @@ public class HUDOverlayHandler {
         public ExhaustionOverlay() {}
         @Override
         public void render(Minecraft minecraft, Player player, GuiGraphics guiGraphics, int left, int right, int top, int guiTicks) {
-            Minecraft mc = Minecraft.getInstance();
-            boolean isMounted = mc.player.getVehicle() instanceof LivingEntity;
-            boolean isAlive = mc.player.isAlive();
-
-            if (isAlive && !isMounted && !mc.options.hideGui && ThirstBarRenderer.shouldDrawSurvivalElements(mc) && !ThirstBarRenderer.cancelRender) {
-                if(ModConfig.SHOW_FOOD_EXHAUSTION_UNDERLAY.get()){
-                    renderExhaustion(mc.gui,guiGraphics);
-                }
-            }
+            if (ThirstBarRenderer.drawn && minecraft.player.isAlive() && ModConfig.SHOW_FOOD_EXHAUSTION_UNDERLAY.get())
+                drawExhaustionOverlay(minecraft.player.getData(ModAttachment.PLAYER_THIRST).getExhaustion(), guiGraphics, ThirstBarRenderer.barRight, ThirstBarRenderer.barTop);
         }
     }
 
@@ -67,33 +56,9 @@ public class HUDOverlayHandler {
         public SaturationOverlay(){}
         @Override
         public void render(Minecraft minecraft, Player player, GuiGraphics guiGraphics, int left, int right, int top, int guiTicks) {
-            Minecraft mc = Minecraft.getInstance();
-            boolean isMounted = mc.player.getVehicle() instanceof LivingEntity;
-            boolean isAlive = mc.player.isAlive();
-
-            if (isAlive && !isMounted && !mc.options.hideGui && ThirstBarRenderer.shouldDrawSurvivalElements(mc) && !ThirstBarRenderer.cancelRender) {
+            if (ThirstBarRenderer.drawn && minecraft.player.isAlive())
                 renderThirstOverlay(guiGraphics);
-            }
         }
-    }
-
-    public static void renderExhaustion(Gui gui, GuiGraphics mStack)
-    {
-        int offset = 10;
-        if (SupernaturalCompat.hasVampirism(Minecraft.getInstance().player)) {
-            offset = 0;
-        }
-        foodIconsOffset = gui.rightHeight + offset;
-
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
-        assert player != null;
-
-        int right = mc.getWindow().getGuiScaledWidth() / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
-        int top = mc.getWindow().getGuiScaledHeight() - foodIconsOffset + ClientConfig.THIRST_BAR_Y_OFFSET.get();
-        float exhaustion = player.getData(ModAttachment.PLAYER_THIRST).getExhaustion();
-
-        drawExhaustionOverlay(exhaustion, mStack, right, top);
     }
 
     public static void renderThirstOverlay(GuiGraphics guiGraphics)
@@ -106,8 +71,8 @@ public class HUDOverlayHandler {
         assert player != null;
         IThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
 
-        int right = mc.getWindow().getGuiScaledWidth() / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
-        int top = mc.getWindow().getGuiScaledHeight() - foodIconsOffset + ClientConfig.THIRST_BAR_Y_OFFSET.get();
+        int right = ThirstBarRenderer.barRight;
+        int top = ThirstBarRenderer.barTop;
 
         generateHungerBarOffsets(top, right, mc.gui.getGuiTicks(), player);
 
