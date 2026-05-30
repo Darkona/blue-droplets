@@ -16,5 +16,6 @@
   "bluedroplets.ponder.sand_filter.text_1": "Песочный фильтр за один этап очищает прокачиваемую через него воду",
   "bluedroplets.ponder.sand_filter.text_2": "Грязную воду нужно закачивать сверху...",
   "bluedroplets.ponder.sand_filter.text_3": "и очищенную воду, соответственно, снизу.",
-  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)"
+  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
+  "effect.bluedroplets.dehydration": "Dehydration"
 }

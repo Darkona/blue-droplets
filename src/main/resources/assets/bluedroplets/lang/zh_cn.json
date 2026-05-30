@@ -20,5 +20,6 @@
   "command.bluedroplets.set": "设置口渴值为 %1$s,解渴值为 %2$s",
   "command.bluedroplets.enable": "已为玩家 %1$s 启用口渴",
   "command.bluedroplets.disable": "已为玩家 %1$s 禁用口渴",
-  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)"
+  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
+  "effect.bluedroplets.dehydration": "Dehydration"
 }

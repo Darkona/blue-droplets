@@ -16,5 +16,6 @@
   "bluedroplets.ponder.sand_filter.text_1": "A Sand Filter purifies by one step water pumped through it",
   "bluedroplets.ponder.sand_filter.text_2": "Dirty Water needs to be pumped in from the top...",
   "bluedroplets.ponder.sand_filter.text_3": "and Purified Water can be pumped out from the bottom",
-  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)"
+  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
+  "effect.bluedroplets.dehydration": "Dehydration"
 }

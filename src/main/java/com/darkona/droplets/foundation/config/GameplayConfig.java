@@ -25,6 +25,7 @@ public final class GameplayConfig
     public static final ModConfigSpec.DoubleValue NETHER_MULTIPLIER;
     public static final ModConfigSpec.IntValue FIRE_RESISTANCE_PERCENT;
     public static final ModConfigSpec.BooleanValue DEPLETES_WHEN_NAUSEOUS;
+    public static final ModConfigSpec.DoubleValue DEHYDRATION_MULTIPLIER;
     public static final ModConfigSpec.DoubleValue FIRE_PROTECTION_PER_LEVEL;
     public static final ModConfigSpec.IntValue FIRE_PROTECTION_MAX_LEVELS;
 
@@ -198,6 +199,10 @@ public final class GameplayConfig
         BUILDER.push("death");
         RESPAWN_THIRST = BUILDER.comment("Thirst after respawning; -1 keeps the thirst the player died with").defineInRange("respawnThirst", 20, -1, 20);
         RESPAWN_QUENCHED = BUILDER.comment("Quenched after respawning (at most the thirst); -1 keeps it").defineInRange("respawnQuenched", 5, -1, 20);
+        BUILDER.pop();
+
+        BUILDER.push("effects");
+        DEHYDRATION_MULTIPLIER = BUILDER.comment("Multiplier of the thirst exhaustion the Dehydration effect adds every tick (0.005 per level)").defineInRange("dehydrationMultiplier", 1.0, 0.0, 10.0);
         BUILDER.pop();
 
         BUILDER.push("loot");

@@ -128,6 +128,12 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 | `minHealthEasy` / `minHealthNormal` / `minHealthHard` | `10` / `1` / `0` | Dehydration only hurts above this health (Peaceful uses Easy) |
 | `canKill` | `true` | `false`: a hit that would kill is skipped |
 
+### `[effects]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| `dehydrationMultiplier` | `1.0` | Multiplier (0-10) of the thirst exhaustion the `bluedroplets:dehydration` effect adds every tick (0.005 per level). Thirst never goes below zero |
+
 ### `[sprint]`, `[drinking]`, `[hand]`, `[death]`, `[loot]`
 
 | Key | Default | Meaning |
@@ -171,7 +177,7 @@ One list per purity: `dirty`, `slightlyDirty`, `acceptable`, `purified`. Each en
 | `acceptable` | `["minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5"]` |
 | `purified` | `[]` |
 
-- Any mob effect id works, also from other mods. An unknown id is skipped (listed by `/bluedroplets config check`).
+- Any mob effect id works, also from other mods, including `bluedroplets:dehydration` (for example `"bluedroplets:dehydration,600,0,20"`). An unknown id is skipped (listed by `/bluedroplets config check`).
 - **One roll per drink** is shared by the whole list: an entry applies when the roll is below its chance. With the defaults, poisoned water always also gives nausea and hunger, as before.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
 - Old configs: the eight `*Percentage` values are turned into these lists once, with the old effects and durations (nausea 5 s and hunger 30 s share the nausea chance; poison 10 s blocks hydration).

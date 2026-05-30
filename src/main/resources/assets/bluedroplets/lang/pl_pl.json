@@ -16,5 +16,6 @@
   "bluedroplets.ponder.sand_filter.text_1": "Filter Piaskowy oczyszcza w jednym stopniu pompowaną przez niego wodę",
   "bluedroplets.ponder.sand_filter.text_2": "Brudna Woda musi być pompowana z góry...",
   "bluedroplets.ponder.sand_filter.text_3": "a Oczyszczona Woda może być wypompowywana z dołu",
-  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)"
+  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
+  "effect.bluedroplets.dehydration": "Dehydration"
 }

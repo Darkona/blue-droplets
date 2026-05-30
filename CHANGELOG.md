@@ -78,6 +78,10 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Purity effects use the player's random generator instead of creating a new one for every drink. `[1.21.1]`
 - Create Sand Filter: an idle filter (not enough dirty water, or a full purified tank) does no fluid work at all each tick. `[1.21.1]`
 
+### Effects
+
+- New **Dehydration** effect (`bluedroplets:dehydration`), the thirst counterpart of Hunger: while active it drains thirst faster, 0.005 exhaustion per tick per level, scaled by `effects.dehydrationMultiplier` (`gameplay.toml`, default 1.0). Nothing applies it by default; use `/effect give @player bluedroplets:dehydration 30 1` or add it to the purity effect lists in `purity.toml`. Thirst never goes below zero (idea from Thirst Was Reclaimed; unlike theirs it never drives thirst below zero). `[1.21.1]`
+
 ### Config
 
 - Drink and food entries must be `["namespace:item" or "#namespace:tag", thirst, quenched]` with thirst 0-20 and quenched 0 or more; anything else is skipped with a warning instead of crashing or hanging the game (thirst#178). NeoForge removes invalid entries from the file. `[1.21.1]`

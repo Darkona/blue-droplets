@@ -16,5 +16,6 @@
   "bluedroplets.ponder.sand_filter.text_1": "Un Filtre à sable effectue une étape de purification quand de l'eau y est pompée à travers",
   "bluedroplets.ponder.sand_filter.text_2": "L'eau sale doit être pompée dans le filtre par dessus...",
   "bluedroplets.ponder.sand_filter.text_3": "et l'eau purifiée peut être pompée par le dessous",
-  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)"
+  "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
+  "effect.bluedroplets.dehydration": "Dehydration"
 }

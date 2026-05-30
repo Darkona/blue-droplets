@@ -126,6 +126,10 @@ Dimension type data map, `data/<namespace>/data_maps/dimension_type/dimension_wa
 
 Both world data maps are only read on the server.
 
+## Dehydration effect
+
+`bluedroplets:dehydration` is a harmful effect that makes thirst drop faster, like Hunger does for food: 0.005 exhaustion per tick per level, times `effects.dehydrationMultiplier` in `gameplay.toml`. Thirst never goes below zero. Nothing applies it by default. Give it with `/effect give @p bluedroplets:dehydration 30 1`, or add it to a purity effect list in `purity.toml` (`"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`), for example `"bluedroplets:dehydration,600,0,25"` in `effects.dirty` for a 25% chance of 30 s of Dehydration I from dirty water. See [Configuration](Configuration.md#effects).
+
 ## Thirst drain attribute: `bluedroplets:thirst_drain`
 
 Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). Thirst loss is multiplied by it, so anything that can carry attribute modifiers can change thirst without code:
