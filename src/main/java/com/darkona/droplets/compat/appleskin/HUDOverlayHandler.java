@@ -184,10 +184,9 @@ public class HUDOverlayHandler {
             if (i * 2 + 1 == modifiedFood)
                 u -= iconSize -1;
 
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-
-            ResourceLocation icons = SupernaturalCompat.getVampireIcons(ThirstBarRenderer.THIRST_ICONS, Minecraft.getInstance().player);
-            guiGraphics.blit(icons, x, y, u, v, iconSize, iconSize, 25, 9);
+            int tint = ThirstBarRenderer.tint;
+            RenderSystem.setShaderColor((tint >> 16 & 255) / 255f, (tint >> 8 & 255) / 255f, (tint & 255) / 255f, alpha);
+            guiGraphics.blit(tint < 0 ? ThirstBarRenderer.THIRST_ICONS : ThirstBarRenderer.THIRST_MASK, x, y, u, v, iconSize, iconSize, 25, 9);
         }
 
         disableAlpha();

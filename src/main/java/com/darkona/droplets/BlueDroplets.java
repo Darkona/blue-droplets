@@ -4,6 +4,8 @@ import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.compat.appleskin.AppleSkinCompat;
 import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
+import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
+import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.DropletsServiceImpl;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
@@ -18,6 +20,7 @@ import com.darkona.droplets.content.thirst.PlayerThirstManager;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.*;
 import com.darkona.droplets.foundation.gui.ThirstBarRenderer;
+import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.darkona.droplets.foundation.tab.ThirstTab;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.network.chat.Component;
@@ -55,6 +58,9 @@ public class BlueDroplets
         if(FMLEnvironment.dist.isClient())
         {
             modBus.addListener(ThirstBarRenderer::registerLayer);
+            ThirstBarStyles.registerBuiltIns();
+            VampirismCompat.initClient();
+            SupernaturalCompat.initClient();
             AppleSkinCompat.initClient(modBus);
         }
 

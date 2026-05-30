@@ -2,8 +2,6 @@ package com.darkona.droplets.foundation.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
-import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
@@ -22,12 +20,16 @@ public final class ThirstBarRenderer
 {
     public static final ResourceLocation LAYER = BlueDroplets.asResource("thirst_level");
     public static final ResourceLocation THIRST_ICONS = BlueDroplets.asResource("textures/gui/thirst_icons.png");
+    /** Grayscale fill of {@link #THIRST_ICONS} (same UVs, no outline or background), tinted by {@link ThirstBarStyles}. */
+    public static final ResourceLocation THIRST_MASK = BlueDroplets.asResource("textures/gui/thirst_icons_mask.png");
     private static final RandomSource random = RandomSource.create();
     private static int lastNotFullTick;
     /** Whether the bar was drawn in the last frame, and where (without shake). */
     public static boolean drawn;
     public static int barRight;
     public static int barTop;
+    /** {@code 0xRRGGBB} of the active {@link ThirstBarStyles} style in the last frame, or -1. */
+    public static int tint = -1;
 
     private ThirstBarRenderer() {}
 
@@ -42,8 +44,7 @@ public final class ThirstBarRenderer
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
         if (player == null || minecraft.options.hideGui || !minecraft.gameMode.canHurtPlayer() || !(minecraft.getCameraEntity() instanceof Player)
-                || player.getVehicle() instanceof LivingEntity vehicle && vehicle.showVehicleHealth()
-                || VampirismCompat.isVampire(player))
+                || player.getVehicle() instanceof LivingEntity vehicle && vehicle.showVehicleHealth())
             return;
 
         IThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
@@ -51,7 +52,11 @@ public final class ThirstBarRenderer
             return;
 
         minecraft.getProfiler().push("thirst");
-        ResourceLocation icons = SupernaturalCompat.getVampireIcons(THIRST_ICONS, player);
+        tint = ThirstBarStyles.resolve(player);
+        ResourceLocation fill = tint < 0 ? THIRST_ICONS : THIRST_MASK;
+        float red = (tint >> 16 & 255) / 255f;
+        float green = (tint >> 8 & 255) / 255f;
+        float blue = (tint & 255) / 255f;
         int right = guiGraphics.guiWidth() / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
         int top = guiGraphics.guiHeight() - minecraft.gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
         minecraft.gui.rightHeight += 10;
@@ -67,12 +72,15 @@ public final class ThirstBarRenderer
             int x = right - i * 8 - 9;
             int y = shake ? top + random.nextInt(3) - 1 : top;
 
-            guiGraphics.blit(icons, x, y, 0, 0, 9, 9, 25, 9);
+            guiGraphics.blit(THIRST_ICONS, x, y, 0, 0, 9, 9, 25, 9);
 
-            if (idx < level)
-                guiGraphics.blit(icons, x, y, 16, 0, 9, 9, 25, 9);
-            else if (idx == level)
-                guiGraphics.blit(icons, x, y, 8, 0, 9, 9, 25, 9);
+            if (idx > level)
+                continue;
+            if (tint >= 0)
+                guiGraphics.setColor(red, green, blue, 1f);
+            guiGraphics.blit(fill, x, y, idx < level ? 16 : 8, 0, 9, 9, 25, 9);
+            if (tint >= 0)
+                guiGraphics.setColor(1f, 1f, 1f, 1f);
         }
         RenderSystem.disableBlend();
 

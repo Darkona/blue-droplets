@@ -20,6 +20,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### Mod compatibility
 
+- Vampirism: vampires now see their thirst bar with blood-red droplets instead of no bar at all. Their thirst still does not go down, as before. Supernatural vampires get the same red droplets instead of Supernatural's thirst icon texture. `[1.21.1]`
 - Mixins into Create, Jade and Farmer's Delight live in a separate optional mixin config and are only applied when that mod is installed; if one no longer matches the installed version it is logged and skipped instead of crashing the game (thirst#280). `[1.21.1]`
 - Declared Create, Jade, AppleSkin, Supernatural, Farmer's Delight, Cold Sweat and Vampirism as optional dependencies. Create must be 6.0.6 or newer when installed: older Create 6 versions drop fluid components from recipe outputs, so purity was lost (related to thirst#259). Built against Create 6.0.10. `[1.21.1]`
 - The published jar no longer declares Create, Farmer's Delight, Cold Sweat, Jade or AppleSkin as transitive dependencies (thirst#218). `[1.21.1]`
@@ -38,6 +39,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 - New client options `Thirst Bar.hideBarWhenFull` (default `false`) and `Thirst Bar.hideBarDelayTicks` (default `60`): the thirst bar is hidden while thirst is full, after the delay, and the air bar and other bars above it move down; it comes back as soon as thirst drops or you hold something that restores thirst. AppleSkin overlays are hidden with it (closes thirst#148, thirst#233)
 - The thirst bar is now a regular HUD layer (`bluedroplets:thirst_level`) drawn right above the hunger bar, instead of being drawn from inside the vanilla air bar through mixins. The air bar and bars from other mods stack above it, resource packs and HUD mods can move or hide it like any vanilla layer, and the `thirstBarXOffset`/`thirstBarYOffset` options still apply. `[1.21.1]`
+- The thirst droplets change colour while a status applies, like vanilla hunger turns green under Hunger: brown with Dehydration, green with Poison, bright cyan with Quenchness, and blood red for vampires. Colours are set in `client.toml` (`Bar Colors`). `[1.21.1]`
 
 ### Bug fixes
 

@@ -16,6 +16,11 @@ public final class ClientConfig
     public static final ModConfigSpec.BooleanValue HIDE_BAR_WHEN_FULL;
     public static final ModConfigSpec.IntValue HIDE_BAR_DELAY_TICKS;
 
+    public static final ModConfigSpec.ConfigValue<String> VAMPIRE_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> DEHYDRATION_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> POISON_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> QUENCHNESS_COLOR;
+
     public static final ModConfigSpec SPEC;
 
     static
@@ -31,7 +36,19 @@ public final class ClientConfig
         HIDE_BAR_DELAY_TICKS = BUILDER.comment("Ticks the bar stays visible after thirst becomes full before it is hidden (20 ticks = 1 second)").defineInRange("hideBarDelayTicks", 60, 0, 1200);
         BUILDER.pop();
 
+        BUILDER.comment("Colours (#RRGGBB) of the thirst bar while a status applies; when several apply, the first in this list wins").push("Bar Colors");
+        VAMPIRE_COLOR = defineColor("vampire", "Vampires (Vampirism, Supernatural)", "#B3121B");
+        DEHYDRATION_COLOR = defineColor("dehydration", "Dehydration effect", "#8B5A2B");
+        POISON_COLOR = defineColor("poison", "Poison effect", "#7DAA3C");
+        QUENCHNESS_COLOR = defineColor("quenchness", "Quenchness effect", "#5FE3FF");
+        BUILDER.pop();
+
         SPEC = BUILDER.build();
+    }
+
+    private static ModConfigSpec.ConfigValue<String> defineColor(String key, String comment, String defaultColor)
+    {
+        return BUILDER.comment(comment).define(key, defaultColor, value -> value instanceof String hex && hex.matches("#[0-9a-fA-F]{6}"));
     }
 
     private ClientConfig() {}

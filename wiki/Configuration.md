@@ -245,3 +245,9 @@ It runs when the world loads, after `/reload` and when `items.toml` changes, nev
 | `Thirst Bar.thirstBarXOffset` / `thirstBarYOffset` | `0` | Moves the thirst bar |
 | `Thirst Bar.hideBarWhenFull` | `false` | Hides the thirst bar while thirst is 20 and the player holds nothing that restores thirst (main or off hand); the bars above it move down and AppleSkin overlays are hidden too |
 | `Thirst Bar.hideBarDelayTicks` | `60` | Ticks the bar stays visible after thirst becomes full (0-1200) |
+| `Bar Colors.vampire` | `#B3121B` | Droplet colour for vampires (Vampirism, Supernatural) |
+| `Bar Colors.dehydration` | `#8B5A2B` | Droplet colour while Dehydration is active |
+| `Bar Colors.poison` | `#7DAA3C` | Droplet colour while Poison is active |
+| `Bar Colors.quenchness` | `#5FE3FF` | Droplet colour while Quenchness is active |
+
+Colours are `#RRGGBB`; an invalid value is reset to its default with a warning in the log. When several apply, the order is vampire, Dehydration, Poison, Quenchness.
