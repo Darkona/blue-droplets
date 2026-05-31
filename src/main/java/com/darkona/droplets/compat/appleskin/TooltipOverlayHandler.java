@@ -3,7 +3,6 @@ package com.darkona.droplets.compat.appleskin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.foundation.gui.ThirstBarRenderer;
 import net.minecraft.client.gui.GuiGraphics;
@@ -85,7 +84,7 @@ public class TooltipOverlayHandler {
     }
 
     static {
-        modIcons = BlueDroplets.asResource("textures/gui/appleskin_icons.png");
+        modIcons = ThirstBarRenderer.QUENCHED_ICONS;
         normalBarTextureOffsets = new TextureOffsets();
         normalBarTextureOffsets.containerNegativeHunger = 43;
         normalBarTextureOffsets.containerExtraHunger = 133;

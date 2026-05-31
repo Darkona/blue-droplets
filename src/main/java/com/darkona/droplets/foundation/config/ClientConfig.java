@@ -15,6 +15,9 @@ public final class ClientConfig
 
     public static final ModConfigSpec.BooleanValue HIDE_BAR_WHEN_FULL;
     public static final ModConfigSpec.IntValue HIDE_BAR_DELAY_TICKS;
+    public static final ModConfigSpec.BooleanValue SHOW_QUENCHED_OVERLAY;
+    public static final ModConfigSpec.BooleanValue SHOW_DRINK_PREVIEW;
+    public static final ModConfigSpec.BooleanValue SHOW_EXHAUSTION_UNDERLAY;
 
     public static final ModConfigSpec.ConfigValue<String> VAMPIRE_COLOR;
     public static final ModConfigSpec.ConfigValue<String> DEHYDRATION_COLOR;
@@ -34,6 +37,9 @@ public final class ClientConfig
         THIRST_BAR_X_OFFSET = BUILDER.comment("How many pixels should the thirst bar be shifted horizontally from its original position").define("thirstBarXOffset", 0);
         HIDE_BAR_WHEN_FULL = BUILDER.comment("Hide the thirst bar while thirst is full (20) and the player holds nothing that restores thirst. The other bars above it move down").define("hideBarWhenFull", false);
         HIDE_BAR_DELAY_TICKS = BUILDER.comment("Ticks the bar stays visible after thirst becomes full before it is hidden (20 ticks = 1 second)").defineInRange("hideBarDelayTicks", 60, 0, 1200);
+        SHOW_QUENCHED_OVERLAY = BUILDER.comment("Outline the droplets by the current quenched (like AppleSkin's saturation outline)").define("showQuenchedOverlay", true);
+        SHOW_DRINK_PREVIEW = BUILDER.comment("While holding something that restores thirst, flash the thirst and quenched it would give").define("showDrinkPreview", true);
+        SHOW_EXHAUSTION_UNDERLAY = BUILDER.comment("Show thirst exhaustion as a bar under the droplets (fills up until the next quenched or thirst point is lost)").define("showExhaustionUnderlay", false);
         BUILDER.pop();
 
         BUILDER.comment("Colours (#RRGGBB) of the thirst bar while a status applies; when several apply, the first in this list wins").push("Bar Colors");

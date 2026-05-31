@@ -29,19 +29,9 @@ public final class SupernaturalCompat
         return LOADED && SupernaturalBridge.isVampire(player);
     }
 
-    public static boolean hasVampirism(Player player)
-    {
-        return LOADED && SupernaturalBridge.hasVampirism(player);
-    }
-
     public static ResourceLocation getVampireIcons(ResourceLocation original, ItemStack stack)
     {
         return LOADED && SupernaturalBridge.isBlood(stack) ? SupernaturalBridge.THIRST_ICONS : original;
-    }
-
-    public static ResourceLocation getVampireAppleskinIcons(ResourceLocation original, Player player)
-    {
-        return hasVampirism(player) ? SupernaturalBridge.APPLESKIN_ICONS : original;
     }
 
     public static ResourceLocation getVampireAppleskinIcons(ResourceLocation original, ItemStack stack)

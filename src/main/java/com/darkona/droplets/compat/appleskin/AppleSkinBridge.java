@@ -8,9 +8,7 @@ final class AppleSkinBridge
 
     static void initClient(IEventBus modBus)
     {
-        HUDOverlayHandler.init();
         TooltipOverlayHandler.init();
         modBus.addListener(TooltipOverlayHandler::register);
-        modBus.addListener(OverlayRegister::onRenderGuiOverlayPost);
     }
 }
