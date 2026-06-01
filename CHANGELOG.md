@@ -20,6 +20,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### Mod compatibility
 
+- AppleSkin is no longer used by any code: the thirst bar overlays and the thirst tooltip are built in, so they look the same with or without AppleSkin and there is nothing to break when AppleSkin updates. Supernatural blood items show the regular droplets in the tooltip. `[1.21.1]`
 - Vampirism: vampires now see their thirst bar with blood-red droplets instead of no bar at all. Their thirst still does not go down, as before. Supernatural vampires get the same red droplets instead of Supernatural's thirst icon texture. `[1.21.1]`
 - Mixins into Create, Jade and Farmer's Delight live in a separate optional mixin config and are only applied when that mod is installed; if one no longer matches the installed version it is logged and skipped instead of crashing the game (thirst#280). `[1.21.1]`
 - Declared Create, Jade, AppleSkin, Supernatural, Farmer's Delight, Cold Sweat and Vampirism as optional dependencies. Create must be 6.0.6 or newer when installed: older Create 6 versions drop fluid components from recipe outputs, so purity was lost (related to thirst#259). Built against Create 6.0.10. `[1.21.1]`
@@ -41,6 +42,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - The thirst bar is now a regular HUD layer (`bluedroplets:thirst_level`) drawn right above the hunger bar, instead of being drawn from inside the vanilla air bar through mixins. The air bar and bars from other mods stack above it, resource packs and HUD mods can move or hide it like any vanilla layer, and the `thirstBarXOffset`/`thirstBarYOffset` options still apply. `[1.21.1]`
 - The thirst droplets change colour while a status applies, like vanilla hunger turns green under Hunger: brown with Dehydration, green with Poison, bright cyan with Quenchness, and blood red for vampires. Colours are set in `client.toml` (`Bar Colors`). `[1.21.1]`
 - AppleSkin-style thirst HUD built in, no AppleSkin needed: an outline on the droplets shows quenched (`showQuenchedOverlay`, on), holding something that restores thirst (either hand) flashes the thirst and quenched it would give, estimated values included (`showDrinkPreview`, on), and an optional bar under the droplets shows exhaustion until the next point is lost (`showExhaustionUnderlay`, off). All three are drawn inside the thirst bar's layer, so they follow its position, shake, colour and hiding. With AppleSkin installed nothing is drawn twice: the old AppleSkin-only thirst overlays were removed (closes thirst#202, thirst#254). `[1.21.1]`
+- Items that restore thirst show it in their tooltip as droplets and quenched icons, with `x N` past ten icons and `(est.)` for values estimated from recipes; this no longer needs AppleSkin and replaces the estimated-values text line (`Tooltip.showTooltipIcons`, on; off brings the text line back) (thirst#159). The client option `onlyShowPurityWhenShifting`, which did nothing, now hides the purity line until Shift is held. `[1.21.1]`
 
 ### Bug fixes
 

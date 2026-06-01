@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.purity;
 
+import com.darkona.droplets.foundation.config.ClientConfig;
 import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.BlueDroplets;
@@ -328,7 +329,7 @@ public class WaterPurity
     @SubscribeEvent
     static void renderPurityTooltip(ItemTooltipEvent event)
     {
-        if(enabled() && isWaterFilledContainer(event.getItemStack()))
+        if(enabled() && isWaterFilledContainer(event.getItemStack()) && (event.getFlags().hasShiftDown() || !ClientConfig.ONLY_SHOW_PURITY_WHEN_SHIFTING.get()))
         {
             int purity = getPurity(event.getItemStack());
             if(purity >= MIN_PURITY && purity <= MAX_PURITY)

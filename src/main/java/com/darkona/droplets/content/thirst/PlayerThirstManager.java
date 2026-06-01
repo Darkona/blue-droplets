@@ -4,6 +4,7 @@ import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
+import com.darkona.droplets.foundation.config.ClientConfig;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
 import com.darkona.droplets.BlueDroplets;
@@ -197,7 +198,7 @@ public class PlayerThirstManager {
     @SubscribeEvent
     public static void estimatedTooltip(ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
-        if (ThirstHelper.isEstimated(stack))
+        if (!ClientConfig.SHOW_TOOLTIP_ICONS.get() && ThirstHelper.isEstimated(stack))
             event.getToolTip().add(Component.translatable("bluedroplets.tooltip.estimated", ThirstHelper.getThirst(stack), ThirstHelper.getQuenched(stack)).withStyle(ChatFormatting.GRAY));
     }
 

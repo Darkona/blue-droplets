@@ -23,5 +23,6 @@
   "command.bluedroplets.enable": "Enable tick Thirst for %1$s",
   "command.bluedroplets.disable": "Disable tick Thirst for %1$s",
   "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
+  "bluedroplets.tooltip.estimated_short": "(est.)",
   "effect.bluedroplets.dehydration": "Dehydration"
 }

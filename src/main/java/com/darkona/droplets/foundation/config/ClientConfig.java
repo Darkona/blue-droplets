@@ -10,6 +10,7 @@ public final class ClientConfig
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     public static final ModConfigSpec.BooleanValue ONLY_SHOW_PURITY_WHEN_SHIFTING;
+    public static final ModConfigSpec.BooleanValue SHOW_TOOLTIP_ICONS;
     public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_Y_OFFSET;
     public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_X_OFFSET;
 
@@ -30,6 +31,10 @@ public final class ClientConfig
     {
         BUILDER.push("Purity tooltip");
         ONLY_SHOW_PURITY_WHEN_SHIFTING = BUILDER.comment("If the purity tooltip should be shown only when the player is pressing the shift key").define("onlyShowPurityWhenShifting", false);
+        BUILDER.pop();
+
+        BUILDER.push("Tooltip");
+        SHOW_TOOLTIP_ICONS = BUILDER.comment("Show the thirst and quenched an item gives as icons in its tooltip; when off, only estimated values are shown, as text").define("showTooltipIcons", true);
         BUILDER.pop();
 
         BUILDER.push("Thirst Bar");

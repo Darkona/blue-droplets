@@ -1,7 +1,6 @@
 package com.darkona.droplets;
 
 import com.darkona.droplets.api.DropletsAPI;
-import com.darkona.droplets.compat.appleskin.AppleSkinCompat;
 import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
@@ -19,6 +18,7 @@ import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.PlayerThirstManager;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.*;
+import com.darkona.droplets.foundation.gui.DrinkTooltip;
 import com.darkona.droplets.foundation.gui.ThirstBarRenderer;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.darkona.droplets.foundation.tab.ThirstTab;
@@ -36,6 +36,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 
@@ -61,7 +62,8 @@ public class BlueDroplets
             ThirstBarStyles.registerBuiltIns();
             VampirismCompat.initClient();
             SupernaturalCompat.initClient();
-            AppleSkinCompat.initClient(modBus);
+            modBus.addListener(DrinkTooltip::registerFactory);
+            NeoForge.EVENT_BUS.addListener(DrinkTooltip::gather);
         }
 
         ItemInit.register(modBus);

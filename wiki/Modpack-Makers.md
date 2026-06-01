@@ -41,7 +41,7 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
 
 - Items with food properties (eaten) and items without (drunk) use the same map; Blue Droplets tells them apart by the item itself.
 - Blue Droplets ships its defaults in `data/bluedroplets/data_maps/item/drinks.json`: vanilla items, its own items and, only when those mods are installed, Farmer's Delight, Farmer's Respite, Brewin' and Chewin', Collector's Reap, Create (builder's tea) and Supernatural. To change a default, add your own entry (a later pack wins) or `remove` it.
-- The map is synced to clients; tooltips, AppleSkin and the HUD use the server's values.
+- The map is synced to clients; tooltips and the HUD use the server's values.
 
 ### Where an item's values come from
 
