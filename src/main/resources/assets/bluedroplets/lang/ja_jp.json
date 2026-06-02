@@ -17,5 +17,10 @@
   "bluedroplets.ponder.sand_filter.text_2": "Dirty Water needs to be pumped in from the top...",
   "bluedroplets.ponder.sand_filter.text_3": "and Purified Water can be pumped out from the bottom",
   "bluedroplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
-  "effect.bluedroplets.dehydration": "Dehydration"
+  "effect.bluedroplets.dehydration": "Dehydration",
+  "effect.bluedroplets.quenchness": "Quenchness",
+  "item.minecraft.potion.effect.quenchness": "Potion of Quenchness",
+  "item.minecraft.splash_potion.effect.quenchness": "Splash Potion of Quenchness",
+  "item.minecraft.lingering_potion.effect.quenchness": "Lingering Potion of Quenchness",
+  "item.minecraft.tipped_arrow.effect.quenchness": "Arrow of Quenchness"
 }

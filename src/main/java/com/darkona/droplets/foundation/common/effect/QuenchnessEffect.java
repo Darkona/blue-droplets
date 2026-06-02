@@ -1,22 +1,29 @@
 package com.darkona.droplets.foundation.common.effect;
 
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
-import net.minecraft.world.effect.InstantenousMobEffect;
+import com.darkona.droplets.foundation.config.GameplayConfig;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-public class QuenchnessEffect extends InstantenousMobEffect {
-    public QuenchnessEffect(MobEffectCategory pCategory, int pColor) {
-        super(pCategory, pColor);
+/**
+ * Every {@code effects.quenchnessIntervalTicks}, restores (level) thirst and quenched, like Regeneration for health.
+ */
+public class QuenchnessEffect extends MobEffect {
+    public QuenchnessEffect(MobEffectCategory category, int color) {
+        super(category, color);
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity p_295892_, int p_296026_) {
-        if (!p_295892_.level().isClientSide && p_295892_ instanceof Player player) {
-            player.getData(ModAttachment.PLAYER_THIRST).drink(player, 1, 1);
-        }
-
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+        if (!entity.level().isClientSide && entity instanceof Player player)
+            player.getData(ModAttachment.PLAYER_THIRST).drink(player, amplifier + 1, amplifier + 1);
         return true;
+    }
+
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+        return duration % GameplayConfig.QUENCHNESS_INTERVAL_TICKS.get() == 0;
     }
 }

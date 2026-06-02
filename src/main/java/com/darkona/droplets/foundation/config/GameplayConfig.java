@@ -26,6 +26,8 @@ public final class GameplayConfig
     public static final ModConfigSpec.IntValue FIRE_RESISTANCE_PERCENT;
     public static final ModConfigSpec.BooleanValue DEPLETES_WHEN_NAUSEOUS;
     public static final ModConfigSpec.DoubleValue DEHYDRATION_MULTIPLIER;
+    public static final ModConfigSpec.IntValue QUENCHNESS_INTERVAL_TICKS;
+    public static final ModConfigSpec.BooleanValue QUENCHNESS_POTION;
     public static final ModConfigSpec.DoubleValue FIRE_PROTECTION_PER_LEVEL;
     public static final ModConfigSpec.IntValue FIRE_PROTECTION_MAX_LEVELS;
 
@@ -203,6 +205,8 @@ public final class GameplayConfig
 
         BUILDER.push("effects");
         DEHYDRATION_MULTIPLIER = BUILDER.comment("Multiplier of the thirst exhaustion the Dehydration effect adds every tick (0.005 per level)").defineInRange("dehydrationMultiplier", 1.0, 0.0, 10.0);
+        QUENCHNESS_INTERVAL_TICKS = BUILDER.comment("Quenchness restores (level) thirst and quenched every this many ticks").defineInRange("quenchnessIntervalTicks", 40, 1, 1200);
+        QUENCHNESS_POTION = BUILDER.comment("Brewing recipes for the Quenchness potions (awkward potion + prismarine crystals). Keep the same value on the server and the clients").define("quenchnessPotion", true);
         BUILDER.pop();
 
         BUILDER.push("loot");

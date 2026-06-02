@@ -133,6 +133,8 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 | Key | Default | Meaning |
 |---|---|---|
 | `dehydrationMultiplier` | `1.0` | Multiplier (0-10) of the thirst exhaustion the `bluedroplets:dehydration` effect adds every tick (0.005 per level). Thirst never goes below zero |
+| `quenchnessIntervalTicks` | `40` | Quenchness restores (level) thirst and (level) quenched every this many ticks (1-1200) |
+| `quenchnessPotion` | `true` | Brewing recipes of the Quenchness potions. Not synced: keep the same value on the server and the clients, or the brewing stand may not accept prismarine crystals client side |
 
 ### `[sprint]`, `[drinking]`, `[hand]`, `[death]`, `[loot]`
 
