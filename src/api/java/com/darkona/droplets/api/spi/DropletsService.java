@@ -6,7 +6,9 @@ import com.darkona.droplets.api.DropletsView;
 import com.darkona.droplets.api.ExhaustionModifier;
 import com.darkona.droplets.api.ThirstValues;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -59,4 +61,6 @@ public interface DropletsService
     void refreshExhaustionModifier(Player player);
 
     void registerBarStyle(ResourceLocation id, Predicate<Player> active, int rgb, int priority);
+
+    void registerWaveEffect(Holder<MobEffect> effect);
 }

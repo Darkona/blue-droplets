@@ -14,7 +14,9 @@ import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -165,5 +167,11 @@ public final class DropletsServiceImpl implements DropletsService
     {
         int color = rgb & 0xFFFFFF;
         ThirstBarStyles.register(id, active, () -> color, priority);
+    }
+
+    @Override
+    public void registerWaveEffect(Holder<MobEffect> effect)
+    {
+        ThirstBarStyles.registerWave(effect);
     }
 }

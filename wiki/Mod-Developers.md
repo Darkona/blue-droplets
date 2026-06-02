@@ -168,6 +168,13 @@ The colour is `0xRRGGBB`. The predicate runs every frame for the local player: k
 (`hasEffect` with a holder is fine). Registering the same id again replaces the style. On a dedicated server the call
 does nothing useful but is harmless.
 
+Positive thirst effects can make the bar wave (one droplet at a time bounces, like hearts under Regeneration; built
+in: Quenchness). Also on the client:
+
+```java
+DropletsAPI.registerWaveEffect(MyEffects.HYDRATED);
+```
+
 ## Events
 
 All on `NeoForge.EVENT_BUS`, in `com.darkona.droplets.api.event`, posted on the server and only when something

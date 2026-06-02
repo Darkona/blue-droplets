@@ -2,7 +2,9 @@ package com.darkona.droplets.api;
 
 import com.darkona.droplets.api.spi.DropletsService;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -252,6 +254,16 @@ public final class DropletsAPI
     public static void registerBarStyle(ResourceLocation id, Predicate<Player> active, int rgb, int priority)
     {
         service().registerBarStyle(id, active, rgb, priority);
+    }
+
+    /**
+     * Makes the thirst bar's droplets bounce one at a time, like hearts under Regeneration, while the local player
+     * has {@code effect} (built in: Quenchness). Meant for positive thirst effects. Client side only (for example in
+     * {@code FMLClientSetupEvent}).
+     */
+    public static void registerWaveEffect(Holder<MobEffect> effect)
+    {
+        service().registerWaveEffect(effect);
     }
 
     /**

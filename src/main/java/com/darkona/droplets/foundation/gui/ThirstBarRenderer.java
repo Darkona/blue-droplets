@@ -72,6 +72,7 @@ public final class ThirstBarRenderer
         int level = thirst.getThirst();
         int quenched = thirst.getQuenched();
         boolean shake = quenched <= 0 && ticks % (level * 3 + 1) == 0;
+        int wave = ClientConfig.BUFF_WAVE.get() && ThirstBarStyles.waves(player) ? ticks % (ThirstConstants.MAX_THIRST + 5) : -1;
         boolean showQuenched = ClientConfig.SHOW_QUENCHED_OVERLAY.get();
 
         ThirstValues gain = ClientConfig.SHOW_DRINK_PREVIEW.get() ? heldDrink(player) : null;
@@ -99,6 +100,8 @@ public final class ThirstBarRenderer
             int idx = i * 2 + 1;
             int x = right - i * 8 - 9;
             int y = shake ? top + random.nextInt(3) - 1 : top;
+            if (i == wave)
+                y -= 2;
 
             guiGraphics.setColor(1f, 1f, 1f, 1f);
             guiGraphics.blit(THIRST_ICONS, x, y, 0, 0, 9, 9, 25, 9);

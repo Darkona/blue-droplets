@@ -3,7 +3,9 @@ package com.darkona.droplets.foundation.gui;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.foundation.config.ClientConfig;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -11,11 +13,13 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.IntSupplier;
 import java.util.function.Predicate;
 
 /**
- * Colours of the thirst bar while a status applies; the active style with the highest priority wins.
+ * Colours of the thirst bar while a status applies (the active style with the highest priority wins) and the effects
+ * that make it wave.
  */
 public final class ThirstBarStyles
 {
@@ -29,6 +33,7 @@ public final class ThirstBarStyles
 
     private static final Comparator<Style> ORDER = Comparator.comparingInt(Style::priority).reversed().thenComparing(Style::id);
     private static volatile Style[] styles = {};
+    private static final List<Holder<MobEffect>> waveEffects = new CopyOnWriteArrayList<>();
 
     private ThirstBarStyles() {}
 
@@ -51,8 +56,23 @@ public final class ThirstBarStyles
         return -1;
     }
 
+    /** Effects that make the droplets bounce one at a time, like hearts under Regeneration. */
+    public static void registerWave(Holder<MobEffect> effect)
+    {
+        waveEffects.add(effect);
+    }
+
+    public static boolean waves(Player player)
+    {
+        for (int i = 0; i < waveEffects.size(); i++)
+            if (player.hasEffect(waveEffects.get(i)))
+                return true;
+        return false;
+    }
+
     public static void registerBuiltIns()
     {
+        registerWave(EffectInit.QUENCHNESS);
         register(BlueDroplets.asResource("dehydration"), player -> player.hasEffect(EffectInit.DEHYDRATION), color(ClientConfig.DEHYDRATION_COLOR), DEHYDRATION_PRIORITY);
         register(ResourceLocation.withDefaultNamespace("poison"), player -> player.hasEffect(MobEffects.POISON), color(ClientConfig.POISON_COLOR), POISON_PRIORITY);
         register(BlueDroplets.asResource("quenchness"), player -> player.hasEffect(EffectInit.QUENCHNESS), color(ClientConfig.QUENCHNESS_COLOR), QUENCHNESS_PRIORITY);
