@@ -156,7 +156,7 @@ DropletsAPI.refreshExhaustionModifier(player);
 ## Thirst bar colour
 
 The droplets are tinted while a style is active, like vanilla hunger turns green under Hunger. Built-in styles and
-their priorities: vampire (Vampirism, Supernatural) 400, Dehydration 300, Poison 200, Quenchness 100, Hydrated 50; the active style
+their priorities: vampire (Vampirism, Supernatural) 400, Dehydration 300, Overhydrated 250, Poison 200, Quenchness 100, Hydrated 50; the active style
 with the highest priority wins. Add your own on the client, for example in `FMLClientSetupEvent`:
 
 ```java
@@ -188,6 +188,7 @@ happens (never once per tick). Listen to `Pre`/`Post`, not to the abstract base 
 | `DrinkEvent.Post` | after it | read the values and `hydrated()` |
 | `PurityEffectEvent` | purity effects were rolled; the Dehydration of `hotDirtyWater` (dirty water in a hot climate) is already in `getEffects()` | cancel (no effects, hydrates), edit `getEffects()`, `setHydrates` |
 | `DehydrationDamageEvent` | a player at zero thirst is about to be hurt | cancel, `setAmount` |
+| `OverhydrationEvent` | a player drank past full until the overflow reached `overhydration.threshold` and is about to get Overhydrated (the overflow resets either way) | cancel, `setDuration`, `setAmplifier`; read `getOverflow()` |
 
 ```java
 @SubscribeEvent

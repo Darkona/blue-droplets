@@ -25,6 +25,7 @@ public final class ThirstBarStyles
 {
     public static final int VAMPIRE_PRIORITY = 400;
     public static final int DEHYDRATION_PRIORITY = 300;
+    public static final int OVERHYDRATED_PRIORITY = 250;
     public static final int POISON_PRIORITY = 200;
     public static final int QUENCHNESS_PRIORITY = 100;
     public static final int HYDRATED_PRIORITY = 50;
@@ -76,6 +77,7 @@ public final class ThirstBarStyles
         registerWave(EffectInit.QUENCHNESS);
         registerWave(EffectInit.HYDRATED);
         register(BlueDroplets.asResource("dehydration"), player -> player.hasEffect(EffectInit.DEHYDRATION), color(ClientConfig.DEHYDRATION_COLOR), DEHYDRATION_PRIORITY);
+        register(BlueDroplets.asResource("overhydrated"), player -> player.hasEffect(EffectInit.OVERHYDRATED), color(ClientConfig.OVERHYDRATED_COLOR), OVERHYDRATED_PRIORITY);
         register(ResourceLocation.withDefaultNamespace("poison"), player -> player.hasEffect(MobEffects.POISON), color(ClientConfig.POISON_COLOR), POISON_PRIORITY);
         register(BlueDroplets.asResource("quenchness"), player -> player.hasEffect(EffectInit.QUENCHNESS), color(ClientConfig.QUENCHNESS_COLOR), QUENCHNESS_PRIORITY);
         register(BlueDroplets.asResource("hydrated"), player -> player.hasEffect(EffectInit.HYDRATED), color(ClientConfig.HYDRATED_COLOR), HYDRATED_PRIORITY);

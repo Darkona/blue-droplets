@@ -18,7 +18,7 @@ public class QuenchnessEffect extends MobEffect {
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide && entity instanceof Player player)
-            player.getData(ModAttachment.PLAYER_THIRST).drink(player, amplifier + 1, amplifier + 1);
+            player.getData(ModAttachment.PLAYER_THIRST).drink(player, amplifier + 1, amplifier + 1, false);
         return true;
     }
 

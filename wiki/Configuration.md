@@ -148,6 +148,20 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 | `fullBonusSeconds` | `30` | Seconds fully hydrated before the effect is given (1-3600) |
 | `fullBonusDurationTicks` | `200` | Duration of the Hydrated effect it gives, so it lasts this long after the player stops being fully hydrated (40-12000) |
 
+### `[overhydration]`
+
+Thirst and quenched drunk past full (items, hand drinking, rain, `DropletsAPI.drink`; not the Quenchness effect) add up as overflow. At the threshold the player gets `bluedroplets:overhydrated` (harmful, 10% slower movement per level) and the overflow starts over. On by default.
+
+| Key | Default | Meaning |
+|---|---|---|
+| `enabled` | `true` | `false` turns the mechanic off (overflow is no longer counted) |
+| `threshold` | `20` | Overflow that causes Overhydrated (1-1000). A water bottle (6/8) drunk while full adds 14 |
+| `decayPerSecond` | `1.0` | Overflow lost per second (0-100), applied once a second |
+| `durationTicks` | `400` | Duration of Overhydrated (20-12000) |
+| `nausea` | `true` | Also 5 seconds of Nausea when it is applied |
+
+The level is I, plus one per half threshold past it, or one more than the active Overhydrated; at most III. `OverhydrationEvent` can cancel it or change duration and level.
+
 ### `[sprint]`, `[drinking]`, `[hand]`, `[death]`, `[loot]`
 
 | Key | Default | Meaning |
@@ -267,6 +281,7 @@ It runs when the world loads, after `/reload` and when `items.toml` changes, nev
 | `Thirst Bar.buffWave` | `true` | Droplets bounce one at a time, like hearts under Regeneration, while a positive thirst effect (Quenchness, Hydrated) is active |
 | `Bar Colors.vampire` | `#B3121B` | Droplet colour for vampires (Vampirism, Supernatural) |
 | `Bar Colors.dehydration` | `#8B5A2B` | Droplet colour while Dehydration is active |
+| `Bar Colors.overhydrated` | `#9DB0C0` | Droplet colour while Overhydrated is active |
 | `Bar Colors.poison` | `#7DAA3C` | Droplet colour while Poison is active |
 | `Bar Colors.quenchness` | `#5FE3FF` | Droplet colour while Quenchness is active |
 | `Bar Colors.hydrated` | `#7FE0C0` | Droplet colour while Hydrated is active |

@@ -8,6 +8,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -23,6 +25,8 @@ public class EffectInit {
     public static final DeferredHolder<MobEffect, MobEffect> QUENCHNESS = MOB_EFFECTS.register("quenchness", () -> new QuenchnessEffect(MobEffectCategory.BENEFICIAL, 0x3FB8E6));
     public static final DeferredHolder<MobEffect, MobEffect> DEHYDRATION = MOB_EFFECTS.register("dehydration", () -> new DehydrationEffect(MobEffectCategory.HARMFUL, 0xA0621F));
     public static final DeferredHolder<MobEffect, MobEffect> HYDRATED = MOB_EFFECTS.register("hydrated", () -> new MobEffect(MobEffectCategory.BENEFICIAL, 0x7FE0C0) {});
+    public static final DeferredHolder<MobEffect, MobEffect> OVERHYDRATED = MOB_EFFECTS.register("overhydrated", () -> new MobEffect(MobEffectCategory.HARMFUL, 0x9DB0C0) {}
+            .addAttributeModifier(Attributes.MOVEMENT_SPEED, BlueDroplets.asResource("effect.overhydrated"), -0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(BuiltInRegistries.POTION, BlueDroplets.ID);
     public static final DeferredHolder<Potion, Potion> QUENCHNESS_POTION = POTIONS.register("quenchness", () -> new Potion("quenchness", new MobEffectInstance(QUENCHNESS, 900)));

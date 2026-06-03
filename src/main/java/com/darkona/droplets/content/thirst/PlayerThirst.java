@@ -4,6 +4,7 @@ import com.darkona.droplets.api.DropletsView;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.api.event.DehydrationDamageEvent;
 import com.darkona.droplets.api.event.DrinkEvent;
+import com.darkona.droplets.api.event.OverhydrationEvent;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.GameplayConfig;
@@ -77,6 +78,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     int syncedRules = SYNC_SPRINT_BLOCKED | SYNC_BOTH_HANDS | SPRINT_MIN_THIRST << SYNC_SPRINT_MIN_SHIFT;
     int handDrinkReadyTick = 0;
     int fullHydrationTicks;
+    float overflow;
 
     public PlayerThirst() {}
 
@@ -218,18 +220,54 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         if (pre.isCanceled())
             return false;
         boolean hydrated = WaterPurity.givePurityEffects(player, pre.getPurity())
-                && player.getData(ModAttachment.PLAYER_THIRST).drink(player, pre.getThirst(), pre.getQuenched());
+                && player.getData(ModAttachment.PLAYER_THIRST).drink(player, pre.getThirst(), pre.getQuenched(), true);
         NeoForge.EVENT_BUS.post(new DrinkEvent.Post(player, item, pre.getThirst(), pre.getQuenched(), pre.getPurity(), hydrated));
         return hydrated;
     }
 
     /**
-     * Hydration of a drink: with {@code extraThirstToQuenched}, thirst above the maximum becomes quenched.
+     * Hydration of a drink: with {@code extraThirstToQuenched}, thirst above the maximum becomes quenched; with
+     * {@code overflows}, what does not fit counts towards Overhydrated.
      */
-    public boolean drink(Player player, int thirst, int quenched)
+    public boolean drink(Player player, int thirst, int quenched, boolean overflows)
     {
         int extra = GameplayConfig.EXTRA_THIRST_TO_QUENCHED.get() ? Math.max(this.thirst + thirst - MAX_THIRST, 0) : 0;
-        return change(player, this.thirst + thirst, this.quenched + quenched + extra, ThirstChangeEvent.Cause.DRINK);
+        return hydrate(player, thirst, quenched, this.thirst + thirst, this.quenched + quenched + extra, overflows, ThirstChangeEvent.Cause.DRINK);
+    }
+
+    private boolean hydrate(Player player, int thirst, int quenched, int newThirst, int newQuenched, boolean overflows, ThirstChangeEvent.Cause cause)
+    {
+        int wasted = 0;
+        if (overflows && thirst >= 0 && quenched >= 0 && GameplayConfig.OVERHYDRATION.get() && shouldTickThirst && !player.getAbilities().invulnerable)
+        {
+            int fitThirst = Mth.clamp(newThirst, 0, MAX_THIRST);
+            wasted = thirst + quenched - (fitThirst - this.thirst) - (Mth.clamp(newQuenched, 0, fitThirst) - this.quenched);
+        }
+        boolean changed = change(player, newThirst, newQuenched, cause);
+        if (wasted > 0)
+            overflow(player, wasted);
+        return changed;
+    }
+
+    /**
+     * Adds water drunk past full; at {@code overhydration.threshold} applies Overhydrated (one level more per half
+     * threshold past it, or while it is active; at most III) and resets the overflow.
+     */
+    private void overflow(Player player, int wasted)
+    {
+        overflow += wasted;
+        int threshold = GameplayConfig.OVERHYDRATION_THRESHOLD.get();
+        if (overflow < threshold)
+            return;
+        MobEffectInstance current = player.getEffect(EffectInit.OVERHYDRATED);
+        int amplifier = Math.min(2, Math.max((int) ((overflow - threshold) * 2 / threshold), current == null ? 0 : current.getAmplifier() + 1));
+        OverhydrationEvent event = NeoForge.EVENT_BUS.post(new OverhydrationEvent(player, overflow, GameplayConfig.OVERHYDRATION_DURATION_TICKS.get(), amplifier));
+        overflow = 0;
+        if (event.isCanceled())
+            return;
+        player.addEffect(new MobEffectInstance(EffectInit.OVERHYDRATED, event.getDuration(), event.getAmplifier()));
+        if (GameplayConfig.OVERHYDRATION_NAUSEA.get())
+            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, OVERHYDRATION_NAUSEA_TICKS));
     }
 
     public void drink(int thirst, int quenched)
@@ -260,6 +298,8 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             modifierDirty = true;
             if(GameplayConfig.FULL_HYDRATION_BONUS.get())
                 fullHydrationBonus(player);
+            if(overflow > 0)
+                overflow = Math.max(0.0F, overflow - GameplayConfig.OVERHYDRATION_DECAY.get().floatValue() * MODIFIER_INTERVAL_TICKS / 20.0F);
         }
 
         Difficulty difficulty = player.level().getDifficulty();
@@ -312,7 +352,11 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
 
         if(GameplayConfig.RAIN_DRINKING.get() && player.tickCount % GameplayConfig.RAIN_INTERVAL_TICKS.get() == 0
                 && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above()))
-            change(player, thirst + GameplayConfig.RAIN_THIRST.get(), quenched + GameplayConfig.RAIN_QUENCHED.get(), ThirstChangeEvent.Cause.RAIN);
+        {
+            int rainThirst = GameplayConfig.RAIN_THIRST.get();
+            int rainQuenched = GameplayConfig.RAIN_QUENCHED.get();
+            hydrate(player, rainThirst, rainQuenched, thirst + rainThirst, quenched + rainQuenched, true, ThirstChangeEvent.Cause.RAIN);
+        }
 
         if (thirst <= 0)
         {
@@ -571,6 +615,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         nbt.putInt("quenched", quenched);
         nbt.putFloat("exhaustion", exhaustion);
         nbt.putBoolean("enable",shouldTickThirst);
+        nbt.putFloat("overflow", overflow);
         return nbt;
     }
 
@@ -580,5 +625,6 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         setQuenched(nbt.getInt("quenched"));
         exhaustion = nbt.getFloat("exhaustion");
         shouldTickThirst = !nbt.contains("enable") || nbt.getBoolean("enable");
+        overflow = nbt.getFloat("overflow");
     }
 }

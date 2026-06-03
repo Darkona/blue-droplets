@@ -35,6 +35,11 @@ public final class GameplayConfig
     public static final ModConfigSpec.IntValue FULL_HYDRATION_MIN_QUENCHED;
     public static final ModConfigSpec.IntValue FULL_HYDRATION_SECONDS;
     public static final ModConfigSpec.IntValue FULL_HYDRATION_DURATION_TICKS;
+    public static final ModConfigSpec.BooleanValue OVERHYDRATION;
+    public static final ModConfigSpec.IntValue OVERHYDRATION_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue OVERHYDRATION_DECAY;
+    public static final ModConfigSpec.IntValue OVERHYDRATION_DURATION_TICKS;
+    public static final ModConfigSpec.BooleanValue OVERHYDRATION_NAUSEA;
     public static final ModConfigSpec.DoubleValue FIRE_PROTECTION_PER_LEVEL;
     public static final ModConfigSpec.IntValue FIRE_PROTECTION_MAX_LEVELS;
 
@@ -224,6 +229,15 @@ public final class GameplayConfig
         FULL_HYDRATION_MIN_QUENCHED = BUILDER.defineInRange("minQuenched", 10, 0, 20);
         FULL_HYDRATION_SECONDS = BUILDER.defineInRange("fullBonusSeconds", 30, 1, 3600);
         FULL_HYDRATION_DURATION_TICKS = BUILDER.comment("Duration of the Hydrated effect it gives; it keeps going this long after the player is no longer fully hydrated").defineInRange("fullBonusDurationTicks", 200, 40, 12000);
+        BUILDER.pop();
+
+        BUILDER.comment("Drinking past full: thirst and quenched that no longer fit add up as overflow, which drains over time.",
+                "At the threshold the player gets Overhydrated (slowness), one level more per half threshold past it or while it lasts (at most III)").push("overhydration");
+        OVERHYDRATION = BUILDER.comment("Whether drinking past full can cause Overhydrated").define("enabled", true);
+        OVERHYDRATION_THRESHOLD = BUILDER.comment("Overflow (points drunk past full) that causes Overhydrated").defineInRange("threshold", 20, 1, 1000);
+        OVERHYDRATION_DECAY = BUILDER.comment("Overflow lost per second").defineInRange("decayPerSecond", 1.0, 0.0, 100.0);
+        OVERHYDRATION_DURATION_TICKS = BUILDER.comment("Duration of Overhydrated").defineInRange("durationTicks", 400, 20, 12000);
+        OVERHYDRATION_NAUSEA = BUILDER.comment("Whether Overhydrated comes with a few seconds of Nausea").define("nausea", true);
         BUILDER.pop();
 
         BUILDER.push("loot");

@@ -96,6 +96,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - New **Hydrated** effect (`bluedroplets:hydrated`): thirst goes down slower, all thirst exhaustion times `effects.hydratedMultiplier` (default 0.5) per level. The thirst bar waves and turns mint green while it is active (`Bar Colors.hydrated`). Nothing gives it by default: use `/effect`, the purity effect lists, or the new option below. `[1.21.1]`
 - New option, off by default: `hydration.fullBonus` gives Hydrated I while you stay fully hydrated (thirst 20 and at least `minQuenched` quenched, default 10) for `fullBonusSeconds` (30); it is refreshed while that holds and lasts `fullBonusDurationTicks` (200) after (closes thirst#186). `[1.21.1]`
 - New option, off by default: `effects.waterBreathingReducesThirst`: fully underwater with Water Breathing or Conduit Power, thirst loss is multiplied by `effects.underwaterBreathingMultiplier` (0.5), on top of `climate.underwater`. `[1.21.1]`
+- New mechanic, on by default: **overhydration**. Thirst and quenched drunk past full (bottles, food, hand drinking, rain, `DropletsAPI.drink`; not Quenchness) add up as overflow, which drains by `overhydration.decayPerSecond` (1.0) points per second. At `overhydration.threshold` (20, about two water bottles while full) the player gets the new harmful **Overhydrated** effect (`bluedroplets:overhydrated`, 10% slower movement per level) for `durationTicks` (400), one level more per half threshold past it or when it is already active (at most III), plus 5 seconds of Nausea (`overhydration.nausea`). The thirst bar turns greyish blue while it lasts (`Bar Colors.overhydrated`). Disable it with `overhydration.enabled = false` (`gameplay.toml`). `[1.21.1]`
 - Dirty water keeps giving the vanilla Nausea, Hunger and Poison from the purity lists in `purity.toml`; there is no separate water sickness effect. `[1.21.1]`
 
 ### Config
@@ -145,6 +146,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### API
 
+- New cancelable `OverhydrationEvent`: posted before Overhydrated is applied, with the overflow; change the duration or the amplifier, or cancel. `[1.21.1]`
 - `DropletsAPI.registerWaveEffect(effect)` makes the thirst bar wave while the local player has that effect (client side), for positive thirst effects. `[1.21.1]`
 - `DropletsAPI.registerBarStyle(id, predicate, rgb, priority)` tints the thirst bar while the predicate holds for the local player (client side); see the wiki page Mod Developers. Removed `ThirstBarRenderer.cancelRender` and the copied GlitchCore `RenderGuiEvent`; the bar is the GUI layer `bluedroplets:thirst_level`, which other mods can move or cancel with NeoForge's `RenderGuiLayerEvent`. `[1.21.1]`
 - New wiki page Mod Developers: dependency setup, soft-dependency guard, reading, changing, registering and events, with examples. `[1.21.1]`

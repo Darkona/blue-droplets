@@ -146,6 +146,10 @@ Splash, lingering and tipped arrows work as for vanilla potions. `effects.quench
 
 `bluedroplets:hydrated` is a beneficial effect that slows thirst loss: all thirst exhaustion is multiplied by `effects.hydratedMultiplier` (default 0.5) once per level, so Hydrated II with the default quarters it. It is part of the cached thirst loss multiplier (`/bluedroplets debug exhaustion` shows it as `hydrated`). Sources: `/effect give @p bluedroplets:hydrated 60 0`, the purity effect lists in `purity.toml` (for example `"bluedroplets:hydrated,600,0,100"` in `effects.purified`), and the optional full-hydration bonus (`[hydration] fullBonus`, off by default). There is no potion for it.
 
+## Overhydrated effect
+
+`bluedroplets:overhydrated` is a harmful effect: 10% slower movement per level (an attribute modifier on `minecraft:generic.movement_speed`, like Slowness). Drinking far past full gives it (`[overhydration]` in `gameplay.toml`, on by default; see [Configuration](Configuration.md#overhydration)); `/effect` works too. The thirst bar turns greyish blue while it lasts (`Bar Colors.overhydrated` in `client.toml`).
+
 Vanilla effects that change thirst: Nausea drains it (`depletion.nauseaDepletes`), Fire Resistance reduces it (`fireResistancePercent`), Hunger does not (its extra food exhaustion is left out in `MIRROR_FOOD` mode), and, with `effects.waterBreathingReducesThirst` (off), Water Breathing or Conduit Power reduce it while fully underwater (`effects.underwaterBreathingMultiplier`, 0.5).
 
 ## Thirst drain attribute: `bluedroplets:thirst_drain`
