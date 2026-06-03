@@ -7,6 +7,7 @@ import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +55,7 @@ public final class ExhaustionFactors
         float time = !dayCycle ? 1.0F : (level.isDay() ? GameplayConfig.DAY_MULTIPLIER : GameplayConfig.NIGHT_MULTIPLIER).get().floatValue();
         float sun = dayCycle && level.isDay() && !level.isRaining() && level.canSeeSky(eyes) ? GameplayConfig.SUN_MULTIPLIER.get().floatValue() : 1.0F;
         float altitude = (float) NumberRows.band(ALTITUDE.get(GameplayConfig.ALTITUDE_MULTIPLIERS.get()), player.getBlockY() - level.getSeaLevel(), 1.0);
-        float water = player.isUnderWater() ? GameplayConfig.UNDERWATER_MULTIPLIER.get().floatValue()
+        float water = player.isUnderWater() ? GameplayConfig.UNDERWATER_MULTIPLIER.get().floatValue() * underwaterBreathing(player)
                 : player.isInWater() ? GameplayConfig.IN_WATER_MULTIPLIER.get().floatValue() : 1.0F;
         MobEffectInstance hydratedEffect = player.getEffect(EffectInit.HYDRATED);
         float hydrated = hydratedEffect == null ? 1.0F : (float) Math.pow(GameplayConfig.HYDRATED_MULTIPLIER.get(), hydratedEffect.getAmplifier() + 1);
@@ -78,5 +79,11 @@ public final class ExhaustionFactors
         if (breakdown != null)
             breakdown[9] = own == 0.0F ? 1.0F : result / own;
         return result;
+    }
+
+    private static float underwaterBreathing(Player player)
+    {
+        return GameplayConfig.WATER_BREATHING_REDUCES_THIRST.get() && (player.hasEffect(MobEffects.WATER_BREATHING) || player.hasEffect(MobEffects.CONDUIT_POWER))
+                ? GameplayConfig.UNDERWATER_BREATHING_MULTIPLIER.get().floatValue() : 1.0F;
     }
 }

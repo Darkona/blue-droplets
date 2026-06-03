@@ -95,6 +95,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - New **Potion of Quenchness** (`bluedroplets:quenchness`, 0:45), long (`long_quenchness`, 1:30, + redstone) and strong (`strong_quenchness`, Quenchness II 0:22, + glowstone), with splash, lingering and tipped arrow variants. Brewed from an awkward potion with **prismarine crystals** (no vanilla potion uses them). `effects.quenchnessPotion` (default `true`) turns the recipes off; keep it the same on the server and the clients. `[1.21.1]`
 - New **Hydrated** effect (`bluedroplets:hydrated`): thirst goes down slower, all thirst exhaustion times `effects.hydratedMultiplier` (default 0.5) per level. The thirst bar waves and turns mint green while it is active (`Bar Colors.hydrated`). Nothing gives it by default: use `/effect`, the purity effect lists, or the new option below. `[1.21.1]`
 - New option, off by default: `hydration.fullBonus` gives Hydrated I while you stay fully hydrated (thirst 20 and at least `minQuenched` quenched, default 10) for `fullBonusSeconds` (30); it is refreshed while that holds and lasts `fullBonusDurationTicks` (200) after (closes thirst#186). `[1.21.1]`
+- New option, off by default: `effects.waterBreathingReducesThirst`: fully underwater with Water Breathing or Conduit Power, thirst loss is multiplied by `effects.underwaterBreathingMultiplier` (0.5), on top of `climate.underwater`. `[1.21.1]`
 
 ### Config
 

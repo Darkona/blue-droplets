@@ -135,6 +135,8 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 | `dehydrationMultiplier` | `1.0` | Multiplier (0-10) of the thirst exhaustion the `bluedroplets:dehydration` effect adds every tick (0.005 per level). Thirst never goes below zero |
 | `quenchnessIntervalTicks` | `40` | Quenchness restores (level) thirst and (level) quenched every this many ticks (1-1200) |
 | `quenchnessPotion` | `true` | Brewing recipes of the Quenchness potions. Not synced: keep the same value on the server and the clients, or the brewing stand may not accept prismarine crystals client side |
+| `waterBreathingReducesThirst` | `false` | While fully underwater with Water Breathing or Conduit Power, thirst loss is also multiplied by `underwaterBreathingMultiplier` (part of the `water` factor) |
+| `underwaterBreathingMultiplier` | `0.5` | See above (0-10), on top of `climate.underwater` |
 | `hydratedMultiplier` | `0.5` | Thirst loss with the `bluedroplets:hydrated` effect, applied once per level (0.5: Hydrated I halves it, II quarters it; 0-1) |
 
 ### `[hydration]`
