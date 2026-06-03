@@ -29,5 +29,6 @@
   "item.minecraft.potion.effect.quenchness": "Potion of Quenchness",
   "item.minecraft.splash_potion.effect.quenchness": "Splash Potion of Quenchness",
   "item.minecraft.lingering_potion.effect.quenchness": "Lingering Potion of Quenchness",
-  "item.minecraft.tipped_arrow.effect.quenchness": "Arrow of Quenchness"
+  "item.minecraft.tipped_arrow.effect.quenchness": "Arrow of Quenchness",
+  "effect.bluedroplets.hydrated": "Hydrated"
 }

@@ -9,6 +9,7 @@ import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.registry.AttributeInit;
+import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.common.damagesource.ModDamageSource;
@@ -75,6 +76,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     int sentFlags;
     int syncedRules = SYNC_SPRINT_BLOCKED | SYNC_BOTH_HANDS | SPRINT_MIN_THIRST << SYNC_SPRINT_MIN_SHIFT;
     int handDrinkReadyTick = 0;
+    int fullHydrationTicks;
 
     public PlayerThirst() {}
 
@@ -254,7 +256,11 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             return;
 
         if((player.tickCount + player.getId()) % MODIFIER_INTERVAL_TICKS == 0)
+        {
             modifierDirty = true;
+            if(GameplayConfig.FULL_HYDRATION_BONUS.get())
+                fullHydrationBonus(player);
+        }
 
         Difficulty difficulty = player.level().getDifficulty();
         boolean paused = has(player, nourishment) || has(player, stuffed) || has(player, saturated);
@@ -327,6 +333,27 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         }
         else
             damageTimer = 0;
+    }
+
+    /**
+     * {@code hydration.fullBonus}: Hydrated I after {@code fullBonusSeconds} at full thirst and enough quenched,
+     * refreshed when it is about to run out. Checked every {@code MODIFIER_INTERVAL_TICKS}.
+     */
+    private void fullHydrationBonus(Player player)
+    {
+        if(thirst < MAX_THIRST || quenched < GameplayConfig.FULL_HYDRATION_MIN_QUENCHED.get())
+        {
+            fullHydrationTicks = 0;
+            return;
+        }
+        if(fullHydrationTicks < GameplayConfig.FULL_HYDRATION_SECONDS.get() * 20)
+        {
+            fullHydrationTicks += MODIFIER_INTERVAL_TICKS;
+            return;
+        }
+        MobEffectInstance current = player.getEffect(EffectInit.HYDRATED);
+        if(current == null || current.endsWithin(MODIFIER_INTERVAL_TICKS))
+            player.addEffect(new MobEffectInstance(EffectInit.HYDRATED, GameplayConfig.FULL_HYDRATION_DURATION_TICKS.get(), 0, true, true));
     }
 
     private static float minHealth(Difficulty difficulty)

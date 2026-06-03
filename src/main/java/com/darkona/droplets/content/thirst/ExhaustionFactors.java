@@ -1,10 +1,12 @@
 package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.api.ExhaustionModifier;
+import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +22,7 @@ import java.util.TreeMap;
  */
 public final class ExhaustionFactors
 {
-    public static final String[] FACTORS = {"climate", "fire protection", "fire resistance", "rain/thunder", "day/night", "sun", "altitude", "water", "other mods"};
+    public static final String[] FACTORS = {"climate", "fire protection", "fire resistance", "rain/thunder", "day/night", "sun", "altitude", "water", "hydrated", "other mods"};
 
     private static final NumberRows ALTITUDE = new NumberRows(3);
     private static final Map<ResourceLocation, ExhaustionModifier> REGISTERED = new TreeMap<>();
@@ -54,6 +56,8 @@ public final class ExhaustionFactors
         float altitude = (float) NumberRows.band(ALTITUDE.get(GameplayConfig.ALTITUDE_MULTIPLIERS.get()), player.getBlockY() - level.getSeaLevel(), 1.0);
         float water = player.isUnderWater() ? GameplayConfig.UNDERWATER_MULTIPLIER.get().floatValue()
                 : player.isInWater() ? GameplayConfig.IN_WATER_MULTIPLIER.get().floatValue() : 1.0F;
+        MobEffectInstance hydratedEffect = player.getEffect(EffectInit.HYDRATED);
+        float hydrated = hydratedEffect == null ? 1.0F : (float) Math.pow(GameplayConfig.HYDRATED_MULTIPLIER.get(), hydratedEffect.getAmplifier() + 1);
 
         if (breakdown != null)
         {
@@ -65,13 +69,14 @@ public final class ExhaustionFactors
             breakdown[5] = sun;
             breakdown[6] = altitude;
             breakdown[7] = water;
+            breakdown[8] = hydrated;
         }
-        float own = climate * fireProtection * fireResistance * weather * time * sun * altitude * water;
+        float own = climate * fireProtection * fireResistance * weather * time * sun * altitude * water * hydrated;
         float result = own;
         for (ExhaustionModifier modifier : modifiers)
             result = Math.max(0.0F, modifier.apply(player, result));
         if (breakdown != null)
-            breakdown[8] = own == 0.0F ? 1.0F : result / own;
+            breakdown[9] = own == 0.0F ? 1.0F : result / own;
         return result;
     }
 }

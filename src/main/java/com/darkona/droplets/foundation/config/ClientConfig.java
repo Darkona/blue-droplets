@@ -25,6 +25,7 @@ public final class ClientConfig
     public static final ModConfigSpec.ConfigValue<String> DEHYDRATION_COLOR;
     public static final ModConfigSpec.ConfigValue<String> POISON_COLOR;
     public static final ModConfigSpec.ConfigValue<String> QUENCHNESS_COLOR;
+    public static final ModConfigSpec.ConfigValue<String> HYDRATED_COLOR;
 
     public static final ModConfigSpec SPEC;
 
@@ -46,7 +47,7 @@ public final class ClientConfig
         SHOW_QUENCHED_OVERLAY = BUILDER.comment("Outline the droplets by the current quenched (like AppleSkin's saturation outline)").define("showQuenchedOverlay", true);
         SHOW_DRINK_PREVIEW = BUILDER.comment("While holding something that restores thirst, flash the thirst and quenched it would give").define("showDrinkPreview", true);
         SHOW_EXHAUSTION_UNDERLAY = BUILDER.comment("Show thirst exhaustion as a bar under the droplets (fills up until the next quenched or thirst point is lost)").define("showExhaustionUnderlay", false);
-        BUFF_WAVE = BUILDER.comment("Droplets bounce one at a time, like hearts under Regeneration, while a positive thirst effect (Quenchness) is active").define("buffWave", true);
+        BUFF_WAVE = BUILDER.comment("Droplets bounce one at a time, like hearts under Regeneration, while a positive thirst effect (Quenchness, Hydrated) is active").define("buffWave", true);
         BUILDER.pop();
 
         BUILDER.comment("Colours (#RRGGBB) of the thirst bar while a status applies; when several apply, the first in this list wins").push("Bar Colors");
@@ -54,6 +55,7 @@ public final class ClientConfig
         DEHYDRATION_COLOR = defineColor("dehydration", "Dehydration effect", "#8B5A2B");
         POISON_COLOR = defineColor("poison", "Poison effect", "#7DAA3C");
         QUENCHNESS_COLOR = defineColor("quenchness", "Quenchness effect", "#5FE3FF");
+        HYDRATED_COLOR = defineColor("hydrated", "Hydrated effect", "#7FE0C0");
         BUILDER.pop();
 
         SPEC = BUILDER.build();

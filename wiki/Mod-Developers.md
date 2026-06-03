@@ -156,7 +156,7 @@ DropletsAPI.refreshExhaustionModifier(player);
 ## Thirst bar colour
 
 The droplets are tinted while a style is active, like vanilla hunger turns green under Hunger. Built-in styles and
-their priorities: vampire (Vampirism, Supernatural) 400, Dehydration 300, Poison 200, Quenchness 100; the active style
+their priorities: vampire (Vampirism, Supernatural) 400, Dehydration 300, Poison 200, Quenchness 100, Hydrated 50; the active style
 with the highest priority wins. Add your own on the client, for example in `FMLClientSetupEvent`:
 
 ```java
@@ -169,7 +169,7 @@ The colour is `0xRRGGBB`. The predicate runs every frame for the local player: k
 does nothing useful but is harmless.
 
 Positive thirst effects can make the bar wave (one droplet at a time bounces, like hearts under Regeneration; built
-in: Quenchness). Also on the client:
+in: Quenchness, Hydrated). Also on the client:
 
 ```java
 DropletsAPI.registerWaveEffect(MyEffects.HYDRATED);

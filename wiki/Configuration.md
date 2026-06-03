@@ -61,7 +61,7 @@ On first start, if a new file does not exist yet, its values are copied from the
 
 ### `[depletion]`
 
-Thirst loss per tick is `activity × scale × M`, where `M = climate × fire protection × fire resistance × rain/thunder × day/night × sun × altitude × water × bluedroplets:thirst_drain`. Every 4.0 of exhaustion removes one quenched point, or one thirst point when quenched is 0. `M` (except the attribute) is recomputed every second per player and right away after armor, effect, dimension or config changes; `/bluedroplets debug exhaustion` shows each factor.
+Thirst loss per tick is `activity × scale × M`, where `M = climate × fire protection × fire resistance × rain/thunder × day/night × sun × altitude × water × Hydrated × bluedroplets:thirst_drain`. Every 4.0 of exhaustion removes one quenched point, or one thirst point when quenched is 0. `M` (except the attribute) is recomputed every second per player and right away after armor, effect, dimension or config changes; `/bluedroplets debug exhaustion` shows each factor.
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -135,6 +135,16 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 | `dehydrationMultiplier` | `1.0` | Multiplier (0-10) of the thirst exhaustion the `bluedroplets:dehydration` effect adds every tick (0.005 per level). Thirst never goes below zero |
 | `quenchnessIntervalTicks` | `40` | Quenchness restores (level) thirst and (level) quenched every this many ticks (1-1200) |
 | `quenchnessPotion` | `true` | Brewing recipes of the Quenchness potions. Not synced: keep the same value on the server and the clients, or the brewing stand may not accept prismarine crystals client side |
+| `hydratedMultiplier` | `0.5` | Thirst loss with the `bluedroplets:hydrated` effect, applied once per level (0.5: Hydrated I halves it, II quarters it; 0-1) |
+
+### `[hydration]`
+
+| Key | Default | Meaning |
+|---|---|---|
+| `fullBonus` | `false` | Staying fully hydrated gives Hydrated I (thirst#186): thirst 20 and at least `minQuenched` for `fullBonusSeconds`; refreshed while it holds, checked once per second |
+| `minQuenched` | `10` | Quenched needed (0-20) |
+| `fullBonusSeconds` | `30` | Seconds fully hydrated before the effect is given (1-3600) |
+| `fullBonusDurationTicks` | `200` | Duration of the Hydrated effect it gives, so it lasts this long after the player stops being fully hydrated (40-12000) |
 
 ### `[sprint]`, `[drinking]`, `[hand]`, `[death]`, `[loot]`
 
@@ -252,10 +262,11 @@ It runs when the world loads, after `/reload` and when `items.toml` changes, nev
 | `Thirst Bar.showQuenchedOverlay` | `true` | Outline on the droplets for the current quenched (like AppleSkin's saturation outline) |
 | `Thirst Bar.showDrinkPreview` | `true` | While holding something that restores thirst (main or off hand), flashes the thirst and quenched it would give |
 | `Thirst Bar.showExhaustionUnderlay` | `false` | Bar under the droplets that fills with thirst exhaustion until the next point is lost |
-| `Thirst Bar.buffWave` | `true` | Droplets bounce one at a time, like hearts under Regeneration, while a positive thirst effect (Quenchness) is active |
+| `Thirst Bar.buffWave` | `true` | Droplets bounce one at a time, like hearts under Regeneration, while a positive thirst effect (Quenchness, Hydrated) is active |
 | `Bar Colors.vampire` | `#B3121B` | Droplet colour for vampires (Vampirism, Supernatural) |
 | `Bar Colors.dehydration` | `#8B5A2B` | Droplet colour while Dehydration is active |
 | `Bar Colors.poison` | `#7DAA3C` | Droplet colour while Poison is active |
 | `Bar Colors.quenchness` | `#5FE3FF` | Droplet colour while Quenchness is active |
+| `Bar Colors.hydrated` | `#7FE0C0` | Droplet colour while Hydrated is active |
 
-Colours are `#RRGGBB`; an invalid value is reset to its default with a warning in the log. When several apply, the order is vampire, Dehydration, Poison, Quenchness.
+Colours are `#RRGGBB`; an invalid value is reset to its default with a warning in the log. When several apply, the order is vampire, Dehydration, Poison, Quenchness, Hydrated.

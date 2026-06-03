@@ -28,6 +28,11 @@ public final class GameplayConfig
     public static final ModConfigSpec.DoubleValue DEHYDRATION_MULTIPLIER;
     public static final ModConfigSpec.IntValue QUENCHNESS_INTERVAL_TICKS;
     public static final ModConfigSpec.BooleanValue QUENCHNESS_POTION;
+    public static final ModConfigSpec.DoubleValue HYDRATED_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue FULL_HYDRATION_BONUS;
+    public static final ModConfigSpec.IntValue FULL_HYDRATION_MIN_QUENCHED;
+    public static final ModConfigSpec.IntValue FULL_HYDRATION_SECONDS;
+    public static final ModConfigSpec.IntValue FULL_HYDRATION_DURATION_TICKS;
     public static final ModConfigSpec.DoubleValue FIRE_PROTECTION_PER_LEVEL;
     public static final ModConfigSpec.IntValue FIRE_PROTECTION_MAX_LEVELS;
 
@@ -207,6 +212,14 @@ public final class GameplayConfig
         DEHYDRATION_MULTIPLIER = BUILDER.comment("Multiplier of the thirst exhaustion the Dehydration effect adds every tick (0.005 per level)").defineInRange("dehydrationMultiplier", 1.0, 0.0, 10.0);
         QUENCHNESS_INTERVAL_TICKS = BUILDER.comment("Quenchness restores (level) thirst and quenched every this many ticks").defineInRange("quenchnessIntervalTicks", 40, 1, 1200);
         QUENCHNESS_POTION = BUILDER.comment("Brewing recipes for the Quenchness potions (awkward potion + prismarine crystals). Keep the same value on the server and the clients").define("quenchnessPotion", true);
+        HYDRATED_MULTIPLIER = BUILDER.comment("Thirst loss with the Hydrated effect, once per level (0.5: level I halves it, level II quarters it)").defineInRange("hydratedMultiplier", 0.5, 0.0, 1.0);
+        BUILDER.pop();
+
+        BUILDER.push("hydration");
+        FULL_HYDRATION_BONUS = BUILDER.comment("Staying fully hydrated (thirst 20 and at least minQuenched) for fullBonusSeconds gives Hydrated I, refreshed while it lasts").define("fullBonus", false);
+        FULL_HYDRATION_MIN_QUENCHED = BUILDER.defineInRange("minQuenched", 10, 0, 20);
+        FULL_HYDRATION_SECONDS = BUILDER.defineInRange("fullBonusSeconds", 30, 1, 3600);
+        FULL_HYDRATION_DURATION_TICKS = BUILDER.comment("Duration of the Hydrated effect it gives; it keeps going this long after the player is no longer fully hydrated").defineInRange("fullBonusDurationTicks", 200, 40, 12000);
         BUILDER.pop();
 
         BUILDER.push("loot");

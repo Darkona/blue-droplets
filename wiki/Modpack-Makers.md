@@ -142,6 +142,10 @@ Both world data maps are only read on the server.
 
 Splash, lingering and tipped arrows work as for vanilla potions. `effects.quenchnessPotion = false` in `gameplay.toml` removes the three brewing recipes (the potions stay registered); to use another ingredient, turn it off and add your own mix with KubeJS or a mod (`RegisterBrewingRecipesEvent`).
 
+## Hydrated effect
+
+`bluedroplets:hydrated` is a beneficial effect that slows thirst loss: all thirst exhaustion is multiplied by `effects.hydratedMultiplier` (default 0.5) once per level, so Hydrated II with the default quarters it. It is part of the cached thirst loss multiplier (`/bluedroplets debug exhaustion` shows it as `hydrated`). Sources: `/effect give @p bluedroplets:hydrated 60 0`, the purity effect lists in `purity.toml` (for example `"bluedroplets:hydrated,600,0,100"` in `effects.purified`), and the optional full-hydration bonus (`[hydration] fullBonus`, off by default). There is no potion for it.
+
 ## Thirst drain attribute: `bluedroplets:thirst_drain`
 
 Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). Thirst loss is multiplied by it, so anything that can carry attribute modifiers can change thirst without code:
