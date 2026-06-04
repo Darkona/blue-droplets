@@ -112,9 +112,12 @@ and quenched from -20 up; negative values make the item **salty**, so eating or 
 DropletsAPI.registerDrink(MyItems.SALTED_FISH, -2, -2);
 ```
 
-`ThirstValues.saltiness()` and `DrinkEvent#getSaltiness()` give the thirst points an item removes (`-thirst`, or 0 when
-it is not salty); `isSalty()` is `getSaltiness() > 0`. On `DrinkEvent.Pre` it follows `setThirst`, so a listener that
+`ThirstValues.saltiness()`, `DrinkEvent#getSaltiness()` and `EatEvent#getSaltiness()` give the thirst points an item removes (`-thirst`, or 0 when
+it is not salty); `isSalty()` is `getSaltiness() > 0`. On the `Pre` events it follows `setThirst`, so a listener that
 makes a drink salty sets a negative thirst.
+
+To hydrate from your own code without an item, `DropletsAPI.drink(player, thirst, quenched[, purity])` posts
+`DrinkEvent` (and rolls purity effects) and `DropletsAPI.eat(player, thirst, quenched)` posts `EatEvent`.
 
 ### Values that depend on the stack
 
@@ -193,9 +196,11 @@ happens (never once per tick). Listen to `Pre`/`Post`, not to the abstract base 
 
 | Event | When | You can |
 |---|---|---|
-| `ThirstChangeEvent.Pre` | thirst or quenched is about to change; `getCause()`: `DEPLETION`, `DRINK`, `RAIN`, `PEACEFUL`, `DEATH`, `COMMAND`, `API` | cancel, `setNewThirst`, `setNewQuenched` |
+| `ThirstChangeEvent.Pre` | thirst or quenched is about to change; `getCause()`: `DEPLETION`, `DRINK`, `EAT`, `RAIN`, `PEACEFUL`, `DEATH`, `COMMAND`, `API` | cancel, `setNewThirst`, `setNewQuenched` |
 | `ThirstChangeEvent.Post` | after the change | read old and new values |
-| `DrinkEvent.Pre` | before a drink's purity effects and hydration; `getItem()` is empty for hand drinking and `DropletsAPI.drink`; `getSaltiness()`/`isSalty()` for values that remove thirst | cancel, `setThirst`, `setQuenched`, `setPurity` (negative values remove thirst) |
+| `EatEvent.Pre` | before food hydrates: food items (no drink animation, not a water container; also `Player#eat` called by other mods), block foods (`bluedroplets:hydrating_blocks`, `getItem()` empty) and `DropletsAPI.eat`; `getSaltiness()`/`isSalty()` | cancel, `setThirst`, `setQuenched` |
+| `EatEvent.Post` | after it | read the values and `hydrated()` |
+| `DrinkEvent.Pre` | before a drink's purity effects and hydration: items with the drink animation (potions, milk, honey bottle, most modded drinks), water containers, hand drinking and `DropletsAPI.drink`; `getItem()` is empty for hand drinking and `DropletsAPI.drink`; `getSaltiness()`/`isSalty()` for values that remove thirst | cancel, `setThirst`, `setQuenched`, `setPurity` (negative values remove thirst) |
 | `DrinkEvent.Post` | after it | read the values and `hydrated()` |
 | `PurityEffectEvent` | purity effects were rolled; the Dehydration of `hotDirtyWater` (dirty water in a hot climate) is already in `getEffects()` | cancel (no effects, hydrates), edit `getEffects()`, `setHydrates` |
 | `DehydrationDamageEvent` | a player at zero thirst is about to be hurt | cancel, `setAmount` |
@@ -212,6 +217,12 @@ public static void noThirstInTheHub(ThirstChangeEvent.Pre event) {
 public static void coldWaterRefreshes(DrinkEvent.Pre event) {
     if (event.getPurity() == DropletsAPI.PURIFIED)
         event.setQuenched(event.getQuenched() + 2);
+}
+
+@SubscribeEvent
+public static void saltLovers(EatEvent.Pre event) {
+    if (event.isSalty() && isMerfolk(event.getEntity()))
+        event.setThirst(event.getSaltiness()); // salty food hydrates them instead
 }
 
 @SubscribeEvent

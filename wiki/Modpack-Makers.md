@@ -52,6 +52,25 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
 - Blue Droplets ships its defaults in `data/bluedroplets/data_maps/item/drinks.json`: vanilla items, its own items and, only when those mods are installed, Farmer's Delight, Farmer's Respite, Brewin' and Chewin', Collector's Reap, Create (builder's tea) and Supernatural. To change a default, add your own entry (a later pack wins) or `remove` it.
 - The map is synced to clients; tooltips and the HUD use the server's values.
 
+### Block foods: `bluedroplets:hydrating_blocks`
+
+Blocks eaten in place, like cake, are not items, so they have their own data map on blocks:
+`data/<namespace>/data_maps/block/hydrating_blocks.json`, with the same `thirst` and `quenched` fields (`purity` is
+ignored; food never rolls purity effects). A bite counts when right-clicking the block raised the player's food level,
+so it works for any block that feeds the player directly (other mods' pies too), but not for a bite that gives no food.
+Default:
+
+```json
+{
+  "values": {
+    "minecraft:cake": { "thirst": 1, "quenched": 1 },
+    "#minecraft:candle_cakes": { "thirst": 1, "quenched": 1 }
+  }
+}
+```
+
+Negative values work here too (salty block foods).
+
 ### Where an item's values come from
 
 Each item takes its values from the first of these that has it; the others are ignored for that item:

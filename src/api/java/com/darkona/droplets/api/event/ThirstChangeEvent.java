@@ -14,7 +14,7 @@ public abstract class ThirstChangeEvent extends PlayerEvent
     {
         /** Exhaustion used up a point of quenched or thirst. */
         DEPLETION,
-        /** A drink or food, drinking by hand, the Quenchness effect or {@code DropletsAPI.drink}. */
+        /** A drink, drinking by hand, the Quenchness effect or {@code DropletsAPI.drink}. */
         DRINK,
         RAIN,
         /** Regeneration on Peaceful. */
@@ -23,7 +23,9 @@ public abstract class ThirstChangeEvent extends PlayerEvent
         DEATH,
         COMMAND,
         /** {@code DropletsAPI.setThirst}, {@code setQuenched} or {@code addThirst}. */
-        API
+        API,
+        /** Food (items and block foods) or {@code DropletsAPI.eat}. */
+        EAT
     }
 
     private final Cause cause;

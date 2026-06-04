@@ -121,6 +121,17 @@ public final class DropletsAPI
     }
 
     /**
+     * Eats without an item: like a food with these values ({@code EatEvent}, no purity effects). Negative values remove
+     * thirst and quenched.
+     *
+     * @return whether thirst or quenched changed
+     */
+    public static boolean eat(Player player, int thirst, int quenched)
+    {
+        return service().eat(player, thirst, quenched);
+    }
+
+    /**
      * Adds exhaustion, multiplied like Blue Droplets' own activities by the climate, armor, effects and the
      * {@code bluedroplets:thirst_drain} attribute. Every {@code exhaustionPerPoint} (4 by default) costs a point of
      * quenched, then of thirst. Ignored for creative players and players with thirst disabled.

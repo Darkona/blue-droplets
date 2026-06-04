@@ -6,24 +6,25 @@ import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 /**
- * A player drinks something that restores thirst, or removes it (salty, negative values): items drunk
- * ({@code UseAnim.DRINK}: potions, milk, most modded drinks) and water containers, drinking by hand and
- * {@code DropletsAPI.drink}. Food posts {@link EatEvent} instead. Posted on {@code NeoForge.EVENT_BUS}, on the server,
- * once per drink. The hydration itself also posts a {@link ThirstChangeEvent} with cause {@code DRINK}.
+ * A player eats something that restores thirst, or removes it (salty, negative values): food items (anything that is
+ * not drunk: no {@code UseAnim.DRINK} and not a water container), also when another mod calls {@code Player#eat}
+ * directly, block foods of the {@code bluedroplets:hydrating_blocks} data map (a cake slice) and
+ * {@code DropletsAPI.eat}. Posted on {@code NeoForge.EVENT_BUS}, on the server, once per bite. Drinks post
+ * {@link DrinkEvent} instead. Food never rolls purity effects. The hydration itself also posts a
+ * {@link ThirstChangeEvent} with cause {@code EAT}.
  */
-public abstract class DrinkEvent extends PlayerEvent
+public abstract class EatEvent extends PlayerEvent
 {
     private final ItemStack item;
 
-    protected DrinkEvent(Player player, ItemStack item)
+    protected EatEvent(Player player, ItemStack item)
     {
         super(player);
         this.item = item;
     }
 
     /**
-     * The stack as it was before being used; empty when drinking by hand or through {@code DropletsAPI.drink}. Do not
-     * modify it.
+     * The stack as it was before being eaten; empty for block foods and {@code DropletsAPI.eat}. Do not modify it.
      */
     public ItemStack getItem()
     {
@@ -31,9 +32,11 @@ public abstract class DrinkEvent extends PlayerEvent
     }
 
     /**
-     * Thirst points it gives; negative for salty food and drinks, which remove thirst (2 points = 1 droplet on the HUD).
+     * Thirst points it gives; negative for salty food, which removes thirst (2 points = 1 droplet on the HUD).
      */
     public abstract int getThirst();
+
+    public abstract int getQuenched();
 
     /**
      * Thirst points it removes: {@code -getThirst()}, or 0 when it is not salty. Points, like thirst: 2 points = 1
@@ -50,20 +53,18 @@ public abstract class DrinkEvent extends PlayerEvent
     }
 
     /**
-     * Before purity effects and hydration. Cancel to skip both, or change what the drink gives.
+     * Before hydration. Cancel to skip it, or change what the food gives.
      */
-    public static final class Pre extends DrinkEvent implements ICancellableEvent
+    public static final class Pre extends EatEvent implements ICancellableEvent
     {
         private int thirst;
         private int quenched;
-        private int purity;
 
-        public Pre(Player player, ItemStack item, int thirst, int quenched, int purity)
+        public Pre(Player player, ItemStack item, int thirst, int quenched)
         {
             super(player, item);
             this.thirst = thirst;
             this.quenched = quenched;
-            this.purity = purity;
         }
 
         @Override
@@ -77,6 +78,7 @@ public abstract class DrinkEvent extends PlayerEvent
             this.thirst = thirst;
         }
 
+        @Override
         public int getQuenched()
         {
             return quenched;
@@ -86,37 +88,22 @@ public abstract class DrinkEvent extends PlayerEvent
         {
             this.quenched = quenched;
         }
-
-        /**
-         * Purity whose effects are rolled, or {@code DropletsAPI.NO_PURITY} for none.
-         */
-        public int getPurity()
-        {
-            return purity;
-        }
-
-        public void setPurity(int purity)
-        {
-            this.purity = purity;
-        }
     }
 
     /**
-     * After purity effects and hydration, with the values that were used.
+     * After hydration, with the values that were used.
      */
-    public static final class Post extends DrinkEvent
+    public static final class Post extends EatEvent
     {
         private final int thirst;
         private final int quenched;
-        private final int purity;
         private final boolean hydrated;
 
-        public Post(Player player, ItemStack item, int thirst, int quenched, int purity, boolean hydrated)
+        public Post(Player player, ItemStack item, int thirst, int quenched, boolean hydrated)
         {
             super(player, item);
             this.thirst = thirst;
             this.quenched = quenched;
-            this.purity = purity;
             this.hydrated = hydrated;
         }
 
@@ -126,18 +113,14 @@ public abstract class DrinkEvent extends PlayerEvent
             return thirst;
         }
 
+        @Override
         public int getQuenched()
         {
             return quenched;
         }
 
-        public int getPurity()
-        {
-            return purity;
-        }
-
         /**
-         * Whether thirst or quenched changed: false when a purity effect prevented it or the player was already full.
+         * Whether thirst or quenched changed.
          */
         public boolean hydrated()
         {

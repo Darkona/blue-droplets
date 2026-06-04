@@ -1,5 +1,6 @@
 package com.darkona.droplets.foundation.common.effect;
 
+import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.world.effect.MobEffect;
@@ -18,7 +19,7 @@ public class QuenchnessEffect extends MobEffect {
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide && entity instanceof Player player)
-            player.getData(ModAttachment.PLAYER_THIRST).drink(player, amplifier + 1, amplifier + 1, false);
+            player.getData(ModAttachment.PLAYER_THIRST).hydrate(player, amplifier + 1, amplifier + 1, false, ThirstChangeEvent.Cause.DRINK);
         return true;
     }
 

@@ -19,7 +19,7 @@ public abstract class MixinPlayer
     {
         Player player = (Player) (Object) this;
         if (!WaterPurity.isWaterFilledContainer(food))
-            PlayerThirst.drink(food, player);
+            PlayerThirst.consume(food, player);
     }
 
 }

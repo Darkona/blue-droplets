@@ -36,6 +36,8 @@ public interface DropletsService
 
     boolean drink(Player player, int thirst, int quenched, int purity);
 
+    boolean eat(Player player, int thirst, int quenched);
+
     void addExhaustion(Player player, float amount);
 
     boolean isPurityEnabled();

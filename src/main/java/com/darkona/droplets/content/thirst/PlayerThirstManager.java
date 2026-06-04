@@ -1,6 +1,8 @@
 package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.api.event.ThirstChangeEvent;
+import com.darkona.droplets.content.data.DrinkValues;
+import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
@@ -11,6 +13,7 @@ import com.darkona.droplets.BlueDroplets;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -47,6 +50,25 @@ import java.util.stream.Stream;
 public class PlayerThirstManager {
     private static volatile RecipeManager reloadingRecipes;
 
+    /**
+     * Block foods of {@code bluedroplets:hydrating_blocks} (a cake slice): vanilla feeds the player straight from the
+     * block, so a bite is detected after the interaction as a higher food level.
+     */
+    @SubscribeEvent
+    public static void eatBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getHand() != InteractionHand.MAIN_HAND || !(event.getEntity() instanceof ServerPlayer player))
+            return;
+        DrinkValues values = event.getLevel().getBlockState(event.getPos()).getBlock().builtInRegistryHolder().getData(DropletsDataMaps.HYDRATING_BLOCKS);
+        if (values == null)
+            return;
+        int food = player.getFoodData().getFoodLevel();
+        MinecraftServer server = player.serverLevel().getServer();
+        server.tell(new TickTask(server.getTickCount(), () -> {
+            if (player.getFoodData().getFoodLevel() > food)
+                PlayerThirst.eat(player, ItemStack.EMPTY, values.thirst(), values.quenched());
+        }));
+    }
+
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickBlock event) {
         if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide && event.getEntity().getData(ModAttachment.PLAYER_THIRST).handDrinkingAllowed())
@@ -69,7 +91,7 @@ public class PlayerThirstManager {
             return;
         ItemStack item = event.getItem();
         if (WaterPurity.isWaterFilledContainer(item) || item.getFoodProperties(player) == null)
-            PlayerThirst.drink(item, player);
+            PlayerThirst.consume(item, player);
     }
 
     @SubscribeEvent

@@ -89,6 +89,12 @@ public final class DropletsServiceImpl implements DropletsService
     }
 
     @Override
+    public boolean eat(Player player, int thirst, int quenched)
+    {
+        return server(player) != null && PlayerThirst.eat(player, ItemStack.EMPTY, thirst, quenched);
+    }
+
+    @Override
     public void addExhaustion(Player player, float amount)
     {
         PlayerThirst data = server(player);

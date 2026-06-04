@@ -4,6 +4,7 @@ import com.darkona.droplets.api.DropletsView;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.api.event.DehydrationDamageEvent;
 import com.darkona.droplets.api.event.DrinkEvent;
+import com.darkona.droplets.api.event.EatEvent;
 import com.darkona.droplets.api.event.OverhydrationEvent;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.purity.WaterPurity;
@@ -29,6 +30,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -194,16 +196,39 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     public boolean getShouldTickThirst(){return shouldTickThirst;}
 
     /**
-     * Drinking or eating an item with thirst values; nothing for other items.
+     * Drinking or eating an item with thirst values; nothing for other items. Drunk when it has the drink animation or
+     * is a water container, eaten otherwise.
      */
-    public static void drink(ItemStack item, Player player)
+    public static void consume(ItemStack item, Player player)
     {
         ThirstValues values = ThirstHelper.valuesOf(item);
-        if (values != null)
-        {
-            boolean hydrates = ThirstHelper.playerRestoresThirst(item, player);
-            drink(player, item, hydrates ? values.thirst() : 0, hydrates ? values.quenched() : 0, WaterPurity.drinkPurity(item));
-        }
+        if (values == null)
+            return;
+        boolean hydrates = ThirstHelper.playerRestoresThirst(item, player);
+        int thirst = hydrates ? values.thirst() : 0;
+        int quenched = hydrates ? values.quenched() : 0;
+        if (item.getUseAnimation() == UseAnim.DRINK || WaterPurity.isWaterFilledContainer(item))
+            drink(player, item, thirst, quenched, WaterPurity.drinkPurity(item));
+        else
+            eat(player, item, thirst, quenched);
+    }
+
+    /**
+     * Every bite (food items, block foods, the API), server side only: {@link EatEvent.Pre}, hydration,
+     * {@link EatEvent.Post}. No purity effects. {@code item} is empty for block foods and the API.
+     *
+     * @return whether thirst or quenched changed
+     */
+    public static boolean eat(Player player, ItemStack item, int thirst, int quenched)
+    {
+        if (player.level().isClientSide)
+            return false;
+        EatEvent.Pre pre = NeoForge.EVENT_BUS.post(new EatEvent.Pre(player, item, thirst, quenched));
+        if (pre.isCanceled())
+            return false;
+        boolean hydrated = player.getData(ModAttachment.PLAYER_THIRST).hydrate(player, pre.getThirst(), pre.getQuenched(), true, ThirstChangeEvent.Cause.EAT);
+        NeoForge.EVENT_BUS.post(new EatEvent.Post(player, item, pre.getThirst(), pre.getQuenched(), hydrated));
+        return hydrated;
     }
 
     /**
@@ -220,22 +245,22 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         if (pre.isCanceled())
             return false;
         boolean hydrated = WaterPurity.givePurityEffects(player, pre.getPurity())
-                && player.getData(ModAttachment.PLAYER_THIRST).drink(player, pre.getThirst(), pre.getQuenched(), true);
+                && player.getData(ModAttachment.PLAYER_THIRST).hydrate(player, pre.getThirst(), pre.getQuenched(), true, ThirstChangeEvent.Cause.DRINK);
         NeoForge.EVENT_BUS.post(new DrinkEvent.Post(player, item, pre.getThirst(), pre.getQuenched(), pre.getPurity(), hydrated));
         return hydrated;
     }
 
     /**
-     * Hydration of a drink: with {@code extraThirstToQuenched}, thirst above the maximum becomes quenched; with
+     * Hydration of a drink or food: with {@code extraThirstToQuenched}, thirst above the maximum becomes quenched; with
      * {@code overflows}, what does not fit counts towards Overhydrated.
      */
-    public boolean drink(Player player, int thirst, int quenched, boolean overflows)
+    public boolean hydrate(Player player, int thirst, int quenched, boolean overflows, ThirstChangeEvent.Cause cause)
     {
         int extra = GameplayConfig.EXTRA_THIRST_TO_QUENCHED.get() ? Math.max(this.thirst + thirst - MAX_THIRST, 0) : 0;
-        return hydrate(player, thirst, quenched, this.thirst + thirst, this.quenched + quenched + extra, overflows, ThirstChangeEvent.Cause.DRINK);
+        return absorb(player, thirst, quenched, this.thirst + thirst, this.quenched + quenched + extra, overflows, cause);
     }
 
-    private boolean hydrate(Player player, int thirst, int quenched, int newThirst, int newQuenched, boolean overflows, ThirstChangeEvent.Cause cause)
+    private boolean absorb(Player player, int thirst, int quenched, int newThirst, int newQuenched, boolean overflows, ThirstChangeEvent.Cause cause)
     {
         int wasted = 0;
         if (overflows && thirst >= 0 && quenched >= 0 && GameplayConfig.OVERHYDRATION.get() && shouldTickThirst && !player.getAbilities().invulnerable)
@@ -355,7 +380,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         {
             int rainThirst = GameplayConfig.RAIN_THIRST.get();
             int rainQuenched = GameplayConfig.RAIN_QUENCHED.get();
-            hydrate(player, rainThirst, rainQuenched, thirst + rainThirst, quenched + rainQuenched, true, ThirstChangeEvent.Cause.RAIN);
+            absorb(player, rainThirst, rainQuenched, thirst + rainThirst, quenched + rainQuenched, true, ThirstChangeEvent.Cause.RAIN);
         }
 
         if (thirst <= 0)
