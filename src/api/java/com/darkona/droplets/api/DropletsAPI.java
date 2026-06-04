@@ -99,7 +99,8 @@ public final class DropletsAPI
     }
 
     /**
-     * Drinks without an item: same rules as drinking a bottle (extra thirst can become quenched).
+     * Drinks without an item: same rules as drinking a bottle (extra thirst can become quenched). Negative values
+     * remove thirst and quenched, like salty food.
      *
      * @return whether it hydrated
      */
@@ -186,6 +187,9 @@ public final class DropletsAPI
      * The config ({@code items.toml}), the {@code bluedroplets:no_thirst} tag and the {@code bluedroplets:drinks}
      * data map win over code, so players and modpacks can still change or remove it. Whether it counts as food or
      * drink follows the item: food if it can be eaten.
+     * <p>
+     * Values are points (2 points = 1 droplet on the HUD): thirst -20 to 20, quenched -20 or more. Negative values
+     * make the item salty: eating or drinking it removes thirst and quenched.
      */
     public static void registerDrink(ItemLike item, int thirst, int quenched)
     {

@@ -82,8 +82,9 @@ public class ThirstHelper
     /**
      * Table entry of an item whose values come from its {@link DrinkValueProvider}; synced like any other entry.
      */
-    private static final int[] PROVIDED = {-1, 0, -1};
-    private static final ThirstValues PROVIDED_VALUES = new ThirstValues(-1, 0, -1, false);
+    private static final int PROVIDED_THIRST = Integer.MIN_VALUE;
+    private static final int[] PROVIDED = {PROVIDED_THIRST, 0, -1};
+    private static final ThirstValues PROVIDED_VALUES = new ThirstValues(PROVIDED_THIRST, 0, -1, false);
 
     private record Table(Map<Item, int[]> drinks, Map<Item, int[]> foods, Set<Item> estimated, Map<Item, ThirstValues> values, Map<Item, DrinkValueProvider> providers)
     {
@@ -92,7 +93,7 @@ public class ThirstHelper
             Map<Item, ThirstValues> values = new HashMap<>();
             Set<Item> estimates = Set.copyOf(estimated);
             for (Map<Item, int[]> source : List.of(foods, drinks))
-                source.forEach((item, v) -> values.put(item, v[0] < 0 ? PROVIDED_VALUES : new ThirstValues(v[0], v[1], v[2], estimates.contains(item))));
+                source.forEach((item, v) -> values.put(item, v[0] == PROVIDED_THIRST ? PROVIDED_VALUES : new ThirstValues(v[0], v[1], v[2], estimates.contains(item))));
             return new Table(Map.copyOf(drinks), Map.copyOf(foods), estimates, Map.copyOf(values), values.containsValue(PROVIDED_VALUES) ? ThirstHelper.providers() : Map.of());
         }
     }
@@ -107,7 +108,7 @@ public class ThirstHelper
 
     public static void registerDrink(ItemLike item, int thirst, int quenched, int purity)
     {
-        CODE_DRINKS.add(new CodeDrink(Objects.requireNonNull(item), new int[]{Mth.clamp(thirst, 0, ThirstConstants.MAX_THIRST), Math.max(quenched, 0), Mth.clamp(purity, -1, WaterPurity.MAX_PURITY)}));
+        CODE_DRINKS.add(new CodeDrink(Objects.requireNonNull(item), new int[]{Mth.clamp(thirst, -ThirstConstants.MAX_THIRST, ThirstConstants.MAX_THIRST), Math.max(quenched, -ThirstConstants.MAX_THIRST), Mth.clamp(purity, -1, WaterPurity.MAX_PURITY)}));
     }
 
     public static void registerProvider(ItemLike item, DrinkValueProvider provider)
@@ -134,7 +135,7 @@ public class ThirstHelper
      * are replaced as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
      * Each item takes its values from the first source that has it: blacklist and {@code bluedroplets:no_thirst} (no values),
      * {@code items.toml}, the {@code bluedroplets:drinks} data map, code ({@code DropletsAPI.registerDrink}, then
-     * {@link RegisterThirstValueEvent}), {@link DrinkValueProvider}s, keywords, and last the values estimated from recipes
+     * {@link RegisterThirstValueEvent}), {@link DrinkValueProvider}s, the {@code bluedroplets:salty} tag, keywords, and last the values estimated from recipes
      * ({@link RecipeInference}, server only: {@code recipes} is null on a remote client).
      */
     @SuppressWarnings("deprecation")
@@ -183,6 +184,10 @@ public class ThirstHelper
         for (CodeContainer container : CODE_CONTAINERS)
             containers.add(container.empty() == null ? new ContainerWithPurity(container.filled().asItem())
                     : new ContainerWithPurity(container.empty().asItem(), container.filled().asItem()));
+
+        int[] salty = {ItemsConfig.SALTY_THIRST.get(), ItemsConfig.SALTY_QUENCHED.get(), -1};
+        for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(DropletsTags.SALTY))
+            tables.claim(item.value(), salty, isFoodItem(item.value()));
 
         if (ItemsConfig.KEYWORDS.get())
             addKeywordItems(tables);

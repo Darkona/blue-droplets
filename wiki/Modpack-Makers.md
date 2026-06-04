@@ -24,8 +24,8 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
 
 | Field | Type | Meaning |
 |---|---|---|
-| `thirst` | int 0-20 | Thirst restored |
-| `quenched` | int ≥ 0 | Quenched restored (hidden "saturation" of thirst) |
+| `thirst` | int -20 to 20 | Thirst restored, in points (2 points = 1 droplet on the HUD); negative removes thirst (salty) |
+| `quenched` | int ≥ -20 | Quenched restored (hidden "saturation" of thirst); negative removes quenched |
 | `purity` | int 0-3, optional | Purity of this drink when the stack stores none (0 dirty, 1 slightly dirty, 2 acceptable, 3 purified). Drinks with a purity roll the purity effects; without it only water containers do |
 
 - Keys are item ids or `#tags`. An entry from a later pack replaces the earlier one for that item. `"replace": true` at the top clears everything loaded before this file.
@@ -40,6 +40,15 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
   ```
 
 - Items with food properties (eaten) and items without (drunk) use the same map; Blue Droplets tells them apart by the item itself.
+- Negative values make an item **salty**: eating or drinking it removes thirst and quenched (never below 0; quenched stays at or below thirst). Salty items never count towards overhydration, roll purity effects only if they are water containers, show red droplets in the tooltip and flash in red the droplets they would take away on the HUD. Saltiness is measured in the same points as thirst: 2 points = 1 droplet on the HUD (20 points = 10 droplets). No vanilla item is salty by default. For example:
+
+  ```json
+  "minecraft:cooked_cod": { "thirst": -2, "quenched": -2 },
+  "minecraft:dried_kelp": { "thirst": -1, "quenched": -2 },
+  "minecraft:cooked_salmon": { "thirst": 1, "quenched": -1 }
+  ```
+
+  Or tag them `#bluedroplets:salty` and let `items.toml` `salty.thirstPenalty`/`quenchedPenalty` (-2/-2) give the values.
 - Blue Droplets ships its defaults in `data/bluedroplets/data_maps/item/drinks.json`: vanilla items, its own items and, only when those mods are installed, Farmer's Delight, Farmer's Respite, Brewin' and Chewin', Collector's Reap, Create (builder's tea) and Supernatural. To change a default, add your own entry (a later pack wins) or `remove` it.
 - The map is synced to clients; tooltips and the HUD use the server's values.
 
@@ -51,8 +60,9 @@ Each item takes its values from the first of these that has it; the others are i
 2. **TOML overrides**: the `drinks` and `foods` lists in `items.toml` (section `overrides`).
 3. **Datapacks**: the `bluedroplets:drinks` data map.
 4. **Other mods' code**: `DropletsAPI.registerDrink` (and the older `RegisterThirstValueEvent`), then per-item value providers of mods whose values depend on the stack. See [Mod developers](Mod-Developers.md).
-5. **Keywords** (`items.toml`, section `keywords`, off by default).
-6. **Estimated from recipes** (`items.toml`, section `inference`, off by default): only for items none of the above gives values. Tooltips add "(est.)"; `/bluedroplets infer <item>` shows how the number was made. See [Configuration](Configuration.md#recipe-inference).
+5. **Salty tag**: items in `#bluedroplets:salty` (empty by default) get `salty.thirstPenalty` and `salty.quenchedPenalty` from `items.toml` (-2 / -2). Explicit values from 1-4 win, so a tagged item with its own entry keeps it.
+6. **Keywords** (`items.toml`, section `keywords`, off by default).
+7. **Estimated from recipes** (`items.toml`, section `inference`, off by default): only for items none of the above gives values. Negative (salty) ingredient values count as 0, so estimates are never negative. Tooltips add "(est.)"; `/bluedroplets infer <item>` shows how the number was made. See [Configuration](Configuration.md#recipe-inference).
 
 The server resolves this table on world load and on `/reload` and sends it to every client, so all players see the server's values.
 
@@ -175,6 +185,7 @@ Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). 
 |---|---|---|---|
 | `bluedroplets:purity_containers` | item | Create builder's tea, Collector's Reap teas | Drinks that carry a water purity: filled with purity by machines (Create spouts), show it in the tooltip and roll its effects. They are not filled from the world |
 | `bluedroplets:no_thirst` | item | empty | Never restores thirst, whatever the config, datapacks or other mods say |
+| `bluedroplets:salty` | item | empty | Items with no other values get the `items.toml` `salty` penalties (they make the player thirstier), eaten or drunk |
 | `bluedroplets:purity_opt_out` | item | empty | Never gets a purity: not filled with purity, no purity tooltip, no purity effects, and its fluid is not given one. Use it for other mods' water containers that break when water items carry extra data |
 | `bluedroplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
 | `bluedroplets:cauldron_heat_sources` | block | `#minecraft:campfires`, `#minecraft:fire`, magma block, lava | Heat sources that boil a water cauldron above them when `purity.toml` `cauldron.boiling` is on. Blocks with a `lit` property (campfires, furnaces) only count while lit |

@@ -6,8 +6,9 @@ import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 /**
- * A player drinks or eats something that restores thirst. Posted on {@code NeoForge.EVENT_BUS}, on the server, once
- * per drink. The hydration itself also posts a {@link ThirstChangeEvent} with cause {@code DRINK}.
+ * A player drinks or eats something that restores thirst, or removes it (salty, negative values). Posted on
+ * {@code NeoForge.EVENT_BUS}, on the server, once per drink. The hydration itself also posts a
+ * {@link ThirstChangeEvent} with cause {@code DRINK}.
  */
 public abstract class DrinkEvent extends PlayerEvent
 {
@@ -29,6 +30,25 @@ public abstract class DrinkEvent extends PlayerEvent
     }
 
     /**
+     * Thirst points it gives; negative for salty food and drinks, which remove thirst (2 points = 1 droplet on the HUD).
+     */
+    public abstract int getThirst();
+
+    /**
+     * Thirst points it removes: {@code -getThirst()}, or 0 when it is not salty. Points, like thirst: 2 points = 1
+     * droplet on the HUD (20 points = 10 droplets). On {@link Pre}, follows {@link Pre#setThirst}.
+     */
+    public int getSaltiness()
+    {
+        return Math.max(0, -getThirst());
+    }
+
+    public boolean isSalty()
+    {
+        return getSaltiness() > 0;
+    }
+
+    /**
      * Before purity effects and hydration. Cancel to skip both, or change what the drink gives.
      */
     public static final class Pre extends DrinkEvent implements ICancellableEvent
@@ -45,6 +65,7 @@ public abstract class DrinkEvent extends PlayerEvent
             this.purity = purity;
         }
 
+        @Override
         public int getThirst()
         {
             return thirst;
@@ -98,6 +119,7 @@ public abstract class DrinkEvent extends PlayerEvent
             this.hydrated = hydrated;
         }
 
+        @Override
         public int getThirst()
         {
             return thirst;

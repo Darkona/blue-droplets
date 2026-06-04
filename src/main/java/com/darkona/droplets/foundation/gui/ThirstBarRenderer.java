@@ -35,6 +35,8 @@ public final class ThirstBarRenderer
     /** Quenched outlines (row 0), exhaustion underlay (v 18) and tooltip quenched icons (7x7, v 27). */
     public static final ResourceLocation QUENCHED_ICONS = BlueDroplets.asResource("textures/gui/quenched_icons.png");
     private static final ResourceLocation QUENCHED_MASK = BlueDroplets.asResource("textures/gui/quenched_icons_mask.png");
+    /** Tint of what a salty item would take away (preview) or takes away (tooltip). */
+    public static final float SALTY_RED = 0.9f, SALTY_GREEN = 0.2f, SALTY_BLUE = 0.2f;
     private static final RandomSource random = RandomSource.create();
     private static int lastNotFullTick;
 
@@ -81,8 +83,8 @@ public final class ThirstBarRenderer
         float flash = 0;
         if (gain != null)
         {
-            newLevel = Math.min(ThirstConstants.MAX_THIRST, level + gain.thirst());
-            newQuenched = Math.min(newLevel, quenched + gain.quenched());
+            newLevel = Mth.clamp(level + gain.thirst(), 0, ThirstConstants.MAX_THIRST);
+            newQuenched = Mth.clamp(quenched + gain.quenched(), 0, newLevel);
             flash = flashAlpha(ticks);
         }
 
@@ -119,6 +121,22 @@ public final class ThirstBarRenderer
                 guiGraphics.blit(fill, x, y, idx < newLevel ? 16 : 8, 0, 9, 9, 25, 9);
             if (newQuenched > quenched && newQuenched > i * 2 && i >= quenched / 2)
                 guiGraphics.blit(outline, x, y, outlineU(newQuenched, i), 0, 9, 9);
+
+            if (newLevel < level && idx <= level && idx >= newLevel)
+            {
+                guiGraphics.setColor(SALTY_RED, SALTY_GREEN, SALTY_BLUE, flash);
+                guiGraphics.blit(THIRST_MASK, x, y, idx < level ? 16 : 8, 0, 9, 9, 25, 9);
+                if (idx == newLevel)
+                {
+                    guiGraphics.setColor(red, green, blue, 1f);
+                    guiGraphics.blit(fill, x, y, 8, 0, 9, 9, 25, 9);
+                }
+            }
+            if (newQuenched < quenched && quenched > i * 2 && newQuenched < i * 2 + 2)
+            {
+                guiGraphics.setColor(SALTY_RED, SALTY_GREEN, SALTY_BLUE, flash);
+                guiGraphics.blit(QUENCHED_MASK, x, y, outlineU(quenched, i), 0, 9, 9);
+            }
         }
         guiGraphics.setColor(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();

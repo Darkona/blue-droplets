@@ -241,9 +241,10 @@ An ultra-warm dimension (the Nether) always counts as hot.
 
 | Key | Default | Meaning |
 |---|---|---|
-| `overrides.drinks` / `overrides.foods` | `[]` | `["namespace:item" or "#tag", thirst, quenched]`; win over datapacks |
+| `overrides.drinks` / `overrides.foods` | `[]` | `["namespace:item" or "#tag", thirst, quenched]`; win over datapacks. Thirst -20 to 20, quenched -20 or more; negative values remove them (salty) |
 | `overrides.blacklist` | `[]` | Items that never restore thirst |
 | `containers.containers` | `[]` | Drinks that carry a water purity |
+| `salty.thirstPenalty` / `salty.quenchedPenalty` | `-2` / `-2` | Values (-20 to 20) of items in the item tag `bluedroplets:salty` that have none from overrides, datapacks or other mods |
 | `keywords.enabled` | `false` | Give values to items by name patterns |
 | `inference.enabled` | `false` | Estimate values from recipe ingredients (see below) |
 | `inference.onlyConsumables` | `true` | Only items that are eaten or drunk get an estimate; others still pass their value on |

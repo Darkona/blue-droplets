@@ -32,7 +32,7 @@ import java.util.TreeMap;
  * that make them (E13, off by default). Built once per table rebuild on the server; one memoized depth-first pass over
  * a result → recipes index. An ingredient is worth the average of its items that have values; a recipe is worth the
  * sum of its ingredients times the multiplier of its category, divided by the result count and capped. The best recipe
- * wins. Fluids in recipes are not seen (only {@link Recipe#getIngredients()}).
+ * wins. Negative values (salty items) count as 0. Fluids in recipes are not seen (only {@link Recipe#getIngredients()}).
  */
 public final class RecipeInference
 {
@@ -226,8 +226,8 @@ public final class RecipeInference
                 int[] values = value(stack.getItem(), depth + 1);
                 if (values[0] > 0 || values[1] > 0)
                 {
-                    sumThirst += values[0];
-                    sumQuenched += values[1];
+                    sumThirst += Math.max(values[0], 0);
+                    sumQuenched += Math.max(values[1], 0);
                     counted++;
                 }
             }

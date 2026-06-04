@@ -36,6 +36,8 @@ public final class ItemsConfig
     public static final ModConfigSpec.ConfigValue<String> KEYWORD_SOUP;
     public static final ModConfigSpec.ConfigValue<String> KEYWORD_FRUIT;
 
+    public static final ModConfigSpec.IntValue SALTY_THIRST;
+    public static final ModConfigSpec.IntValue SALTY_QUENCHED;
     public static final ModConfigSpec.BooleanValue INFERENCE;
     public static final ModConfigSpec.BooleanValue INFERENCE_ONLY_CONSUMABLES;
     public static final ModConfigSpec.IntValue INFERENCE_MAX_DEPTH;
@@ -53,7 +55,7 @@ public final class ItemsConfig
     static
     {
         BUILDER.comment("These entries win over the bluedroplets:drinks data map (datapacks) and over values registered by other mods.",
-                "Format: [[\"namespace:item\" or \"#namespace:tag\", thirst, quenched], ...]").push("overrides");
+                "Format: [[\"namespace:item\" or \"#namespace:tag\", thirst, quenched], ...]; thirst -20 to 20 and quenched -20 or more (negative values remove them)").push("overrides");
         DRINKS = BUILDER.comment("Items that restore thirst when drunk").<List<?>>defineListAllowEmpty("drinks", List.of(), ItemsConfig::newEntry, ItemsConfig::checkEntry);
         FOODS = BUILDER.comment("Items that restore thirst when eaten").<List<?>>defineListAllowEmpty("foods", List.of(), ItemsConfig::newEntry, ItemsConfig::checkEntry);
         BLACKLIST = BUILDER.comment("Items that never restore thirst, whatever datapacks or other mods say: [\"namespace:item\", \"#namespace:tag\"]")
@@ -64,6 +66,11 @@ public final class ItemsConfig
         CONTAINERS = BUILDER.comment("Drinks that carry a water purity (added to the item tag bluedroplets:purity_containers, where the defaults live)",
                         "Format: [\"examplemod:example_item_1\", \"#examplemod:example_tag\"]")
                 .<String>defineListAllowEmpty("containers", List.of(), () -> "namespace:item", it -> it instanceof String);
+        BUILDER.pop();
+
+        BUILDER.comment("Items in the item tag bluedroplets:salty (empty by default) with no values from overrides, datapacks or other mods get these").push("salty");
+        SALTY_THIRST = BUILDER.comment("Thirst they give (negative: they make the player thirstier)").defineInRange("thirstPenalty", -2, -20, 20);
+        SALTY_QUENCHED = BUILDER.defineInRange("quenchedPenalty", -2, -20, 20);
         BUILDER.pop();
 
         BUILDER.comment("Gives thirst values to items whose translation key matches a regular expression. Items with values from any other source are skipped").push("keywords");
@@ -104,13 +111,13 @@ public final class ItemsConfig
     private ItemsConfig() {}
 
     /**
-     * {@code ["namespace:item" or "#namespace:tag", thirst 0-20, quenched >= 0]}
+     * {@code ["namespace:item" or "#namespace:tag", thirst -20..20, quenched >= -20]}
      */
     public static boolean isValidEntry(Object entry)
     {
         return entry instanceof List<?> list && list.size() == 3 && list.get(0) instanceof String
-                && list.get(1) instanceof Number thirst && thirst.doubleValue() >= 0 && thirst.doubleValue() <= 20
-                && list.get(2) instanceof Number quenched && quenched.doubleValue() >= 0;
+                && list.get(1) instanceof Number thirst && thirst.doubleValue() >= -20 && thirst.doubleValue() <= 20
+                && list.get(2) instanceof Number quenched && quenched.doubleValue() >= -20;
     }
 
     private static boolean checkEntry(Object entry)
@@ -118,7 +125,7 @@ public final class ItemsConfig
         if (isValidEntry(entry))
             return true;
         if (REPORTED.add(String.valueOf(entry)))
-            LOGGER.warn("Skipping invalid entry {} in items.toml: expected [\"namespace:item\" or \"#namespace:tag\", thirst 0-20, quenched 0 or more]", entry);
+            LOGGER.warn("Skipping invalid entry {} in items.toml: expected [\"namespace:item\" or \"#namespace:tag\", thirst -20 to 20, quenched -20 or more]", entry);
         return false;
     }
 

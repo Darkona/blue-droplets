@@ -24,6 +24,8 @@ public final class DropletsTags
     public static final TagKey<Block> CAULDRON_HEAT_SOURCES = TagKey.create(Registries.BLOCK, BlueDroplets.asResource("cauldron_heat_sources"));
     /** Items that never restore thirst, whatever the config, datapacks or other mods say. */
     public static final TagKey<Item> NO_THIRST = TagKey.create(Registries.ITEM, BlueDroplets.asResource("no_thirst"));
+    /** Items that take the {@code salty} penalties of {@code items.toml} when nothing else gives them values. */
+    public static final TagKey<Item> SALTY = TagKey.create(Registries.ITEM, BlueDroplets.asResource("salty"));
 
     private DropletsTags() {}
 

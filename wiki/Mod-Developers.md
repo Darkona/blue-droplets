@@ -105,6 +105,17 @@ DropletsAPI.registerDrink(MyItems.SPRING_WATER, 6, 2, DropletsAPI.PURIFIED); // 
 
 Whether an item hydrates as food or as a drink follows the item: if it can be eaten, when eaten.
 
+Values are points, like thirst: 2 points = 1 droplet on the HUD (20 points = 10 droplets). Thirst goes from -20 to 20
+and quenched from -20 up; negative values make the item **salty**, so eating or drinking it removes thirst and quenched:
+
+```java
+DropletsAPI.registerDrink(MyItems.SALTED_FISH, -2, -2);
+```
+
+`ThirstValues.saltiness()` and `DrinkEvent#getSaltiness()` give the thirst points an item removes (`-thirst`, or 0 when
+it is not salty); `isSalty()` is `getSaltiness() > 0`. On `DrinkEvent.Pre` it follows `setThirst`, so a listener that
+makes a drink salty sets a negative thirst.
+
 ### Values that depend on the stack
 
 For items whose value depends on their components (a flask with a fluid, a potion, a tank), register a provider for
@@ -184,7 +195,7 @@ happens (never once per tick). Listen to `Pre`/`Post`, not to the abstract base 
 |---|---|---|
 | `ThirstChangeEvent.Pre` | thirst or quenched is about to change; `getCause()`: `DEPLETION`, `DRINK`, `RAIN`, `PEACEFUL`, `DEATH`, `COMMAND`, `API` | cancel, `setNewThirst`, `setNewQuenched` |
 | `ThirstChangeEvent.Post` | after the change | read old and new values |
-| `DrinkEvent.Pre` | before a drink's purity effects and hydration; `getItem()` is empty for hand drinking and `DropletsAPI.drink` | cancel, `setThirst`, `setQuenched`, `setPurity` |
+| `DrinkEvent.Pre` | before a drink's purity effects and hydration; `getItem()` is empty for hand drinking and `DropletsAPI.drink`; `getSaltiness()`/`isSalty()` for values that remove thirst | cancel, `setThirst`, `setQuenched`, `setPurity` (negative values remove thirst) |
 | `DrinkEvent.Post` | after it | read the values and `hydrated()` |
 | `PurityEffectEvent` | purity effects were rolled; the Dehydration of `hotDirtyWater` (dirty water in a hot climate) is already in `getEffects()` | cancel (no effects, hydrates), edit `getEffects()`, `setHydrates` |
 | `DehydrationDamageEvent` | a player at zero thirst is about to be hurt | cancel, `setAmount` |
