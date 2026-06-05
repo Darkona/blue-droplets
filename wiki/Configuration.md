@@ -235,6 +235,7 @@ An ultra-warm dimension (the Nether) always counts as hot.
 |---|---|---|
 | `create.sandFilterFiltrationAmount` | `1` | Purity levels gained in a Sand Filter |
 | `create.sandFilterMbPerTick` | `10` | Millibuckets filtered per tick |
+| `create.openEndedPipePurity` | `true` | Water that an open pipe end pulls from the world or from a water cauldron keeps its purity there (as buckets and the hose pulley); `false` = it reads as `defaultPurity` |
 | `coldsweat.useBodyTemperature` | `true` | The climate multiplier uses Cold Sweat's body temperature instead of the biome's |
 
 ## `items.toml`

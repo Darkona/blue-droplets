@@ -1,63 +1,55 @@
 package com.darkona.droplets.foundation.mixin.create;
 
-import com.simibubi.create.content.fluids.OpenEndedPipe;
-import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
-import net.minecraft.world.level.block.LiquidBlock;
+import com.darkona.droplets.foundation.config.CompatConfig;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import com.simibubi.create.content.fluids.OpenEndedPipe;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = OpenEndedPipe.class,remap = false)
-public class MixinOpenEndedPipe
+/**
+ * Water pulled from the world or from a water cauldron by an open pipe end keeps the purity it had there, as buckets
+ * and the hose pulley do ({@code create.openEndedPipePurity}). The purity is read before Create drains the block,
+ * because afterwards the source or the cauldron level is gone.
+ */
+@Mixin(value = OpenEndedPipe.class, remap = false)
+public abstract class MixinOpenEndedPipe
 {
-
-    @Inject(method = "removeFluidFromSpace", at = @At("HEAD"), cancellable = true, remap = false)
-    private void removeFluidFromSpace(boolean simulate, CallbackInfoReturnable<FluidStack> cir)
+    @Inject(method = "removeFluidFromSpace", at = @At("HEAD"), remap = false)
+    private void bluedroplets$readPurity(boolean simulate, CallbackInfoReturnable<FluidStack> cir, @Share("purity") LocalIntRef purity)
     {
-        OpenEndedPipe pipe = ((OpenEndedPipe)(Object)this);
+        purity.set(-1);
+        OpenEndedPipe pipe = (OpenEndedPipe) (Object) this;
+        Level level = pipe.getWorld();
+        if (level == null || !CompatConfig.OPEN_ENDED_PIPE_PURITY.get() || !WaterPurity.enabled())
+            return;
+        BlockPos pos = pipe.getOutputPos();
+        if (!level.isLoaded(pos))
+            return;
+        BlockState state = level.getBlockState(pos);
+        FluidState fluid = state.getFluidState();
+        if (fluid.is(FluidTags.WATER))
+            purity.set(WaterPurity.getWaterPurity(level, pos, fluid.isSource()));
+        else if (state.is(Blocks.WATER_CAULDRON))
+            purity.set(WaterPurity.getBlockPurity(state));
+    }
 
-        if(pipe.getWorld() != null && pipe.getWorld().isLoaded(pipe.getOutputPos()))
-        {
-            BlockState state = pipe.getWorld().getBlockState(pipe.getOutputPos());
-            FluidState fluidState = state.getFluidState();
-            boolean waterlog = state.hasProperty(BlockStateProperties.WATERLOGGED);
-
-            if ((!fluidState.isEmpty() && fluidState.isSource())&&(waterlog || state.canBeReplaced()))
-            {
-                FluidStack stack = new FluidStack(fluidState.getType(), 1000);
-                if(FluidHelper.isWater(stack.getFluid()))
-                {
-                    WaterPurity.addPurity(stack, WaterPurity.getBlockPurity(pipe.getWorld(), pipe.getOutputPos()));
-
-                    if (simulate)
-                    {
-                        cir.setReturnValue(stack);
-                    }
-                    else
-                    {
-                        AdvancementBehaviour.tryAward(pipe.getWorld(), pipe.getPos(), AllAdvancements.WATER_SUPPLY);
-
-                        if (waterlog)
-                        {
-                            pipe.getWorld().setBlock(pipe.getOutputPos(), state.setValue(BlockStateProperties.WATERLOGGED, false), 3);
-                            pipe.getWorld().scheduleTick(pipe.getOutputPos(), Fluids.WATER, 1);
-                            cir.setReturnValue(stack);
-                        } else {
-                            pipe.getWorld().setBlock(pipe.getOutputPos(), fluidState.createLegacyBlock().setValue(LiquidBlock.LEVEL, 14), 3);
-                            cir.setReturnValue(stack);
-                        }
-                    }
-                }
-            }
-        }
+    @ModifyReturnValue(method = "removeFluidFromSpace", at = @At("RETURN"), remap = false)
+    private FluidStack bluedroplets$addPurity(FluidStack drained, @Share("purity") LocalIntRef purity)
+    {
+        if (purity.get() >= 0 && !drained.isEmpty() && drained.is(FluidTags.WATER) && !WaterPurity.hasPurity(drained))
+            WaterPurity.addPurity(drained, purity.get());
+        return drained;
     }
 }

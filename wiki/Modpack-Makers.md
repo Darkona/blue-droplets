@@ -87,7 +87,7 @@ The server resolves this table on world load and on `/reload` and sends it to ev
 
 ## Water purity in the world
 
-Water picked up from the world (buckets, bottles, bowls, drinking by hand, Create pumps and drains) gets a purity from 0 (dirty) to 3 (purified):
+Water picked up from the world (buckets, bottles, bowls, drinking by hand, Create hose pulleys and open pipe ends) gets a purity from 0 (dirty) to 3 (purified):
 
 1. **Salt water**: if `saltWaterPurity` (`purity.toml`, default -1 = off) is 0-3 and the biome is in `#bluedroplets:salt_water`, that fixed value is used and nothing else applies.
 2. **Base purity**, the first that is set:

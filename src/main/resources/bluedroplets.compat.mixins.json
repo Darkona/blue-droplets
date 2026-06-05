@@ -10,7 +10,8 @@
     "create.MixinFluidDrainingBehaviour",
     "create.MixinGenericItemEmptying",
     "create.MixinGenericItemFilling",
-    "create.MixinIHaveGoggleInformation"
+    "create.MixinIHaveGoggleInformation",
+    "create.MixinOpenEndedPipe"
   ],
   "injectors": {
     "defaultRequire": 1
