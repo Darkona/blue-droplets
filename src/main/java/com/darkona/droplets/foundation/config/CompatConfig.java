@@ -11,6 +11,7 @@ public final class CompatConfig
 
     public static final ModConfigSpec.IntValue SAND_FILTER_FILTRATION_AMOUNT;
     public static final ModConfigSpec.IntValue SAND_FILTER_MB_PER_TICK;
+    public static final ModConfigSpec.IntValue SAND_FILTER_MAX_PURITY;
     public static final ModConfigSpec.BooleanValue OPEN_ENDED_PIPE_PURITY;
 
     public static final ModConfigSpec.BooleanValue COLD_SWEAT_BODY_TEMPERATURE;
@@ -22,6 +23,7 @@ public final class CompatConfig
         BUILDER.push("create");
         SAND_FILTER_FILTRATION_AMOUNT = BUILDER.comment("Purification levels gained by filtering water through a Sand Filter").defineInRange("sandFilterFiltrationAmount", 1, 0, 3);
         SAND_FILTER_MB_PER_TICK = BUILDER.comment("Millibuckets of water filtered per game tick with a Sand Filter").defineInRange("sandFilterMbPerTick", 10, 1, 1000);
+        SAND_FILTER_MAX_PURITY = BUILDER.comment("Highest purity a Sand Filter raises water to (0 dirty ... 3 purified); water already purer passes unchanged. Below 3, the last steps need another method (boiling, smelting)").defineInRange("sandFilterMaxPurity", 3, 0, 3);
         OPEN_ENDED_PIPE_PURITY = BUILDER.comment("Whether water pulled from the world or from a water cauldron by an open pipe end keeps its purity there, like buckets and the hose pulley; false = it reads as defaultPurity").define("openEndedPipePurity", true);
         BUILDER.pop();
 

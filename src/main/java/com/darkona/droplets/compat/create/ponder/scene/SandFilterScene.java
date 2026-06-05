@@ -82,5 +82,20 @@ public class SandFilterScene {
 
         scene.idle(50);
 
+        scene.overlay().showText(80)
+                .pointAt(filterSide)
+                .placeNearTarget()
+                .attachKeyFrame()
+                .text("A Wrench turns the filter: water always leaves on the side the bottom faces");
+
+        scene.idle(90);
+
+        scene.overlay().showText(80)
+                .pointAt(filterSide)
+                .placeNearTarget()
+                .text("Filters placed in a row facing the same way pass their water on, one step purer each");
+
+        scene.idle(90);
+
     }
 }

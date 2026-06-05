@@ -29,6 +29,9 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
     public static final int TANK_SIZE = 1000;
     SmartFluidTankBehaviour dirtyTank;
     SmartFluidTankBehaviour purifiedTank;
+    /** The block in front, recomputed only when the filter is turned. */
+    private Direction nextFacing;
+    private BlockPos nextPos;
 
     public SandFilterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
     {
@@ -39,7 +42,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         dirtyTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 1, TANK_SIZE, false);
         behaviours.add(dirtyTank);
-        purifiedTank = SmartFluidTankBehaviour.single(this, TANK_SIZE);
+        purifiedTank = SmartFluidTankBehaviour.single(this, TANK_SIZE).forbidInsertion();
         behaviours.add(purifiedTank);
     }
 
@@ -53,21 +56,20 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
                 Capabilities.FluidHandler.BLOCK,
                 CreateRegistry.SAND_FILTER_BE.get(),
                 (be, side) -> {
-                    if (side != null && side.getAxis() == Direction.Axis.Y)
-                    {
-                        if(side == Direction.DOWN)
-                            return be.purifiedTank.getCapability();
-                        else
-                            return be.dirtyTank.getCapability();
-                    }
-                    return null;
+                    if (side == null)
+                        return null;
+                    Direction facing = be.getBlockState().getValue(SandFilterBlock.FACING);
+                    if (side == facing)
+                        return be.purifiedTank.getCapability();
+                    return side == facing.getOpposite() ? be.dirtyTank.getCapability() : null;
                 }
         );
     }
 
     /**
      * Moves up to {@code sandFilterMbPerTick} from the dirty to the purified tank, only what the purified tank accepts:
-     * water of a different purity is not mixed, it waits.
+     * water of a different purity is not mixed, it waits. Then hands purified water on to a filter right in front
+     * that faces the same way, so a row of filters purifies in stages.
      */
     public void tick()
     {
@@ -77,6 +79,12 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
             return;
 
         int rate = CompatConfig.SAND_FILTER_MB_PER_TICK.get();
+        filter(rate);
+        passOn(rate);
+    }
+
+    private void filter(int rate)
+    {
         SmartFluidTank dirty = dirtyTank.getPrimaryHandler();
         SmartFluidTank purified = purifiedTank.getPrimaryHandler();
         if(dirty.getFluidAmount() < rate || purified.getSpace() <= 0)
@@ -87,7 +95,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
             return;
 
         if(water.is(FluidTags.WATER))
-            WaterPurity.addPurity(water, Math.min(WaterPurity.getPurity(water) + CompatConfig.SAND_FILTER_FILTRATION_AMOUNT.get(), WaterPurity.MAX_PURITY));
+            WaterPurity.addPurity(water, filteredPurity(WaterPurity.getPurity(water)));
 
         int accepted = purified.fill(water, IFluidHandler.FluidAction.SIMULATE);
         if(accepted <= 0)
@@ -95,6 +103,34 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
 
         int drained = dirty.drain(accepted, IFluidHandler.FluidAction.EXECUTE).getAmount();
         purified.fill(water.copyWithAmount(drained), IFluidHandler.FluidAction.EXECUTE);
+    }
+
+    /**
+     * {@code sandFilterFiltrationAmount} more, up to {@code sandFilterMaxPurity}; water already above it passes unchanged.
+     */
+    public static int filteredPurity(int purity)
+    {
+        int max = CompatConfig.SAND_FILTER_MAX_PURITY.get();
+        return Math.max(purity, Math.min(purity + CompatConfig.SAND_FILTER_FILTRATION_AMOUNT.get(), max));
+    }
+
+    private void passOn(int rate)
+    {
+        SmartFluidTank purified = purifiedTank.getPrimaryHandler();
+        if(purified.isEmpty())
+            return;
+        Direction facing = getBlockState().getValue(SandFilterBlock.FACING);
+        if(facing != nextFacing)
+        {
+            nextFacing = facing;
+            nextPos = worldPosition.relative(facing);
+        }
+        if(!(level.getBlockEntity(nextPos) instanceof SandFilterBlockEntity next) || next.getBlockState().getValue(SandFilterBlock.FACING) != facing)
+            return;
+        SmartFluidTank nextDirty = next.dirtyTank.getPrimaryHandler();
+        int accepted = nextDirty.fill(purified.drain(rate, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.SIMULATE);
+        if(accepted > 0)
+            nextDirty.fill(purified.drain(accepted, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
     }
 
     public boolean hasFluid()
