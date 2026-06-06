@@ -191,6 +191,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### For developers
 
+- Boot checks: `scripts/server-boot-check.sh` starts a dedicated server in `run/bootcheck-server` (superflat world, random port), stops it with the shutdown hook and fails on any error in the log that `scripts/boot-check-known.txt` does not list; `scripts/client-boot-check.sh` boots the client headless (Xvfb + Mesa) into a copy of a superflat world, types optional commands and takes a screenshot of the HUD. Both take `GRADLE_ARGS="-PwithCompat"` and only ever stop processes they started (tagged environment, no `pkill`). New Gradle runs `runServerBootCheck` and `runBootCheck`. `[1.21.1]`
 - Build moved from NeoGradle to ModDevGradle 2.0.141 on Gradle 9.7.1, built against NeoForge 21.1.252; the minimum NeoForge version is now 21.1.219. `[1.21.1]`
 
 ## Planned

@@ -62,10 +62,22 @@ neoForge {
             client()
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
+        // Headless client straight into a copy of a test world: scripts/client-boot-check.sh.
+        bootCheck {
+            client()
+            gameDirectory = project.file('run')
+            programArguments.addAll '--width', '1920', '--height', '1080', '--quickPlaySingleplayer', 'bdboot'
+        }
         server {
             server()
             programArgument '--nogui'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        // Dedicated server in its own folder, started and stopped by scripts/server-boot-check.sh.
+        serverBootCheck {
+            server()
+            gameDirectory = project.file('run/bootcheck-server')
+            programArgument '--nogui'
         }
         gameTestServer {
             type = 'gameTestServer'

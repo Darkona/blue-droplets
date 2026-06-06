@@ -1,0 +1,11 @@
+# Log lines the boot checks accept: one extended regular expression per line, matched against each suspicious line
+# (ERROR level, exception or error class at the start of a line, "Exception in thread"). Blank lines and # comments
+# are skipped. Add a line only for problems of other mods or of the dev environment, with a comment saying why.
+
+# -PwithCompat: Farmer's Delight and Cold Sweat ship Create recipes in an older Create format; Create 6 rejects them.
+Parsing error loading recipe (farmersdelight|cold_sweat):
+^com\.google\.gson\.JsonParseException: Failed to parse either\. First: No key (amount|id) in MapLike
+
+# Dev environment: no Mojang account, so no chat signing keys or profile lookups.
+Failed to fetch user properties
+Failed to retrieve profile key pair
