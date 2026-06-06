@@ -2,6 +2,7 @@ package com.darkona.droplets;
 
 import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.compat.create.CreateRegistry;
+import com.darkona.droplets.compat.create.SandFilterBlockEntity;
 import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
@@ -21,6 +22,7 @@ import com.darkona.droplets.foundation.config.*;
 import com.darkona.droplets.foundation.gui.DrinkTooltip;
 import com.darkona.droplets.foundation.gui.ThirstBarRenderer;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
+import com.darkona.droplets.foundation.network.ThirstModPacketHandler;
 import com.darkona.droplets.foundation.tab.ThirstTab;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.network.chat.Component;
@@ -53,6 +55,7 @@ public class BlueDroplets
         modBus.addListener(DropletsDataMaps::register);
         modBus.addListener(PlayerThirstManager::onConfigReloaded);
         modBus.addListener(BlueDroplets::addPacks);
+        modBus.addListener(ThirstModPacketHandler::register);
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 
@@ -75,6 +78,7 @@ public class BlueDroplets
         if(ModList.get().isLoaded("create"))
         {
             CreateRegistry.register();
+            modBus.addListener(SandFilterBlockEntity::registerCapabilities);
         }
 
         ThirstTab.register(modBus);

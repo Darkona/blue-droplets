@@ -1,7 +1,6 @@
 {
   "death.attack.dehydrate": "%1$s 이(가) 탈수로 사망했습니다.",
   "death.attack.dehydrate.player": "%1$s 이(가) %2$s 와 싸우다가 탈수로 사망했습니다.",
-  "item.bluedroplets.wooden_water_bowl": "나무 물그릇",
   "item.bluedroplets.terracotta_water_bowl": "테라코타 물그릇",
   "item.bluedroplets.terracotta_bowl": "테라코타 그릇",
   "item.bluedroplets.clay_bowl": "점토 그릇",

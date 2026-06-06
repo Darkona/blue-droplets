@@ -1,7 +1,6 @@
 {
   "death.attack.dehydrate": "%1$s が脱水で死亡しました。",
   "death.attack.dehydrate.player": "%1$s が %2$s と戦って脱水で死亡しました。",
-  "item.bluedroplets.wooden_water_bowl": "木の水入れ",
   "item.bluedroplets.terracotta_water_bowl": "テラコッタ 水入れ",
   "item.bluedroplets.terracotta_bowl": "テラコッタ 器",
   "item.bluedroplets.clay_bowl": "粘土の器",

@@ -23,8 +23,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -57,12 +56,11 @@ public class CommandInit {
                 .then(Commands.literal("query").then(Commands.argument("Player", EntityArgument.player())
                         .executes(context -> {
                                     ServerPlayer player = EntityArgument.getPlayer(context,"Player");
-                                    IThirst iThirst = player.getData(ModAttachment.PLAYER_THIRST);
-                                    Object[] arg =new Object[2];
-                                    arg[0]=iThirst.getThirst();
-                                    arg[1]=iThirst.getQuenched();
-                                    context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.query","command.bluedroplets.query",arg)),false);
-                                    return 0;
+                                    IThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+                                    int value = thirst.getThirst();
+                                    int quenched = thirst.getQuenched();
+                                    context.getSource().sendSuccess(() -> Component.translatable("command.bluedroplets.query", value, quenched, player.getDisplayName()), false);
+                                    return value;
                                 }
                         )))
                 .then(Commands.literal("set").then(Commands.argument("Player", EntityArgument.player())
@@ -70,12 +68,13 @@ public class CommandInit {
                                 .then(Commands.argument("quenched", IntegerArgumentType.integer(0, ThirstConstants.MAX_THIRST))
                                         .executes(context -> {
                                             ServerPlayer player = EntityArgument.getPlayer(context,"Player");
-                                            Object[] arg =new Object[2];
-                                            arg[0]= IntegerArgumentType.getInteger(context,"thirst");
-                                            arg[1]= IntegerArgumentType.getInteger(context,"quenched");
-                                            player.getData(ModAttachment.PLAYER_THIRST).change(player, (Integer) arg[0], (Integer) arg[1], ThirstChangeEvent.Cause.COMMAND);
-                                            context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.set","command.bluedroplets.set",arg)),false);
-                                            return 0;
+                                            PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+                                            thirst.change(player, IntegerArgumentType.getInteger(context,"thirst"), IntegerArgumentType.getInteger(context,"quenched"), ThirstChangeEvent.Cause.COMMAND);
+                                            // Quenched never exceeds thirst and listeners may cancel or change it: report what was set.
+                                            int value = thirst.getThirst();
+                                            int quenched = thirst.getQuenched();
+                                            context.getSource().sendSuccess(() -> Component.translatable("command.bluedroplets.set", value, quenched, player.getDisplayName()), true);
+                                            return value;
                                         })))
                 ))
                 .then(Commands.literal("enable").then(Commands.argument("Player",EntityArgument.players())
@@ -83,21 +82,14 @@ public class CommandInit {
                                 .executes(context ->{
                                     Collection<ServerPlayer> players = EntityArgument.getPlayers(context,"Player");
                                     boolean shouldTick = BoolArgumentType.getBool(context,"bool");
-                                    Collection<Component> playersName = new ArrayList<>();
                                     for(ServerPlayer player:players){
                                         IThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
                                         thirstData.setShouldTickThirst(shouldTick);
                                         thirstData.updateThirstData(player);
-                                        playersName.add(player.getName());
                                     }
-
-                                    if(shouldTick){
-                                        context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.enable","command.bluedroplets.enable",playersName.toArray())),false);
-                                    }else {
-                                        context.getSource().sendSuccess(()->MutableComponent.create(new TranslatableContents("command.bluedroplets.disable","command.bluedroplets.disable",playersName.toArray())),false);
-                                    }
-
-                                    return 0;
+                                    Component names = ComponentUtils.formatList(players, ServerPlayer::getDisplayName);
+                                    context.getSource().sendSuccess(() -> Component.translatable(shouldTick ? "command.bluedroplets.enable" : "command.bluedroplets.disable", names), true);
+                                    return players.size();
                                 }))))
                 .then(Commands.literal("debug")
                         .then(Commands.literal("exhaustion")

@@ -241,7 +241,7 @@ public final class GameplayConfig
         BUILDER.pop();
 
         BUILDER.push("loot");
-        LOOT = BUILDER.comment("Whether drinks are added to vanilla chest loot").define("enabled", true);
+        LOOT = BUILDER.comment("Whether drinks are added to vanilla chest loot. Checked when datapacks load: a change applies after /reload or on the next world load").define("enabled", true);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

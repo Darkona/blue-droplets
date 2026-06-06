@@ -181,7 +181,7 @@ The level is I, plus one per half threshold past it, or one more than the active
 | `hand.cooldownTicks` | `10` | Minimum ticks between two sips |
 | `hand.effects` | `true` | Swing the arm and splash particles when drinking by hand (visual only) |
 | `death.respawnThirst` / `respawnQuenched` | `20` / `5` | Values after respawning; `-1` keeps what the player died with |
-| `loot.enabled` | `true` | Drinks are added to vanilla chest loot |
+| `loot.enabled` | `true` | Drinks are added to vanilla chest loot. Checked when datapacks load: a change applies after `/reload` or on the next world load |
 
 The maximum thirst stays 20: the HUD, its overlays and commands assume it.
 

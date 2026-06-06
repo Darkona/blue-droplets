@@ -52,6 +52,9 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### Bug fixes
 
+- `/bluedroplets query` now returns the player's thirst (usable with `/execute store result`), `set` returns the thirst it set and `enable` the number of players; they all returned 0. `set` reports the values actually stored (quenched never above thirst, or what another mod's `ThirstChangeEvent` left), `enable` lists every player instead of only the first, and `set`/`enable` are shown to other operators like vanilla admin commands. `[1.21.1]`
+- A purity component with a value outside 0-3 (old saves, other mods) now reads as the default purity when the item or fluid is loaded, so that water also stacks with water of the default purity; it no longer stays stored as an invalid number. Purity is sent to clients in one byte instead of four (network protocol version `0.1.12`). `[1.21.1]`
+- The Create Ponder tag "Purification" showed its raw translation key; it now has a name and description. `[1.21.1]`
 - AppleSkin: the quenched overlay and drink preview are no longer drawn on top of the chat, the F3 screen and other HUD elements, and they always line up with the thirst bar; before, they could end up at the bottom edge of the screen when AppleSkin's exhaustion underlay was turned off (closes thirst#223). `[1.21.1]`
 - Pouring water with purity into a cauldron or tank now always updates its purity; the old delayed-task helper could skip the update when several happened on consecutive ticks, and kept tasks alive after leaving a singleplayer world. `[1.21.1]`
 - Water taken from a cauldron keeps the cauldron's purity and gives that purity's effects when drunk (glass bottles and buckets, since the purity rewrite). Terracotta bowls can now also be filled from a water cauldron, with its purity. Pouring water into a cauldron with no stored purity mixes with `defaultPurity` (the lower wins) instead of taking the poured purity, and the new purity now reaches clients, so Jade shows it right away (closes thirst#260). `[1.21.1]`
@@ -180,6 +183,8 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### Project
 
+- New Spanish translation (`es_es`). Removed the translation of the Wooden Water Bowl, an item that no longer exists. `[1.21.1]`
+- `loot.enabled` (`gameplay.toml`) documents that it is checked when datapacks load: a change applies after `/reload` or on the next world load. `[1.21.1]`
 - Removed the empty access transformer file and its declaration (thirst#234). `[1.21.1]`
 - Issue tracker and homepage links now point to https://github.com/Darkona/blue-droplets. `[1.21.1]`
 - Added this changelog. `[1.21.1]`

@@ -3,18 +3,17 @@ package com.darkona.droplets.foundation.network;
 import com.darkona.droplets.foundation.network.message.DrinkByHandMessage;
 import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
 import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber
+/**
+ * Payloads; registered on the mod bus from the mod constructor.
+ */
 public class ThirstModPacketHandler
 {
-    private static final String PROTOCOL_VERSION = "0.1.11";
+    private static final String PROTOCOL_VERSION = "0.1.12";
 
-    @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
         registrar.playToServer(
