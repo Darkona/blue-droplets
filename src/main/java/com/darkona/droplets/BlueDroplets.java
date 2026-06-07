@@ -24,6 +24,7 @@ import com.darkona.droplets.foundation.gui.ThirstBarRenderer;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.darkona.droplets.foundation.network.ThirstModPacketHandler;
 import com.darkona.droplets.foundation.tab.ThirstTab;
+import com.darkona.droplets.gametest.DropletsGameTests;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -56,6 +57,7 @@ public class BlueDroplets
         modBus.addListener(PlayerThirstManager::onConfigReloaded);
         modBus.addListener(BlueDroplets::addPacks);
         modBus.addListener(ThirstModPacketHandler::register);
+        modBus.addListener(DropletsGameTests::register);
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 

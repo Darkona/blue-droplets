@@ -1,0 +1,157 @@
+package com.darkona.droplets.gametest;
+
+import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.event.ThirstChangeEvent;
+import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.content.registry.EffectInit;
+import com.darkona.droplets.content.thirst.PlayerThirst;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+import static com.darkona.droplets.gametest.TestSupport.player;
+import static com.darkona.droplets.gametest.TestSupport.thirst;
+
+/**
+ * Drinking, eating, limits, overhydration, purity effects and the commands, with the default config.
+ */
+@GameTestHolder(BlueDroplets.ID)
+@PrefixGameTestTemplate(false)
+public class ThirstTests
+{
+    /** Cause of the last thirst change of any player; tests run one at a time on the server thread. */
+    private static ThirstChangeEvent.Cause lastCause;
+
+    static
+    {
+        NeoForge.EVENT_BUS.addListener((ThirstChangeEvent.Post event) -> lastCause = event.getCause());
+    }
+
+    private static ItemStack waterBottle(int purity)
+    {
+        return WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), purity);
+    }
+
+    @GameTest(template = "empty")
+    public static void waterBottleIsDrunk(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
+        PlayerThirst.consume(waterBottle(WaterPurity.MAX_PURITY), player);
+        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a purified water bottle (6)");
+        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a purified water bottle (8)");
+        helper.assertValueEqual(lastCause, ThirstChangeEvent.Cause.DRINK, "cause of drinking a water bottle");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void appleIsEaten(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
+        PlayerThirst.consume(new ItemStack(Items.APPLE), player);
+        helper.assertValueEqual(thirst.getThirst(), 6, "thirst after an apple (2)");
+        helper.assertValueEqual(lastCause, ThirstChangeEvent.Cause.EAT, "cause of eating an apple");
+        helper.assertFalse(player.hasEffect(MobEffects.CONFUSION), "food rolled purity effects");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void quenchedNeverExceedsThirst(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 4, 10, ThirstChangeEvent.Cause.COMMAND);
+        helper.assertValueEqual(thirst.getQuenched(), 4, "quenched set above thirst");
+        thirst.change(player, 2, 2, ThirstChangeEvent.Cause.COMMAND);
+        helper.assertValueEqual(thirst.getQuenched(), 2, "quenched after thirst went down");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void saltyValuesStopAtZero(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 1, 1, ThirstChangeEvent.Cause.COMMAND);
+        thirst.hydrate(player, -6, -6, true, ThirstChangeEvent.Cause.EAT);
+        helper.assertValueEqual(thirst.getThirst(), 0, "thirst after salty food");
+        helper.assertValueEqual(thirst.getQuenched(), 0, "quenched after salty food");
+        helper.assertFalse(player.hasEffect(EffectInit.OVERHYDRATED), "salty food overhydrated");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void drinkingFarPastFullOverhydrates(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 20, 20, ThirstChangeEvent.Cause.COMMAND);
+        thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
+        helper.assertFalse(player.hasEffect(EffectInit.OVERHYDRATED), "one bottle past full already overhydrated");
+        thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
+        MobEffectInstance effect = player.getEffect(EffectInit.OVERHYDRATED);
+        helper.assertTrue(effect != null && effect.getAmplifier() == 0, "two bottles past full give Overhydrated I");
+        helper.assertTrue(player.hasEffect(MobEffects.CONFUSION), "Overhydrated comes with Nausea");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void invulnerablePlayersDoNotOverhydrate(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        player.getAbilities().invulnerable = true;
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 20, 20, ThirstChangeEvent.Cause.COMMAND);
+        for (int i = 0; i < 4; i++)
+            thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
+        helper.assertFalse(player.hasEffect(EffectInit.OVERHYDRATED), "an invulnerable player overhydrated");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void dirtyWaterGivesItsEffects(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst.consume(waterBottle(0), player);
+        helper.assertTrue(player.hasEffect(MobEffects.CONFUSION), "dirty water gives Nausea (100% by default)");
+        helper.assertTrue(player.hasEffect(MobEffects.HUNGER), "dirty water gives Hunger (100% by default)");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void purifiedWaterGivesNoEffects(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst.consume(waterBottle(WaterPurity.MAX_PURITY), player);
+        helper.assertTrue(player.getActiveEffects().isEmpty(), "purified water gave " + player.getActiveEffects());
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void commandsReturnTheirResult(GameTestHelper helper) throws Exception
+    {
+        ServerPlayer player = player(helper);
+        CommandSourceStack source = player.createCommandSourceStack().withPermission(2).withSuppressedOutput();
+        var dispatcher = helper.getLevel().getServer().getCommands().getDispatcher();
+        helper.assertValueEqual(dispatcher.execute("bluedroplets set @s 4 10", source), 4, "result of set");
+        helper.assertValueEqual(thirst(player).getQuenched(), 4, "quenched after set 4 10");
+        helper.assertValueEqual(dispatcher.execute("bluedroplets query @s", source), 4, "result of query");
+        helper.assertValueEqual(dispatcher.execute("thirst query @s", source), 4, "result of the /thirst alias");
+        helper.assertValueEqual(dispatcher.execute("bluedroplets enable @s false", source), 1, "result of enable");
+        helper.assertFalse(thirst(player).getShouldTickThirst(), "thirst still enabled after enable false");
+        helper.succeed();
+    }
+}
