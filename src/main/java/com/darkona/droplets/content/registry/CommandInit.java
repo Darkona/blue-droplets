@@ -159,7 +159,8 @@ public class CommandInit {
         else
         {
             purity = WaterPurity.getBlockPurity(level, pos);
-            trace.add("not water: " + (level.getBlockState(pos).is(Blocks.WATER_CAULDRON) ? "cauldron purity" : "defaultPurity"));
+            trace.add("not water: " + (level.getBlockState(pos).is(Blocks.WATER_CAULDRON)
+                    ? (purity == WaterPurity.HEATED_CAULDRON_PURITY ? "cauldron on a heat source" : "cauldron") : "defaultPurity"));
         }
         String biome = level.getBiome(pos).unwrapKey().map(key -> key.location().toString()).orElse("?");
         StringBuilder text = new StringBuilder("Purity at ").append(pos.toShortString()).append(" (").append(biome).append("): ")

@@ -107,10 +107,10 @@ Global settings in `purity.toml`, section `world`:
 | `runningWaterPurificationAmount` | `1` | Added to flowing water (0 to 3) |
 | `worldWaterBasePurity` | `0` | Base purity when neither biome nor dimension sets one |
 | `saltWaterPurity` | `-1` | Fixed purity in `#bluedroplets:salt_water` biomes; -1 = off |
-| `rainCauldronPurity` | `-1` | Purity of rain collected in a cauldron; -1 = none stored (reads as `defaultPurity`) |
-| `dripstoneCauldronPurity` | `-1` | Purity of water dripped into a cauldron by pointed dripstone; -1 = none stored |
 
-Rain or dripstone adding water to a cauldron that already has water keeps the lower of the two purities.
+### Cauldrons
+
+A water cauldron stores no purity: whatever went into it (rain, dripstone, a bucket of dirty or purified water), water taken out of it (buckets, bottles, bowls, Create open pipe ends) is always **slightly dirty (1)**, or **acceptable (2)** while the cauldron stands on a heat source from the block tag `#bluedroplets:cauldron_heat_sources` (blocks with a `lit` property only when lit). A cauldron never gives purified water: use a Sand Filter or the purification recipes for that. Jade shows the purity the water would have right now.
 
 ### Biome tags
 
@@ -207,7 +207,7 @@ Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). 
 | `bluedroplets:salty` | item | empty | Items with no other values get the `items.toml` `salty` penalties (they make the player thirstier), eaten or drunk |
 | `bluedroplets:purity_opt_out` | item | empty | Never gets a purity: not filled with purity, no purity tooltip, no purity effects, and its fluid is not given one. Use it for other mods' water containers that break when water items carry extra data |
 | `bluedroplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
-| `bluedroplets:cauldron_heat_sources` | block | `#minecraft:campfires`, `#minecraft:fire`, magma block, lava | Heat sources that boil a water cauldron above them when `purity.toml` `cauldron.boiling` is on. Blocks with a `lit` property (campfires, furnaces) only count while lit |
+| `bluedroplets:cauldron_heat_sources` | block | `#minecraft:campfires`, `#minecraft:fire`, magma block, lava | Heat sources under a water cauldron: its water comes out acceptable (2) instead of slightly dirty (1). Blocks with a `lit` property (campfires, furnaces) only count while lit |
 
 Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`, `data/bluedroplets/tags/block/cauldron_heat_sources.json`. Use `{"id": "othermod:item", "required": false}` for optional mods.
 

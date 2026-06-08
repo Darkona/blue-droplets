@@ -59,8 +59,6 @@ public final class LegacyConfigMigration
             {"common", "World.saltWaterPurity", "purity", "world.saltWaterPurity"},
             {"common", "World.runningWaterPurificationAmount", "purity", "world.runningWaterPurificationAmount"},
             {"common", "World.stillWaterPurificationAmount", "purity", "world.stillWaterPurificationAmount"},
-            {"common", "World.rainCauldronPurity", "purity", "world.rainCauldronPurity"},
-            {"common", "World.dripstoneCauldronPurity", "purity", "world.dripstoneCauldronPurity"},
             {"common", "Purity-related Effects.defaultPurity", "purity", "general.defaultPurity"},
             {"common", "Purity-related Effects.quenchThirstWhenDebuffed", "purity", "general.quenchWhenDebuffed"},
             {"common", "Create compatibility.sandFilterFiltrationAmount", "compat", "create.sandFilterFiltrationAmount"},

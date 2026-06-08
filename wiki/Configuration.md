@@ -193,9 +193,6 @@ The maximum thirst stays 20: the HUD, its overlays and commands assume it.
 | `general.defaultPurity` | `2` | Purity of water with none stored |
 | `general.quenchWhenDebuffed` | `true` | Drinking still restores thirst when a purity effect blocks hydration |
 | `world.*` | | See [Water purity in the world](Modpack-Makers.md#water-purity-in-the-world) |
-| `cauldron.boiling` | `false` | A water cauldron standing on a heat source (block tag `#bluedroplets:cauldron_heat_sources`: lit campfires, fire, magma, lava) slowly gains purity |
-| `cauldron.boilingMaxPurity` | `3` | Purity boiling stops at (0-3) |
-| `cauldron.boilingChance` | `0.25` | Chance of +1 purity on each random tick of the cauldron (0-1). At `randomTickSpeed` 3 a block gets a random tick about every 68 s, so 0.25 is about +1 purity every 4.5 minutes; raising `randomTickSpeed` speeds it up too |
 
 ### `[effects]`
 

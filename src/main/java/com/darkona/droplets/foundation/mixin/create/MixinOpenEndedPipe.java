@@ -42,7 +42,7 @@ public abstract class MixinOpenEndedPipe
         if (fluid.is(FluidTags.WATER))
             purity.set(WaterPurity.getWaterPurity(level, pos, fluid.isSource()));
         else if (state.is(Blocks.WATER_CAULDRON))
-            purity.set(WaterPurity.getBlockPurity(state));
+            purity.set(WaterPurity.cauldronPurity(level, pos));
     }
 
     @ModifyReturnValue(method = "removeFluidFromSpace", at = @At("RETURN"), remap = false)

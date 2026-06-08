@@ -37,15 +37,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.TickTask;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
@@ -55,24 +51,21 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -96,27 +89,15 @@ public class WaterPurity
     private static final List<ContainerWithPurity> codeContainers = new CopyOnWriteArrayList<>();
     private static volatile Map<Item, ContainerWithPurity> waterContainers = Map.of();
     private static volatile List<ContainerWithPurity> dataContainers = List.of();
-    private static final List<Block> fillablesWithPurity = new ArrayList<>();
     public static final int MIN_PURITY = 0;
     public static final int MAX_PURITY = 3;
-
-    /**
-     * Specifies the purity of a block filled with water. Has to be incremented by one
-     * number because while using Mixins, generally every block that
-     * implements water purity has a mixin-able "createBlockStateDefinition" function,
-     * but doesn't have an as-accessible "setDefaultState" function. Thus i am forced to
-     * use 0 as the "null" value for the block purity.
-     * <br><br>
-     * On the bright side, there is a function in this class which takes in a BlockState and
-     * returns the already-modified purity
-     * */
-    public static final IntegerProperty BLOCK_PURITY = IntegerProperty.create("purity", 0, 4);
+    public static final int CAULDRON_PURITY = 1;
+    public static final int HEATED_CAULDRON_PURITY = 2;
 
     public static void init()
     {
         registerDispenserBehaviours();
         registerContainers();
-        registerFillables();
     }
 
     /**
@@ -162,46 +143,6 @@ public class WaterPurity
         return contents != null && contents.is(Potions.WATER);
     }
 
-    private static void registerFillables()
-    {
-        fillablesWithPurity.add(Blocks.CAULDRON);
-        fillablesWithPurity.add(Blocks.WATER_CAULDRON);
-    }
-
-    @SubscribeEvent
-    static void fillablesHandler(PlayerInteractEvent.RightClickBlock event)
-    {
-        if (event.getEntity() instanceof ServerPlayer player && enabled() && isWaterFilledContainer(event.getItemStack()))
-        {
-            ServerLevel level = player.serverLevel();
-            BlockPos pos = event.getHitVec().getBlockPos();
-            BlockState blockState = level.getBlockState(pos);
-            //Trying to make compat with unregistered fluid container
-            BlockEntity entity = level.getBlockEntity(pos);
-
-            if (isFillableBlock(blockState) ||(entity != null && Capabilities.FluidHandler.BLOCK.getCapability(level,pos,blockState,entity,null) != null))
-            {
-                int purity = getPurity(event.getItemStack());
-
-                int blockPurity = blockState.is(Blocks.WATER_CAULDRON) ? getBlockPurity(blockState) : MAX_PURITY;
-
-                MinecraftServer server = level.getServer();
-                server.tell(new TickTask(server.getTickCount(), () -> {
-                    BlockState blockState1 = level.getBlockState(pos);
-
-                    if(!blockState1.hasProperty(BLOCK_PURITY))
-                        return;
-
-                    level.setBlock(
-                            pos,
-                            blockState1.setValue(BLOCK_PURITY, Math.min(purity, blockPurity) + 1),
-                            Block.UPDATE_CLIENTS
-                    );
-                }));
-            }
-        }
-
-    }
     /**
      * Registers a water container for the whole session.
      *
@@ -356,22 +297,6 @@ public class WaterPurity
         return container != null && !item.is(DropletsTags.PURITY_OPT_OUT) && container.equalsFilled(item);
     }
 
-    static boolean isFillableBlock(Block block)
-    {
-        for (Block fillable : fillablesWithPurity)
-        {
-            if (fillable == block)
-                return true;
-        }
-
-        return false;
-    }
-
-    static boolean isFillableBlock(BlockState blockState)
-    {
-        return isFillableBlock(blockState.getBlock());
-    }
-
     /**
      * Reads the purity from an item without modifying it; missing purity reads as the drink's data map purity if it has
      * one, missing or invalid purity as the default purity
@@ -421,15 +346,6 @@ public class WaterPurity
         return purity == 0 ? 11028517 :
                 purity == 1 ? 7957617 :
                 purity == 2 ? 6128285 : 2208255;
-    }
-
-    /**
-     * Returns the already-adjusted water purity level of a
-     * block with the BLOCK_PURITY tag
-     */
-    public static int getBlockPurity(BlockState blockState)
-    {
-        return sanitizePurity(blockState.hasProperty(BLOCK_PURITY) ? blockState.getValue(BLOCK_PURITY) - 1 : null);
     }
 
     public static boolean hasPurity(ItemStack item)
@@ -483,8 +399,20 @@ public class WaterPurity
         FluidState fluid = level.getFluidState(pos);
         if (fluid.is(FluidTags.WATER))
             return getWaterPurity(level, pos, fluid.isSource());
-        BlockState state = level.getBlockState(pos);
-        return state.is(Blocks.WATER_CAULDRON) ? getBlockPurity(state) : defaultPurity();
+        return level.getBlockState(pos).is(Blocks.WATER_CAULDRON) ? cauldronPurity(level, pos) : defaultPurity();
+    }
+
+    /**
+     * Purity of water taken from a water cauldron. The cauldron stores nothing: the purity is decided when the water
+     * leaves it, {@value #CAULDRON_PURITY}, or {@value #HEATED_CAULDRON_PURITY} while it stands on a heat source (block
+     * tag {@code bluedroplets:cauldron_heat_sources}; blocks with a {@code lit} property only when lit). Never purified:
+     * that is what filters are for.
+     */
+    public static int cauldronPurity(BlockGetter level, BlockPos pos)
+    {
+        BlockState below = level.getBlockState(pos.below());
+        return below.is(DropletsTags.CAULDRON_HEAT_SOURCES) && below.getOptionalValue(BlockStateProperties.LIT).orElse(true)
+                ? HEATED_CAULDRON_PURITY : CAULDRON_PURITY;
     }
 
     /**
@@ -540,42 +468,6 @@ public class WaterPurity
         if (PurityConfig.ALTITUDE_RELATIVE_TO_SEA_LEVEL.get())
             y -= level.getSeaLevel();
         return (int) NumberRows.band(ALTITUDE_BANDS.get(PurityConfig.ALTITUDE_BANDS.get()), y, 0);
-    }
-
-    /**
-     * Purity for a cauldron filled by rain or dripstone: {@code configured} (-1 = unchanged), or the lower of it and
-     * the water already there.
-     */
-    public static BlockState naturalFill(BlockState previous, BlockState filled, int configured)
-    {
-        if (configured < MIN_PURITY || !enabled() || !filled.is(Blocks.WATER_CAULDRON) || !filled.hasProperty(BLOCK_PURITY))
-            return filled;
-        int purity = previous.is(Blocks.WATER_CAULDRON) ? Math.min(getBlockPurity(previous), configured) : configured;
-        return filled.setValue(BLOCK_PURITY, purity + 1);
-    }
-
-    /**
-     * Water cauldrons below purity 3 (stored or unset). Depends on the state only: it decides {@code isRandomlyTicking}.
-     */
-    public static boolean canBoil(BlockState state)
-    {
-        return state.is(Blocks.WATER_CAULDRON) && state.getValue(BLOCK_PURITY) <= MAX_PURITY;
-    }
-
-    /**
-     * Random tick of a water cauldron: with {@code cauldron.boiling}, a chance of +1 purity, up to
-     * {@code cauldron.boilingMaxPurity}, while it stands on a lit block in {@code bluedroplets:cauldron_heat_sources}.
-     */
-    public static void boil(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
-    {
-        if (!PurityConfig.CAULDRON_BOILING.get() || !enabled() || !canBoil(state))
-            return;
-        int purity = getBlockPurity(state);
-        if (purity >= PurityConfig.CAULDRON_BOILING_MAX_PURITY.get() || random.nextDouble() >= PurityConfig.CAULDRON_BOILING_CHANCE.get())
-            return;
-        BlockState below = level.getBlockState(pos.below());
-        if (below.is(DropletsTags.CAULDRON_HEAT_SOURCES) && below.getOptionalValue(BlockStateProperties.LIT).orElse(true))
-            level.setBlock(pos, state.setValue(BLOCK_PURITY, purity + 2), Block.UPDATE_ALL);
     }
 
     private static int basePurity(Level level, Holder<Biome> biome, @Nullable BiomeWater biomeWater, @Nullable List<String> trace)

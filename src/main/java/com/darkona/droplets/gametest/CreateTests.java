@@ -31,14 +31,14 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 public class CreateTests
 {
     @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
-    public static void openPipeKeepsCauldronPurity(GameTestHelper helper)
+    public static void openPipeGetsCauldronPurity(GameTestHelper helper)
     {
-        BlockPos cauldron = helper.absolutePos(new BlockPos(2, 1, 2));
-        BlockState state = Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3).setValue(WaterPurity.BLOCK_PURITY, 1);
-        helper.getLevel().setBlockAndUpdate(cauldron, state);
+        BlockPos cauldron = helper.absolutePos(new BlockPos(2, 2, 2));
+        helper.getLevel().setBlockAndUpdate(cauldron.below(), Blocks.CAMPFIRE.defaultBlockState());
+        helper.getLevel().setBlockAndUpdate(cauldron, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3));
         FluidStack drained = drainThroughPipe(helper, cauldron.above());
         helper.assertFalse(drained.isEmpty(), "the pipe drained nothing from the cauldron");
-        helper.assertValueEqual(WaterPurity.getPurity(drained), 0, "purity of water drained from a dirty cauldron");
+        helper.assertValueEqual(WaterPurity.getPurity(drained), WaterPurity.HEATED_CAULDRON_PURITY, "purity of water drained from a cauldron on a campfire");
         helper.succeed();
     }
 
