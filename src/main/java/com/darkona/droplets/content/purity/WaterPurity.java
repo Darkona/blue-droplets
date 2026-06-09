@@ -109,14 +109,15 @@ public class WaterPurity
     }
 
     /**
-     * Takes one level of water from a water cauldron into {@code filled}, with the cauldron's purity.
+     * Takes one level of water from a water cauldron into {@code filled}; the purity is added by
+     * {@link #applyCauldronPurity}, as for every other cauldron interaction.
      */
     public static CauldronInteraction fillFromCauldron(Supplier<ItemStack> filled, SoundEvent sound)
     {
         return (state, level, pos, player, hand, stack) -> {
             if (!level.isClientSide())
             {
-                player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, addPurity(filled.get(), pos, level)));
+                player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, filled.get()));
                 player.awardStat(Stats.USE_CAULDRON);
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                 LayeredCauldronBlock.lowerFillLevel(state, level, pos);
@@ -400,6 +401,35 @@ public class WaterPurity
         if (fluid.is(FluidTags.WATER))
             return getWaterPurity(level, pos, fluid.isSource());
         return level.getBlockState(pos).is(Blocks.WATER_CAULDRON) ? cauldronPurity(level, pos) : defaultPurity();
+    }
+
+    /** Purity for water leaving the water cauldron being used right now, -1 outside one. Server thread only. */
+    private static int takingFromCauldron = -1;
+
+    /**
+     * Start of an item interaction with a cauldron: when it is a water cauldron on the server, water containers that
+     * come out of it until {@link #doneTakingFromCauldron} get its purity. Returns whether it started.
+     */
+    public static boolean takingFromCauldron(BlockState state, Level level, BlockPos pos)
+    {
+        if (level.isClientSide() || !enabled() || !state.is(Blocks.WATER_CAULDRON))
+            return false;
+        takingFromCauldron = cauldronPurity(level, pos);
+        return true;
+    }
+
+    public static void doneTakingFromCauldron()
+    {
+        takingFromCauldron = -1;
+    }
+
+    /**
+     * During a water cauldron interaction, gives {@code filled} the cauldron purity if it is a water container with none.
+     */
+    public static void applyCauldronPurity(ItemStack filled)
+    {
+        if (takingFromCauldron >= MIN_PURITY && isWaterFilledContainer(filled) && !hasPurity(filled))
+            addPurity(filled, takingFromCauldron);
     }
 
     /**

@@ -4,12 +4,13 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "bluedroplets.refmap.json",
   "mixins": [
-    "MixinBootstrap",
+    "MixinAbstractCauldronBlock",
     "MixinCampfireBlockEntity",
     "MixinFluidBucketWrapper",
     "MixinFluidUtil",
     "MixinFoodData",
     "MixinItemStack",
+    "MixinItemUtils",
     "MixinPlayer",
     "MixinPotionItem"
   ],
