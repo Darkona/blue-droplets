@@ -4,6 +4,10 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
@@ -66,6 +70,31 @@ public class PurityTests
         ItemStack bowl = useOnFullCauldron(helper, player, pos, new ItemStack(ItemInit.TERRACOTTA_BOWL.get()));
         helper.assertTrue(bowl.is(ItemInit.TERRACOTTA_WATER_BOWL.get()), "the terracotta bowl was not filled");
         helper.assertValueEqual(WaterPurity.getPurity(bowl), WaterPurity.CAULDRON_PURITY, "terracotta water bowl from a cauldron");
+        helper.succeed();
+    }
+
+    @GameTest(template = "box")
+    public static void fluidCapabilityCarriesTheCauldronPurity(GameTestHelper helper)
+    {
+        BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
+        helper.getLevel().setBlockAndUpdate(pos.below(), Blocks.CAMPFIRE.defaultBlockState());
+        helper.getLevel().setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3));
+        IFluidHandler handler = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+        helper.assertTrue(handler != null, "a water cauldron has no fluid handler");
+        int heated = WaterPurity.HEATED_CAULDRON_PURITY;
+
+        FluidStack inTank = handler.getFluidInTank(0);
+        helper.assertTrue(WaterPurity.hasPurity(inTank), "tank contents have no purity");
+        helper.assertValueEqual(WaterPurity.getPurity(inTank), heated, "purity of the tank contents");
+        FluidStack simulated = handler.drain(1000, IFluidHandler.FluidAction.SIMULATE);
+        helper.assertValueEqual(WaterPurity.getPurity(simulated), heated, "purity of a simulated drain");
+
+        FluidStack other = WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), WaterPurity.CAULDRON_PURITY);
+        helper.assertTrue(handler.drain(other, IFluidHandler.FluidAction.EXECUTE).isEmpty(), "drained water of another purity");
+        FluidStack drained = handler.drain(inTank.copyWithAmount(1000), IFluidHandler.FluidAction.EXECUTE);
+        helper.assertValueEqual(drained.getAmount(), 1000, "amount drained asking for the tank contents");
+        helper.assertValueEqual(WaterPurity.getPurity(drained), heated, "purity of the drained water");
+        helper.assertTrue(helper.getLevel().getBlockState(pos).is(Blocks.CAULDRON), "the cauldron was not emptied");
         helper.succeed();
     }
 

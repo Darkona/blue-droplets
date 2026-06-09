@@ -110,7 +110,7 @@ Global settings in `purity.toml`, section `world`:
 
 ### Cauldrons
 
-A water cauldron stores no purity: whatever went into it (rain, dripstone, a bucket of dirty or purified water), water taken out of it (buckets, bottles, bowls, Create open pipe ends) is always **slightly dirty (1)**, or **acceptable (2)** while the cauldron stands on a heat source from the block tag `#bluedroplets:cauldron_heat_sources` (blocks with a `lit` property only when lit). A cauldron never gives purified water: use a Sand Filter or the purification recipes for that. Jade shows the purity the water would have right now. This applies to any water container another mod lets you fill from a cauldron, as long as it is a registered purity container.
+A water cauldron stores no purity: whatever went into it (rain, dripstone, a bucket of dirty or purified water), water taken out of it (buckets, bottles, bowls, Create open pipe ends) is always **slightly dirty (1)**, or **acceptable (2)** while the cauldron stands on a heat source from the block tag `#bluedroplets:cauldron_heat_sources` (blocks with a `lit` property only when lit). A cauldron never gives purified water: use a Sand Filter or the purification recipes for that. Jade shows the purity the water would have right now. This applies to any water container another mod lets you fill from a cauldron, as long as it is a registered purity container, and to pumps and pipes of other mods that drain the cauldron through the NeoForge fluid capability.
 
 ### Biome tags
 
