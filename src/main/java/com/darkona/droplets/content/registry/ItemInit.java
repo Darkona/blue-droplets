@@ -2,6 +2,7 @@ package com.darkona.droplets.content.registry;
 
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.common.item.DrinkableItem;
+import com.darkona.droplets.foundation.common.item.TerracottaBowlItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -23,7 +24,7 @@ public class ItemInit {
         CLAY_BOWL = ITEMS.register("clay_bowl", () -> new Item((new Item.Properties())
                 .stacksTo(64)
         ));
-        TERRACOTTA_BOWL = ITEMS.register("terracotta_bowl", () -> new Item((new Item.Properties())
+        TERRACOTTA_BOWL = ITEMS.register("terracotta_bowl", () -> new TerracottaBowlItem((new Item.Properties())
                 .stacksTo(64)
         ));
         TERRACOTTA_WATER_BOWL = ITEMS.register("terracotta_water_bowl", () -> (new DrinkableItem())

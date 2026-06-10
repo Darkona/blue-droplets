@@ -20,6 +20,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.core.dispenser.BlockSource;
@@ -139,6 +141,44 @@ public class PurityTests
         helper.assertTrue(helper.getLevel().getFluidState(water).isEmpty(), "the dispenser did not pick up the water");
         helper.assertValueEqual(WaterPurity.getPurity(bucket), expected, "purity of a water bucket from a dispenser");
         helper.succeed();
+    }
+
+    @GameTest(template = "box")
+    public static void containersFillWithWorldWaterPurity(GameTestHelper helper)
+    {
+        BlockPos water = helper.absolutePos(new BlockPos(2, 2, 2));
+        helper.getLevel().setBlockAndUpdate(water, Blocks.WATER.defaultBlockState());
+        int still = WaterPurity.getWaterPurity(helper.getLevel(), water, true);
+        ServerPlayer player = TestSupport.player(helper);
+        player.moveTo(water.getX() + 0.5, water.getY() + 1, water.getZ() + 0.5, 0.0F, 90.0F);
+
+        ItemStack bottle = useFromAbove(player, new ItemStack(Items.GLASS_BOTTLE));
+        helper.assertTrue(bottle.is(Items.POTION), "the glass bottle was not filled");
+        helper.assertTrue(WaterPurity.hasPurity(bottle), "water bottle from the world has no purity");
+        helper.assertValueEqual(WaterPurity.getPurity(bottle), still, "purity of a water bottle from still water");
+
+        ItemStack bowl = useFromAbove(player, new ItemStack(ItemInit.TERRACOTTA_BOWL.get()));
+        helper.assertTrue(bowl.is(ItemInit.TERRACOTTA_WATER_BOWL.get()), "the terracotta bowl was not filled");
+        helper.assertValueEqual(WaterPurity.getPurity(bowl), still, "purity of a terracotta water bowl from still water");
+        helper.assertTrue(WaterPurity.hasPurity(bowl), "terracotta water bowl from the world has no purity");
+
+        ItemStack bucket = useFromAbove(player, new ItemStack(Items.BUCKET));
+        helper.assertTrue(bucket.is(Items.WATER_BUCKET), "the bucket was not filled");
+        helper.assertTrue(WaterPurity.hasPurity(bucket), "water bucket from the world has no purity");
+        helper.assertValueEqual(WaterPurity.getPurity(bucket), still, "purity of a water bucket from the world");
+
+        helper.getLevel().setBlockAndUpdate(water, Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 2));
+        int running = WaterPurity.getWaterPurity(helper.getLevel(), water, false);
+        ItemStack flowing = useFromAbove(player, new ItemStack(Items.GLASS_BOTTLE));
+        helper.assertTrue(flowing.is(Items.POTION), "the glass bottle was not filled from flowing water");
+        helper.assertValueEqual(WaterPurity.getPurity(flowing), running, "purity of a water bottle from flowing water");
+        helper.succeed();
+    }
+
+    private static ItemStack useFromAbove(Player player, ItemStack stack)
+    {
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        return stack.use(player.level(), player, InteractionHand.MAIN_HAND).getObject();
     }
 
     private static ItemStack useOnFullCauldron(GameTestHelper helper, Player player, BlockPos pos, ItemStack stack)

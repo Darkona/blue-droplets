@@ -15,14 +15,9 @@ import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
@@ -53,7 +48,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -63,7 +57,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -192,60 +185,6 @@ public class WaterPurity
         for (ContainerWithPurity container : second)
             byFilled.putIfAbsent(container.getFilledItem(), container);
         return Map.copyOf(byFilled);
-    }
-
-    /**
-     * Fills empty buckets, glass bottles and terracotta bowls from water in the world, with the purity of that water.
-     * Replaces vanilla {@code use} for those cases; dragon breath and everything else is left to vanilla.
-     */
-    @SubscribeEvent
-    static void fillWithPurity(PlayerInteractEvent.RightClickItem event)
-    {
-        ItemStack item = event.getItemStack();
-        boolean bucket = item.is(Items.BUCKET);
-        boolean bottle = item.is(Items.GLASS_BOTTLE);
-        if (!bucket && !bottle && !item.is(ItemInit.TERRACOTTA_BOWL.get()))
-            return;
-
-        Player player = event.getEntity();
-        Level level = event.getLevel();
-        if (bottle && !level.getEntitiesOfClass(AreaEffectCloud.class, player.getBoundingBox().inflate(2.0),
-                cloud -> cloud.isAlive() && cloud.getOwner() instanceof EnderDragon).isEmpty())
-            return;
-
-        BlockHitResult hit = pickFluid(player, bucket || !SyncedValues.canFillFromFlowingWater() ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.ANY);
-        if (hit.getType() != HitResult.Type.BLOCK)
-            return;
-        BlockPos pos = hit.getBlockPos();
-        BlockState state = level.getBlockState(pos);
-        if (!state.getFluidState().is(FluidTags.WATER) || !level.mayInteract(player, pos))
-            return;
-
-        int purity = getBlockPurity(level, pos);
-        ItemStack filled;
-        if (bucket)
-        {
-            if (!(state.getBlock() instanceof BucketPickup pickup) || !player.mayUseItemAt(pos.relative(hit.getDirection()), hit.getDirection(), item))
-                return;
-            filled = pickup.pickupBlock(player, level, pos, state);
-            if (filled.isEmpty())
-                return;
-            addPurity(filled, purity);
-            pickup.getPickupSound(state).ifPresent(sound -> player.playSound(sound, 1.0F, 1.0F));
-            if (player instanceof ServerPlayer serverPlayer)
-                CriteriaTriggers.FILLED_BUCKET.trigger(serverPlayer, filled);
-        }
-        else
-        {
-            filled = addPurity(bottle ? PotionContents.createItemStack(Items.POTION, Potions.WATER) : new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), purity);
-            level.playSound(player, player.getX(), player.getY(), player.getZ(), bottle ? SoundEvents.BOTTLE_FILL : SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
-        }
-
-        level.gameEvent(player, GameEvent.FLUID_PICKUP, pos);
-        player.awardStat(Stats.ITEM_USED.get(item.getItem()));
-        player.setItemInHand(event.getHand(), ItemUtils.createFilledResult(item, player, filled));
-        event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide()));
-        event.setCanceled(true);
     }
 
     /**
