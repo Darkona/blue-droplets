@@ -29,9 +29,6 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Style;
@@ -57,7 +54,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -69,7 +65,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -96,7 +91,6 @@ public class WaterPurity
 
     public static void init()
     {
-        registerDispenserBehaviours();
         registerContainers();
     }
 
@@ -359,15 +353,6 @@ public class WaterPurity
         return fluid.get(ThirstComponent.PURITY) != null;
     }
 
-    /**
-     * Shorthand for adding purity to an item if in a context where the block
-     * the player is pointing at is accessible
-     */
-    public static ItemStack addPurity(ItemStack item, BlockPos pos, Level level)
-    {
-        return addPurity(item, getBlockPurity(level, pos));
-    }
-
 
     /**
      * Sets the purity component on an item; it is always stored, also for the default purity.
@@ -401,6 +386,18 @@ public class WaterPurity
         if (fluid.is(FluidTags.WATER))
             return getWaterPurity(level, pos, fluid.isSource());
         return level.getBlockState(pos).is(Blocks.WATER_CAULDRON) ? cauldronPurity(level, pos) : defaultPurity();
+    }
+
+    /**
+     * Purity of water just taken from {@code pos} by a machine or a dispenser: the water or water cauldron still there,
+     * or else a source that was picked up (world water purity depends on the biome and height, not on the block).
+     */
+    public static int takenWaterPurity(Level level, BlockPos pos)
+    {
+        FluidState fluid = level.getFluidState(pos);
+        if (fluid.is(FluidTags.WATER))
+            return getWaterPurity(level, pos, fluid.isSource());
+        return level.getBlockState(pos).is(Blocks.WATER_CAULDRON) ? cauldronPurity(level, pos) : getWaterPurity(level, pos, true);
     }
 
     /** Purity for water leaving the water cauldron being used right now, -1 outside one. Server thread only. */
@@ -617,63 +614,5 @@ public class WaterPurity
             return null;
         return new PurityEffect(effect, Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim()),
                 (float) (Double.parseDouble(parts[3].trim()) / 100.0), parts.length == 5 && parts[4].trim().equals("true"));
-    }
-
-    static void registerDispenserBehaviours()
-    {
-        DispenseItemBehavior bucketDefaultBehaviour = DispenserBlock.DISPENSER_REGISTRY.get(Items.BUCKET);
-        DispenseItemBehavior bottleDefaultBehaviour = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE);
-
-        DispenserBlock.registerBehavior(Items.BUCKET, (block, item) ->
-        {
-            Level level = block.level();
-            BlockPos blockpos = block.pos().relative(block.state().getValue(DispenserBlock.FACING));
-            BlockState state = level.getBlockState(blockpos);
-            if(state.getFluidState().is(FluidTags.WATER) && state.getFluidState().isSource() && state.getBlock() instanceof BucketPickup pickup)
-            {
-                ItemStack result = new ItemStack(Items.WATER_BUCKET);
-                return getStack(block, item, level, blockpos, result, pickup);
-            }
-            else
-                return bucketDefaultBehaviour.dispense(block,item);
-
-        });
-
-        DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, (block, item) ->
-        {
-            Level level = block.level();
-            BlockPos blockpos = block.pos().relative(block.state().getValue(DispenserBlock.FACING));
-
-            if(level.getFluidState(blockpos).is(FluidTags.WATER))
-            {
-                ItemStack result = PotionContents.createItemStack(Items.POTION,Potions.WATER);
-                return getStack(block, item, level, blockpos, result, null);
-            }
-            else
-                return bottleDefaultBehaviour.dispense(block,item);
-
-        });
-    }
-
-    @NotNull
-    private static ItemStack getStack(BlockSource block, ItemStack item, Level level, BlockPos blockpos, ItemStack result, @Nullable BucketPickup pickup) {
-        level.gameEvent(null, GameEvent.FLUID_PICKUP, blockpos);
-        addPurity(result, blockpos, level);
-
-        if(pickup != null)
-            pickup.pickupBlock(null,level, blockpos, level.getBlockState(blockpos));
-
-        item.shrink(1);
-        if (item.isEmpty()) {
-            return result;
-        } else
-        {
-            if (block.blockEntity().insertItem(result)!=result)
-            {
-                new DefaultDispenseItemBehavior().dispense(block, result);
-            }
-
-            return item;
-        }
     }
 }

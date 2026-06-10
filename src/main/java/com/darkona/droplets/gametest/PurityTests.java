@@ -20,6 +20,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.gametest.GameTestHolder;
@@ -112,6 +115,29 @@ public class PurityTests
         helper.assertTrue(filled.is(Items.WATER_BUCKET), "no water bucket for water with a purity");
         helper.assertValueEqual(WaterPurity.getPurity(filled), 3, "purity of a bucket filled with water");
         helper.assertFalse(WaterPurity.hasPurity(FluidUtil.getFilledBucket(new FluidStack(Fluids.WATER, 1000))), "a bucket of water without purity got one");
+        helper.succeed();
+    }
+
+    @GameTest(template = "box")
+    public static void dispensersFillWithWorldWaterPurity(GameTestHelper helper)
+    {
+        BlockPos dispenser = helper.absolutePos(new BlockPos(1, 2, 2));
+        BlockPos water = dispenser.east();
+        helper.getLevel().setBlockAndUpdate(dispenser, Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.EAST));
+        helper.getLevel().setBlockAndUpdate(water, Blocks.WATER.defaultBlockState());
+        int expected = WaterPurity.getWaterPurity(helper.getLevel(), water, true);
+        BlockSource source = new BlockSource(helper.getLevel(), dispenser, helper.getLevel().getBlockState(dispenser),
+                (DispenserBlockEntity) helper.getLevel().getBlockEntity(dispenser));
+
+        ItemStack bottle = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE).dispense(source, new ItemStack(Items.GLASS_BOTTLE));
+        helper.assertTrue(bottle.is(Items.POTION), "the dispenser did not fill the bottle");
+        helper.assertTrue(WaterPurity.hasPurity(bottle), "water bottle from a dispenser has no purity");
+        helper.assertValueEqual(WaterPurity.getPurity(bottle), expected, "purity of a water bottle from a dispenser");
+
+        ItemStack bucket = DispenserBlock.DISPENSER_REGISTRY.get(Items.BUCKET).dispense(source, new ItemStack(Items.BUCKET));
+        helper.assertTrue(bucket.is(Items.WATER_BUCKET), "the dispenser did not fill the bucket");
+        helper.assertTrue(helper.getLevel().getFluidState(water).isEmpty(), "the dispenser did not pick up the water");
+        helper.assertValueEqual(WaterPurity.getPurity(bucket), expected, "purity of a water bucket from a dispenser");
         helper.succeed();
     }
 
