@@ -3,6 +3,8 @@ package com.darkona.droplets.foundation.mixin;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +12,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FoodData.class)
@@ -24,11 +25,11 @@ public abstract class MixinFoodData
     private int dehydratedHealTimer = 0;
 
 
-    @Redirect(
+    @WrapOperation(
             method = {"tick"},
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;heal(F)V", ordinal = 0)
     )
-    private void healWithSaturation(Player player, float amount)
+    private void healWithSaturation(Player player, float amount, Operation<Void> original)
     {
         FoodData foodData = player.getFoodData();
         PlayerThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
@@ -39,16 +40,16 @@ public abstract class MixinFoodData
 
         if(shouldHeal)
         {
-            player.heal(f / 6.0F);
-            thirstData.onFoodHeal(f / 6.0F);
+            original.call(player, amount);
+            thirstData.onFoodHeal(amount);
             return;
         }
 
         dehydratedHealTimer++;
         if(dehydratedHealTimer >= GameplayConfig.SLOW_REGEN_INTERVAL_TICKS.get() && thirstData.getThirst() >= GameplayConfig.SLOW_REGEN_MIN_THIRST.get())
         {
-            player.heal(f / 6.0F);
-            thirstData.onFoodHeal(f / 6.0F);
+            original.call(player, amount);
+            thirstData.onFoodHeal(amount);
             dehydratedHealTimer = 0;
             return;
         }
@@ -56,19 +57,19 @@ public abstract class MixinFoodData
         this.addExhaustion(-f);
     }
 
-    @Redirect(
+    @WrapOperation(
             method = {"tick"},
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;heal(F)V", ordinal = 1)
     )
-    private void healWithHunger(Player player, float amount)
+    private void healWithHunger(Player player, float amount, Operation<Void> original)
     {
         PlayerThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
         boolean shouldHeal = !GameplayConfig.REGEN_HALTED_WHEN_THIRSTY.get() || thirstData.getThirst() >= GameplayConfig.HUNGER_REGEN_MIN_THIRST.get();
 
         if(shouldHeal)
         {
-            player.heal(1.0F);
-            thirstData.onFoodHeal(1.0F);
+            original.call(player, amount);
+            thirstData.onFoodHeal(amount);
         }
         else
             this.addExhaustion(-6.0F);
