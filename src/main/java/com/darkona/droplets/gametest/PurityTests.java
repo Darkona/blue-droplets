@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -95,6 +96,22 @@ public class PurityTests
         helper.assertValueEqual(drained.getAmount(), 1000, "amount drained asking for the tank contents");
         helper.assertValueEqual(WaterPurity.getPurity(drained), heated, "purity of the drained water");
         helper.assertTrue(helper.getLevel().getBlockState(pos).is(Blocks.CAULDRON), "the cauldron was not emptied");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void bucketsKeepPurityThroughTheFluidCapability(GameTestHelper helper)
+    {
+        ItemStack bucket = WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 0);
+        FluidStack inBucket = FluidUtil.getFluidContained(bucket).orElse(FluidStack.EMPTY);
+        helper.assertTrue(inBucket.is(Fluids.WATER), "no water in a water bucket");
+        helper.assertTrue(WaterPurity.hasPurity(inBucket), "water read from a bucket has no purity");
+        helper.assertValueEqual(WaterPurity.getPurity(inBucket), 0, "purity of water read from a bucket");
+
+        ItemStack filled = FluidUtil.getFilledBucket(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), 3));
+        helper.assertTrue(filled.is(Items.WATER_BUCKET), "no water bucket for water with a purity");
+        helper.assertValueEqual(WaterPurity.getPurity(filled), 3, "purity of a bucket filled with water");
+        helper.assertFalse(WaterPurity.hasPurity(FluidUtil.getFilledBucket(new FluidStack(Fluids.WATER, 1000))), "a bucket of water without purity got one");
         helper.succeed();
     }
 
