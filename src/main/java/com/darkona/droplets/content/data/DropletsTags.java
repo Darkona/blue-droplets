@@ -3,6 +3,7 @@ package com.darkona.droplets.content.data;
 import com.darkona.droplets.BlueDroplets;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +27,11 @@ public final class DropletsTags
     public static final TagKey<Item> NO_THIRST = TagKey.create(Registries.ITEM, BlueDroplets.asResource("no_thirst"));
     /** Items that take the {@code salty} penalties of {@code items.toml} when nothing else gives them values. */
     public static final TagKey<Item> SALTY = TagKey.create(Registries.ITEM, BlueDroplets.asResource("salty"));
+
+    /** Effects that pause thirst loss from activity while active, e.g. Farmer's Delight Nourishment. */
+    public static final TagKey<MobEffect> PAUSES_THIRST = TagKey.create(Registries.MOB_EFFECT, BlueDroplets.asResource("pauses_thirst"));
+    /** Effects that stop the whole thirst tick while active, e.g. Corail Tombstone's Ghostly Shape. */
+    public static final TagKey<MobEffect> STOPS_THIRST = TagKey.create(Registries.MOB_EFFECT, BlueDroplets.asResource("stops_thirst"));
 
     private DropletsTags() {}
 

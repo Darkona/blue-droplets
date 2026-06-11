@@ -5,7 +5,14 @@ import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.thirst.ExhaustionFactors;
+import com.darkona.droplets.content.data.DropletsTags;
+import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.foundation.config.GameplayConfig;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,6 +24,7 @@ import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
+import static com.darkona.droplets.gametest.TestSupport.thirst;
 
 /**
  * Optional mods, with or without them on the runtime ({@code -PwithCompat}): what Blue Droplets registers and calls
@@ -50,6 +58,37 @@ public class CompatTests
         float[] factors = new float[ExhaustionFactors.FACTORS.length];
         float total = ExhaustionFactors.compute(player, factors);
         helper.assertTrue(Float.isFinite(total) && total >= 0, "thirst loss multiplier " + total);
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void effectTagPausesThirst(GameTestHelper helper)
+    {
+        Holder<MobEffect> nourishment = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("farmersdelight", "nourishment")).orElse(null);
+        helper.assertValueEqual(nourishment != null && nourishment.is(DropletsTags.PAUSES_THIRST), ModList.get().isLoaded("farmersdelight"), "Nourishment in bluedroplets:pauses_thirst");
+        if (nourishment == null)
+        {
+            helper.succeed();
+            return;
+        }
+        double basal = GameplayConfig.BASAL_PER_TICK.get();
+        try
+        {
+            GameplayConfig.BASAL_PER_TICK.set(0.01);
+            ServerPlayer player = player(helper);
+            PlayerThirst thirst = thirst(player);
+            float before = thirst.getExhaustion();
+            thirst.tick(player);
+            helper.assertTrue(thirst.getExhaustion() > before, "no thirst exhaustion without Nourishment");
+            player.addEffect(new MobEffectInstance(nourishment, 200));
+            before = thirst.getExhaustion();
+            thirst.tick(player);
+            helper.assertValueEqual(thirst.getExhaustion(), before, "thirst exhaustion with Nourishment");
+        }
+        finally
+        {
+            GameplayConfig.BASAL_PER_TICK.set(basal);
+        }
         helper.succeed();
     }
 }

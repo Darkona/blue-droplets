@@ -7,6 +7,7 @@ import com.darkona.droplets.api.event.DrinkEvent;
 import com.darkona.droplets.api.event.EatEvent;
 import com.darkona.droplets.api.event.OverhydrationEvent;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
+import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
@@ -18,9 +19,7 @@ import com.darkona.droplets.foundation.common.damagesource.ModDamageSource;
 import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -36,7 +35,6 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import static com.darkona.droplets.core.ThirstConstants.*;
@@ -50,11 +48,6 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     /** Bits 8-15 of the synced rules: {@code sprint.minThirst}. */
     public static final int SYNC_SPRINT_MIN_SHIFT = 8;
     private static final double MAX_STEP = 10.0;
-
-    private static @Nullable Holder<MobEffect> ghostlyShape;
-    private static @Nullable Holder<MobEffect> nourishment;
-    private static @Nullable Holder<MobEffect> stuffed;
-    private static @Nullable Holder<MobEffect> saturated;
 
     int thirst = MAX_THIRST;
     int quenched = RESPAWN_QUENCHED;
@@ -72,6 +65,9 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     boolean hasLastPosition;
     float exhaustionModifier = 1.0F;
     boolean modifierDirty = true;
+    boolean effectsDirty = true;
+    boolean pausedByEffect;
+    boolean stoppedByEffect;
     boolean forceSync = true;
     int sentThirst;
     int sentQuenched;
@@ -84,22 +80,22 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
 
     public PlayerThirst() {}
 
-    public static void resolveCompatEffects()
+    /**
+     * Whether an active effect is in {@code bluedroplets:stops_thirst} or {@code bluedroplets:pauses_thirst}; read
+     * when effects change and every {@code MODIFIER_INTERVAL_TICKS}, not every tick.
+     */
+    private void readThirstEffects(Player player)
     {
-        ghostlyShape = compatEffect("tombstone", "ghostly_shape");
-        nourishment = compatEffect("farmersdelight", "nourishment");
-        stuffed = compatEffect("bakery", "stuffed");
-        saturated = compatEffect("brewery", "saturated");
-    }
-
-    private static @Nullable Holder<MobEffect> compatEffect(String namespace, String path)
-    {
-        return BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath(namespace, path)).orElse(null);
-    }
-
-    private static boolean has(Player player, @Nullable Holder<MobEffect> effect)
-    {
-        return effect != null && player.hasEffect(effect);
+        boolean paused = false;
+        boolean stopped = false;
+        for (MobEffectInstance effect : player.getActiveEffects())
+        {
+            Holder<MobEffect> holder = effect.getEffect();
+            stopped |= holder.is(DropletsTags.STOPS_THIRST);
+            paused |= holder.is(DropletsTags.PAUSES_THIRST);
+        }
+        pausedByEffect = paused;
+        stoppedByEffect = stopped;
     }
 
     public int getThirst()
@@ -312,13 +308,19 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         if(player.getAbilities().invulnerable || !shouldTickThirst)
             return;
 
-        if(has(player, ghostlyShape))
+        boolean interval = (player.tickCount + player.getId()) % MODIFIER_INTERVAL_TICKS == 0;
+        if(interval || effectsDirty)
+        {
+            effectsDirty = false;
+            readThirstEffects(player);
+        }
+        if(stoppedByEffect)
             return;
 
         if(VampirismCompat.isVampire(player))
             return;
 
-        if((player.tickCount + player.getId()) % MODIFIER_INTERVAL_TICKS == 0)
+        if(interval)
         {
             modifierDirty = true;
             if(GameplayConfig.FULL_HYDRATION_BONUS.get())
@@ -328,7 +330,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         }
 
         Difficulty difficulty = player.level().getDifficulty();
-        boolean paused = has(player, nourishment) || has(player, stuffed) || has(player, saturated);
+        boolean paused = pausedByEffect;
 
         if(GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get() && player.hasEffect(MobEffects.CONFUSION))
             exhaustion += GameplayConfig.NAUSEA_PER_TICK.get().floatValue() * exhaustionModifier(player);
@@ -630,6 +632,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     public void invalidateModifier()
     {
         modifierDirty = true;
+        effectsDirty = true;
     }
 
 

@@ -198,7 +198,7 @@ Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). 
 ```
 
 
-## Item and fluid tags
+## Item, fluid, block and effect tags
 
 | Tag | Registry | Default | Meaning |
 |---|---|---|---|
@@ -208,8 +208,10 @@ Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). 
 | `bluedroplets:purity_opt_out` | item | empty | Never gets a purity: not filled with purity, no purity tooltip, no purity effects, and its fluid is not given one. Use it for other mods' water containers that break when water items carry extra data |
 | `bluedroplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
 | `bluedroplets:cauldron_heat_sources` | block | `#minecraft:campfires`, `#minecraft:fire`, magma block, lava | Heat sources under a water cauldron: its water comes out acceptable (2) instead of slightly dirty (1). Blocks with a `lit` property (campfires, furnaces) only count while lit |
+| `bluedroplets:pauses_thirst` | mob_effect | Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated | While the player has one of these effects, thirst exhaustion stops building up; drinking and regeneration still work |
+| `bluedroplets:stops_thirst` | mob_effect | Corail Tombstone Ghostly Shape | While the player has one of these effects, thirst does not tick at all: no exhaustion, no Dehydration damage, no regeneration cost |
 
-Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`, `data/bluedroplets/tags/block/cauldron_heat_sources.json`. Use `{"id": "othermod:item", "required": false}` for optional mods.
+Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`, `data/bluedroplets/tags/block/cauldron_heat_sources.json`, `data/bluedroplets/tags/mob_effect/pauses_thirst.json`, `data/bluedroplets/tags/mob_effect/stops_thirst.json`. Use `{"id": "othermod:item", "required": false}` for optional mods. Effects are read when the player's effects change and once a second, not every tick.
 
 ## Purification recipes
 

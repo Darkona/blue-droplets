@@ -31,9 +31,8 @@ Current (1.21.1, all optional):
 
 - Create 6.0.6+ (Sand Filter, purity kept through pumps, tanks and basins, Ponder scene)
 - Jade (purity in fluid tooltips)
-- Farmer's Delight Nourishment, Let's Do Bakery's Stuffed, Let's Do Brewery's Saturated and Tombstone's ghostly shape pause thirst drain
 - Farmer's Delight, Brewin' and Chewin', Farmer's Respite (drinks and loot)
-- Farmer's Delight Nourishment, Let's Do Bakery's Stuffed and Let's Do Brewery's Saturated effects slow thirst; Tombstone's ghostly shape pauses it
+- Farmer's Delight Nourishment, Let's Do Bakery's Stuffed and Let's Do Brewery's Saturated pause thirst drain; Tombstone's ghostly shape stops thirst entirely (effect tags: datapacks can add more)
 - Cold Sweat (body temperature drives thirst)
 - Vampirism and Supernatural (vampires do not get thirsty)
 
