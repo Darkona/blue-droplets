@@ -1,60 +1,40 @@
 package com.darkona.droplets.foundation.mixin;
 
 import com.darkona.droplets.content.purity.WaterPurity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin({CampfireBlockEntity.class})
-public class MixinCampfireBlockEntity
+/**
+ * Water containers cooking on a campfire give off vapour ({@code EFFECT} particles) instead of smoke; the other items
+ * and the campfire itself keep their smoke. {@code particleTick} only runs on the client thread, so one flag, set for
+ * each slot before its particles, is enough.
+ */
+@Mixin(CampfireBlockEntity.class)
+public abstract class MixinCampfireBlockEntity
 {
-    public MixinCampfireBlockEntity() { }
+    @Unique
+    private static boolean bluedroplets$water;
 
-    @Inject(
-            method = {"particleTick"},
-            at = {@At("HEAD")},
-            cancellable = true
-    )
-    private static void waterVapour(Level level, BlockPos pos, BlockState blockState, CampfireBlockEntity campfire, CallbackInfo ci) {
-        RandomSource random = level.getRandom();
-        int l = blockState.getValue(CampfireBlock.FACING).get2DDataValue();
-        boolean cancel = false;
+    @WrapOperation(method = "particleTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;get(I)Ljava/lang/Object;"))
+    private static Object bluedroplets$checkWater(NonNullList<ItemStack> items, int slot, Operation<Object> original)
+    {
+        Object item = original.call(items, slot);
+        bluedroplets$water = item instanceof ItemStack stack && WaterPurity.isWaterFilledContainer(stack);
+        return item;
+    }
 
-        for(int i = 0; i < campfire.getItems().size(); ++i) {
-            ItemStack itemstack = campfire.getItems().get(i);
-            if (WaterPurity.isWaterFilledContainer(itemstack)) {
-                cancel = true;
-                if (random.nextFloat() < 0.2F) {
-                    Direction direction = Direction.from2DDataValue(Math.floorMod(i + l, 4));
-                    final float f = 0.3125F;
-                    double d0 = (double)pos.getX() + 0.5 - (double)((float)direction.getStepX() * f) + (double)((float)direction.getClockWise().getStepX() * f);
-                    double d1 = (double)pos.getY() + 0.6;
-                    double d2 = (double)pos.getZ() + 0.5 - (double)((float)direction.getStepZ() * f) + (double)((float)direction.getClockWise().getStepZ() * f);
-                    level.addParticle(ParticleTypes.EFFECT, d0, d1, d2, 0.0, 0.001, 0.0);
-                }
-            }
-        }
-
-        if (cancel) {
-            if (random.nextFloat() < 0.11F) {
-                int smokes = random.nextInt(2) + 2;
-                for(int i = 0; i < smokes; ++i) {
-                    CampfireBlock.makeParticles(level, pos, blockState.getValue(CampfireBlock.SIGNAL_FIRE), false);
-                }
-            }
-
-            ci.cancel();
-        }
-
+    @ModifyArg(method = "particleTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), index = 0)
+    private static ParticleOptions bluedroplets$vapour(ParticleOptions particle)
+    {
+        return bluedroplets$water ? ParticleTypes.EFFECT : particle;
     }
 }
