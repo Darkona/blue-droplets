@@ -35,41 +35,22 @@ public class DrinkableItem extends Item
         return this;
     }
 
+    /**
+     * Uses up one drink and hands back its empty container, like vanilla bottles: into the inventory, or dropped when
+     * it is full.
+     */
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack item, @NotNull Level level, @NotNull LivingEntity entity)
     {
-        Player player = entity instanceof Player ? (Player)entity : null;
-
-        if (player instanceof ServerPlayer)
-        {
-            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer)player, item);
-        }
-        if (player != null)
-        {
-            player.awardStat(Stats.ITEM_USED.get(this));
-            if (!player.getAbilities().instabuild)
-            {
-                item.shrink(1);
-            }
-        }
-
-        if (player == null || !player.getAbilities().instabuild)
-        {
-            if (item.isEmpty())
-            {
-                return new ItemStack(container);
-            }
-
-            if (player != null)
-            {
-                ItemStack container = new ItemStack(this.container);
-                if (!player.getInventory().add(container)) {
-                    player.drop(container, false);
-                }
-            }
-        }
-
         level.gameEvent(entity, GameEvent.ITEM_INTERACT_FINISH, entity.getEyePosition());
-        return item;
+        if (!(entity instanceof Player player))
+        {
+            item.consume(1, entity);
+            return item.isEmpty() ? new ItemStack(container) : item;
+        }
+        if (player instanceof ServerPlayer serverPlayer)
+            CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, item);
+        player.awardStat(Stats.ITEM_USED.get(this));
+        return ItemUtils.createFilledResult(item, player, new ItemStack(container));
     }
 
     @Override

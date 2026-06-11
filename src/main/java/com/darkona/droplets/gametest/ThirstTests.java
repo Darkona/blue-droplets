@@ -3,6 +3,7 @@ package com.darkona.droplets.gametest;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import net.minecraft.commands.CommandSourceStack;
@@ -52,6 +53,19 @@ public class ThirstTests
         helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a purified water bottle (6)");
         helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a purified water bottle (8)");
         helper.assertValueEqual(lastCause, ThirstChangeEvent.Cause.DRINK, "cause of drinking a water bottle");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void drinkingABowlGivesTheEmptyBowlBack(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        ItemStack bowls = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get(), 2);
+        ItemStack left = bowls.finishUsingItem(helper.getLevel(), player);
+        helper.assertTrue(left.is(ItemInit.TERRACOTTA_WATER_BOWL.get()) && left.getCount() == 1, "water bowls left after drinking one of two");
+        helper.assertValueEqual(player.getInventory().countItem(ItemInit.TERRACOTTA_BOWL.get()), 1, "empty bowls in the inventory");
+        ItemStack last = left.finishUsingItem(helper.getLevel(), player);
+        helper.assertTrue(last.is(ItemInit.TERRACOTTA_BOWL.get()) && last.getCount() == 1, "drinking the last water bowl leaves the empty bowl in hand");
         helper.succeed();
     }
 
