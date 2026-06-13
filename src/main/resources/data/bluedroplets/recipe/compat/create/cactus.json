@@ -19,7 +19,7 @@
       "id": "minecraft:water",
       "amount": 250,
       "components": {
-        "bluedroplets:purity": 3
+        "bluedroplets:purity": 2
       }
     },
     {

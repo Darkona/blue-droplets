@@ -3,7 +3,13 @@ package com.darkona.droplets.gametest;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
+import com.darkona.droplets.content.registry.ThirstComponent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.neoforged.fml.ModList;
+import java.util.List;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -179,6 +185,23 @@ public class PurityTests
     {
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
         return stack.use(player.level(), player, InteractionHand.MAIN_HAND).getObject();
+    }
+
+    @GameTest(template = "empty")
+    public static void cookingReachesPurifiedOnlyWithoutCreate(GameTestHelper helper)
+    {
+        int max = -1;
+        for (RecipeType<? extends AbstractCookingRecipe> type : List.of(RecipeType.SMELTING, RecipeType.CAMPFIRE_COOKING))
+            for (RecipeHolder<? extends AbstractCookingRecipe> holder : helper.getLevel().getRecipeManager().getAllRecipesFor(type))
+                if (holder.id().getNamespace().equals(BlueDroplets.ID))
+                {
+                    Integer purity = holder.value().getResultItem(helper.getLevel().registryAccess()).get(ThirstComponent.PURITY);
+                    if (purity != null)
+                        max = Math.max(max, purity);
+                }
+        int expected = ModList.get().isLoaded("create") ? 2 : WaterPurity.MAX_PURITY;
+        helper.assertValueEqual(max, expected, "highest purity from cooking water");
+        helper.succeed();
     }
 
     private static ItemStack useOnFullCauldron(GameTestHelper helper, Player player, BlockPos pos, ItemStack stack)

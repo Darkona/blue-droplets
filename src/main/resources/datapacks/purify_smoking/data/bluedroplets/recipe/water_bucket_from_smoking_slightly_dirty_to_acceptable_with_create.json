@@ -4,11 +4,8 @@
       "type": "bluedroplets:purity_enabled"
     },
     {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:mod_loaded",
-        "modid": "create"
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
     }
   ],
   "type": "minecraft:smoking",
@@ -19,26 +16,13 @@
       "components": {
         "bluedroplets:purity": 1
       }
-    },
-    {
-      "type": "neoforge:components",
-      "items": "minecraft:water_bucket",
-      "components": {
-        "bluedroplets:purity": 2
-      }
-    },
-    {
-      "type": "neoforge:components",
-      "items": "minecraft:water_bucket",
-      "components": {},
-      "strict": true
     }
   ],
   "result": {
     "id": "minecraft:water_bucket",
     "count": 1,
     "components": {
-      "bluedroplets:purity": 3
+      "bluedroplets:purity": 2
     }
   },
   "experience": 0.35,

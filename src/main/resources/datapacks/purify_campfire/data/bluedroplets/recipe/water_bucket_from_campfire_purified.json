@@ -2,6 +2,13 @@
   "neoforge:conditions": [
     {
       "type": "bluedroplets:purity_enabled"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "create"
+      }
     }
   ],
   "type": "minecraft:campfire_cooking",
