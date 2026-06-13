@@ -47,7 +47,14 @@ public class ThirstTab
         return list;
     }
 
+    /**
+     * One stack per purity, or the plain stack once when purity is off.
+     */
     private static void addPurities(List<ItemStack> list, ItemStack stack) {
+        if (!WaterPurity.enabled()) {
+            list.add(stack);
+            return;
+        }
         for (int purity = WaterPurity.MIN_PURITY; purity <= WaterPurity.MAX_PURITY; purity++)
             list.add(WaterPurity.addPurity(stack.copy(), purity));
     }

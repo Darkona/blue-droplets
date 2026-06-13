@@ -75,6 +75,7 @@ public class BlueDroplets
         EffectInit.register(modBus);
         AttributeInit.register(modBus);
         ConditionInit.CONDITION_CODECS.register(modBus);
+        ConditionInit.LOOT_CONDITIONS.register(modBus);
         LegacyIds.register(modBus);
 
         if(ModList.get().isLoaded("create"))

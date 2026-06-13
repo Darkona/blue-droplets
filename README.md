@@ -17,6 +17,8 @@ It is the continuation of **[Thirst Was Taken](https://github.com/ghen-git/Thirs
 - Terracotta and clay bowls as early-game water containers.
 - `/bluedroplets` command (`/thirst` still works) to query or set thirst.
 
+Only want thirst? Set `general.enabled = false` in `config/bluedroplets/purity.toml` and water purity is gone: no purity on items, no tooltips, no sickness from dirty water, no purification recipes (see `wiki/Configuration.md`).
+
 ## Moving from Thirst Was Taken
 
 Blue Droplets uses the mod id `bluedroplets` and cannot be installed together with Thirst Was Taken or Thirst Was Reclaimed (mod id `thirst`); the game will tell you if both are present.

@@ -55,7 +55,7 @@ public class JadePlugin implements IWailaPlugin
         {
             IFluidHandler handler = Capabilities.FluidHandler.BLOCK.getCapability(accessor.getLevel(), accessor.getPosition(),
                     accessor.getBlockState(), accessor.getBlockEntity(), null);
-            if (handler == null)
+            if (handler == null || !WaterPurity.enabled())
                 return;
 
             IntArrayList purities = new IntArrayList();

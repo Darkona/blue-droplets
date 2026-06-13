@@ -18,7 +18,7 @@ public abstract class MixinFluidDrainingBehaviour
     public void getDrainableFluid(BlockPos rootPos, CallbackInfoReturnable<FluidStack> cir){
         FluidDrainingBehaviour behaviour = ((FluidDrainingBehaviour)(Object) this);
         FluidStack output = cir.getReturnValue();
-        if (FluidHelper.isWater(output.getFluid())){
+        if (WaterPurity.enabled() && FluidHelper.isWater(output.getFluid())){
                 WaterPurity.addPurity(output,WaterPurity.getBlockPurity(behaviour.getWorld(), rootPos));
                 cir.setReturnValue(output);
         }

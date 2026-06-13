@@ -154,7 +154,8 @@ public final class DropletsAPI
 
     /**
      * Purity of a water stack, or of a drink with a fixed purity; missing or invalid purity reads as the server's
-     * {@code defaultPurity}.
+     * {@code defaultPurity}. It still answers when purity is off: check {@link #isPurityEnabled()} before letting it
+     * change anything.
      */
     public static int getPurity(ItemStack stack)
     {
@@ -181,7 +182,8 @@ public final class DropletsAPI
     }
 
     /**
-     * Purity of the water at this position (biome, dimension, altitude, running or still) or of a water cauldron.
+     * Purity of the water at this position (biome, dimension, altitude, running or still) or of a water cauldron. It
+     * still answers when purity is off: check {@link #isPurityEnabled()} before letting it change anything.
      * Server side: biome and dimension data are not synced.
      */
     public static int getWaterPurity(Level level, BlockPos pos)

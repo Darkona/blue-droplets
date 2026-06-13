@@ -47,7 +47,7 @@ public class TerracottaBowlItem extends Item
         level.gameEvent(player, GameEvent.FLUID_PICKUP, pos);
         player.awardStat(Stats.ITEM_USED.get(this));
         ItemStack water = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get());
-        if (!level.isClientSide())
+        if (!level.isClientSide() && WaterPurity.enabled())
             WaterPurity.addPurity(water, WaterPurity.takenWaterPurity(level, pos));
         return InteractionResultHolder.sidedSuccess(ItemUtils.createFilledResult(bowl, player, water), level.isClientSide());
     }

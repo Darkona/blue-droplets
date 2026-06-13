@@ -78,6 +78,8 @@ ItemStack clean = DropletsAPI.withPurity(stack, DropletsAPI.PURIFIED);  // a cop
 int here = DropletsAPI.getWaterPurity(level, pos);       // server side
 ```
 
+Purity can be turned off (`purity.toml` `general.enabled = false`, synced to clients). Then `isPurityEnabled()` is `false`, `withPurity` returns an unchanged copy, drinking never rolls purity effects and `DrinkEvent` carries `NO_PURITY`. `getPurity` and `getWaterPurity` still answer (`defaultPurity` for most water), so check `isPurityEnabled()` before letting a purity change anything in your mod.
+
 ## Changing thirst (server)
 
 ```java

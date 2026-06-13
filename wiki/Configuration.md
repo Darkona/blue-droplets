@@ -189,10 +189,23 @@ The maximum thirst stays 20: the HUD, its overlays and commands assume it.
 
 | Key | Default | Meaning |
 |---|---|---|
-| `general.enabled` | `true` | Water has a purity at all. `false`: nothing stores or shows purity (tooltips, Jade, Create goggles), no purity effects, and the purification recipes are not loaded (they are checked when datapacks load: `/reload` or restart) |
+| `general.enabled` | `true` | Water has a purity at all. `false` turns the whole purity mechanic off and leaves only thirst: see [Thirst only](#thirst-only-purity-off) |
 | `general.defaultPurity` | `2` | Purity of water with none stored |
 | `general.quenchWhenDebuffed` | `true` | Drinking still restores thirst when a purity effect blocks hydration |
 | `world.*` | | See [Water purity in the world](Modpack-Makers.md#water-purity-in-the-world) |
+
+### Thirst only (purity off)
+
+If you only want the thirst bar, set `general.enabled = false`. The server's value is sent to clients, so players do not need to change their own file. With it off:
+
+- No item or fluid gets a purity. Buckets, glass bottles and terracotta bowls filled from the world, a cauldron, a dispenser, a pump or a Create machine hold plain water, and chest loot drinks come without one.
+- Nothing shows a purity: item tooltips, Jade, Create goggles and the Sand Filter tooltip. The Blue Droplets creative tab lists each water container once instead of once per purity.
+- Drinking any water, from an item or by hand, restores thirst and never gives purity effects, including the Dehydration of `hotDirtyWater`. `DrinkEvent` reports `NO_PURITY`.
+- The purification recipes (furnace, campfire and smoker packs) are not loaded, and Create's cactus compacting gives plain water. Recipes are checked when datapacks load, so this part applies after `/reload` or a restart.
+- The Sand Filter and the bowls stay, because registered blocks and items cannot depend on a config. The Sand Filter then works as a pass-through: water goes through it unchanged, at `sandFilterMbPerTick`. The bowls are plain water containers.
+- `/bluedroplets debug purity` only says that purity is off. For other mods, `DropletsAPI.isPurityEnabled()` returns `false` and `withPurity` returns an unchanged copy.
+- The other keys of this file and the purity keys of `compat.toml` (`sandFilterFiltrationAmount`, `sandFilterMaxPurity`, `openEndedPipePurity`) do nothing.
+- Purity already stored on items and fluids from before is ignored and not shown. Such items may not stack with new water until they are used up.
 
 ### `[effects]`
 

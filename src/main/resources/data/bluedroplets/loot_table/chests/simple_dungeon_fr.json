@@ -18,7 +18,8 @@
           "functions": [
             {
               "function": "minecraft:set_components",
-              "components": {"bluedroplets:purity":3}
+              "components": {"bluedroplets:purity":3},
+              "conditions": [{"condition": "bluedroplets:purity_enabled"}]
             }
           ],
           "name": "farmersrespite:dandelion_tea",
@@ -29,7 +30,8 @@
           "functions": [
             {
               "function": "minecraft:set_components",
-              "components": {"bluedroplets:purity":3}
+              "components": {"bluedroplets:purity":3},
+              "conditions": [{"condition": "bluedroplets:purity_enabled"}]
             }
           ],
           "name": "farmersrespite:yellow_tea",

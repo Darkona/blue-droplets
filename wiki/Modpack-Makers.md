@@ -227,7 +227,8 @@ The recipes ship as optional built-in datapacks, one per method, listed in the d
 
 - Turn a method off or on per world with `/datapack disable "mod/bluedroplets:datapacks/purify_campfire"` / `/datapack enable ...`; the choice is saved with the world.
 - To change a recipe, put a recipe with the same id (`bluedroplets:water_bottle_from_smelting_purified`, …) in your own datapack above it.
-- Every purification recipe carries the condition `{"type": "bluedroplets:purity_enabled"}`, so none load when `purity.enabled` is `false`. Use it in your own purity recipes too.
+- Every purification recipe carries the condition `{"type": "bluedroplets:purity_enabled"}`, so none load when `purity.enabled` is `false`. Use it in your own purity recipes too. A recipe that should still exist without purity needs a second copy with `{"type": "neoforge:not", "value": {"type": "bluedroplets:purity_enabled"}}`, as Create's cactus compacting does (`bluedroplets:compat/create/cactus_without_purity`).
+- The same id is also a loot condition, checked each time loot is rolled: put `"conditions": [{"condition": "bluedroplets:purity_enabled"}]` on a `minecraft:set_components` function that stores `bluedroplets:purity`, as the built-in chest loot does, so the drink comes without a purity when it is off.
 
 Example of one level of purification for a modded water container:
 

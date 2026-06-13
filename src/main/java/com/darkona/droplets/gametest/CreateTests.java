@@ -6,6 +6,7 @@ import com.darkona.droplets.compat.create.SandFilterBlock;
 import com.darkona.droplets.compat.create.SandFilterBlockEntity;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.CompatConfig;
+import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.tab.ThirstTab;
 import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.content.fluids.OpenEndedPipe;
@@ -114,6 +115,39 @@ public class CreateTests
             tab.buildContents(parameters);
             helper.assertTrue(tab.getDisplayItems().stream().anyMatch(stack -> stack.is(CreateRegistry.SAND_FILTER_BLOCK.asItem())), "Sand Filter missing from " + tab.getDisplayName().getString());
         }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void sandFilterPassesWaterUnchangedWithPurityOff(GameTestHelper helper)
+    {
+        BlockPos pos = helper.absolutePos(BlockPos.ZERO);
+        helper.getLevel().setBlockAndUpdate(pos, CreateRegistry.SAND_FILTER_BLOCK.get().defaultBlockState());
+        SandFilterBlockEntity filter = (SandFilterBlockEntity) helper.getLevel().getBlockEntity(pos);
+        boolean enabled = PurityConfig.ENABLED.get();
+        try
+        {
+            PurityConfig.ENABLED.set(false);
+            helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.UP).fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+            for (int tick = 0; tick < 1000 && filter.hasFluid() && helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.DOWN).getFluidInTank(0).getAmount() < 1000; tick++)
+                filter.tick();
+            FluidStack out = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.DOWN).getFluidInTank(0);
+            helper.assertValueEqual(out.getAmount(), 1000, "water through a filter with purity off");
+            helper.assertFalse(WaterPurity.hasPurity(out), "water through a filter has a purity with purity off");
+        }
+        finally
+        {
+            PurityConfig.ENABLED.set(enabled);
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void cactusRecipeFollowsPurityToggle(GameTestHelper helper)
+    {
+        var recipes = helper.getLevel().getRecipeManager();
+        helper.assertTrue(recipes.byKey(BlueDroplets.asResource("compat/create/cactus")).isPresent(), "cactus compacting with purity is missing with purity on");
+        helper.assertFalse(recipes.byKey(BlueDroplets.asResource("compat/create/cactus_without_purity")).isPresent(), "cactus compacting without purity is loaded with purity on");
         helper.succeed();
     }
 

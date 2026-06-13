@@ -5,7 +5,10 @@
       "modid": "create"
     },
     {
-      "type": "bluedroplets:purity_enabled"
+      "type": "neoforge:not",
+      "value": {
+        "type": "bluedroplets:purity_enabled"
+      }
     }
   ],
   "type": "create:compacting",
@@ -17,10 +20,7 @@
   "results": [
     {
       "id": "minecraft:water",
-      "amount": 250,
-      "components": {
-        "bluedroplets:purity": 3
-      }
+      "amount": 250
     },
     {
       "id": "minecraft:green_dye"

@@ -88,7 +88,7 @@ public abstract class DrinkEvent extends PlayerEvent
         }
 
         /**
-         * Purity whose effects are rolled, or {@code DropletsAPI.NO_PURITY} for none.
+         * Purity whose effects are rolled, or {@code DropletsAPI.NO_PURITY} for none (always when purity is off).
          */
         public int getPurity()
         {

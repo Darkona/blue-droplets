@@ -18,7 +18,8 @@
           "functions": [
             {
               "function": "minecraft:set_components",
-              "components": {"bluedroplets:purity":3}
+              "components": {"bluedroplets:purity":3},
+              "conditions": [{"condition": "bluedroplets:purity_enabled"}]
             },
             {
               "count": {
@@ -37,7 +38,8 @@
           "functions": [
             {
               "function": "minecraft:set_components",
-              "components": {"bluedroplets:purity":3}
+              "components": {"bluedroplets:purity":3},
+              "conditions": [{"condition": "bluedroplets:purity_enabled"}]
             },
             {
               "count": {

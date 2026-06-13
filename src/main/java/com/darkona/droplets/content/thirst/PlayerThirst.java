@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.thirst;
 
+import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.api.DropletsView;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.api.event.DehydrationDamageEvent;
@@ -229,7 +230,8 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
 
     /**
      * Every drink (items, hand drinking, the API), server side only: {@link DrinkEvent.Pre}, purity effects, which may
-     * prevent hydration, hydration, {@link DrinkEvent.Post}. {@code item} is empty for hand drinking and the API.
+     * prevent hydration, hydration, {@link DrinkEvent.Post}. {@code item} is empty for hand drinking and the API. With
+     * purity off the events carry {@code NO_PURITY}.
      *
      * @return whether thirst or quenched changed
      */
@@ -237,6 +239,8 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     {
         if (player.level().isClientSide)
             return false;
+        if (!WaterPurity.enabled())
+            purity = DropletsAPI.NO_PURITY;
         DrinkEvent.Pre pre = NeoForge.EVENT_BUS.post(new DrinkEvent.Pre(player, item, thirst, quenched, purity));
         if (pre.isCanceled())
             return false;

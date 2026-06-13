@@ -24,7 +24,8 @@
               "function": "minecraft:set_components",
               "components": {
                 "bluedroplets:purity": 3
-              }
+              },
+              "conditions": [{"condition": "bluedroplets:purity_enabled"}]
             }
           ],
           "name": "farmersdelight:apple_cider",
@@ -37,7 +38,8 @@
               "function": "minecraft:set_components",
               "components": {
                 "bluedroplets:purity": 3
-              }
+              },
+              "conditions": [{"condition": "bluedroplets:purity_enabled"}]
             }
           ],
           "name": "farmersrespite:yellow_tea",
