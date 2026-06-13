@@ -75,13 +75,6 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
-modId="appleskin"
-type="optional"
-versionRange="[0,)"
-ordering="NONE"
-side="BOTH"
-
-[[dependencies.${mod_id}]]
 modId="supernatural"
 type="optional"
 versionRange="[0,)"
