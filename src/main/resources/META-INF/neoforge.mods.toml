@@ -103,6 +103,13 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
+modId="travelersbackpack"
+type="optional"
+versionRange="[10.1.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
 modId="toughasnails"
 type="incompatible"
 reason="Tough As Nails has its own thirst system. Blue Droplets replaces it: use one or the other, not both."

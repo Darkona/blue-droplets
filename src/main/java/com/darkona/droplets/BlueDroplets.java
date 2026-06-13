@@ -31,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import com.darkona.droplets.compat.travelersbackpack.TravelersBackpackCompat;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -58,6 +59,7 @@ public class BlueDroplets
         modBus.addListener(BlueDroplets::addPacks);
         modBus.addListener(ThirstModPacketHandler::register);
         modBus.addListener(DropletsGameTests::register);
+        TravelersBackpackCompat.init(modBus);
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 

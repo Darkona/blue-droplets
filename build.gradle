@@ -45,6 +45,12 @@ repositories {
         url = 'https://modmaven.dev'
     }
     maven { url = 'https://maven.createmod.net' }
+    maven {
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
     maven { url = 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven' }
 }
 
@@ -120,6 +126,7 @@ dependencies {
     compileOnly 'curse.maven:cold-sweat-506194:6991377-sources-6991378'
     compileOnly 'curse.maven:jade-324717:6291517'
     compileOnly 'curse.maven:supernatural-610880:6500773'
+    compileOnly 'maven.modrinth:travelersbackpack:1.21.1-10.1.39'
 
     // ./gradlew runClient -PwithCompat
     if (project.hasProperty('withCompat')) {
@@ -131,6 +138,7 @@ dependencies {
         localRuntime 'curse.maven:cold-sweat-506194:6991377-sources-6991378'
         localRuntime 'curse.maven:jade-324717:6291517'
         localRuntime 'curse.maven:appleskin-248787:5586600'
+        localRuntime 'maven.modrinth:travelersbackpack:1.21.1-10.1.39'
     }
 
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"

@@ -37,10 +37,11 @@ Current (1.21.1, all optional):
 - Farmer's Delight Nourishment, Let's Do Bakery's Stuffed and Let's Do Brewery's Saturated pause thirst drain; Tombstone's ghostly shape stops thirst entirely (effect tags: datapacks can add more)
 - Cold Sweat (body temperature drives thirst)
 - Vampirism and Supernatural (vampires do not get thirsty)
+- Traveler's Backpack 10.1+ (drinking water with the hose hydrates, with the purity of the water in the tank)
 
 Incompatible: Tough As Nails (it has its own thirst system).
 
-Planned: Create fan purification, the wider Farmer's Delight ecosystem, Traveler's Backpack, Serene Seasons, JEI/EMI purification pages, Reliquary, Curios canteen slot, and a public API for other mods.
+Planned: Create fan purification, the wider Farmer's Delight ecosystem, Serene Seasons, JEI/EMI purification pages, Reliquary, Curios canteen slot, and a public API for other mods.
 
 ## Versions
 
