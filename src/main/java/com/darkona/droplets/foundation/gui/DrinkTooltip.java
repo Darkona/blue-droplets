@@ -1,6 +1,7 @@
 package com.darkona.droplets.foundation.gui;
 
 import com.darkona.droplets.api.ThirstValues;
+import com.darkona.droplets.compat.appleskin.AppleSkinCompat;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.config.ClientConfig;
 import com.mojang.datafixers.util.Either;
@@ -52,10 +53,13 @@ public final class DrinkTooltip implements TooltipComponent, ClientTooltipCompon
         event.register(DrinkTooltip.class, tooltip -> tooltip);
     }
 
-    /** Runs every frame while a tooltip is open: reuses the last component while the values stay the same. */
+    /**
+     * Runs every frame while a tooltip is open: reuses the last component while the values stay the same. Registered at
+     * low priority, so with AppleSkin the droplets go right under its food row.
+     */
     public static void gather(RenderTooltipEvent.GatherComponents event)
     {
-        if (!ClientConfig.SHOW_TOOLTIP_ICONS.get())
+        if (!ClientConfig.SHOW_TOOLTIP_ICONS.get() || !AppleSkinCompat.tooltip())
             return;
         ThirstValues values = ThirstHelper.valuesOf(event.getItemStack());
         if (values == null || values.thirst() == 0 && values.quenched() == 0)

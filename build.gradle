@@ -127,6 +127,7 @@ dependencies {
     compileOnly 'curse.maven:jade-324717:6291517'
     compileOnly 'curse.maven:supernatural-610880:6500773'
     compileOnly 'maven.modrinth:travelersbackpack:1.21.1-10.1.39'
+    compileOnly 'curse.maven:appleskin-248787:5586600'
 
     // ./gradlew runClient -PwithCompat
     if (project.hasProperty('withCompat')) {

@@ -285,6 +285,7 @@ It runs when the world loads, after `/reload` and when `items.toml` changes, nev
 |---|---|---|
 | `Purity tooltip.onlyShowPurityWhenShifting` | `false` | Shows the purity line of water containers only while Shift is held |
 | `Tooltip.showTooltipIcons` | `true` | Thirst and quenched of items as icons in the tooltip (`(est.)` for estimated values); when off, estimated values are shown as a text line |
+| `Tooltip.followAppleSkin` | `true` | With AppleSkin installed, the quenched outline, drink preview, exhaustion underlay and tooltip icons are also hidden when their food counterpart is turned off in AppleSkin's config, so both are set in one place; the tooltip icons then also follow its "hold Shift" option. Nothing is drawn through AppleSkin |
 | `Thirst Bar.thirstBarXOffset` / `thirstBarYOffset` | `0` | Moves the thirst bar |
 | `Thirst Bar.hideBarWhenFull` | `false` | Hides the thirst bar while thirst is 20 and the player holds nothing that restores thirst (main or off hand); the bars above it move down and the quenched outline, preview and underlay are hidden too |
 | `Thirst Bar.hideBarDelayTicks` | `60` | Ticks the bar stays visible after thirst becomes full (0-1200) |

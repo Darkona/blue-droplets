@@ -11,6 +11,7 @@ public final class ClientConfig
 
     public static final ModConfigSpec.BooleanValue ONLY_SHOW_PURITY_WHEN_SHIFTING;
     public static final ModConfigSpec.BooleanValue SHOW_TOOLTIP_ICONS;
+    public static final ModConfigSpec.BooleanValue FOLLOW_APPLESKIN;
     public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_Y_OFFSET;
     public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_X_OFFSET;
 
@@ -38,6 +39,7 @@ public final class ClientConfig
 
         BUILDER.push("Tooltip");
         SHOW_TOOLTIP_ICONS = BUILDER.comment("Show the thirst and quenched an item gives as icons in its tooltip; when off, only estimated values are shown, as text").define("showTooltipIcons", true);
+        FOLLOW_APPLESKIN = BUILDER.comment("With AppleSkin installed, also hide the quenched outline, drink preview, exhaustion underlay and tooltip icons when its food counterpart is turned off in AppleSkin's config (tooltip icons then also follow its hold-Shift option)").define("followAppleSkin", true);
         BUILDER.pop();
 
         BUILDER.push("Thirst Bar");

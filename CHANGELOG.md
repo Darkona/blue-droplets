@@ -20,6 +20,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 
 ### Mod compatibility
 
+- AppleSkin (client, optional): with the new `client.toml` option `followAppleSkin` (default `true`), turning off a food visual in AppleSkin's config also turns off its thirst counterpart (saturation outline → quenched outline, held-food preview and its off-hand option → drink preview, exhaustion underlay, tooltip values and its hold-Shift option → tooltip icons). The thirst tooltip row now sits right under AppleSkin's food row. `[1.21.1]`
 - Traveler's Backpack (10.1 or newer, optional): drinking water with the hose hydrates like a water bottle (its drink values, so datapacks and the config apply), with the purity of the water in the tank and its effects. It uses Traveler's Backpack's own fluid effect API, no mixins; Traveler's Backpack's own water effect (putting out fire, regeneration in hot biomes) still runs, and the hose still drains 1000 mB per drink. `[1.21.1]`
 - AppleSkin is no longer used by any code: the thirst bar overlays and the thirst tooltip are built in, so they look the same with or without AppleSkin and there is nothing to break when AppleSkin updates. Supernatural blood items show the regular droplets in the tooltip. `[1.21.1]`
 - Vampirism: vampires now see their thirst bar with blood-red droplets instead of no bar at all. Their thirst still does not go down, as before. Supernatural vampires get the same red droplets instead of Supernatural's thirst icon texture. `[1.21.1]`

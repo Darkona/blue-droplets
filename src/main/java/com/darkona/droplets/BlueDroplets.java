@@ -32,6 +32,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import com.darkona.droplets.compat.travelersbackpack.TravelersBackpackCompat;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -70,7 +71,7 @@ public class BlueDroplets
             VampirismCompat.initClient();
             SupernaturalCompat.initClient();
             modBus.addListener(DrinkTooltip::registerFactory);
-            NeoForge.EVENT_BUS.addListener(DrinkTooltip::gather);
+            NeoForge.EVENT_BUS.addListener(EventPriority.LOW, DrinkTooltip::gather);
         }
 
         ItemInit.register(modBus);

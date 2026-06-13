@@ -3,6 +3,7 @@ package com.darkona.droplets.foundation.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.ThirstValues;
+import com.darkona.droplets.compat.appleskin.AppleSkinCompat;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.IThirst;
@@ -75,7 +76,7 @@ public final class ThirstBarRenderer
         int quenched = thirst.getQuenched();
         boolean shake = quenched <= 0 && ticks % (level * 3 + 1) == 0;
         int wave = ClientConfig.BUFF_WAVE.get() && ThirstBarStyles.waves(player) ? ticks % (ThirstConstants.MAX_THIRST + 5) : -1;
-        boolean showQuenched = ClientConfig.SHOW_QUENCHED_OVERLAY.get();
+        boolean showQuenched = ClientConfig.SHOW_QUENCHED_OVERLAY.get() && AppleSkinCompat.quenchedOverlay();
 
         ThirstValues gain = ClientConfig.SHOW_DRINK_PREVIEW.get() ? heldDrink(player) : null;
         int newLevel = level;
@@ -90,7 +91,7 @@ public final class ThirstBarRenderer
 
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        if (ClientConfig.SHOW_EXHAUSTION_UNDERLAY.get())
+        if (ClientConfig.SHOW_EXHAUSTION_UNDERLAY.get() && AppleSkinCompat.exhaustionUnderlay())
         {
             int width = (int) (Mth.clamp(thirst.getExhaustion() / GameplayConfig.EXHAUSTION_PER_POINT.get().floatValue(), 0f, 1f) * 81);
             guiGraphics.setColor(1f, 1f, 1f, 0.75f);
@@ -160,7 +161,9 @@ public final class ThirstBarRenderer
     private static @Nullable ThirstValues heldDrink(Player player)
     {
         ThirstValues values = drinkValues(player, player.getMainHandItem());
-        return values != null ? values : drinkValues(player, player.getOffhandItem());
+        if (values != null)
+            return AppleSkinCompat.drinkPreview(false) ? values : null;
+        return AppleSkinCompat.drinkPreview(true) ? drinkValues(player, player.getOffhandItem()) : null;
     }
 
     private static @Nullable ThirstValues drinkValues(Player player, ItemStack stack)
