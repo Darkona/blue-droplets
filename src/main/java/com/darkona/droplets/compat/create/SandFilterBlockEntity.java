@@ -110,8 +110,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
      */
     public static int filteredPurity(int purity)
     {
-        int max = CompatConfig.SAND_FILTER_MAX_PURITY.get();
-        return Math.max(purity, Math.min(purity + CompatConfig.SAND_FILTER_FILTRATION_AMOUNT.get(), max));
+        return CreateCompat.sandFilterPurity(purity);
     }
 
     private void passOn(int rate)

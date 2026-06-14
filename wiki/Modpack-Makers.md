@@ -217,6 +217,8 @@ Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/
 
 Purifying water uses vanilla recipe types (`minecraft:smelting`, `minecraft:campfire_cooking`, `minecraft:smoking`) with NeoForge component ingredients: the ingredient matches water of a given purity and the result stores a higher one. JEI and other recipe viewers show them like any other recipe.
 
+JEI (and EMI when JEI is installed too) also gets a "Water Purification" page for what is not a recipe: the water cauldron, plain and over a block of `bluedroplets:cauldron_heat_sources`, and with Create the Sand Filter, one step per purity with the `compat.toml` amount and maximum. The page is hidden when `purity.enabled` is `false`. A "Hydration" page lists every item that changes thirst with the values the server resolved, so it shows your datapack and config changes after `/reload`.
+
 The recipes ship as optional built-in datapacks, one per method, listed in the datapack screen when creating a world and in `/datapack list`:
 
 | Pack id | Default | Recipes |

@@ -34,5 +34,12 @@
   "item.minecraft.lingering_potion.effect.quenchness": "Poción persistente de saciedad de agua",
   "item.minecraft.tipped_arrow.effect.quenchness": "Flecha de saciedad de agua",
   "effect.bluedroplets.hydrated": "Hidratado",
-  "effect.bluedroplets.overhydrated": "Sobrehidratado"
+  "effect.bluedroplets.overhydrated": "Sobrehidratado",
+  "bluedroplets.jei.purification": "Purificación del agua",
+  "bluedroplets.jei.purification.cauldron": "Agua sacada de un caldero",
+  "bluedroplets.jei.purification.heated_cauldron": "Agua sacada de un caldero sobre una fuente de calor",
+  "bluedroplets.jei.purification.sand_filter": "Cada filtro suma %s, hasta %s",
+  "bluedroplets.jei.hydration": "Hidratación",
+  "bluedroplets.jei.hydration.values": "Sed %s, saciedad %s",
+  "bluedroplets.jei.hydration.values_estimated": "Sed %s, saciedad %s (estimado)"
 }

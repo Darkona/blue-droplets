@@ -34,5 +34,12 @@
   "item.minecraft.lingering_potion.effect.quenchness": "Lingering Potion of Quenchness",
   "item.minecraft.tipped_arrow.effect.quenchness": "Arrow of Quenchness",
   "effect.bluedroplets.hydrated": "Hydrated",
-  "effect.bluedroplets.overhydrated": "Overhydrated"
+  "effect.bluedroplets.overhydrated": "Overhydrated",
+  "bluedroplets.jei.purification": "Water Purification",
+  "bluedroplets.jei.purification.cauldron": "Water taken out of a cauldron",
+  "bluedroplets.jei.purification.heated_cauldron": "Water taken out of a cauldron over a heat source",
+  "bluedroplets.jei.purification.sand_filter": "Each filter adds %s, up to %s",
+  "bluedroplets.jei.hydration": "Hydration",
+  "bluedroplets.jei.hydration.values": "Thirst %s, quenched %s",
+  "bluedroplets.jei.hydration.values_estimated": "Thirst %s, quenched %s (estimated)"
 }

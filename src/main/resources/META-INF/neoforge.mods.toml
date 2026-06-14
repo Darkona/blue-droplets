@@ -110,6 +110,13 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
+modId="jei"
+type="optional"
+versionRange="[19.21,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.${mod_id}]]
 modId="toughasnails"
 type="incompatible"
 reason="Tough As Nails has its own thirst system. Blue Droplets replaces it: use one or the other, not both."

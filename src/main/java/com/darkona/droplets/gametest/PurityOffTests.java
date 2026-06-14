@@ -3,6 +3,7 @@ package com.darkona.droplets.gametest;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.api.event.DrinkEvent;
+import com.darkona.droplets.compat.jei.PurificationEntry;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
@@ -211,6 +212,14 @@ public class PurityOffTests
             if (WaterPurity.isWaterFilledContainer(stack))
                 count++;
         return count;
+    }
+
+    @GameTest(template = "empty")
+    public static void purificationPageIsHiddenWithPurityOff(GameTestHelper helper)
+    {
+        helper.assertFalse(PurificationEntry.all().isEmpty(), "purification page empty with purity on");
+        withPurityOff(() -> helper.assertTrue(PurificationEntry.all().isEmpty(), "purification page has entries with purity off"));
+        helper.succeed();
     }
 
     @GameTest(template = "empty")

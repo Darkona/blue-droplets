@@ -48,6 +48,14 @@ public final class DrinkTooltip implements TooltipComponent, ClientTooltipCompon
         estimatedText = values.estimated() ? I18n.get("bluedroplets.tooltip.estimated_short") : null;
     }
 
+    /**
+     * The same droplets and quenched icons outside a tooltip (the recipe viewer's hydration page).
+     */
+    public static DrinkTooltip of(ThirstValues values)
+    {
+        return new DrinkTooltip(values);
+    }
+
     public static void registerFactory(RegisterClientTooltipComponentFactoriesEvent event)
     {
         event.register(DrinkTooltip.class, tooltip -> tooltip);
