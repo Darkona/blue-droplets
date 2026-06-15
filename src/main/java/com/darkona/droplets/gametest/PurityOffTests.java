@@ -10,6 +10,9 @@ import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.tab.ThirstTab;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +21,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -46,9 +51,13 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
@@ -212,6 +221,38 @@ public class PurityOffTests
             if (WaterPurity.isWaterFilledContainer(stack))
                 count++;
         return count;
+    }
+
+    /**
+     * Recipes are only checked when datapacks load, so this looks at the files: every recipe of this mod that stores or
+     * matches a purity must carry the {@code bluedroplets:purity_enabled} condition, or it would load with purity off.
+     */
+    @GameTest(template = "empty")
+    public static void purityRecipesCarryThePurityCondition(GameTestHelper helper)
+    {
+        Map<ResourceLocation, Resource> recipes = helper.getLevel().getServer().getResourceManager()
+                .listResources("recipe", id -> id.getNamespace().equals(BlueDroplets.ID) && id.getPath().endsWith(".json"));
+        helper.assertTrue(recipes.size() > 10, "only " + recipes.size() + " recipes found");
+        for (Map.Entry<ResourceLocation, Resource> recipe : recipes.entrySet())
+        {
+            JsonObject json;
+            try (Reader reader = recipe.getValue().openAsReader())
+            {
+                json = JsonParser.parseReader(reader).getAsJsonObject();
+            }
+            catch (IOException e)
+            {
+                throw new UncheckedIOException(e);
+            }
+            if (!json.toString().contains("\"bluedroplets:purity\":"))
+                continue;
+            boolean conditioned = false;
+            if (json.has("neoforge:conditions"))
+                for (JsonElement condition : json.getAsJsonArray("neoforge:conditions"))
+                    conditioned |= condition.getAsJsonObject().get("type").getAsString().equals("bluedroplets:purity_enabled");
+            helper.assertTrue(conditioned, recipe.getKey() + " uses a purity without the bluedroplets:purity_enabled condition");
+        }
+        helper.succeed();
     }
 
     @GameTest(template = "empty")

@@ -6,6 +6,7 @@
   "refmap": "bluedroplets.refmap.json",
   "mixins": [
     "create.MixinBasinRecipe",
+    "create.MixinFillingBySpout",
     "create.MixinFluidDrainingBehaviour",
     "create.MixinGenericItemEmptying",
     "create.MixinGenericItemFilling",

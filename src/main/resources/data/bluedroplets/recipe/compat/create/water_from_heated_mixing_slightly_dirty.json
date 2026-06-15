@@ -1,0 +1,32 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "bluedroplets:purity_enabled"
+    }
+  ],
+  "type": "create:mixing",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "fluids": "minecraft:water",
+      "components": {
+        "bluedroplets:purity": 1
+      },
+      "amount": 250
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:water",
+      "amount": 250,
+      "components": {
+        "bluedroplets:purity": 2
+      }
+    }
+  ]
+}

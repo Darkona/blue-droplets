@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:emptying",
+  "ingredients": [
+    {
+      "item": "bluedroplets:terracotta_water_bowl"
+    }
+  ],
+  "results": [
+    {
+      "id": "bluedroplets:terracotta_bowl"
+    },
+    {
+      "id": "minecraft:water",
+      "amount": 250
+    }
+  ]
+}

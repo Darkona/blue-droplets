@@ -12,7 +12,7 @@ It is the continuation of **[Thirst Was Taken](https://github.com/ghen-git/Thirs
 
 - Thirst bar next to the hunger bar, with a hidden "quenched" value (like saturation). Thirst drains with activity and hot biomes; at zero you take damage.
 - Water purity in four levels (dirty, slightly dirty, acceptable, purified) on buckets, bottles, bowls, fluids and cauldrons. Drinking impure water can make you sick.
-- Purify water by smelting or campfire cooking, or with Create's Sand Filter.
+- Purify water by smelting or campfire cooking, in a cauldron over a fire, or with Create (Sand Filter, fans, heated basins).
 - Drink directly from water sources by hand.
 - Terracotta and clay bowls as early-game water containers.
 - `/bluedroplets` command (`/thirst` still works) to query or set thirst.
@@ -31,7 +31,7 @@ Blue Droplets uses the mod id `bluedroplets` and cannot be installed together wi
 
 Current (1.21.1, all optional):
 
-- Create 6.0.6+ (Sand Filter, purity kept through pumps, tanks and basins, Ponder scene)
+- Create 6.0.6+ (Sand Filter; fan washing and heated basins purify up to acceptable; purity kept through pumps, tanks, basins, spouts and drains; Ponder scene)
 - Jade (purity in fluid tooltips)
 - Farmer's Delight, Brewin' and Chewin', Farmer's Respite (drinks and loot)
 - Farmer's Delight Nourishment, Let's Do Bakery's Stuffed and Let's Do Brewery's Saturated pause thirst drain; Tombstone's ghostly shape stops thirst entirely (effect tags: datapacks can add more)
@@ -42,7 +42,7 @@ Current (1.21.1, all optional):
 
 Incompatible: Tough As Nails (it has its own thirst system).
 
-Planned: Create fan purification, the wider Farmer's Delight ecosystem, Serene Seasons, Reliquary, Curios canteen slot, and a public API for other mods.
+Planned: the wider Farmer's Delight ecosystem, Serene Seasons, Reliquary, Curios canteen slot, and a public API for other mods.
 
 ## Versions
 
