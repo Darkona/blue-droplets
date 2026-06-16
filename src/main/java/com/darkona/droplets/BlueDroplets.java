@@ -1,6 +1,7 @@
 package com.darkona.droplets;
 
 import com.darkona.droplets.api.DropletsAPI;
+import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.SandFilterBlockEntity;
 import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
@@ -61,6 +62,7 @@ public class BlueDroplets
         modBus.addListener(ThirstModPacketHandler::register);
         modBus.addListener(DropletsGameTests::register);
         TravelersBackpackCompat.init(modBus);
+        ColdSweatCompat.init();
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 

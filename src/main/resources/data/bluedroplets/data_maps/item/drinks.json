@@ -21,6 +21,7 @@
     "farmersrespite:dandelion_tea": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "farmersrespite"}], "thirst": 12, "quenched": 22},
     "farmersrespite:coffee": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "farmersrespite"}], "thirst": 6, "quenched": 11},
     "create:builders_tea": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "create"}], "thirst": 12, "quenched": 22},
+    "cold_sweat:filled_waterskin": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "cold_sweat"}], "thirst": 6, "quenched": 3},
     "farmersdelight:apple_cider": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "farmersdelight"}], "thirst": 8, "quenched": 13},
     "farmersdelight:melon_juice": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "farmersdelight"}], "thirst": 8, "quenched": 13},
     "brewinandchewin:beer": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "brewinandchewin"}], "thirst": 10, "quenched": 14},

@@ -123,7 +123,7 @@ dependencies {
 
     compileOnly 'curse.maven:vampirism-become-a-vampire-233029:5547201'
     compileOnly 'curse.maven:farmers-delight-398521:6154807'
-    compileOnly 'curse.maven:cold-sweat-506194:6991377-sources-6991378'
+    compileOnly 'maven.modrinth:cold-sweat:2.4.3.1'
     compileOnly 'curse.maven:jade-324717:6291517'
     compileOnly 'curse.maven:supernatural-610880:6500773'
     compileOnly 'maven.modrinth:travelersbackpack:1.21.1-10.1.39'
@@ -137,7 +137,7 @@ dependencies {
         localRuntime "dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}"
         localRuntime "com.tterrag.registrate:Registrate:${registrate_version}"
         localRuntime 'curse.maven:farmers-delight-398521:6154807'
-        localRuntime 'curse.maven:cold-sweat-506194:6991377-sources-6991378'
+        localRuntime 'maven.modrinth:cold-sweat:2.4.3.1'
         localRuntime 'curse.maven:jade-324717:6291517'
         localRuntime 'curse.maven:appleskin-248787:5586600'
         localRuntime 'maven.modrinth:travelersbackpack:1.21.1-10.1.39'

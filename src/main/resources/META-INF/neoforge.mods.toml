@@ -89,9 +89,9 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
-modId="coldsweat"
+modId="cold_sweat"
 type="optional"
-versionRange="[0,)"
+versionRange="[2.4,)"
 ordering="NONE"
 side="BOTH"
 

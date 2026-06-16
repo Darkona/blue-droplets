@@ -70,6 +70,7 @@ public class ThirstHelper
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final NumberRows TEMPERATURE_CURVE = new NumberRows(2);
     private static final NumberRows HUMIDITY_CURVE = new NumberRows(2);
+    private static final NumberRows BODY_TEMPERATURE_CURVE = new NumberRows(2);
 
     private record CodeDrink(ItemLike item, int[] values) {}
     private record CodeProvider(ItemLike item, DrinkValueProvider provider) {}
@@ -529,7 +530,8 @@ public class ThirstHelper
     /**
      * Climate multiplier: the dimension type's {@code thirst_multiplier} ({@code bluedroplets:dimension_water}) or
      * {@code netherMultiplier} in ultra-warm dimensions replace it; otherwise {@code depletion.multiplier} times the
-     * LEGACY formula or the CURVE multipliers of biome temperature (Cold Sweat: body temperature / 100) and downfall.
+     * Cold Sweat body temperature curve ({@code coldsweat.useBodyTemperature}), or else the LEGACY formula or the
+     * CURVE multipliers of biome temperature and downfall.
      */
     public static float getExhaustionBiomeModifier(Player player)
     {
@@ -540,17 +542,15 @@ public class ThirstHelper
         if (level.dimensionType().ultraWarm())
             return GameplayConfig.NETHER_MULTIPLIER.get().floatValue();
 
+        float multiplier = GameplayConfig.DEPLETION_MULTIPLIER.get().floatValue();
+        if (ColdSweatCompat.LOADED && CompatConfig.COLD_SWEAT_BODY_TEMPERATURE.get())
+            return multiplier * (float) NumberRows.curve(BODY_TEMPERATURE_CURVE.get(CompatConfig.COLD_SWEAT_BODY_TEMPERATURE_CURVE.get()), ColdSweatCompat.bodyTemperature(player));
+
         Biome biome = level.getBiome(player.getOnPos()).value();
         float downfall = biome.getModifiedClimateSettings().downfall();
-        boolean bodyTemperature = ColdSweatCompat.LOADED && CompatConfig.COLD_SWEAT_BODY_TEMPERATURE.get();
-        float multiplier = GameplayConfig.DEPLETION_MULTIPLIER.get().floatValue();
-
         if (GameplayConfig.CLIMATE_FORMULA.get() == GameplayConfig.ClimateFormula.CURVE)
-        {
-            float temp = bodyTemperature ? (float) (ColdSweatCompat.bodyTemperature(player) / 100f) : biome.getBaseTemperature();
-            return multiplier * (float) (NumberRows.curve(TEMPERATURE_CURVE.get(GameplayConfig.TEMPERATURE_CURVE.get()), temp)
+            return multiplier * (float) (NumberRows.curve(TEMPERATURE_CURVE.get(GameplayConfig.TEMPERATURE_CURVE.get()), biome.getBaseTemperature())
                     * NumberRows.curve(HUMIDITY_CURVE.get(GameplayConfig.HUMIDITY_CURVE.get()), downfall));
-        }
 
         //humidity range: 0 - 0.8 == 0.8 midpoint: 0.4
         float humidity = downfall + 0.6f;
@@ -559,9 +559,7 @@ public class ThirstHelper
 
         //temperature range: -0.8 - 2 == 2.8 midpoint: 0.8
         float temp = biome.getBaseTemperature() + 0.2f;
-        if(bodyTemperature)
-            temp = (float) (ColdSweatCompat.bodyTemperature(player) / 100f);
-        else if(temp <= 0)
+        if(temp <= 0)
             temp = (float) Math.exp(temp);
         else if(temp > 1)
             temp /= 2;

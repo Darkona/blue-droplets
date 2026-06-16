@@ -35,7 +35,7 @@ Current (1.21.1, all optional):
 - Jade (purity in fluid tooltips)
 - Farmer's Delight, Brewin' and Chewin', Farmer's Respite (drinks and loot)
 - Farmer's Delight Nourishment, Let's Do Bakery's Stuffed and Let's Do Brewery's Saturated pause thirst drain; Tombstone's ghostly shape stops thirst entirely (effect tags: datapacks can add more)
-- Cold Sweat (body temperature drives thirst)
+- Cold Sweat 2.4+ (body temperature drives thirst; drinking water can cool you; the waterskin hydrates and carries purity)
 - Vampirism and Supernatural (vampires do not get thirsty)
 - Traveler's Backpack 10.1+ (drinking water with the hose hydrates, with the purity of the water in the tank)
 - JEI 19.21+, and EMI together with JEI (water purification and hydration pages)

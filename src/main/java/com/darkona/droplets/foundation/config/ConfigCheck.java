@@ -32,6 +32,7 @@ public final class ConfigCheck
         overlaps("gameplay.toml depletion.climate.altitude", GameplayConfig.ALTITUDE_MULTIPLIERS, problems);
         curve("gameplay.toml depletion.climate.temperatureCurve", GameplayConfig.TEMPERATURE_CURVE, problems);
         curve("gameplay.toml depletion.climate.humidityCurve", GameplayConfig.HUMIDITY_CURVE, problems);
+        curve("compat.toml coldsweat.bodyTemperatureCurve", CompatConfig.COLD_SWEAT_BODY_TEMPERATURE_CURVE, problems);
         for (int purity = 0; purity < PurityConfig.EFFECTS.size(); purity++)
             for (String entry : PurityConfig.EFFECTS.get(purity).get())
             {

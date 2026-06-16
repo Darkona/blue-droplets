@@ -41,7 +41,7 @@ public class CompatTests
         helper.assertTrue(FMLEnvironment.dist.isDedicatedServer(), "GameTests should run on a dedicated server");
         boolean create = ModList.get().isLoaded("create");
         helper.assertValueEqual(BuiltInRegistries.BLOCK.containsKey(BlueDroplets.asResource("sand_filter")), create, "Sand Filter registered with Create installed");
-        helper.assertValueEqual(ColdSweatCompat.LOADED, ModList.get().isLoaded("coldsweat"), "Cold Sweat detected");
+        helper.assertValueEqual(ColdSweatCompat.LOADED, BuiltInRegistries.ITEM.containsKey(ResourceLocation.fromNamespaceAndPath("cold_sweat", "waterskin")), "Cold Sweat detected");
         helper.assertValueEqual(VampirismCompat.LOADED, ModList.get().isLoaded("vampirism"), "Vampirism detected");
         helper.assertValueEqual(SupernaturalCompat.LOADED, ModList.get().isLoaded("supernatural"), "Supernatural detected");
         helper.succeed();

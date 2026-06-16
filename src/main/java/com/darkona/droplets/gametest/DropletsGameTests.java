@@ -17,5 +17,7 @@ public final class DropletsGameTests
             event.register(CreateTests.class);
         if (ModList.get().isLoaded("travelersbackpack"))
             event.register(TravelersBackpackTests.class);
+        if (ModList.get().isLoaded("cold_sweat"))
+            event.register(ColdSweatTests.class);
     }
 }

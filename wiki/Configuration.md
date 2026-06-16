@@ -82,7 +82,7 @@ Thirst loss per tick is `activity × scale × M`, where `M = climate × fire pro
 
 | Key | Default | Meaning |
 |---|---|---|
-| `formula` | `LEGACY` | `LEGACY`: `multiplier × temperature / humidity` of the biome, softened below 1 (as before). `CURVE`: `multiplier × temperatureCurve(temperature) × humidityCurve(downfall)`. With Cold Sweat (`compat.toml` `coldsweat.useBodyTemperature`) the body temperature / 100 is used as temperature |
+| `formula` | `LEGACY` | `LEGACY`: `multiplier × temperature / humidity` of the biome, softened below 1 (as before). `CURVE`: `multiplier × temperatureCurve(temperature) × humidityCurve(downfall)`. With Cold Sweat and `compat.toml` `coldsweat.useBodyTemperature`, `coldsweat.bodyTemperatureCurve` replaces both formulas |
 | `legacyHarshness` | `0.5` | LEGACY: part of a multiplier below 1 that is kept |
 | `temperatureCurve` | `["-0.5,0.7", "0.8,1.0", "2.0,1.5"]` | CURVE: `"x,multiplier"` points in ascending x, straight lines between them |
 | `humidityCurve` | `["0.0,1.2", "0.4,1.0", "1.0,0.8"]` | CURVE: same for the biome's downfall |
@@ -247,7 +247,10 @@ An ultra-warm dimension (the Nether) always counts as hot.
 | `create.sandFilterMbPerTick` | `10` | Millibuckets filtered per tick |
 | `create.sandFilterMaxPurity` | `3` | Highest purity a Sand Filter raises water to (0-3); purer water passes unchanged. Filters in a row facing the same way pass water on, one step each |
 | `create.openEndedPipePurity` | `true` | Water that an open pipe end pulls from the world or from a water cauldron keeps its purity there (as buckets and the hose pulley); `false` = it reads as `defaultPurity` |
-| `coldsweat.useBodyTemperature` | `true` | The climate multiplier uses Cold Sweat's body temperature instead of the biome's |
+| `coldsweat.useBodyTemperature` | `true` | The climate multiplier comes from Cold Sweat's body temperature (`bodyTemperatureCurve`) instead of the biome's temperature and downfall. The dimension's thirst multiplier and `netherMultiplier` still come first |
+| `coldsweat.bodyTemperatureCurve` | `["-100,0.8", "0,1.0", "50,1.3", "100,2.0", "150,3.0"]` | `"bodyTemperature,multiplier"` points in ascending order (Cold Sweat units: 0 comfortable, 100 burning, -100 freezing), straight lines between them, flat beyond the ends; times `depletion.multiplier` |
+| `coldsweat.drinkCooling` | `0.0` | How much drinking water (water containers, drinking by hand, the Traveler's Backpack hose) cools the body, in Cold Sweat units; 0 = off. Cold Sweat's own waterskin is left alone, it already changes the temperature by the water it holds |
+| `coldsweat.drinkCoolingTicks` | `0` | `0`: `drinkCooling` lowers the body temperature once and it drifts back with the surroundings; more: it lowers the base temperature for that many ticks instead, like Cold Sweat's cold foods (another drink restarts it, it does not stack) |
 
 ## `items.toml`
 
