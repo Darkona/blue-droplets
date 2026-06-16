@@ -11,7 +11,8 @@
     "create.MixinGenericItemEmptying",
     "create.MixinGenericItemFilling",
     "create.MixinIHaveGoggleInformation",
-    "create.MixinOpenEndedPipe"
+    "create.MixinOpenEndedPipe",
+    "travelersbackpack.MixinHoseItem"
   ],
   "injectors": {
     "defaultRequire": 1
