@@ -28,6 +28,8 @@ public class TravelersBackpackTests
         EffectFluid effect = EffectFluidRegistry.getRegisteredFluidEffects().get("bluedroplets:water");
         helper.assertTrue(effect != null, "the hose water effect is not registered");
         helper.assertTrue(effect.fluid == Fluids.WATER, "the hose water effect is not for water");
+        helper.assertTrue(EffectFluidRegistry.getEffectsForFluid(Fluids.WATER).size() == 1, "Traveler's Backpack's own water effect is still registered");
+        helper.assertValueEqual(EffectFluidRegistry.getHighestFluidEffectAmount(Fluids.WATER), 250, "mB drained per sip");
 
         FluidStack sip = WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), WaterPurity.MAX_PURITY);
         ServerPlayer player = player(helper);

@@ -4,6 +4,7 @@ import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.tiviacz.travelersbackpack.api.fluids.EffectFluid;
+import com.tiviacz.travelersbackpack.fluids.EffectFluidRegistry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -16,8 +17,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
  * Water drunk with the hose hydrates like a water bottle (its drink values, so datapacks and the config apply) with the
- * purity of the water in the tank. Runs next to Traveler's Backpack's own water effect; the hose drains the largest
- * amount any water effect needs.
+ * purity of the water in the tank. It replaces Traveler's Backpack's own water effect (put out fire, regeneration in
+ * hot biomes), so a sip drains {@value #AMOUNT} mB, a bottle's worth.
  */
 final class HoseWaterEffect extends EffectFluid
 {
@@ -30,6 +31,7 @@ final class HoseWaterEffect extends EffectFluid
 
     static void register()
     {
+        EffectFluidRegistry.EFFECT_REGISTRY.remove("minecraft:water");
         new HoseWaterEffect();
     }
 
