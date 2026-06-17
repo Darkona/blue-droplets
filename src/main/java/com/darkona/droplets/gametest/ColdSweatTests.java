@@ -11,6 +11,13 @@ import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.momosoftworks.coldsweat.core.init.ModItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -93,6 +100,31 @@ public class ColdSweatTests
         helper.assertTrue(filled.is(ModItems.FILLED_WATERSKIN), "no waterskin was filled from the water source, got " + filled);
         helper.assertTrue(WaterPurity.hasPurity(filled), "a waterskin filled from the world has no purity");
         helper.assertValueEqual(WaterPurity.getPurity(filled), WaterPurity.getWaterPurity(helper.getLevel(), water, true), "purity of a waterskin filled from the world");
+        helper.succeed();
+    }
+
+    @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
+    public static void waterskinTakesThePurityOfATank(GameTestHelper helper)
+    {
+        Block tankBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("create", "fluid_tank"));
+        if (tankBlock == Blocks.AIR)
+        {
+            helper.succeed();
+            return;
+        }
+        BlockPos tank = helper.absolutePos(new BlockPos(2, 2, 2));
+        helper.getLevel().setBlockAndUpdate(tank, tankBlock.defaultBlockState());
+        IFluidHandler handler = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, tank, Direction.UP);
+        helper.assertTrue(handler != null, "the tank has no fluid handler");
+        handler.fill(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), 0), IFluidHandler.FluidAction.EXECUTE);
+        ServerPlayer player = player(helper);
+        ItemStack empties = new ItemStack(ModItems.WATERSKIN.get(), 2);
+        player.setItemInHand(InteractionHand.MAIN_HAND, empties);
+        player.gameMode.useItemOn(player, helper.getLevel(), empties, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(tank), Direction.UP, tank, false));
+        ItemStack filled = filledWaterskin(player);
+        helper.assertTrue(!filled.isEmpty(), "no waterskin was filled from the tank");
+        helper.assertValueEqual(WaterPurity.getPurity(filled), 0, "purity of a waterskin filled from a tank of dirty water");
+        helper.assertFalse(WaterPurity.hasPurity(empties), "the empty waterskins got a purity");
         helper.succeed();
     }
 

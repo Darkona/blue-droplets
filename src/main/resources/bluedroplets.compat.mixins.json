@@ -6,6 +6,7 @@
   "refmap": "bluedroplets.refmap.json",
   "mixins": [
     "cold_sweat.MixinFilledWaterskinItem",
+    "cold_sweat.MixinWaterskinItem",
     "create.MixinBasinRecipe",
     "create.MixinFillingBySpout",
     "create.MixinFluidDrainingBehaviour",

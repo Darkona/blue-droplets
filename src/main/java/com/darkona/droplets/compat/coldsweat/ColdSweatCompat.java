@@ -26,17 +26,16 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 /**
- * Cold Sweat, through its public API only (GPL-3.0 with an exception for use as a library; no code of it is copied or
- * patched): body temperature for the climate multiplier and hot dirty water, drinking water cools, and its waterskin
- * carries purity. The waterskin's drink values and its purity container entry are data
+ * Cold Sweat, through its public API (GPL-3.0 with an exception for use as a library; no code of it is copied):
+ * body temperature for the climate multiplier and hot dirty water, and drinking water cools. The waterskin's purity
+ * (filled: purity of its water; emptied: none) is two small runtime mixins in {@code foundation.mixin.cold_sweat},
+ * until Cold Sweat has a hook for it. The waterskin's drink values and its purity container entry are data
  * ({@code bluedroplets:drinks}, {@code bluedroplets:purity_containers}).
  */
 public final class ColdSweatCompat
 {
     public static final boolean LOADED = ModList.get().isLoaded("cold_sweat");
 
-    /** Water taken by a waterskin, as Cold Sweat's own waterskin code takes it. */
-    private static final int WATERSKIN_MB = 250;
 
     private ColdSweatCompat() {}
 
@@ -45,8 +44,6 @@ public final class ColdSweatCompat
         if (!LOADED)
             return;
         NeoForge.EVENT_BUS.addListener(ColdSweatCompat::coolAfterDrinking);
-        NeoForge.EVENT_BUS.addListener(ColdSweatCompat::fillFromWorld);
-        NeoForge.EVENT_BUS.addListener(ColdSweatCompat::fillFromBlock);
     }
 
     public static double bodyTemperature(Player player)
@@ -65,64 +62,5 @@ public final class ColdSweatCompat
         if (cooling <= 0 || !item.isEmpty() && (!WaterPurity.isWaterFilledContainer(item) || ColdSweatBridge.isWaterskin(item)))
             return;
         ColdSweatBridge.cool(event.getEntity(), cooling, CompatConfig.COLD_SWEAT_DRINK_COOLING_TICKS.get());
-    }
-
-    /**
-     * Cold Sweat fills a waterskin by copying the empty one's components onto the filled one, so the empty waterskin
-     * gets the purity of the water it is about to take, and loses it again once the interaction is over. This
-     * handler covers a water source in sight ({@code WaterskinItem#use}).
-     */
-    private static void fillFromWorld(PlayerInteractEvent.RightClickItem event)
-    {
-        Level level = event.getLevel();
-        if (level.isClientSide() || !WaterPurity.enabled() || !ColdSweatBridge.isEmptyWaterskin(event.getItemStack()))
-            return;
-        BlockHitResult hit = WaterPurity.pickFluid(event.getEntity(), ClipContext.Fluid.SOURCE_ONLY);
-        if (hit.getType() != HitResult.Type.BLOCK)
-            return;
-        FluidState fluid = level.getFluidState(hit.getBlockPos());
-        if (fluid.isSource() && fluid.is(FluidTags.WATER))
-            carry(level, event.getItemStack(), WaterPurity.getWaterPurity(level, hit.getBlockPos(), true));
-    }
-
-    /**
-     * The same for a water cauldron or a block holding water ({@code WaterskinItem#useOn}): the first tank with enough
-     * water, as Cold Sweat picks it.
-     */
-    private static void fillFromBlock(PlayerInteractEvent.RightClickBlock event)
-    {
-        Level level = event.getLevel();
-        if (level.isClientSide() || !WaterPurity.enabled() || !ColdSweatBridge.isEmptyWaterskin(event.getItemStack()))
-            return;
-        BlockPos pos = event.getPos();
-        BlockState state = level.getBlockState(pos);
-        if (state.is(Blocks.WATER_CAULDRON) && state.getValue(BlockStateProperties.LEVEL_CAULDRON) > 0)
-        {
-            carry(level, event.getItemStack(), WaterPurity.cauldronPurity(level, pos));
-            return;
-        }
-        if (level.getBlockEntity(pos) == null)
-            return;
-        IFluidHandler tanks = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, event.getFace());
-        if (tanks == null)
-            return;
-        for (int tank = 0; tank < tanks.getTanks(); tank++)
-        {
-            FluidStack water = tanks.getFluidInTank(tank);
-            if (water.is(FluidTags.WATER) && water.getAmount() >= WATERSKIN_MB)
-            {
-                carry(level, event.getItemStack(), WaterPurity.getPurity(water));
-                return;
-            }
-        }
-    }
-
-    private static void carry(Level level, ItemStack emptyWaterskin, int purity)
-    {
-        MinecraftServer server = level.getServer();
-        if (server == null)
-            return;
-        WaterPurity.addPurity(emptyWaterskin, purity);
-        server.tell(new TickTask(server.getTickCount(), () -> emptyWaterskin.remove(ThirstComponent.PURITY)));
     }
 }
