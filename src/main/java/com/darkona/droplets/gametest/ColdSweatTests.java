@@ -38,6 +38,17 @@ import static com.darkona.droplets.gametest.TestSupport.player;
 public class ColdSweatTests
 {
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void emptiedWaterskinLosesItsPurity(GameTestHelper helper)
+    {
+        ItemStack filled = WaterPurity.addPurity(new ItemStack(ModItems.FILLED_WATERSKIN.get()), 0);
+        ItemStack empty = filled.getCraftingRemainingItem();
+        helper.assertTrue(empty.is(ModItems.WATERSKIN), "the remainder is not an empty waterskin");
+        helper.assertFalse(WaterPurity.hasPurity(empty), "the emptied waterskin kept its purity");
+        helper.assertTrue(ItemStack.isSameItemSameComponents(empty, new ItemStack(ModItems.WATERSKIN.get())), "the emptied waterskin does not stack with a new one");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void waterskinIsAWaterDrinkThatCooks(GameTestHelper helper)
     {
         ItemStack waterskin = new ItemStack(ModItems.FILLED_WATERSKIN.get());

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "bluedroplets.refmap.json",
   "mixins": [
+    "cold_sweat.MixinFilledWaterskinItem",
     "create.MixinBasinRecipe",
     "create.MixinFillingBySpout",
     "create.MixinFluidDrainingBehaviour",
