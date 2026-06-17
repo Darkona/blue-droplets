@@ -3,7 +3,7 @@
 Blue Droplets is configured in two layers:
 
 - **Datapacks** hold everything that belongs to a registry id: item values, tags, biomes, dimensions. They reload with `/reload` and are sent to clients by the server.
-- **TOML files** in `config/bluedroplets/` hold global numbers and switches, plus a few explicit per-item overrides. See [Configuration](Configuration.md).
+- **TOML files** in `config/bluedroplets/` hold global numbers and switches, plus a few explicit per-item overrides. See [Configuration](Configuration).
 
 All paths below are inside a datapack (`data/<namespace>/...`). Bad entries are logged and skipped; they never crash the game or disconnect players.
 
@@ -78,10 +78,10 @@ Each item takes its values from the first of these that has it; the others are i
 1. **Blacklist**: the item tag `#bluedroplets:no_thirst` or `blacklist` in `items.toml` (the item restores no thirst at all).
 2. **TOML overrides**: the `drinks` and `foods` lists in `items.toml` (section `overrides`).
 3. **Datapacks**: the `bluedroplets:drinks` data map.
-4. **Other mods' code**: `DropletsAPI.registerDrink` (and the older `RegisterThirstValueEvent`), then per-item value providers of mods whose values depend on the stack. See [Mod developers](Mod-Developers.md).
+4. **Other mods' code**: `DropletsAPI.registerDrink` (and the older `RegisterThirstValueEvent`), then per-item value providers of mods whose values depend on the stack. See [Mod developers](Mod-Developers).
 5. **Salty tag**: items in `#bluedroplets:salty` (empty by default) get `salty.thirstPenalty` and `salty.quenchedPenalty` from `items.toml` (-2 / -2). Explicit values from 1-4 win, so a tagged item with its own entry keeps it.
 6. **Keywords** (`items.toml`, section `keywords`, off by default).
-7. **Estimated from recipes** (`items.toml`, section `inference`, off by default): only for items none of the above gives values. Negative (salty) ingredient values count as 0, so estimates are never negative. Tooltips add "(est.)"; `/bluedroplets infer <item>` shows how the number was made. See [Configuration](Configuration.md#recipe-inference).
+7. **Estimated from recipes** (`items.toml`, section `inference`, off by default): only for items none of the above gives values. Negative (salty) ingredient values count as 0, so estimates are never negative. Tooltips add "(est.)"; `/bluedroplets infer <item>` shows how the number was made. See [Configuration](Configuration#recipe-inference).
 
 The server resolves this table on world load and on `/reload` and sends it to every client, so all players see the server's values.
 
@@ -157,7 +157,7 @@ Both world data maps are only read on the server.
 
 ## Dehydration effect
 
-`bluedroplets:dehydration` is a harmful effect that makes thirst drop faster, like Hunger does for food: 0.005 exhaustion per tick per level, times `effects.dehydrationMultiplier` in `gameplay.toml`. Thirst never goes below zero. Nothing applies it by default. Give it with `/effect give @p bluedroplets:dehydration 30 1`, or add it to a purity effect list in `purity.toml` (`"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`), for example `"bluedroplets:dehydration,600,0,25"` in `effects.dirty` for a 25% chance of 30 s of Dehydration I from dirty water. See [Configuration](Configuration.md#effects).
+`bluedroplets:dehydration` is a harmful effect that makes thirst drop faster, like Hunger does for food: 0.005 exhaustion per tick per level, times `effects.dehydrationMultiplier` in `gameplay.toml`. Thirst never goes below zero. Nothing applies it by default. Give it with `/effect give @p bluedroplets:dehydration 30 1`, or add it to a purity effect list in `purity.toml` (`"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`), for example `"bluedroplets:dehydration,600,0,25"` in `effects.dirty` for a 25% chance of 30 s of Dehydration I from dirty water. See [Configuration](Configuration#effects).
 
 ## Quenchness effect and potions
 
@@ -177,7 +177,7 @@ Splash, lingering and tipped arrows work as for vanilla potions. `effects.quench
 
 ## Overhydrated effect
 
-`bluedroplets:overhydrated` is a harmful effect: 10% slower movement per level (an attribute modifier on `minecraft:generic.movement_speed`, like Slowness). Drinking far past full gives it (`[overhydration]` in `gameplay.toml`, on by default; see [Configuration](Configuration.md#overhydration)); `/effect` works too. The thirst bar turns greyish blue while it lasts (`Bar Colors.overhydrated` in `client.toml`).
+`bluedroplets:overhydrated` is a harmful effect: 10% slower movement per level (an attribute modifier on `minecraft:generic.movement_speed`, like Slowness). Drinking far past full gives it (`[overhydration]` in `gameplay.toml`, on by default; see [Configuration](Configuration#overhydration)); `/effect` works too. The thirst bar turns greyish blue while it lasts (`Bar Colors.overhydrated` in `client.toml`).
 
 Vanilla effects that change thirst: Nausea drains it (`depletion.nauseaDepletes`), Fire Resistance reduces it (`fireResistancePercent`), Hunger does not (its extra food exhaustion is left out in `MIRROR_FOOD` mode), and, with `effects.waterBreathingReducesThirst` (off), Water Breathing or Conduit Power reduce it while fully underwater (`effects.underwaterBreathingMultiplier`, 0.5).
 

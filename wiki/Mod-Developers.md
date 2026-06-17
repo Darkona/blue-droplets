@@ -97,7 +97,7 @@ All of these keep `0 <= quenched <= thirst <= 20`, post the events below and rea
 Call these once, from your mod constructor or common setup. Items are resolved each time the tables are built (world
 load and `/reload`), so `DeferredItem`s are fine. Players and modpacks keep the last word: `items.toml`, the
 `#bluedroplets:no_thirst` tag and the `bluedroplets:drinks` data map override what code registers (see
-[Modpack makers](Modpack-Makers.md#where-an-items-values-come-from)). If your values fit in a datapack, prefer shipping
+[Modpack makers](Modpack-Makers#where-an-items-values-come-from)). If your values fit in a datapack, prefer shipping
 a `bluedroplets:drinks` data map entry instead.
 
 ```java

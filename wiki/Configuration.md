@@ -2,7 +2,7 @@
 
 All TOML files live in `config/bluedroplets/`. They are NeoForge configs: missing keys are added with their default and a comment, values out of range are reset to the default, invalid list entries are removed, and edits are picked up while the game runs. When a server's file changes, the server rebuilds the drink tables, recomputes every player's thirst loss and sends the new values to all players; no `/reload` or relog needed.
 
-Per-id data (items, biomes, dimensions) lives in datapacks instead; see [Modpack makers](Modpack-Makers.md).
+Per-id data (items, biomes, dimensions) lives in datapacks instead; see [Modpack makers](Modpack-Makers).
 
 ## Checking a config
 
@@ -92,7 +92,7 @@ Thirst loss per tick is `activity × scale × M`, where `M = climate × fire pro
 | `inWater` / `underwater` | `1.0` / `1.0` | In water with the head out / fully underwater |
 | `altitude` | `[]` | `"minY,maxY,multiplier"` from sea level; the first band containing the player applies |
 
-A dimension type can replace the climate multiplier with `thirst_multiplier` in the `bluedroplets:dimension_water` data map (see [Modpack makers](Modpack-Makers.md)).
+A dimension type can replace the climate multiplier with `thirst_multiplier` in the `bluedroplets:dimension_water` data map (see [Modpack makers](Modpack-Makers)).
 
 ### `[depletion.activity]`
 
@@ -192,7 +192,7 @@ The maximum thirst stays 20: the HUD, its overlays and commands assume it.
 | `general.enabled` | `true` | Water has a purity at all. `false` turns the whole purity mechanic off and leaves only thirst: see [Thirst only](#thirst-only-purity-off) |
 | `general.defaultPurity` | `2` | Purity of water with none stored |
 | `general.quenchWhenDebuffed` | `true` | Drinking still restores thirst when a purity effect blocks hydration |
-| `world.*` | | See [Water purity in the world](Modpack-Makers.md#water-purity-in-the-world) |
+| `world.*` | | See [Water purity in the world](Modpack-Makers#water-purity-in-the-world) |
 
 ### Thirst only (purity off)
 
