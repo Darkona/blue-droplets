@@ -9,11 +9,11 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = "${mod_version}"
+version = [release_type, minecraft_version, mod_version].findAll { !it.isBlank() }.join('-')
 group = mod_group_id
 
 base {
-    archivesName = 'BlueDroplets'
+    archivesName = mod_id
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -195,7 +195,7 @@ tasks.withType(JavaCompile).configureEach {
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
-            artifactId = 'BlueDroplets'
+            artifactId = mod_id
             from components.java
         }
         register('api', MavenPublication) {
