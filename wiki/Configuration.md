@@ -92,7 +92,7 @@ Thirst loss per tick is `activity × scale × M`, where `M = climate × fire pro
 | `inWater` / `underwater` | `1.0` / `1.0` | In water with the head out / fully underwater |
 | `altitude` | `[]` | `"minY,maxY,multiplier"` from sea level; the first band containing the player applies |
 
-A dimension type can replace the climate multiplier with `thirst_multiplier` in the `blue_droplets:dimension_water` data map (see [Modpack makers](Modpack-Makers)).
+A dimension type can replace the climate multiplier with `thirst_multiplier` in the `blue_droplets:dimension_water` data map (see [Modpack makers](Modpack-Makers)); Blue Droplets sets the End to `0.6`, as cold as a snowy biome.
 
 ### `[depletion.activity]`
 

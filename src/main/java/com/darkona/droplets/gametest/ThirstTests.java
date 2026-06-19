@@ -2,13 +2,18 @@ package com.darkona.droplets.gametest;
 
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
+import com.darkona.droplets.content.data.DimensionWater;
+import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.content.thirst.ThirstHelper;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -16,9 +21,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+import java.util.UUID;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
@@ -151,6 +160,21 @@ public class ThirstTests
         ServerPlayer player = player(helper);
         PlayerThirst.consume(waterBottle(WaterPurity.MAX_PURITY), player);
         helper.assertTrue(player.getActiveEffects().isEmpty(), "purified water gave " + player.getActiveEffects());
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void theEndIsCold(GameTestHelper helper)
+    {
+        ServerLevel end = helper.getLevel().getServer().getLevel(Level.END);
+        helper.assertTrue(end != null, "no End");
+        ServerPlayer player = FakePlayerFactory.get(end, new GameProfile(UUID.randomUUID(), "droplets-test"));
+        player.moveTo(0.5, 64, 0.5);
+        DimensionWater water = end.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
+        helper.assertTrue(water != null && water.thirstMultiplier().isPresent(), "the End has no thirst_multiplier");
+        float climate = ThirstHelper.getExhaustionBiomeModifier(player);
+        helper.assertValueEqual(climate, water.thirstMultiplier().get(), "climate multiplier in the End");
+        helper.assertTrue(climate < 1.0F, "climate multiplier in the End " + climate + ", not below 1");
         helper.succeed();
     }
 

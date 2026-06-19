@@ -153,6 +153,8 @@ Dimension type data map, `data/<namespace>/data_maps/dimension_type/dimension_wa
 | `base` | int 0-3, optional | Base purity for biomes without their own |
 | `thirst_multiplier` | float 0-10, optional | Replaces the climate multiplier of thirst loss in this dimension type (the Nether uses `netherMultiplier` from `gameplay.toml` unless set here) |
 
+Blue Droplets sets `minecraft:the_end` to `thirst_multiplier` `0.6`, so the End counts as cold (about a snowy biome); a datapack entry for `minecraft:the_end` replaces it.
+
 Both world data maps are only read on the server.
 
 ## Dehydration effect
