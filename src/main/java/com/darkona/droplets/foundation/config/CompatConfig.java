@@ -21,6 +21,9 @@ public final class CompatConfig
     public static final ModConfigSpec.DoubleValue COLD_SWEAT_DRINK_COOLING;
     public static final ModConfigSpec.IntValue COLD_SWEAT_DRINK_COOLING_TICKS;
 
+    public static final ModConfigSpec.BooleanValue SERENE_SEASONS_ENABLED;
+    public static final ModConfigSpec.DoubleValue SERENE_SEASONS_TROPICAL_DRY;
+
     public static final ModConfigSpec SPEC;
 
     static
@@ -41,6 +44,11 @@ public final class CompatConfig
                         "Cold Sweat's own filled waterskin is left alone: it already changes the temperature by the water it holds").defineInRange("drinkCooling", 0.0, 0.0, 100.0);
         COLD_SWEAT_DRINK_COOLING_TICKS = BUILDER.comment("0: drinkCooling lowers the body temperature once, which then drifts back with the surroundings;",
                         "more: it lowers the base temperature for this many ticks instead, like Cold Sweat's cold foods").defineInRange("drinkCoolingTicks", 0, 0, 72000);
+        BUILDER.pop();
+
+        BUILDER.comment("Serene Seasons, only without Cold Sweat (its body temperature already follows the seasons)").push("sereneseasons");
+        SERENE_SEASONS_ENABLED = BUILDER.comment("Whether the biome climate formula uses the biome temperature as the season changes it (Serene Seasons' biome_temp_adjustment per sub-season)").define("enabled", true);
+        SERENE_SEASONS_TROPICAL_DRY = BUILDER.comment("With enabled: climate multiplier in a tropical biome's dry season (their temperature does not change with the season; the wet season is 1)").defineInRange("tropicalDrySeasonMultiplier", 1.1, 0.0, 10.0);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

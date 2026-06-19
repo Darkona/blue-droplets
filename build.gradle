@@ -129,6 +129,8 @@ dependencies {
     compileOnly 'maven.modrinth:travelersbackpack:1.21.1-10.1.39'
     compileOnly 'curse.maven:appleskin-248787:5586600'
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly 'maven.modrinth:serene-seasons:pHEgQQUE'
+    compileOnly 'maven.modrinth:glitchcore:S2TfWrZR'
 
     // ./gradlew runClient -PwithCompat
     if (project.hasProperty('withCompat')) {
@@ -141,6 +143,8 @@ dependencies {
         localRuntime 'curse.maven:jade-324717:6291517'
         localRuntime 'curse.maven:appleskin-248787:5586600'
         localRuntime 'maven.modrinth:travelersbackpack:1.21.1-10.1.39'
+        localRuntime 'maven.modrinth:serene-seasons:pHEgQQUE'
+        localRuntime 'maven.modrinth:glitchcore:S2TfWrZR'
     }
 
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"

@@ -19,5 +19,7 @@ public final class DropletsGameTests
             event.register(TravelersBackpackTests.class);
         if (ModList.get().isLoaded("cold_sweat"))
             event.register(ColdSweatTests.class);
+        if (ModList.get().isLoaded("sereneseasons"))
+            event.register(SereneSeasonsTests.class);
     }
 }

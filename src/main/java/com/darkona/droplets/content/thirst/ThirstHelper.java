@@ -9,6 +9,7 @@ import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
+import com.darkona.droplets.compat.sereneseasons.SereneSeasonsCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DrinkValues;
@@ -20,6 +21,7 @@ import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -531,7 +533,7 @@ public class ThirstHelper
      * Climate multiplier: the dimension type's {@code thirst_multiplier} ({@code blue_droplets:dimension_water}) or
      * {@code netherMultiplier} in ultra-warm dimensions replace it; otherwise {@code depletion.multiplier} times the
      * Cold Sweat body temperature curve ({@code coldsweat.useBodyTemperature}), or else the LEGACY formula or the
-     * CURVE multipliers of biome temperature and downfall.
+     * CURVE multipliers of biome temperature and downfall ({@link #biomeClimate}), with the seasons of Serene Seasons.
      */
     public static float getExhaustionBiomeModifier(Player player)
     {
@@ -546,10 +548,23 @@ public class ThirstHelper
         if (ColdSweatCompat.LOADED && CompatConfig.COLD_SWEAT_BODY_TEMPERATURE.get())
             return multiplier * (float) NumberRows.curve(BODY_TEMPERATURE_CURVE.get(CompatConfig.COLD_SWEAT_BODY_TEMPERATURE_CURVE.get()), ColdSweatCompat.bodyTemperature(player));
 
-        Biome biome = level.getBiome(player.getOnPos()).value();
+        BlockPos pos = player.getOnPos();
+        return biomeClimate(level, level.getBiome(pos), pos, multiplier, SereneSeasonsCompat.ACTIVE);
+    }
+
+    /**
+     * The biome formula of {@link #getExhaustionBiomeModifier}, LEGACY or CURVE, times {@code multiplier}. With
+     * {@code seasons} (Serene Seasons loaded) the temperature is the one of the current season, and a tropical biome's
+     * dry season adds its multiplier.
+     */
+    public static float biomeClimate(Level level, Holder<Biome> biomeHolder, BlockPos pos, float multiplier, boolean seasons)
+    {
+        Biome biome = biomeHolder.value();
+        float temperature = seasons ? SereneSeasonsCompat.temperature(level, biomeHolder, pos, biome.getBaseTemperature()) : biome.getBaseTemperature();
+        float season = seasons ? SereneSeasonsCompat.tropicalMultiplier(level, biomeHolder) : 1.0F;
         float downfall = biome.getModifiedClimateSettings().downfall();
         if (GameplayConfig.CLIMATE_FORMULA.get() == GameplayConfig.ClimateFormula.CURVE)
-            return multiplier * (float) (NumberRows.curve(TEMPERATURE_CURVE.get(GameplayConfig.TEMPERATURE_CURVE.get()), biome.getBaseTemperature())
+            return season * multiplier * (float) (NumberRows.curve(TEMPERATURE_CURVE.get(GameplayConfig.TEMPERATURE_CURVE.get()), temperature)
                     * NumberRows.curve(HUMIDITY_CURVE.get(GameplayConfig.HUMIDITY_CURVE.get()), downfall));
 
         //humidity range: 0 - 0.8 == 0.8 midpoint: 0.4
@@ -558,7 +573,7 @@ public class ThirstHelper
             humidity += 0.5;
 
         //temperature range: -0.8 - 2 == 2.8 midpoint: 0.8
-        float temp = biome.getBaseTemperature() + 0.2f;
+        float temp = temperature + 0.2f;
         if(temp <= 0)
             temp = (float) Math.exp(temp);
         else if(temp > 1)
@@ -567,7 +582,7 @@ public class ThirstHelper
         float thirstModifier = multiplier * (temp / humidity);
         if(thirstModifier < 1)
             thirstModifier = 1 - (1 - thirstModifier) * GameplayConfig.LEGACY_HARSHNESS.get().floatValue();
-        return thirstModifier;
+        return season * thirstModifier;
     }
 
     /**

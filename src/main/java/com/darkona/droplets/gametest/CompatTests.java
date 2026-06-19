@@ -2,6 +2,7 @@ package com.darkona.droplets.gametest;
 
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
+import com.darkona.droplets.compat.sereneseasons.SereneSeasonsCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.thirst.ExhaustionFactors;
@@ -42,6 +43,7 @@ public class CompatTests
         boolean create = ModList.get().isLoaded("create");
         helper.assertValueEqual(BuiltInRegistries.BLOCK.containsKey(BlueDroplets.asResource("sand_filter")), create, "Sand Filter registered with Create installed");
         helper.assertValueEqual(ColdSweatCompat.LOADED, BuiltInRegistries.ITEM.containsKey(ResourceLocation.fromNamespaceAndPath("cold_sweat", "waterskin")), "Cold Sweat detected");
+        helper.assertValueEqual(SereneSeasonsCompat.LOADED, BuiltInRegistries.ITEM.containsKey(ResourceLocation.fromNamespaceAndPath("sereneseasons", "calendar")), "Serene Seasons detected");
         helper.assertValueEqual(VampirismCompat.LOADED, ModList.get().isLoaded("vampirism"), "Vampirism detected");
         helper.assertValueEqual(SupernaturalCompat.LOADED, ModList.get().isLoaded("supernatural"), "Supernatural detected");
         helper.succeed();
