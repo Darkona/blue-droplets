@@ -3,7 +3,7 @@ package com.darkona.droplets.foundation.config;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
- * {@code config/bluedroplets/client.toml}: visuals only.
+ * {@code config/blue_droplets/client.toml}: visuals only.
  */
 public final class ClientConfig
 {

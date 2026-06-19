@@ -1,5 +1,5 @@
-# Blue Droplets "hardcore" preset: copy these keys into config/bluedroplets/gameplay.toml.
-# Pair with the built-in datapack mod/bluedroplets:datapacks/preset_hardcore (Nether x4).
+# Blue Droplets "hardcore" preset: copy these keys into config/blue_droplets/gameplay.toml.
+# Pair with the built-in datapack mod/blue_droplets:datapacks/preset_hardcore (Nether x4).
 
 [depletion]
 multiplier = 1.6

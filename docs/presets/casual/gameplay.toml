@@ -1,5 +1,5 @@
-# Blue Droplets "casual" preset: copy these keys into config/bluedroplets/gameplay.toml.
-# Pair with the built-in datapack mod/bluedroplets:datapacks/preset_casual (Nether x1.5).
+# Blue Droplets "casual" preset: copy these keys into config/blue_droplets/gameplay.toml.
+# Pair with the built-in datapack mod/blue_droplets:datapacks/preset_casual (Nether x1.5).
 
 [depletion]
 multiplier = 0.8

@@ -59,7 +59,7 @@ public class CommandInit {
                                     IThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
                                     int value = thirst.getThirst();
                                     int quenched = thirst.getQuenched();
-                                    context.getSource().sendSuccess(() -> Component.translatable("command.bluedroplets.query", value, quenched, player.getDisplayName()), false);
+                                    context.getSource().sendSuccess(() -> Component.translatable("command.blue_droplets.query", value, quenched, player.getDisplayName()), false);
                                     return value;
                                 }
                         )))
@@ -73,7 +73,7 @@ public class CommandInit {
                                             // Quenched never exceeds thirst and listeners may cancel or change it: report what was set.
                                             int value = thirst.getThirst();
                                             int quenched = thirst.getQuenched();
-                                            context.getSource().sendSuccess(() -> Component.translatable("command.bluedroplets.set", value, quenched, player.getDisplayName()), true);
+                                            context.getSource().sendSuccess(() -> Component.translatable("command.blue_droplets.set", value, quenched, player.getDisplayName()), true);
                                             return value;
                                         })))
                 ))
@@ -88,7 +88,7 @@ public class CommandInit {
                                         thirstData.updateThirstData(player);
                                     }
                                     Component names = ComponentUtils.formatList(players, ServerPlayer::getDisplayName);
-                                    context.getSource().sendSuccess(() -> Component.translatable(shouldTick ? "command.bluedroplets.enable" : "command.bluedroplets.disable", names), true);
+                                    context.getSource().sendSuccess(() -> Component.translatable(shouldTick ? "command.blue_droplets.enable" : "command.blue_droplets.disable", names), true);
                                     return players.size();
                                 }))))
                 .then(Commands.literal("debug")
@@ -119,7 +119,7 @@ public class CommandInit {
         for (int i = 0; i < factors.length; i++)
             text.append("\n  ").append(ExhaustionFactors.FACTORS[i]).append(": x").append(format(factors[i]))
                     .append(i == 0 ? " (" + climateSource(player) + ")" : "");
-        text.append("\n  bluedroplets:thirst_drain: x").append(format(drain))
+        text.append("\n  blue_droplets:thirst_drain: x").append(format(drain))
                 .append("\n  total: x").append(format(cached * drain))
                 .append("\n  exhaustion ").append(format(thirst.getExhaustion())).append(" / ").append(format(GameplayConfig.EXHAUSTION_PER_POINT.get()))
                 .append(", thirst ").append(thirst.getThirst()).append(", quenched ").append(thirst.getQuenched())

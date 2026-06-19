@@ -8,7 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 
 /**
- * Value of the {@code bluedroplets:drinks} item data map. {@code purity} is the purity of the drink when the stack
+ * Value of the {@code blue_droplets:drinks} item data map. {@code purity} is the purity of the drink when the stack
  * stores none; without it, drinks that are not water containers roll no purity effects. Negative values (salty food)
  * remove thirst and quenched.
  */

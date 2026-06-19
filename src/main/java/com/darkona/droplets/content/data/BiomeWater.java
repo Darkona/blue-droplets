@@ -7,7 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 
 /**
- * Value of the {@code bluedroplets:biome_water} biome data map: {@code base} replaces the base purity of the biome's
+ * Value of the {@code blue_droplets:biome_water} biome data map: {@code base} replaces the base purity of the biome's
  * water, {@code delta} is added after the other sources, and the result never exceeds {@code max}.
  */
 public record BiomeWater(Optional<Integer> base, int delta, int max)

@@ -3,7 +3,7 @@
 # whether it joined without errors. Leaves a screenshot of the HUD (thirst bar above the hunger bar) in
 # build/client-boot-check.png. Adapted from Green Feathers' scripts/client-boot-check.sh.
 #
-# Usage: [GRADLE_ARGS="-PwithCompat"] [COMMANDS='bluedroplets set @s 7 2;effect give @s bluedroplets:quenchness 30']
+# Usage: [GRADLE_ARGS="-PwithCompat"] [COMMANDS='blue_droplets set @s 7 2;effect give @s blue_droplets:quenchness 30']
 #        [PRE_SHOT='F5'] [SHOT=path.png] scripts/client-boot-check.sh [TIMEOUT_SECONDS]
 #   GRADLE_ARGS  extra Gradle flags (see build.gradle); COMMANDS typed into chat after joining, ';'-separated.
 # Generates its own superflat world (run/bootworld) the first time, with a dedicated server run. Every run: noon, clear
@@ -82,7 +82,7 @@ PID=$!
 logs() { cat "$LOG" "$GAME_LOG" 2>/dev/null; }
 X="env DISPLAY=:$DISPLAY_NUM XAUTHORITY=$XAUTH xdotool"
 
-FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*bluedroplets|FileNotFoundException: .*bluedroplets'
+FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*blue_droplets|FileNotFoundException: .*blue_droplets'
 OK_RE='joined the game'
 verdict="TIMEOUT after ${TIMEOUT}s"
 for _ in $(seq 1 "$TIMEOUT"); do

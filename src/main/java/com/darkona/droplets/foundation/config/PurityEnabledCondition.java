@@ -5,7 +5,7 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * {@code bluedroplets:purity_enabled}: true when {@code purity.enabled} is on; checked when datapacks load.
+ * {@code blue_droplets:purity_enabled}: true when {@code purity.enabled} is on; checked when datapacks load.
  */
 public record PurityEnabledCondition() implements ICondition
 {

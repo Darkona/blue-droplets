@@ -45,7 +45,7 @@ public final class DrinkTooltip implements TooltipComponent, ClientTooltipCompon
         quenchedIcons = quenchedBars > 10 ? 1 : quenchedBars;
         thirstText = thirstBars > 10 ? "x" + thirstBars : null;
         quenchedText = quenchedBars > 10 ? "x" + quenchedBars : null;
-        estimatedText = values.estimated() ? I18n.get("bluedroplets.tooltip.estimated_short") : null;
+        estimatedText = values.estimated() ? I18n.get("blue_droplets.tooltip.estimated_short") : null;
     }
 
     /**

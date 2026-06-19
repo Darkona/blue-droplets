@@ -19,7 +19,7 @@ public abstract class MixinFluidBucketWrapper
     @Shadow protected ItemStack container;
 
     @ModifyReturnValue(method = "getFluid", at = @At("RETURN"))
-    private FluidStack bluedroplets$bucketPurity(FluidStack fluid)
+    private FluidStack blue_droplets$bucketPurity(FluidStack fluid)
     {
         if (!fluid.isEmpty() && WaterPurity.hasPurity(container))
             WaterPurity.addPurity(fluid, WaterPurity.getPurity(container));

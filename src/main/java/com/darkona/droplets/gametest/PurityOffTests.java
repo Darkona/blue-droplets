@@ -225,7 +225,7 @@ public class PurityOffTests
 
     /**
      * Recipes are only checked when datapacks load, so this looks at the files: every recipe of this mod that stores or
-     * matches a purity must carry the {@code bluedroplets:purity_enabled} condition, or it would load with purity off.
+     * matches a purity must carry the {@code blue_droplets:purity_enabled} condition, or it would load with purity off.
      */
     @GameTest(template = "empty")
     public static void purityRecipesCarryThePurityCondition(GameTestHelper helper)
@@ -244,13 +244,13 @@ public class PurityOffTests
             {
                 throw new UncheckedIOException(e);
             }
-            if (!json.toString().contains("\"bluedroplets:purity\":"))
+            if (!json.toString().contains("\"blue_droplets:purity\":"))
                 continue;
             boolean conditioned = false;
             if (json.has("neoforge:conditions"))
                 for (JsonElement condition : json.getAsJsonArray("neoforge:conditions"))
-                    conditioned |= condition.getAsJsonObject().get("type").getAsString().equals("bluedroplets:purity_enabled");
-            helper.assertTrue(conditioned, recipe.getKey() + " uses a purity without the bluedroplets:purity_enabled condition");
+                    conditioned |= condition.getAsJsonObject().get("type").getAsString().equals("blue_droplets:purity_enabled");
+            helper.assertTrue(conditioned, recipe.getKey() + " uses a purity without the blue_droplets:purity_enabled condition");
         }
         helper.succeed();
     }
@@ -271,7 +271,7 @@ public class PurityOffTests
             CommandSourceStack source = player.createCommandSourceStack().withPermission(2).withSuppressedOutput();
             try
             {
-                int result = helper.getLevel().getServer().getCommands().getDispatcher().execute("bluedroplets debug purity", source);
+                int result = helper.getLevel().getServer().getCommands().getDispatcher().execute("blue_droplets debug purity", source);
                 helper.assertValueEqual(result, 0, "result of debug purity with purity off");
             }
             catch (Exception e)

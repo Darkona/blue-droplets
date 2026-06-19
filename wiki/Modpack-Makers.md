@@ -3,11 +3,11 @@
 Blue Droplets is configured in two layers:
 
 - **Datapacks** hold everything that belongs to a registry id: item values, tags, biomes, dimensions. They reload with `/reload` and are sent to clients by the server.
-- **TOML files** in `config/bluedroplets/` hold global numbers and switches, plus a few explicit per-item overrides. See [Configuration](Configuration).
+- **TOML files** in `config/blue_droplets/` hold global numbers and switches, plus a few explicit per-item overrides. See [Configuration](Configuration).
 
 All paths below are inside a datapack (`data/<namespace>/...`). Bad entries are logged and skipped; they never crash the game or disconnect players.
 
-## Drink and food values: `bluedroplets:drinks`
+## Drink and food values: `blue_droplets:drinks`
 
 A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/) on items. File: `data/<namespace>/data_maps/item/drinks.json` (any namespace; all packs are merged in load order).
 
@@ -48,11 +48,11 @@ A NeoForge [data map](https://docs.neoforged.net/docs/resources/server/datamaps/
   "minecraft:cooked_salmon": { "thirst": 1, "quenched": -1 }
   ```
 
-  Or tag them `#bluedroplets:salty` and let `items.toml` `salty.thirstPenalty`/`quenchedPenalty` (-2/-2) give the values.
-- Blue Droplets ships its defaults in `data/bluedroplets/data_maps/item/drinks.json`: vanilla items, its own items and, only when those mods are installed, Farmer's Delight, Farmer's Respite, Brewin' and Chewin', Collector's Reap, Create (builder's tea) and Supernatural. To change a default, add your own entry (a later pack wins) or `remove` it.
+  Or tag them `#blue_droplets:salty` and let `items.toml` `salty.thirstPenalty`/`quenchedPenalty` (-2/-2) give the values.
+- Blue Droplets ships its defaults in `data/blue_droplets/data_maps/item/drinks.json`: vanilla items, its own items and, only when those mods are installed, Farmer's Delight, Farmer's Respite, Brewin' and Chewin', Collector's Reap, Create (builder's tea) and Supernatural. To change a default, add your own entry (a later pack wins) or `remove` it.
 - The map is synced to clients; tooltips and the HUD use the server's values.
 
-### Block foods: `bluedroplets:hydrating_blocks`
+### Block foods: `blue_droplets:hydrating_blocks`
 
 Blocks eaten in place, like cake, are not items, so they have their own data map on blocks:
 `data/<namespace>/data_maps/block/hydrating_blocks.json`, with the same `thirst` and `quenched` fields (`purity` is
@@ -75,13 +75,13 @@ Negative values work here too (salty block foods).
 
 Each item takes its values from the first of these that has it; the others are ignored for that item:
 
-1. **Blacklist**: the item tag `#bluedroplets:no_thirst` or `blacklist` in `items.toml` (the item restores no thirst at all).
+1. **Blacklist**: the item tag `#blue_droplets:no_thirst` or `blacklist` in `items.toml` (the item restores no thirst at all).
 2. **TOML overrides**: the `drinks` and `foods` lists in `items.toml` (section `overrides`).
-3. **Datapacks**: the `bluedroplets:drinks` data map.
+3. **Datapacks**: the `blue_droplets:drinks` data map.
 4. **Other mods' code**: `DropletsAPI.registerDrink` (and the older `RegisterThirstValueEvent`), then per-item value providers of mods whose values depend on the stack. See [Mod developers](Mod-Developers).
-5. **Salty tag**: items in `#bluedroplets:salty` (empty by default) get `salty.thirstPenalty` and `salty.quenchedPenalty` from `items.toml` (-2 / -2). Explicit values from 1-4 win, so a tagged item with its own entry keeps it.
+5. **Salty tag**: items in `#blue_droplets:salty` (empty by default) get `salty.thirstPenalty` and `salty.quenchedPenalty` from `items.toml` (-2 / -2). Explicit values from 1-4 win, so a tagged item with its own entry keeps it.
 6. **Keywords** (`items.toml`, section `keywords`, off by default).
-7. **Estimated from recipes** (`items.toml`, section `inference`, off by default): only for items none of the above gives values. Negative (salty) ingredient values count as 0, so estimates are never negative. Tooltips add "(est.)"; `/bluedroplets infer <item>` shows how the number was made. See [Configuration](Configuration#recipe-inference).
+7. **Estimated from recipes** (`items.toml`, section `inference`, off by default): only for items none of the above gives values. Negative (salty) ingredient values count as 0, so estimates are never negative. Tooltips add "(est.)"; `/blue_droplets infer <item>` shows how the number was made. See [Configuration](Configuration#recipe-inference).
 
 The server resolves this table on world load and on `/reload` and sends it to every client, so all players see the server's values.
 
@@ -89,11 +89,11 @@ The server resolves this table on world load and on `/reload` and sends it to ev
 
 Water picked up from the world (buckets, bottles, bowls, drinking by hand, Create hose pulleys and open pipe ends) gets a purity from 0 (dirty) to 3 (purified):
 
-1. **Salt water**: if `saltWaterPurity` (`purity.toml`, default -1 = off) is 0-3 and the biome is in `#bluedroplets:salt_water`, that fixed value is used and nothing else applies.
+1. **Salt water**: if `saltWaterPurity` (`purity.toml`, default -1 = off) is 0-3 and the biome is in `#blue_droplets:salt_water`, that fixed value is used and nothing else applies.
 2. **Base purity**, the first that is set:
-   1. `base` of the biome in the `bluedroplets:biome_water` data map;
-   2. biome tags `#bluedroplets:water_purity/3`, `/2`, `/1`, `/0` (checked in that order);
-   3. `base` of the dimension type in the `bluedroplets:dimension_water` data map;
+   1. `base` of the biome in the `blue_droplets:biome_water` data map;
+   2. biome tags `#blue_droplets:water_purity/3`, `/2`, `/1`, `/0` (checked in that order);
+   3. `base` of the dimension type in the `blue_droplets:dimension_water` data map;
    4. `worldWaterBasePurity` in `purity.toml` (default 0).
 3. Plus the **altitude** delta, the **still/running** delta and the biome's `delta`; the result is kept between 0 and the biome's `max` (default 3).
 
@@ -106,22 +106,22 @@ Global settings in `purity.toml`, section `world`:
 | `stillWaterPurificationAmount` | `0` | Added to source water (-3 to 3) |
 | `runningWaterPurificationAmount` | `1` | Added to flowing water (0 to 3) |
 | `worldWaterBasePurity` | `0` | Base purity when neither biome nor dimension sets one |
-| `saltWaterPurity` | `-1` | Fixed purity in `#bluedroplets:salt_water` biomes; -1 = off |
+| `saltWaterPurity` | `-1` | Fixed purity in `#blue_droplets:salt_water` biomes; -1 = off |
 
 ### Cauldrons
 
-A water cauldron stores no purity: whatever went into it (rain, dripstone, a bucket of dirty or purified water), water taken out of it (buckets, bottles, bowls, Create open pipe ends) is always **slightly dirty (1)**, or **acceptable (2)** while the cauldron stands on a heat source from the block tag `#bluedroplets:cauldron_heat_sources` (blocks with a `lit` property only when lit). A cauldron never gives purified water: use a Sand Filter or the purification recipes for that. Jade shows the purity the water would have right now. This applies to any water container another mod lets you fill from a cauldron, as long as it is a registered purity container, and to pumps and pipes of other mods that drain the cauldron through the NeoForge fluid capability.
+A water cauldron stores no purity: whatever went into it (rain, dripstone, a bucket of dirty or purified water), water taken out of it (buckets, bottles, bowls, Create open pipe ends) is always **slightly dirty (1)**, or **acceptable (2)** while the cauldron stands on a heat source from the block tag `#blue_droplets:cauldron_heat_sources` (blocks with a `lit` property only when lit). A cauldron never gives purified water: use a Sand Filter or the purification recipes for that. Jade shows the purity the water would have right now. This applies to any water container another mod lets you fill from a cauldron, as long as it is a registered purity container, and to pumps and pipes of other mods that drain the cauldron through the NeoForge fluid capability.
 
 ### Biome tags
 
-- `data/bluedroplets/tags/worldgen/biome/water_purity/0.json` … `/3.json`: standard biome tags. None ship with Blue Droplets, so by default all water starts at `worldWaterBasePurity`.
-- `data/bluedroplets/tags/worldgen/biome/salt_water.json`: ships with `#minecraft:is_ocean`; only used when `saltWaterPurity` is set.
+- `data/blue_droplets/tags/worldgen/biome/water_purity/0.json` … `/3.json`: standard biome tags. None ship with Blue Droplets, so by default all water starts at `worldWaterBasePurity`.
+- `data/blue_droplets/tags/worldgen/biome/salt_water.json`: ships with `#minecraft:is_ocean`; only used when `saltWaterPurity` is set.
 
 ```json
 { "values": ["minecraft:cherry_grove", "#c:is_mountain"] }
 ```
 
-### `bluedroplets:biome_water`
+### `blue_droplets:biome_water`
 
 Biome data map, `data/<namespace>/data_maps/worldgen/biome/biome_water.json`:
 
@@ -140,7 +140,7 @@ Biome data map, `data/<namespace>/data_maps/worldgen/biome/biome_water.json`:
 | `delta` | int -3 to 3 | 0 | Added after altitude and running water |
 | `max` | int 0-3 | 3 | Highest purity water can have here |
 
-### `bluedroplets:dimension_water`
+### `blue_droplets:dimension_water`
 
 Dimension type data map, `data/<namespace>/data_maps/dimension_type/dimension_water.json`. It is keyed by **dimension type** (`minecraft:overworld`, `minecraft:the_nether`, a mod's type id), so dimensions that share a type share the value.
 
@@ -157,42 +157,42 @@ Both world data maps are only read on the server.
 
 ## Dehydration effect
 
-`bluedroplets:dehydration` is a harmful effect that makes thirst drop faster, like Hunger does for food: 0.005 exhaustion per tick per level, times `effects.dehydrationMultiplier` in `gameplay.toml`. Thirst never goes below zero. Nothing applies it by default. Give it with `/effect give @p bluedroplets:dehydration 30 1`, or add it to a purity effect list in `purity.toml` (`"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`), for example `"bluedroplets:dehydration,600,0,25"` in `effects.dirty` for a 25% chance of 30 s of Dehydration I from dirty water. See [Configuration](Configuration#effects).
+`blue_droplets:dehydration` is a harmful effect that makes thirst drop faster, like Hunger does for food: 0.005 exhaustion per tick per level, times `effects.dehydrationMultiplier` in `gameplay.toml`. Thirst never goes below zero. Nothing applies it by default. Give it with `/effect give @p blue_droplets:dehydration 30 1`, or add it to a purity effect list in `purity.toml` (`"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`), for example `"blue_droplets:dehydration,600,0,25"` in `effects.dirty` for a 25% chance of 30 s of Dehydration I from dirty water. See [Configuration](Configuration#effects).
 
 ## Quenchness effect and potions
 
-`bluedroplets:quenchness` is a beneficial effect: every `effects.quenchnessIntervalTicks` (default 40) it restores (level) thirst and (level) quenched, like Regeneration for health. Potions (registry `minecraft:potion`, usable in loot tables, `set_potion`, recipes and `/give @p minecraft:potion[potion_contents={potion:"bluedroplets:quenchness"}]`):
+`blue_droplets:quenchness` is a beneficial effect: every `effects.quenchnessIntervalTicks` (default 40) it restores (level) thirst and (level) quenched, like Regeneration for health. Potions (registry `minecraft:potion`, usable in loot tables, `set_potion`, recipes and `/give @p minecraft:potion[potion_contents={potion:"blue_droplets:quenchness"}]`):
 
 | Potion | Effect | Brewing |
 |---|---|---|
-| `bluedroplets:quenchness` | Quenchness I, 0:45 | awkward potion + prismarine crystals |
-| `bluedroplets:long_quenchness` | Quenchness I, 1:30 | Quenchness + redstone |
-| `bluedroplets:strong_quenchness` | Quenchness II, 0:22 | Quenchness + glowstone dust |
+| `blue_droplets:quenchness` | Quenchness I, 0:45 | awkward potion + prismarine crystals |
+| `blue_droplets:long_quenchness` | Quenchness I, 1:30 | Quenchness + redstone |
+| `blue_droplets:strong_quenchness` | Quenchness II, 0:22 | Quenchness + glowstone dust |
 
 Splash, lingering and tipped arrows work as for vanilla potions. `effects.quenchnessPotion = false` in `gameplay.toml` removes the three brewing recipes (the potions stay registered); to use another ingredient, turn it off and add your own mix with KubeJS or a mod (`RegisterBrewingRecipesEvent`).
 
 ## Hydrated effect
 
-`bluedroplets:hydrated` is a beneficial effect that slows thirst loss: all thirst exhaustion is multiplied by `effects.hydratedMultiplier` (default 0.5) once per level, so Hydrated II with the default quarters it. It is part of the cached thirst loss multiplier (`/bluedroplets debug exhaustion` shows it as `hydrated`). Sources: `/effect give @p bluedroplets:hydrated 60 0`, the purity effect lists in `purity.toml` (for example `"bluedroplets:hydrated,600,0,100"` in `effects.purified`), and the optional full-hydration bonus (`[hydration] fullBonus`, off by default). There is no potion for it.
+`blue_droplets:hydrated` is a beneficial effect that slows thirst loss: all thirst exhaustion is multiplied by `effects.hydratedMultiplier` (default 0.5) once per level, so Hydrated II with the default quarters it. It is part of the cached thirst loss multiplier (`/blue_droplets debug exhaustion` shows it as `hydrated`). Sources: `/effect give @p blue_droplets:hydrated 60 0`, the purity effect lists in `purity.toml` (for example `"blue_droplets:hydrated,600,0,100"` in `effects.purified`), and the optional full-hydration bonus (`[hydration] fullBonus`, off by default). There is no potion for it.
 
 ## Overhydrated effect
 
-`bluedroplets:overhydrated` is a harmful effect: 10% slower movement per level (an attribute modifier on `minecraft:generic.movement_speed`, like Slowness). Drinking far past full gives it (`[overhydration]` in `gameplay.toml`, on by default; see [Configuration](Configuration#overhydration)); `/effect` works too. The thirst bar turns greyish blue while it lasts (`Bar Colors.overhydrated` in `client.toml`).
+`blue_droplets:overhydrated` is a harmful effect: 10% slower movement per level (an attribute modifier on `minecraft:generic.movement_speed`, like Slowness). Drinking far past full gives it (`[overhydration]` in `gameplay.toml`, on by default; see [Configuration](Configuration#overhydration)); `/effect` works too. The thirst bar turns greyish blue while it lasts (`Bar Colors.overhydrated` in `client.toml`).
 
 Vanilla effects that change thirst: Nausea drains it (`depletion.nauseaDepletes`), Fire Resistance reduces it (`fireResistancePercent`), Hunger does not (its extra food exhaustion is left out in `MIRROR_FOOD` mode), and, with `effects.waterBreathingReducesThirst` (off), Water Breathing or Conduit Power reduce it while fully underwater (`effects.underwaterBreathingMultiplier`, 0.5).
 
-## Thirst drain attribute: `bluedroplets:thirst_drain`
+## Thirst drain attribute: `blue_droplets:thirst_drain`
 
-Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). Thirst loss is multiplied by it, so anything that can carry attribute modifiers can change thirst without code:
+Every player has the attribute `blue_droplets:thirst_drain` (base 1.0, 0 to 10). Thirst loss is multiplied by it, so anything that can carry attribute modifiers can change thirst without code:
 
 - items: the vanilla `minecraft:attribute_modifiers` component (`/give`, loot tables, other mods);
 - enchantments (datapack): the `minecraft:attributes` effect component;
 - effects, Curios, other mods: ordinary `AttributeModifier`s;
-- commands: `/attribute @s bluedroplets:thirst_drain base set 0.5`.
+- commands: `/attribute @s blue_droplets:thirst_drain base set 0.5`.
 
 ```json
 "minecraft:attribute_modifiers": {
-  "modifiers": [{ "type": "bluedroplets:thirst_drain", "id": "examplemod:cooling_helmet", "amount": -0.25,
+  "modifiers": [{ "type": "blue_droplets:thirst_drain", "id": "examplemod:cooling_helmet", "amount": -0.25,
                   "operation": "add_multiplied_base", "slot": "head" }]
 }
 ```
@@ -202,56 +202,56 @@ Every player has the attribute `bluedroplets:thirst_drain` (base 1.0, 0 to 10). 
 
 | Tag | Registry | Default | Meaning |
 |---|---|---|---|
-| `bluedroplets:purity_containers` | item | Create builder's tea, Collector's Reap teas | Drinks that carry a water purity: filled with purity by machines (Create spouts), show it in the tooltip and roll its effects. They are not filled from the world |
-| `bluedroplets:no_thirst` | item | empty | Never restores thirst, whatever the config, datapacks or other mods say |
-| `bluedroplets:salty` | item | empty | Items with no other values get the `items.toml` `salty` penalties (they make the player thirstier), eaten or drunk |
-| `bluedroplets:purity_opt_out` | item | empty | Never gets a purity: not filled with purity, no purity tooltip, no purity effects, and its fluid is not given one. Use it for other mods' water containers that break when water items carry extra data |
-| `bluedroplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
-| `bluedroplets:cauldron_heat_sources` | block | `#minecraft:campfires`, `#minecraft:fire`, magma block, lava | Heat sources under a water cauldron: its water comes out acceptable (2) instead of slightly dirty (1). Blocks with a `lit` property (campfires, furnaces) only count while lit |
-| `bluedroplets:pauses_thirst` | mob_effect | Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated | While the player has one of these effects, thirst exhaustion stops building up; drinking and regeneration still work |
-| `bluedroplets:stops_thirst` | mob_effect | Corail Tombstone Ghostly Shape | While the player has one of these effects, thirst does not tick at all: no exhaustion, no Dehydration damage, no regeneration cost |
+| `blue_droplets:purity_containers` | item | Create builder's tea, Collector's Reap teas | Drinks that carry a water purity: filled with purity by machines (Create spouts), show it in the tooltip and roll its effects. They are not filled from the world |
+| `blue_droplets:no_thirst` | item | empty | Never restores thirst, whatever the config, datapacks or other mods say |
+| `blue_droplets:salty` | item | empty | Items with no other values get the `items.toml` `salty` penalties (they make the player thirstier), eaten or drunk |
+| `blue_droplets:purity_opt_out` | item | empty | Never gets a purity: not filled with purity, no purity tooltip, no purity effects, and its fluid is not given one. Use it for other mods' water containers that break when water items carry extra data |
+| `blue_droplets:carries_purity` | fluid | `#minecraft:water`, Create tea | Fluids made in a Create basin from water keep the water's purity |
+| `blue_droplets:cauldron_heat_sources` | block | `#minecraft:campfires`, `#minecraft:fire`, magma block, lava | Heat sources under a water cauldron: its water comes out acceptable (2) instead of slightly dirty (1). Blocks with a `lit` property (campfires, furnaces) only count while lit |
+| `blue_droplets:pauses_thirst` | mob_effect | Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated | While the player has one of these effects, thirst exhaustion stops building up; drinking and regeneration still work |
+| `blue_droplets:stops_thirst` | mob_effect | Corail Tombstone Ghostly Shape | While the player has one of these effects, thirst does not tick at all: no exhaustion, no Dehydration damage, no regeneration cost |
 
-Files: `data/bluedroplets/tags/item/purity_containers.json`, `data/bluedroplets/tags/item/no_thirst.json`, `data/bluedroplets/tags/item/purity_opt_out.json`, `data/bluedroplets/tags/fluid/carries_purity.json`, `data/bluedroplets/tags/block/cauldron_heat_sources.json`, `data/bluedroplets/tags/mob_effect/pauses_thirst.json`, `data/bluedroplets/tags/mob_effect/stops_thirst.json`. Use `{"id": "othermod:item", "required": false}` for optional mods. Effects are read when the player's effects change and once a second, not every tick.
+Files: `data/blue_droplets/tags/item/purity_containers.json`, `data/blue_droplets/tags/item/no_thirst.json`, `data/blue_droplets/tags/item/purity_opt_out.json`, `data/blue_droplets/tags/fluid/carries_purity.json`, `data/blue_droplets/tags/block/cauldron_heat_sources.json`, `data/blue_droplets/tags/mob_effect/pauses_thirst.json`, `data/blue_droplets/tags/mob_effect/stops_thirst.json`. Use `{"id": "othermod:item", "required": false}` for optional mods. Effects are read when the player's effects change and once a second, not every tick.
 
 ## Purification recipes
 
 Purifying water uses vanilla recipe types (`minecraft:smelting`, `minecraft:campfire_cooking`, `minecraft:smoking`) with NeoForge component ingredients: the ingredient matches water of a given purity and the result stores a higher one. JEI and other recipe viewers show them like any other recipe.
 
-JEI (and EMI when JEI is installed too) also gets a "Water Purification" page for what is not a recipe: the water cauldron, plain and over a block of `bluedroplets:cauldron_heat_sources`, and with Create the Sand Filter, one step per purity with the `compat.toml` amount and maximum. The page is hidden when `purity.enabled` is `false`. A "Hydration" page lists every item that changes thirst with the values the server resolved, so it shows your datapack and config changes after `/reload`.
+JEI (and EMI when JEI is installed too) also gets a "Water Purification" page for what is not a recipe: the water cauldron, plain and over a block of `blue_droplets:cauldron_heat_sources`, and with Create the Sand Filter, one step per purity with the `compat.toml` amount and maximum. The page is hidden when `purity.enabled` is `false`. A "Hydration" page lists every item that changes thirst with the values the server resolved, so it shows your datapack and config changes after `/reload`.
 
 The recipes ship as optional built-in datapacks, one per method, listed in the datapack screen when creating a world and in `/datapack list`:
 
 | Pack id | Default | Recipes |
 |---|---|---|
-| `mod/bluedroplets:datapacks/purify_smelting` | enabled | Furnace: dirty → acceptable, slightly dirty / acceptable / none stored → purified |
-| `mod/bluedroplets:datapacks/purify_campfire` | enabled | Campfire: one level per cook |
-| `mod/bluedroplets:datapacks/purify_smoking` | disabled | Smoker: same as the furnace, twice as fast |
+| `mod/blue_droplets:datapacks/purify_smelting` | enabled | Furnace: dirty → acceptable, slightly dirty / acceptable / none stored → purified |
+| `mod/blue_droplets:datapacks/purify_campfire` | enabled | Campfire: one level per cook |
+| `mod/blue_droplets:datapacks/purify_smoking` | disabled | Smoker: same as the furnace, twice as fast |
 
-- Turn a method off or on per world with `/datapack disable "mod/bluedroplets:datapacks/purify_campfire"` / `/datapack enable ...`; the choice is saved with the world.
-- To change a recipe, put a recipe with the same id (`bluedroplets:water_bottle_from_smelting_purified`, …) in your own datapack above it.
+- Turn a method off or on per world with `/datapack disable "mod/blue_droplets:datapacks/purify_campfire"` / `/datapack enable ...`; the choice is saved with the world.
+- To change a recipe, put a recipe with the same id (`blue_droplets:water_bottle_from_smelting_purified`, …) in your own datapack above it.
 - **With Create installed** the recipes that give purified water (3) do not load: the furnace and smoker turn slightly dirty water into acceptable instead, and the campfire stops at acceptable. Purified water then only comes from the Sand Filter, so the filters are worth building. Without Create, cooking reaches purified as in the table. The capped recipes carry `{"type": "neoforge:not", "value": {"type": "neoforge:mod_loaded", "modid": "create"}}`; the Create-only replacements end in `_with_create`.
-- **Create** recipes (in the mod's own data, loaded only with Create and with purity on): fan washing (`create:splashing`) takes water bottles and terracotta water bowls up one level, dirty → slightly dirty → acceptable (`bluedroplets:compat/create/water_bottle_from_splashing_dirty`, …); a mixer over a heated basin (`create:mixing`, `heat_requirement: heated`) turns 250 mB of dirty or slightly dirty water into acceptable (`bluedroplets:compat/create/water_from_heated_mixing_dirty`, …); an Item Drain empties terracotta water bowls (`create:emptying`). Water buckets are not washed: Create gives back the bucket's crafting remainder next to the result. Smoking and blasting fans use the smoker and furnace recipes above; with the smoker pack on, a blasting fan burns what a smoker can cook, water included, as Create does with food.
-- **Cold Sweat**: each pack also purifies the filled waterskin (`bluedroplets:filled_waterskin_from_smelting_acceptable`, …), loaded only with Cold Sweat. The waterskin comes out full, with Cold Sweat's default water temperature, since cooking recipes give a fixed result; water is free to refill anyway. There is no recipe for a waterskin with no purity stored, because a component ingredient cannot say "no purity" for an item that always carries other data; waterskins filled with Blue Droplets installed always get one.
-- Every purification recipe carries the condition `{"type": "bluedroplets:purity_enabled"}`, so none load when `purity.enabled` is `false`. Use it in your own purity recipes too. A recipe that should still exist without purity needs a second copy with `{"type": "neoforge:not", "value": {"type": "bluedroplets:purity_enabled"}}`, as Create's cactus compacting does (`bluedroplets:compat/create/cactus_without_purity`).
-- The same id is also a loot condition, checked each time loot is rolled: put `"conditions": [{"condition": "bluedroplets:purity_enabled"}]` on a `minecraft:set_components` function that stores `bluedroplets:purity`, as the built-in chest loot does, so the drink comes without a purity when it is off.
+- **Create** recipes (in the mod's own data, loaded only with Create and with purity on): fan washing (`create:splashing`) takes water bottles and terracotta water bowls up one level, dirty → slightly dirty → acceptable (`blue_droplets:compat/create/water_bottle_from_splashing_dirty`, …); a mixer over a heated basin (`create:mixing`, `heat_requirement: heated`) turns 250 mB of dirty or slightly dirty water into acceptable (`blue_droplets:compat/create/water_from_heated_mixing_dirty`, …); an Item Drain empties terracotta water bowls (`create:emptying`). Water buckets are not washed: Create gives back the bucket's crafting remainder next to the result. Smoking and blasting fans use the smoker and furnace recipes above; with the smoker pack on, a blasting fan burns what a smoker can cook, water included, as Create does with food.
+- **Cold Sweat**: each pack also purifies the filled waterskin (`blue_droplets:filled_waterskin_from_smelting_acceptable`, …), loaded only with Cold Sweat. The waterskin comes out full, with Cold Sweat's default water temperature, since cooking recipes give a fixed result; water is free to refill anyway. There is no recipe for a waterskin with no purity stored, because a component ingredient cannot say "no purity" for an item that always carries other data; waterskins filled with Blue Droplets installed always get one.
+- Every purification recipe carries the condition `{"type": "blue_droplets:purity_enabled"}`, so none load when `purity.enabled` is `false`. Use it in your own purity recipes too. A recipe that should still exist without purity needs a second copy with `{"type": "neoforge:not", "value": {"type": "blue_droplets:purity_enabled"}}`, as Create's cactus compacting does (`blue_droplets:compat/create/cactus_without_purity`).
+- The same id is also a loot condition, checked each time loot is rolled: put `"conditions": [{"condition": "blue_droplets:purity_enabled"}]` on a `minecraft:set_components` function that stores `blue_droplets:purity`, as the built-in chest loot does, so the drink comes without a purity when it is off.
 
 Example of one level of purification for a modded water container:
 
 ```json
 {
-  "neoforge:conditions": [{ "type": "bluedroplets:purity_enabled" }],
+  "neoforge:conditions": [{ "type": "blue_droplets:purity_enabled" }],
   "type": "minecraft:campfire_cooking",
   "ingredient": {
     "type": "neoforge:components",
     "items": "examplemod:canteen",
-    "components": { "bluedroplets:purity": 0 }
+    "components": { "blue_droplets:purity": 0 }
   },
-  "result": { "id": "examplemod:canteen", "count": 1, "components": { "bluedroplets:purity": 1 } },
+  "result": { "id": "examplemod:canteen", "count": 1, "components": { "blue_droplets:purity": 1 } },
   "cookingtime": 300
 }
 ```
 
-Water with no purity stored counts as `defaultPurity` (2, acceptable) in the game but does not match a `"bluedroplets:purity": 2` ingredient; match it with `{"type": "neoforge:components", "items": "...", "components": {}, "strict": true}` as the built-in recipes do.
+Water with no purity stored counts as `defaultPurity` (2, acceptable) in the game but does not match a `"blue_droplets:purity": 2` ingredient; match it with `{"type": "neoforge:components", "items": "...", "components": {}, "strict": true}` as the built-in recipes do.
 
 ## Presets
 
@@ -259,7 +259,7 @@ Two optional presets change the balance; the default is Blue Droplets' own behav
 
 | Part | casual | hardcore |
 |---|---|---|
-| Built-in datapack (disabled by default; enable when creating the world or with `/datapack enable`) | `mod/bluedroplets:datapacks/preset_casual`: Nether climate ×1.5 | `mod/bluedroplets:datapacks/preset_hardcore`: Nether climate ×4 |
-| TOML keys to copy into `config/bluedroplets/` ([`docs/presets/`](../docs/presets/) in the repository) | `multiplier` 0.8, riding ×0.5, dehydration stops at 5 hearts on Normal and never kills, drinking by hand on, dirty water: 50% nausea and hunger, no poison | `multiplier` 1.6, weather/day/sun/water multipliers, riding ×1, rain every 2 s, drinking by hand with a 1 s cooldown, no running water bonus, dirty water: 60% poison |
+| Built-in datapack (disabled by default; enable when creating the world or with `/datapack enable`) | `mod/blue_droplets:datapacks/preset_casual`: Nether climate ×1.5 | `mod/blue_droplets:datapacks/preset_hardcore`: Nether climate ×4 |
+| TOML keys to copy into `config/blue_droplets/` ([`docs/presets/`](../docs/presets/) in the repository) | `multiplier` 0.8, riding ×0.5, dehydration stops at 5 hearts on Normal and never kills, drinking by hand on, dirty water: 50% nausea and hunger, no poison | `multiplier` 1.6, weather/day/sun/water multipliers, riding ×1, rain every 2 s, drinking by hand with a 1 s cooldown, no running water bonus, dirty water: 60% poison |
 
 The TOML files only list the keys they change; Blue Droplets adds the rest with their defaults.

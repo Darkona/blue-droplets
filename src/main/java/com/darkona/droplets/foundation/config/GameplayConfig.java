@@ -6,7 +6,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.List;
 
 /**
- * {@code config/bluedroplets/gameplay.toml}: thirst loss, drinking, damage and regeneration rules.
+ * {@code config/blue_droplets/gameplay.toml}: thirst loss, drinking, damage and regeneration rules.
  */
 public final class GameplayConfig
 {

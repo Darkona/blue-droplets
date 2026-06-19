@@ -22,19 +22,19 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class MixinCampfireBlockEntity
 {
     @Unique
-    private static boolean bluedroplets$water;
+    private static boolean blue_droplets$water;
 
     @WrapOperation(method = "particleTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;get(I)Ljava/lang/Object;"))
-    private static Object bluedroplets$checkWater(NonNullList<ItemStack> items, int slot, Operation<Object> original)
+    private static Object blue_droplets$checkWater(NonNullList<ItemStack> items, int slot, Operation<Object> original)
     {
         Object item = original.call(items, slot);
-        bluedroplets$water = item instanceof ItemStack stack && WaterPurity.isWaterFilledContainer(stack);
+        blue_droplets$water = item instanceof ItemStack stack && WaterPurity.isWaterFilledContainer(stack);
         return item;
     }
 
     @ModifyArg(method = "particleTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), index = 0)
-    private static ParticleOptions bluedroplets$vapour(ParticleOptions particle)
+    private static ParticleOptions blue_droplets$vapour(ParticleOptions particle)
     {
-        return bluedroplets$water ? ParticleTypes.EFFECT : particle;
+        return blue_droplets$water ? ParticleTypes.EFFECT : particle;
     }
 }

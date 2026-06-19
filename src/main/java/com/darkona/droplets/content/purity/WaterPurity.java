@@ -295,7 +295,7 @@ public class WaterPurity
 
     /**
      * Sets the purity component on an item; it is always stored, also for the default purity.
-     * Invalid values are stored as the default purity. Items in {@code bluedroplets:purity_opt_out}, or any item with {@code purity.enabled=false}, are left unchanged.
+     * Invalid values are stored as the default purity. Items in {@code blue_droplets:purity_opt_out}, or any item with {@code purity.enabled=false}, are left unchanged.
      */
     public static ItemStack addPurity(ItemStack item, int purity)
     {
@@ -371,7 +371,7 @@ public class WaterPurity
     /**
      * Purity of water taken from a water cauldron. The cauldron stores nothing: the purity is decided when the water
      * leaves it, {@value #CAULDRON_PURITY}, or {@value #HEATED_CAULDRON_PURITY} while it stands on a heat source (block
-     * tag {@code bluedroplets:cauldron_heat_sources}; blocks with a {@code lit} property only when lit). Never purified:
+     * tag {@code blue_droplets:cauldron_heat_sources}; blocks with a {@code lit} property only when lit). Never purified:
      * that is what filters are for.
      */
     public static int cauldronPurity(BlockGetter level, BlockPos pos)
@@ -391,7 +391,7 @@ public class WaterPurity
     }
 
     /**
-     * Same, writing each step to {@code trace} when given ({@code /bluedroplets debug purity}).
+     * Same, writing each step to {@code trace} when given ({@code /blue_droplets debug purity}).
      */
     public static int getWaterPurity(Level level, BlockPos pos, boolean source, @Nullable List<String> trace)
     {
@@ -447,7 +447,7 @@ public class WaterPurity
             purity = biomeWater.base().get();
         }
         else if ((purity = taggedPurity(biome)) >= MIN_PURITY)
-            from = "biome tag bluedroplets:water_purity/" + purity;
+            from = "biome tag blue_droplets:water_purity/" + purity;
         else if ((dimensionWater = level.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER)) != null && dimensionWater.base().isPresent())
         {
             from = "dimension_water data map";

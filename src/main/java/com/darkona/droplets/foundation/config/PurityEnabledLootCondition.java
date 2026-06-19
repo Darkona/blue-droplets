@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Loot condition {@code bluedroplets:purity_enabled}: true while {@code purity.enabled} is on. Checked each time loot
+ * Loot condition {@code blue_droplets:purity_enabled}: true while {@code purity.enabled} is on. Checked each time loot
  * is rolled; the chest loot tables put it on the {@code set_components} function that stores a purity.
  */
 public record PurityEnabledLootCondition() implements LootItemCondition

@@ -17,7 +17,7 @@ import java.util.regex.PatternSyntaxException;
  * Problems NeoForge's per-key validation cannot see (unknown ids, overlapping bands, unordered curves, bad patterns,
  * recipes the inference could not read).
  * Reported as one warning each time the tables are rebuilt (world load, {@code /reload}, config file change) and by
- * {@code /bluedroplets config check}. Nothing here stops loading: bad entries are skipped where they are used.
+ * {@code /blue_droplets config check}. Nothing here stops loading: bad entries are skipped where they are used.
  */
 public final class ConfigCheck
 {

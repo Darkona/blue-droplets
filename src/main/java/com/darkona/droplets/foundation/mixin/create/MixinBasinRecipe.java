@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.List;
 
 /**
- * Basin outputs in {@code bluedroplets:carries_purity} without their own purity take the purity of the input water.
+ * Basin outputs in {@code blue_droplets:carries_purity} without their own purity take the purity of the input water.
  * Works on copies in the basin's output list, never on the recipe's shared stacks, and only in the simulated pass
  * that builds that list (the input is not drained yet); skipped when Create only tests the recipe.
  */
@@ -28,12 +28,12 @@ public class MixinBasinRecipe {
             method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z",
             at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;acceptOutputs(Ljava/util/List;Ljava/util/List;Z)Z"),
             remap = false)
-    private static boolean bluedroplets$carryPurity(BasinBlockEntity basin, List<ItemStack> items, List<FluidStack> fluids, boolean simulate,
+    private static boolean blue_droplets$carryPurity(BasinBlockEntity basin, List<ItemStack> items, List<FluidStack> fluids, boolean simulate,
                                                     Operation<Boolean> original, @Local(argsOnly = true) boolean test)
     {
         if (simulate && !test && !fluids.isEmpty())
         {
-            int purity = bluedroplets$inputPurity(basin);
+            int purity = blue_droplets$inputPurity(basin);
             if (purity >= WaterPurity.MIN_PURITY)
                 for (int i = 0; i < fluids.size(); i++)
                 {
@@ -46,7 +46,7 @@ public class MixinBasinRecipe {
     }
 
     @Unique
-    private static int bluedroplets$inputPurity(BasinBlockEntity basin)
+    private static int blue_droplets$inputPurity(BasinBlockEntity basin)
     {
         IFluidHandler input = basin.inputTank.getCapability();
         for (int tank = 0; tank < input.getTanks(); tank++)

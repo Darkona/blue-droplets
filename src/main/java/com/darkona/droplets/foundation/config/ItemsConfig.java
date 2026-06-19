@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * {@code config/bluedroplets/items.toml}: per-item overrides, purity containers, keywords and recipe inference (was item_settings.toml,
+ * {@code config/blue_droplets/items.toml}: per-item overrides, purity containers, keywords and recipe inference (was item_settings.toml,
  * container.toml and keyword.toml).
  */
 public final class ItemsConfig
@@ -54,7 +54,7 @@ public final class ItemsConfig
 
     static
     {
-        BUILDER.comment("These entries win over the bluedroplets:drinks data map (datapacks) and over values registered by other mods.",
+        BUILDER.comment("These entries win over the blue_droplets:drinks data map (datapacks) and over values registered by other mods.",
                 "Format: [[\"namespace:item\" or \"#namespace:tag\", thirst, quenched], ...]; thirst -20 to 20 and quenched -20 or more (negative values remove them)").push("overrides");
         DRINKS = BUILDER.comment("Items that restore thirst when drunk").<List<?>>defineListAllowEmpty("drinks", List.of(), ItemsConfig::newEntry, ItemsConfig::checkEntry);
         FOODS = BUILDER.comment("Items that restore thirst when eaten").<List<?>>defineListAllowEmpty("foods", List.of(), ItemsConfig::newEntry, ItemsConfig::checkEntry);
@@ -63,12 +63,12 @@ public final class ItemsConfig
         BUILDER.pop();
 
         BUILDER.push("containers");
-        CONTAINERS = BUILDER.comment("Drinks that carry a water purity (added to the item tag bluedroplets:purity_containers, where the defaults live)",
+        CONTAINERS = BUILDER.comment("Drinks that carry a water purity (added to the item tag blue_droplets:purity_containers, where the defaults live)",
                         "Format: [\"examplemod:example_item_1\", \"#examplemod:example_tag\"]")
                 .<String>defineListAllowEmpty("containers", List.of(), () -> "namespace:item", it -> it instanceof String);
         BUILDER.pop();
 
-        BUILDER.comment("Items in the item tag bluedroplets:salty (empty by default) with no values from overrides, datapacks or other mods get these").push("salty");
+        BUILDER.comment("Items in the item tag blue_droplets:salty (empty by default) with no values from overrides, datapacks or other mods get these").push("salty");
         SALTY_THIRST = BUILDER.comment("Thirst they give (negative: they make the player thirstier)").defineInRange("thirstPenalty", -2, -20, 20);
         SALTY_QUENCHED = BUILDER.defineInRange("quenchedPenalty", -2, -20, 20);
         BUILDER.pop();
@@ -88,7 +88,7 @@ public final class ItemsConfig
         BUILDER.pop();
 
         BUILDER.comment("Estimates thirst values from recipe ingredients for items that have none from any other source (shown as \"est.\").",
-                "Computed when the world loads, on /reload and when this file changes; /bluedroplets infer <item> explains a result").push("inference");
+                "Computed when the world loads, on /reload and when this file changes; /blue_droplets infer <item> explains a result").push("inference");
         INFERENCE = BUILDER.comment("Whether values are estimated").define("enabled", false);
         INFERENCE_ONLY_CONSUMABLES = BUILDER.comment("Only items that are eaten or drunk get an estimate; other items still pass their value on to recipes that use them")
                 .define("onlyConsumables", true);

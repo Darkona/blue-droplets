@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinOpenEndedPipe
 {
     @Inject(method = "removeFluidFromSpace", at = @At("HEAD"), remap = false)
-    private void bluedroplets$readPurity(boolean simulate, CallbackInfoReturnable<FluidStack> cir, @Share("purity") LocalIntRef purity)
+    private void blue_droplets$readPurity(boolean simulate, CallbackInfoReturnable<FluidStack> cir, @Share("purity") LocalIntRef purity)
     {
         purity.set(-1);
         OpenEndedPipe pipe = (OpenEndedPipe) (Object) this;
@@ -46,7 +46,7 @@ public abstract class MixinOpenEndedPipe
     }
 
     @ModifyReturnValue(method = "removeFluidFromSpace", at = @At("RETURN"), remap = false)
-    private FluidStack bluedroplets$addPurity(FluidStack drained, @Share("purity") LocalIntRef purity)
+    private FluidStack blue_droplets$addPurity(FluidStack drained, @Share("purity") LocalIntRef purity)
     {
         if (purity.get() >= 0 && !drained.isEmpty() && drained.is(FluidTags.WATER) && !WaterPurity.hasPurity(drained))
             WaterPurity.addPurity(drained, purity.get());

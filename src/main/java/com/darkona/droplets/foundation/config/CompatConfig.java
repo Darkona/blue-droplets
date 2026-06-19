@@ -5,7 +5,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.List;
 
 /**
- * {@code config/bluedroplets/compat.toml}: one section per optional mod; ignored when that mod is not installed.
+ * {@code config/blue_droplets/compat.toml}: one section per optional mod; ignored when that mod is not installed.
  */
 public final class CompatConfig
 {

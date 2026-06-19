@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinAbstractCauldronBlock
 {
     @WrapOperation(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/cauldron/CauldronInteraction;interact(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/ItemInteractionResult;"))
-    private ItemInteractionResult bluedroplets$cauldronPurity(CauldronInteraction interaction, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack, Operation<ItemInteractionResult> original)
+    private ItemInteractionResult blue_droplets$cauldronPurity(CauldronInteraction interaction, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack, Operation<ItemInteractionResult> original)
     {
         if (!WaterPurity.takingFromCauldron(state, level, pos))
             return original.call(interaction, state, level, pos, player, hand, stack);

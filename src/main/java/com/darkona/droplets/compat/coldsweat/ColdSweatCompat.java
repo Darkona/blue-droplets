@@ -30,7 +30,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
  * body temperature for the climate multiplier and hot dirty water, and drinking water cools. The waterskin's purity
  * (filled: purity of its water; emptied: none) is two small runtime mixins in {@code foundation.mixin.cold_sweat},
  * until Cold Sweat has a hook for it. The waterskin's drink values and its purity container entry are data
- * ({@code bluedroplets:drinks}, {@code bluedroplets:purity_containers}).
+ * ({@code blue_droplets:drinks}, {@code blue_droplets:purity_containers}).
  */
 public final class ColdSweatCompat
 {

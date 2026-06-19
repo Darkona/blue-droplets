@@ -22,14 +22,14 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinHoseItem
 {
     @ModifyExpressionValue(method = "use", at = @At(value = "NEW", target = "net/neoforged/neoforge/fluids/FluidStack", ordinal = 0))
-    private FluidStack bluedroplets$checkedStack(FluidStack fluid, @Local(argsOnly = true) Level level, @Local(ordinal = 0) BlockPos pos, @Share("purity") LocalIntRef purity)
+    private FluidStack blue_droplets$checkedStack(FluidStack fluid, @Local(argsOnly = true) Level level, @Local(ordinal = 0) BlockPos pos, @Share("purity") LocalIntRef purity)
     {
         purity.set(fluid.is(FluidTags.WATER) && WaterPurity.enabled() ? WaterPurity.getBlockPurity(level, pos) : -1);
         return withPurity(fluid, purity);
     }
 
     @ModifyExpressionValue(method = "use", at = @At(value = "NEW", target = "net/neoforged/neoforge/fluids/FluidStack", ordinal = 1))
-    private FluidStack bluedroplets$filledStack(FluidStack fluid, @Share("purity") LocalIntRef purity)
+    private FluidStack blue_droplets$filledStack(FluidStack fluid, @Share("purity") LocalIntRef purity)
     {
         return withPurity(fluid, purity);
     }

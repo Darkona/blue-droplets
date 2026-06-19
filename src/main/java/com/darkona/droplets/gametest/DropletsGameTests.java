@@ -5,7 +5,7 @@ import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 
 /**
  * Registers the test classes that link against optional mods, only when that mod is installed; the rest are found
- * through {@code @GameTestHolder}. Tests only run with {@code neoforge.enabledGameTestNamespaces=bluedroplets}.
+ * through {@code @GameTestHolder}. Tests only run with {@code neoforge.enabledGameTestNamespaces=blue_droplets}.
  */
 public final class DropletsGameTests
 {

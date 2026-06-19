@@ -28,20 +28,20 @@ public abstract class MixinCauldronWrapper
     @Shadow @Final private BlockPos pos;
 
     @ModifyReturnValue(method = "getFluidInTank", at = @At("RETURN"))
-    private FluidStack bluedroplets$tankPurity(FluidStack fluid)
+    private FluidStack blue_droplets$tankPurity(FluidStack fluid)
     {
         return withPurity(fluid);
     }
 
     @ModifyReturnValue(method = "drain(Lnet/minecraft/world/level/block/state/BlockState;ILnet/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction;)Lnet/neoforged/neoforge/fluids/FluidStack;", at = @At("RETURN"))
-    private FluidStack bluedroplets$drainPurity(FluidStack drained)
+    private FluidStack blue_droplets$drainPurity(FluidStack drained)
     {
         return withPurity(drained);
     }
 
     @WrapOperation(method = "drain(Lnet/neoforged/neoforge/fluids/FluidStack;Lnet/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction;)Lnet/neoforged/neoforge/fluids/FluidStack;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/core/component/PatchedDataComponentMap;isEmpty()Z"))
-    private boolean bluedroplets$acceptOwnPurity(PatchedDataComponentMap components, Operation<Boolean> original, @Local(argsOnly = true) FluidStack resource)
+    private boolean blue_droplets$acceptOwnPurity(PatchedDataComponentMap components, Operation<Boolean> original, @Local(argsOnly = true) FluidStack resource)
     {
         return original.call(components) || components.size() == 1 && WaterPurity.hasPurity(resource) && resource.is(FluidTags.WATER)
                 && WaterPurity.getPurity(resource) == WaterPurity.cauldronPurity(level, pos);

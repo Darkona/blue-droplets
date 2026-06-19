@@ -1,7 +1,7 @@
 # Mod developers
 
 Blue Droplets has a small public API in `com.darkona.droplets.api`. It ships inside the mod jar and alone as
-`bluedroplets-api` (with sources) so you can compile against it without pulling in the mod's internals. Everything
+`blue-droplets-api` (with sources) so you can compile against it without pulling in the mod's internals. Everything
 outside `com.darkona.droplets.api` is internal and may change in any version.
 
 `DropletsAPI` is the place to start; every public method is documented. `DropletsAPI.API_VERSION` goes up when the API
@@ -20,9 +20,9 @@ repositories {
 
 dependencies {
     // The API only: nothing of Blue Droplets' internals is on your compile classpath.
-    compileOnly "com.darkona.droplets:bluedroplets-api:${bluedroplets_version}"
+    compileOnly "com.darkona.droplets:blue-droplets-api:${blue_droplets_version}"
     // The whole mod, to run it in your dev environment (optional).
-    localRuntime "com.darkona.droplets:BlueDroplets:${bluedroplets_version}"
+    localRuntime "com.darkona.droplets:BlueDroplets:${blue_droplets_version}"
 }
 ```
 
@@ -30,7 +30,7 @@ In `neoforge.mods.toml`, declare Blue Droplets as optional:
 
 ```toml
 [[dependencies.yourmod]]
-modId = "bluedroplets"
+modId = "blue_droplets"
 type = "optional"
 versionRange = "[0,)"
 ordering = "NONE"
@@ -42,7 +42,7 @@ side = "BOTH"
 Keep every call in a class that is only loaded when Blue Droplets is installed, and guard the entry point:
 
 ```java
-if (ModList.get().isLoaded(DropletsAPI.MOD_ID)) {   // or the literal "bluedroplets"
+if (ModList.get().isLoaded(DropletsAPI.MOD_ID)) {   // or the literal "blue_droplets"
     DropletsCompat.init();
 }
 ```
@@ -63,7 +63,7 @@ DropletsView thirst = DropletsAPI.view(player);  // live view, no copy
 int points = thirst.thirst();                    // 0..20 (thirst.maxThirst())
 int quenched = thirst.quenched();                // like saturation, never above thirst
 float exhaustion = thirst.exhaustion();          // towards the next point lost
-boolean on = thirst.isEnabled();                 // /bluedroplets enable
+boolean on = thirst.isEnabled();                 // /blue_droplets enable
 float multiplier = thirst.lastModifier();        // cached climate/armor/effects/mods multiplier
 ```
 
@@ -96,9 +96,9 @@ All of these keep `0 <= quenched <= thirst <= 20`, post the events below and rea
 
 Call these once, from your mod constructor or common setup. Items are resolved each time the tables are built (world
 load and `/reload`), so `DeferredItem`s are fine. Players and modpacks keep the last word: `items.toml`, the
-`#bluedroplets:no_thirst` tag and the `bluedroplets:drinks` data map override what code registers (see
+`#blue_droplets:no_thirst` tag and the `blue_droplets:drinks` data map override what code registers (see
 [Modpack makers](Modpack-Makers#where-an-items-values-come-from)). If your values fit in a datapack, prefer shipping
-a `bluedroplets:drinks` data map entry instead.
+a `blue_droplets:drinks` data map entry instead.
 
 ```java
 DropletsAPI.registerDrink(MyItems.LEMONADE, 6, 4);                          // thirst, quenched
@@ -152,7 +152,7 @@ Filling them from the world is up to your item; give the result a purity with `D
 
 ## Thirst loss
 
-Prefer the attribute `bluedroplets:thirst_drain` (a multiplier, base 1.0): equipment, effects and enchantments change
+Prefer the attribute `blue_droplets:thirst_drain` (a multiplier, base 1.0): equipment, effects and enchantments change
 it with ordinary attribute modifiers and no code on your side.
 
 For rules the attribute can't express (additive terms, your own climate or seasons), register a modifier. It runs on the
@@ -167,7 +167,7 @@ DropletsAPI.registerExhaustionModifier(ResourceLocation.fromNamespaceAndPath("my
 DropletsAPI.refreshExhaustionModifier(player);
 ```
 
-`/bluedroplets debug exhaustion` shows the combined effect of registered modifiers as "other mods".
+`/blue_droplets debug exhaustion` shows the combined effect of registered modifiers as "other mods".
 
 ## Thirst bar colour
 
@@ -200,7 +200,7 @@ happens (never once per tick). Listen to `Pre`/`Post`, not to the abstract base 
 |---|---|---|
 | `ThirstChangeEvent.Pre` | thirst or quenched is about to change; `getCause()`: `DEPLETION`, `DRINK`, `EAT`, `RAIN`, `PEACEFUL`, `DEATH`, `COMMAND`, `API` | cancel, `setNewThirst`, `setNewQuenched` |
 | `ThirstChangeEvent.Post` | after the change | read old and new values |
-| `EatEvent.Pre` | before food hydrates: food items (no drink animation, not a water container; also `Player#eat` called by other mods), block foods (`bluedroplets:hydrating_blocks`, `getItem()` empty) and `DropletsAPI.eat`; `getSaltiness()`/`isSalty()` | cancel, `setThirst`, `setQuenched` |
+| `EatEvent.Pre` | before food hydrates: food items (no drink animation, not a water container; also `Player#eat` called by other mods), block foods (`blue_droplets:hydrating_blocks`, `getItem()` empty) and `DropletsAPI.eat`; `getSaltiness()`/`isSalty()` | cancel, `setThirst`, `setQuenched` |
 | `EatEvent.Post` | after it | read the values and `hydrated()` |
 | `DrinkEvent.Pre` | before a drink's purity effects and hydration: items with the drink animation (potions, milk, honey bottle, most modded drinks), water containers, hand drinking and `DropletsAPI.drink`; `getItem()` is empty for hand drinking and `DropletsAPI.drink`; `getSaltiness()`/`isSalty()` for values that remove thirst | cancel, `setThirst`, `setQuenched`, `setPurity` (negative values remove thirst) |
 | `DrinkEvent.Post` | after it | read the values and `hydrated()` |

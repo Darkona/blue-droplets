@@ -65,7 +65,7 @@ public class CompatTests
     public static void effectTagPausesThirst(GameTestHelper helper)
     {
         Holder<MobEffect> nourishment = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("farmersdelight", "nourishment")).orElse(null);
-        helper.assertValueEqual(nourishment != null && nourishment.is(DropletsTags.PAUSES_THIRST), ModList.get().isLoaded("farmersdelight"), "Nourishment in bluedroplets:pauses_thirst");
+        helper.assertValueEqual(nourishment != null && nourishment.is(DropletsTags.PAUSES_THIRST), ModList.get().isLoaded("farmersdelight"), "Nourishment in blue_droplets:pauses_thirst");
         if (nourishment == null)
         {
             helper.succeed();

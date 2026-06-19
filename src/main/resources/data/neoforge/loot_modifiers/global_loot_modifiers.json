@@ -1,25 +1,25 @@
 {
   "neoforge:conditions": [
     {
-      "type": "bluedroplets:loot_config"
+      "type": "blue_droplets:loot_config"
     }
   ],
   "replace": false,
   "entries": [
-    "bluedroplets:add_loot_shipwreck_supply",
-    "bluedroplets:add_loot_shipwreck_supply_fr",
-    "bluedroplets:add_loot_shipwreck_supply_bc",
-    "bluedroplets:add_loot_abandoned_mineshaft",
-    "bluedroplets:add_loot_abandoned_mineshaft_fr",
-    "bluedroplets:add_loot_abandoned_mineshaft_bc",
-    "bluedroplets:add_loot_simple_dungeon",
-    "bluedroplets:add_loot_simple_dungeon_fr",
-    "bluedroplets:add_loot_simple_dungeon_bc",
-    "bluedroplets:add_loot_nether_bridge",
-    "bluedroplets:add_loot_nether_bridge_fr",
-    "bluedroplets:add_loot_nether_bridge_bc",
-    "bluedroplets:add_loot_bastion_other",
-    "bluedroplets:add_loot_bastion_other_fr",
-    "bluedroplets:add_loot_bastion_other_bc"
+    "blue_droplets:add_loot_shipwreck_supply",
+    "blue_droplets:add_loot_shipwreck_supply_fr",
+    "blue_droplets:add_loot_shipwreck_supply_bc",
+    "blue_droplets:add_loot_abandoned_mineshaft",
+    "blue_droplets:add_loot_abandoned_mineshaft_fr",
+    "blue_droplets:add_loot_abandoned_mineshaft_bc",
+    "blue_droplets:add_loot_simple_dungeon",
+    "blue_droplets:add_loot_simple_dungeon_fr",
+    "blue_droplets:add_loot_simple_dungeon_bc",
+    "blue_droplets:add_loot_nether_bridge",
+    "blue_droplets:add_loot_nether_bridge_fr",
+    "blue_droplets:add_loot_nether_bridge_bc",
+    "blue_droplets:add_loot_bastion_other",
+    "blue_droplets:add_loot_bastion_other_fr",
+    "blue_droplets:add_loot_bastion_other_bc"
   ]
 }

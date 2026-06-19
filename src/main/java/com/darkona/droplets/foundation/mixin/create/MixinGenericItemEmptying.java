@@ -25,7 +25,7 @@ public class MixinGenericItemEmptying
      * on the fluid Create has just made.
      */
     @WrapOperation(method = "emptyItem", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/potion/PotionFluidHandler;emptyPotion(Lnet/minecraft/world/item/ItemStack;Z)Lnet/createmod/catnip/data/Pair;"))
-    private static Pair<FluidStack, ItemStack> bluedroplets$bottlePurity(ItemStack stack, boolean simulate, Operation<Pair<FluidStack, ItemStack>> original,
+    private static Pair<FluidStack, ItemStack> blue_droplets$bottlePurity(ItemStack stack, boolean simulate, Operation<Pair<FluidStack, ItemStack>> original,
                                                                          @Local(argsOnly = true) Level level)
     {
         int purity = !level.isClientSide() && WaterPurity.hasPurity(stack) ? WaterPurity.getPurity(stack) : -1;
@@ -40,7 +40,7 @@ public class MixinGenericItemEmptying
      * Create's callers use the fluid of the simulated pass, where the stack is still whole.
      */
     @WrapOperation(method = "emptyItem", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/transfer/EmptyingRecipe;getResultingFluid()Lnet/neoforged/neoforge/fluids/FluidStack;"))
-    private static FluidStack bluedroplets$recipePurity(EmptyingRecipe recipe, Operation<FluidStack> original,
+    private static FluidStack blue_droplets$recipePurity(EmptyingRecipe recipe, Operation<FluidStack> original,
                                                         @Local(argsOnly = true) Level level, @Local(argsOnly = true) ItemStack stack)
     {
         FluidStack fluid = original.call(recipe);

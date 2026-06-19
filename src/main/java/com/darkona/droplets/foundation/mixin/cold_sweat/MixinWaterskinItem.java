@@ -27,33 +27,33 @@ public abstract class MixinWaterskinItem
 {
     /** Purity of the water just drained from a tank, -1 outside that fill. Server thread only. */
     @Unique
-    private static int bluedroplets$tankPurity = -1;
+    private static int blue_droplets$tankPurity = -1;
 
     @WrapOperation(method = "lambda$useOn$0", at = @At(value = "INVOKE", target = "Lcom/momosoftworks/coldsweat/common/item/WaterskinItem;handleFillWaterskin(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/core/BlockPos;)V"))
-    private static void bluedroplets$fromTank(Player player, ItemStack empty, InteractionHand hand, BlockPos pos, Operation<Void> original, @Local(ordinal = 1) FluidStack drained)
+    private static void blue_droplets$fromTank(Player player, ItemStack empty, InteractionHand hand, BlockPos pos, Operation<Void> original, @Local(ordinal = 1) FluidStack drained)
     {
         if (player.level().isClientSide())
         {
             original.call(player, empty, hand, pos);
             return;
         }
-        bluedroplets$tankPurity = WaterPurity.getPurity(drained);
+        blue_droplets$tankPurity = WaterPurity.getPurity(drained);
         try
         {
             original.call(player, empty, hand, pos);
         }
         finally
         {
-            bluedroplets$tankPurity = -1;
+            blue_droplets$tankPurity = -1;
         }
     }
 
     @ModifyReturnValue(method = "getFilledItem", at = @At("RETURN"))
-    private static ItemStack bluedroplets$purity(ItemStack filled, @Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos pos)
+    private static ItemStack blue_droplets$purity(ItemStack filled, @Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos pos)
     {
         if (level.isClientSide())
             return filled;
-        int purity = bluedroplets$tankPurity >= 0 ? bluedroplets$tankPurity
+        int purity = blue_droplets$tankPurity >= 0 ? blue_droplets$tankPurity
                 : level.getBlockState(pos).getBlock() instanceof AbstractCauldronBlock ? WaterPurity.cauldronPurity(level, pos)
                 : WaterPurity.getBlockPurity(level, pos);
         return WaterPurity.addPurity(filled, purity);

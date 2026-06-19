@@ -19,7 +19,7 @@ public final class AttributeInit
      * Curios and commands change it with ordinary attribute modifiers.
      */
     public static final DeferredHolder<Attribute, Attribute> THIRST_DRAIN = ATTRIBUTES.register("thirst_drain",
-            () -> new RangedAttribute("attribute.name.bluedroplets.thirst_drain", 1.0, 0.0, 10.0).setSyncable(true));
+            () -> new RangedAttribute("attribute.name.blue_droplets.thirst_drain", 1.0, 0.0, 10.0).setSyncable(true));
 
     private AttributeInit() {}
 

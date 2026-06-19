@@ -13,14 +13,14 @@ version = [release_type, minecraft_version, mod_version].findAll { !it.isBlank()
 group = mod_group_id
 
 base {
-    archivesName = mod_id
+    archivesName = archives_name
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 java.withSourcesJar()
 
 // The public API (com.darkona.droplets.api) lives in its own source set and ships twice: inside the mod jar, and
-// alone as bluedroplets-api for other mods to compile against. It may only use Minecraft and NeoForge.
+// alone as blue-droplets-api for other mods to compile against. It may only use Minecraft and NeoForge.
 sourceSets {
     api
 }
@@ -176,12 +176,12 @@ tasks.named('sourcesJar', Jar) {
 }
 
 var apiJar = tasks.register('apiJar', Jar) {
-    archiveBaseName = "${mod_id}-api"
+    archiveBaseName = "${archives_name}-api"
     from sourceSets.api.output
     from('LICENSE')
 }
 var apiSourcesJar = tasks.register('apiSourcesJar', Jar) {
-    archiveBaseName = "${mod_id}-api"
+    archiveBaseName = "${archives_name}-api"
     archiveClassifier = 'sources'
     from sourceSets.api.allSource
 }
@@ -195,11 +195,11 @@ tasks.withType(JavaCompile).configureEach {
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
-            artifactId = mod_id
+            artifactId = archives_name
             from components.java
         }
         register('api', MavenPublication) {
-            artifactId = "${mod_id}-api"
+            artifactId = "${archives_name}-api"
             artifact apiJar
             artifact apiSourcesJar
         }

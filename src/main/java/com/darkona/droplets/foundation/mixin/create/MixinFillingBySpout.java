@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MixinFillingBySpout
 {
     @ModifyReturnValue(method = "fillItem", at = @At("RETURN"))
-    private static ItemStack bluedroplets$keepPurity(ItemStack filled, @Local(argsOnly = true) FluidStack availableFluid)
+    private static ItemStack blue_droplets$keepPurity(ItemStack filled, @Local(argsOnly = true) FluidStack availableFluid)
     {
         if (!filled.isEmpty() && WaterPurity.hasPurity(availableFluid) && !WaterPurity.hasPurity(filled) && WaterPurity.isWaterFilledContainer(filled))
             WaterPurity.addPurity(filled, WaterPurity.getPurity(availableFluid));

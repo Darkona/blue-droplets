@@ -1,4 +1,4 @@
-# Blue Droplets "hardcore" preset: copy these keys into config/bluedroplets/purity.toml.
+# Blue Droplets "hardcore" preset: copy these keys into config/blue_droplets/purity.toml.
 
 [world]
 worldWaterBasePurity = 0

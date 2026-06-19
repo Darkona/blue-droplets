@@ -1,4 +1,4 @@
-# Blue Droplets "casual" preset: copy these keys into config/bluedroplets/purity.toml.
+# Blue Droplets "casual" preset: copy these keys into config/blue_droplets/purity.toml.
 
 [effects]
 dirty = ["minecraft:nausea,100,0,50", "minecraft:hunger,600,0,50"]

@@ -21,12 +21,12 @@ import java.util.function.Predicate;
  * <b>Sides.</b> Reading works on both sides (clients see their own synced values). Everything that changes thirst is
  * server side: on a client it does nothing and returns {@code false}.
  * <p>
- * <b>Soft dependency.</b> Compile against {@code bluedroplets-api} only and guard calls with
- * {@code ModList.get().isLoaded("bluedroplets")}.
+ * <b>Soft dependency.</b> Compile against {@code blue-droplets-api} only and guard calls with
+ * {@code ModList.get().isLoaded("blue_droplets")}.
  */
 public final class DropletsAPI
 {
-    public static final String MOD_ID = "bluedroplets";
+    public static final String MOD_ID = "blue_droplets";
     /** Bumped when the API changes incompatibly. */
     public static final int API_VERSION = 1;
 
@@ -133,7 +133,7 @@ public final class DropletsAPI
 
     /**
      * Adds exhaustion, multiplied like Blue Droplets' own activities by the climate, armor, effects and the
-     * {@code bluedroplets:thirst_drain} attribute. Every {@code exhaustionPerPoint} (4 by default) costs a point of
+     * {@code blue_droplets:thirst_drain} attribute. Every {@code exhaustionPerPoint} (4 by default) costs a point of
      * quenched, then of thirst. Ignored for creative players and players with thirst disabled.
      */
     public static void addExhaustion(Player player, float amount)
@@ -169,7 +169,7 @@ public final class DropletsAPI
 
     /**
      * A copy of the stack with this purity stored (invalid values become {@code defaultPurity}). Unchanged copy when
-     * purity is off or the item is in {@code bluedroplets:purity_opt_out}.
+     * purity is off or the item is in {@code blue_droplets:purity_opt_out}.
      */
     public static ItemStack withPurity(ItemStack stack, int purity)
     {
@@ -197,7 +197,7 @@ public final class DropletsAPI
      * Gives an item thirst values from code. Call any time from mod construction on; items are resolved when the
      * tables are built (world load, {@code /reload}), so deferred items are fine.
      * <p>
-     * The config ({@code items.toml}), the {@code bluedroplets:no_thirst} tag and the {@code bluedroplets:drinks}
+     * The config ({@code items.toml}), the {@code blue_droplets:no_thirst} tag and the {@code blue_droplets:drinks}
      * data map win over code, so players and modpacks can still change or remove it. Whether it counts as food or
      * drink follows the item: food if it can be eaten.
      * <p>

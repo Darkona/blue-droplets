@@ -11,7 +11,7 @@ import net.minecraft.world.level.material.Fluid;
 
 public final class DropletsTags
 {
-    /** Index = purity: biomes in {@code bluedroplets:water_purity/N} have water of base purity N (highest wins). */
+    /** Index = purity: biomes in {@code blue_droplets:water_purity/N} have water of base purity N (highest wins). */
     public static final TagKey<Biome>[] WATER_PURITY = waterPurityTags();
     public static final TagKey<Biome> SALT_WATER = TagKey.create(Registries.BIOME, BlueDroplets.asResource("salt_water"));
 

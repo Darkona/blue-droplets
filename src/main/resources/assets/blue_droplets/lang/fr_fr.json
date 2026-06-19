@@ -1,0 +1,27 @@
+{
+  "death.attack.dehydrate": "%1$s est mort(e) de déshydratation",
+  "death.attack.dehydrate.player": "%1$s est mort(e) de déshydratation en combattant %2$s",
+  "item.blue_droplets.terracotta_water_bowl": "Bol d'eau en terre cuite",
+  "item.blue_droplets.terracotta_bowl": "Bol en terre cuite",
+  "item.blue_droplets.clay_bowl": "Bol en argile",
+  "itemGroup.blue_droplets": "Blue Droplets",
+  "blue_droplets.purity.dirty": "Sale",
+  "blue_droplets.purity.slightly_dirty": "Un peu sale",
+  "blue_droplets.purity.acceptable": "Buvable",
+  "blue_droplets.purity.purified": "Purifiée",
+  "block.blue_droplets.sand_filter": "Filtre à sable",
+
+  "blue_droplets.ponder.sand_filter.header": "Purifier de l'eau avec un Filtre à sable",
+  "blue_droplets.ponder.sand_filter.text_1": "Un Filtre à sable effectue une étape de purification quand de l'eau y est pompée à travers",
+  "blue_droplets.ponder.sand_filter.text_2": "L'eau sale doit être pompée dans le filtre par dessus...",
+  "blue_droplets.ponder.sand_filter.text_3": "et l'eau purifiée peut être pompée par le dessous",
+  "blue_droplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
+  "effect.blue_droplets.dehydration": "Dehydration",
+  "effect.blue_droplets.quenchness": "Quenchness",
+  "item.minecraft.potion.effect.quenchness": "Potion of Quenchness",
+  "item.minecraft.splash_potion.effect.quenchness": "Splash Potion of Quenchness",
+  "item.minecraft.lingering_potion.effect.quenchness": "Lingering Potion of Quenchness",
+  "item.minecraft.tipped_arrow.effect.quenchness": "Arrow of Quenchness",
+  "effect.blue_droplets.hydrated": "Hydrated",
+  "effect.blue_droplets.overhydrated": "Overhydrated"
+}

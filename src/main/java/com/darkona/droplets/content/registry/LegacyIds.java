@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Registry aliases from the Thirst Was Taken namespace ({@code thirst:*}) to {@code bluedroplets:*},
+ * Registry aliases from the Thirst Was Taken namespace ({@code thirst:*}) to {@code blue_droplets:*},
  * so items, blocks, block entities, effects, the purity component and the player attachment saved
  * by Thirst Was Taken load under the new ids. Saving writes the new id, so each entry migrates once.
  * Never remove: unloaded chunks and offline players can keep old ids indefinitely.

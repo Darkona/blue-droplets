@@ -25,7 +25,7 @@ public class TravelersBackpackTests
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void hoseWaterHydratesWithTheTankPurity(GameTestHelper helper)
     {
-        EffectFluid effect = EffectFluidRegistry.getRegisteredFluidEffects().get("bluedroplets:water");
+        EffectFluid effect = EffectFluidRegistry.getRegisteredFluidEffects().get("blue_droplets:water");
         helper.assertTrue(effect != null, "the hose water effect is not registered");
         helper.assertTrue(effect.fluid == Fluids.WATER, "the hose water effect is not for water");
         helper.assertTrue(EffectFluidRegistry.getEffectsForFluid(Fluids.WATER).size() == 1, "Traveler's Backpack's own water effect is still registered");

@@ -51,7 +51,7 @@ public class PlayerThirstManager {
     private static volatile RecipeManager reloadingRecipes;
 
     /**
-     * Block foods of {@code bluedroplets:hydrating_blocks} (a cake slice): vanilla feeds the player straight from the
+     * Block foods of {@code blue_droplets:hydrating_blocks} (a cake slice): vanilla feeds the player straight from the
      * block, so a bite is detected after the interaction as a higher food level.
      */
     @SubscribeEvent
@@ -221,7 +221,7 @@ public class PlayerThirstManager {
     public static void estimatedTooltip(ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
         if (!ClientConfig.SHOW_TOOLTIP_ICONS.get() && ThirstHelper.isEstimated(stack))
-            event.getToolTip().add(Component.translatable("bluedroplets.tooltip.estimated", ThirstHelper.getThirst(stack), ThirstHelper.getQuenched(stack)).withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.translatable("blue_droplets.tooltip.estimated", ThirstHelper.getThirst(stack), ThirstHelper.getQuenched(stack)).withStyle(ChatFormatting.GRAY));
     }
 
     /**

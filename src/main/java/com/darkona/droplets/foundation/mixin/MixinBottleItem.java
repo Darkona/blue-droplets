@@ -20,13 +20,13 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class MixinBottleItem
 {
     @ModifyArg(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BottleItem;getPlayerPOVHitResult(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/ClipContext$Fluid;)Lnet/minecraft/world/phys/BlockHitResult;"), index = 2)
-    private ClipContext.Fluid bluedroplets$flowingWater(ClipContext.Fluid fluid)
+    private ClipContext.Fluid blue_droplets$flowingWater(ClipContext.Fluid fluid)
     {
         return SyncedValues.canFillFromFlowingWater() ? ClipContext.Fluid.ANY : fluid;
     }
 
     @ModifyArg(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BottleItem;turnBottleIntoItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;", ordinal = 1), index = 2)
-    private ItemStack bluedroplets$worldWaterPurity(ItemStack filled, @Local(argsOnly = true) Level level, @Local BlockPos pos)
+    private ItemStack blue_droplets$worldWaterPurity(ItemStack filled, @Local(argsOnly = true) Level level, @Local BlockPos pos)
     {
         if (!level.isClientSide() && WaterPurity.enabled() && WaterPurity.isWaterFilledContainer(filled) && !WaterPurity.hasPurity(filled))
             WaterPurity.addPurity(filled, WaterPurity.takenWaterPurity(level, pos));

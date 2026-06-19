@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinFilledWaterskinItem
 {
     @ModifyReturnValue(method = "getCraftingRemainingItem", at = @At("RETURN"))
-    private ItemStack bluedroplets$dropPurity(ItemStack empty)
+    private ItemStack blue_droplets$dropPurity(ItemStack empty)
     {
         if (!(empty.getItem() instanceof FilledWaterskinItem))
             empty.remove(ThirstComponent.PURITY);

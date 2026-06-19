@@ -85,7 +85,7 @@ public record PurificationEntry(String method, List<ItemStack> inputs, List<Item
     }
 
     /**
-     * Items of the blocks in {@code bluedroplets:cauldron_heat_sources} (fire and lava have none).
+     * Items of the blocks in {@code blue_droplets:cauldron_heat_sources} (fire and lava have none).
      */
     private static List<ItemStack> heatSources()
     {

@@ -26,7 +26,7 @@ import java.util.Optional;
 
 /**
  * One-time config migrations, run from the mod constructor before any config is registered:
- * {@code config/thirst/*.toml} (Thirst Was Taken) to {@code config/bluedroplets/}, then the old single files
+ * {@code config/thirst/*.toml} (Thirst Was Taken) to {@code config/blue_droplets/}, then the old single files
  * ({@code common.toml}, {@code item_settings.toml}, {@code container.toml}, {@code keyword.toml}) to the files by concern.
  */
 public final class LegacyConfigMigration

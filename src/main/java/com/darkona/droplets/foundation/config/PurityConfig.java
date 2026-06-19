@@ -6,7 +6,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.List;
 
 /**
- * {@code config/bluedroplets/purity.toml}: water purity in the world and its effects.
+ * {@code config/blue_droplets/purity.toml}: water purity in the world and its effects.
  */
 public final class PurityConfig
 {
@@ -52,9 +52,9 @@ public final class PurityConfig
                         "Default: +1 at 38 or more blocks above sea level (mountains) and at 16 or more below it (caves)")
                 .<String>defineListAllowEmpty("altitudeBands", List.of("38,4096,1", "-4096,-16,1"), () -> "0,0,0", PurityConfig::isValidAltitudeBand);
         ALTITUDE_RELATIVE_TO_SEA_LEVEL = BUILDER.comment("Whether altitudeBands are measured from the dimension's sea level (true) or are absolute Y levels (false)").define("altitudeRelativeToSeaLevel", true);
-        WORLD_WATER_BASE_PURITY = BUILDER.comment("Base purity of water in the world when neither its biome (bluedroplets:water_purity/N tags, bluedroplets:biome_water data map)",
-                "nor its dimension type (bluedroplets:dimension_water data map) sets one").defineInRange("worldWaterBasePurity", 0, 0, 3);
-        SALT_WATER_PURITY = BUILDER.comment("Fixed purity of water in biomes tagged bluedroplets:salt_water (oceans by default); -1 treats it like any other water").defineInRange("saltWaterPurity", -1, -1, 3);
+        WORLD_WATER_BASE_PURITY = BUILDER.comment("Base purity of water in the world when neither its biome (blue_droplets:water_purity/N tags, blue_droplets:biome_water data map)",
+                "nor its dimension type (blue_droplets:dimension_water data map) sets one").defineInRange("worldWaterBasePurity", 0, 0, 3);
+        SALT_WATER_PURITY = BUILDER.comment("Fixed purity of water in biomes tagged blue_droplets:salt_water (oceans by default); -1 treats it like any other water").defineInRange("saltWaterPurity", -1, -1, 3);
         RUNNING_WATER_PURIFICATION_AMOUNT = BUILDER.comment("Purity added to flowing water").defineInRange("runningWaterPurificationAmount", 1, 0, 3);
         STILL_WATER_PURIFICATION_AMOUNT = BUILDER.comment("Purity added to still (source) water; negative values make it dirtier").defineInRange("stillWaterPurificationAmount", 0, -3, 3);
         BUILDER.pop();

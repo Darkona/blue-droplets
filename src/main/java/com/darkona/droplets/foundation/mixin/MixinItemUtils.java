@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinItemUtils
 {
     @Inject(method = "createFilledResult(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;Z)Lnet/minecraft/world/item/ItemStack;", at = @At("HEAD"))
-    private static void bluedroplets$cauldronPurity(ItemStack emptyStack, Player player, ItemStack filledStack, boolean preventDuplicates, CallbackInfoReturnable<ItemStack> cir)
+    private static void blue_droplets$cauldronPurity(ItemStack emptyStack, Player player, ItemStack filledStack, boolean preventDuplicates, CallbackInfoReturnable<ItemStack> cir)
     {
         WaterPurity.applyCauldronPurity(filledStack);
     }

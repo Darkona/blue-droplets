@@ -1,0 +1,23 @@
+{
+  "required": false,
+  "package": "com.darkona.droplets.foundation.mixin",
+  "plugin": "com.darkona.droplets.foundation.mixin.CompatMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "blue_droplets.refmap.json",
+  "mixins": [
+    "cold_sweat.MixinFilledWaterskinItem",
+    "cold_sweat.MixinWaterskinItem",
+    "create.MixinBasinRecipe",
+    "create.MixinFillingBySpout",
+    "create.MixinFluidDrainingBehaviour",
+    "create.MixinGenericItemEmptying",
+    "create.MixinGenericItemFilling",
+    "create.MixinIHaveGoggleInformation",
+    "create.MixinOpenEndedPipe",
+    "travelersbackpack.MixinHoseItem"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8.4"
+}

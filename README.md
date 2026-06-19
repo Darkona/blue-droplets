@@ -15,17 +15,17 @@ It is the continuation of **[Thirst Was Taken](https://github.com/ghen-git/Thirs
 - Purify water by smelting or campfire cooking, in a cauldron over a fire, or with Create (Sand Filter, fans, heated basins).
 - Drink directly from water sources by hand.
 - Terracotta and clay bowls as early-game water containers.
-- `/bluedroplets` command (`/thirst` still works) to query or set thirst.
+- `/blue_droplets` command (`/thirst` still works) to query or set thirst.
 
-Only want thirst? Set `general.enabled = false` in `config/bluedroplets/purity.toml` and water purity is gone: no purity on items, no tooltips, no sickness from dirty water, no purification recipes (see `wiki/Configuration.md`).
+Only want thirst? Set `general.enabled = false` in `config/blue_droplets/purity.toml` and water purity is gone: no purity on items, no tooltips, no sickness from dirty water, no purification recipes (see `wiki/Configuration.md`).
 
 ## Moving from Thirst Was Taken
 
-Blue Droplets uses the mod id `bluedroplets` and cannot be installed together with Thirst Was Taken or Thirst Was Reclaimed (mod id `thirst`); the game will tell you if both are present.
+Blue Droplets uses the mod id `blue_droplets` and cannot be installed together with Thirst Was Taken or Thirst Was Reclaimed (mod id `thirst`); the game will tell you if both are present.
 
-- **Worlds**: items, blocks, effects, thirst data and purity saved with `thirst:` ids load under `bluedroplets:` ids. Nothing needs to be done.
-- **Config**: on first start, `config/thirst/` is copied to `config/bluedroplets/` and its files are split by concern (`gameplay.toml`, `purity.toml`, `items.toml`, `compat.toml`, `client.toml`; see `wiki/Configuration.md`). Modpacks shipping `defaultconfigs/thirst/` should rename it to `defaultconfigs/bluedroplets/` and use the new file names.
-- **Datapacks and resource packs** that target `thirst:` ids or translation keys need to be updated to `bluedroplets:`.
+- **Worlds**: items, blocks, effects, thirst data and purity saved with `thirst:` ids load under `blue_droplets:` ids. Nothing needs to be done.
+- **Config**: on first start, `config/thirst/` is copied to `config/blue_droplets/` and its files are split by concern (`gameplay.toml`, `purity.toml`, `items.toml`, `compat.toml`, `client.toml`; see `wiki/Configuration.md`). Modpacks shipping `defaultconfigs/thirst/` should rename it to `defaultconfigs/blue_droplets/` and use the new file names.
+- **Datapacks and resource packs** that target `thirst:` ids or translation keys need to be updated to `blue_droplets:`.
 
 ## Compatibility
 

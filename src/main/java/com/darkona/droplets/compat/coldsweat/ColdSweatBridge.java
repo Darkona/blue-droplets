@@ -38,7 +38,7 @@ final class ColdSweatBridge
             return;
         }
         FoodTempModifier modifier = new FoodTempModifier(-amount);
-        modifier.getNBT().putString("item", "bluedroplets:water");
+        modifier.getNBT().putString("item", "blue_droplets:water");
         modifier.expires(ticks);
         Temperature.replaceOrAddModifier(player, modifier, Temperature.Trait.BASE, Matcher.EQUALS);
     }

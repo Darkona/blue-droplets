@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinFluidType
 {
     @ModifyReturnValue(method = "getBucket(Lnet/neoforged/neoforge/fluids/FluidStack;)Lnet/minecraft/world/item/ItemStack;", at = @At("RETURN"))
-    private ItemStack bluedroplets$bucketPurity(ItemStack bucket, @Local(argsOnly = true) FluidStack stack)
+    private ItemStack blue_droplets$bucketPurity(ItemStack bucket, @Local(argsOnly = true) FluidStack stack)
     {
         if (!bucket.isEmpty() && WaterPurity.hasPurity(stack))
             WaterPurity.addPurity(bucket, WaterPurity.getPurity(stack));

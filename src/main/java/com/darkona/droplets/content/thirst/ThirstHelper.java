@@ -134,9 +134,9 @@ public class ThirstHelper
     /**
      * Rebuilds the drink/food tables and the purity containers. Call once tags and data maps are bound; the tables
      * are replaced as a whole, never mutated. Values are {thirst, quenched, purity} with purity -1 when unset.
-     * Each item takes its values from the first source that has it: blacklist and {@code bluedroplets:no_thirst} (no values),
-     * {@code items.toml}, the {@code bluedroplets:drinks} data map, code ({@code DropletsAPI.registerDrink}, then
-     * {@link RegisterThirstValueEvent}), {@link DrinkValueProvider}s, the {@code bluedroplets:salty} tag, keywords, and last the values estimated from recipes
+     * Each item takes its values from the first source that has it: blacklist and {@code blue_droplets:no_thirst} (no values),
+     * {@code items.toml}, the {@code blue_droplets:drinks} data map, code ({@code DropletsAPI.registerDrink}, then
+     * {@link RegisterThirstValueEvent}), {@link DrinkValueProvider}s, the {@code blue_droplets:salty} tag, keywords, and last the values estimated from recipes
      * ({@link RecipeInference}, server only: {@code recipes} is null on a remote client).
      */
     @SuppressWarnings("deprecation")
@@ -270,7 +270,7 @@ public class ThirstHelper
     }
 
     /**
-     * Values and blacklists the last server-side rebuild gave the recipe inference; for {@code /bluedroplets infer}.
+     * Values and blacklists the last server-side rebuild gave the recipe inference; for {@code /blue_droplets infer}.
      */
     public static RecipeInference.Inputs inferenceInputs()
     {
@@ -528,7 +528,7 @@ public class ThirstHelper
     }
 
     /**
-     * Climate multiplier: the dimension type's {@code thirst_multiplier} ({@code bluedroplets:dimension_water}) or
+     * Climate multiplier: the dimension type's {@code thirst_multiplier} ({@code blue_droplets:dimension_water}) or
      * {@code netherMultiplier} in ultra-warm dimensions replace it; otherwise {@code depletion.multiplier} times the
      * Cold Sweat body temperature curve ({@code coldsweat.useBodyTemperature}), or else the LEGACY formula or the
      * CURVE multipliers of biome temperature and downfall.

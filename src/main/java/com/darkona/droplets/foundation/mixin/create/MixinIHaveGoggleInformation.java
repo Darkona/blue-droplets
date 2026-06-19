@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public interface MixinIHaveGoggleInformation
 {
     @WrapOperation(method = "containedFluidTooltip", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/foundation/utility/CreateLang;fluidName(Lnet/neoforged/neoforge/fluids/FluidStack;)Lnet/createmod/catnip/lang/LangBuilder;"))
-    private LangBuilder bluedroplets$purityBeforeName(FluidStack fluid, Operation<LangBuilder> original)
+    private LangBuilder blue_droplets$purityBeforeName(FluidStack fluid, Operation<LangBuilder> original)
     {
         LangBuilder name = original.call(fluid);
         if (!WaterPurity.enabled() || !WaterPurity.hasPurity(fluid) && !fluid.is(FluidTags.WATER))

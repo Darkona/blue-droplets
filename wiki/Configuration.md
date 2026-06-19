@@ -1,6 +1,6 @@
 # Configuration
 
-All TOML files live in `config/bluedroplets/`. They are NeoForge configs: missing keys are added with their default and a comment, values out of range are reset to the default, invalid list entries are removed, and edits are picked up while the game runs. When a server's file changes, the server rebuilds the drink tables, recomputes every player's thirst loss and sends the new values to all players; no `/reload` or relog needed.
+All TOML files live in `config/blue_droplets/`. They are NeoForge configs: missing keys are added with their default and a comment, values out of range are reset to the default, invalid list entries are removed, and edits are picked up while the game runs. When a server's file changes, the server rebuilds the drink tables, recomputes every player's thirst loss and sends the new values to all players; no `/reload` or relog needed.
 
 Per-id data (items, biomes, dimensions) lives in datapacks instead; see [Modpack makers](Modpack-Makers).
 
@@ -12,10 +12,10 @@ Commands (operators, permission level 2):
 
 | Command | Shows |
 |---|---|
-| `/bluedroplets config check` | The same list of problems, or "no problems found" |
-| `/bluedroplets debug exhaustion [player]` | Mode, every factor of the thirst loss multiplier (and where the climate factor comes from), the `thirst_drain` attribute, the total, exhaustion, thirst and quenched |
-| `/bluedroplets debug purity` | Purity of the water you look at (or the block at your feet): salt water rule, base and where it comes from, altitude, still/running and biome deltas, cap |
-| `/bluedroplets infer <item>` | How recipe inference would estimate the item: every recipe that makes it, each ingredient's value, multiplier, result count, the estimate and why it would not be used |
+| `/blue_droplets config check` | The same list of problems, or "no problems found" |
+| `/blue_droplets debug exhaustion [player]` | Mode, every factor of the thirst loss multiplier (and where the climate factor comes from), the `thirst_drain` attribute, the total, exhaustion, thirst and quenched |
+| `/blue_droplets debug purity` | Purity of the water you look at (or the block at your feet): salt water rule, base and where it comes from, altitude, still/running and biome deltas, cap |
+| `/blue_droplets infer <item>` | How recipe inference would estimate the item: every recipe that makes it, each ingredient's value, multiplier, result count, the estimate and why it would not be used |
 
 ## Files
 
@@ -61,7 +61,7 @@ On first start, if a new file does not exist yet, its values are copied from the
 
 ### `[depletion]`
 
-Thirst loss per tick is `activity × scale × M`, where `M = climate × fire protection × fire resistance × rain/thunder × day/night × sun × altitude × water × Hydrated × bluedroplets:thirst_drain`. Every 4.0 of exhaustion removes one quenched point, or one thirst point when quenched is 0. `M` (except the attribute) is recomputed every second per player and right away after armor, effect, dimension or config changes; `/bluedroplets debug exhaustion` shows each factor.
+Thirst loss per tick is `activity × scale × M`, where `M = climate × fire protection × fire resistance × rain/thunder × day/night × sun × altitude × water × Hydrated × blue_droplets:thirst_drain`. Every 4.0 of exhaustion removes one quenched point, or one thirst point when quenched is 0. `M` (except the attribute) is recomputed every second per player and right away after armor, effect, dimension or config changes; `/blue_droplets debug exhaustion` shows each factor.
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -92,7 +92,7 @@ Thirst loss per tick is `activity × scale × M`, where `M = climate × fire pro
 | `inWater` / `underwater` | `1.0` / `1.0` | In water with the head out / fully underwater |
 | `altitude` | `[]` | `"minY,maxY,multiplier"` from sea level; the first band containing the player applies |
 
-A dimension type can replace the climate multiplier with `thirst_multiplier` in the `bluedroplets:dimension_water` data map (see [Modpack makers](Modpack-Makers)).
+A dimension type can replace the climate multiplier with `thirst_multiplier` in the `blue_droplets:dimension_water` data map (see [Modpack makers](Modpack-Makers)).
 
 ### `[depletion.activity]`
 
@@ -132,12 +132,12 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 
 | Key | Default | Meaning |
 |---|---|---|
-| `dehydrationMultiplier` | `1.0` | Multiplier (0-10) of the thirst exhaustion the `bluedroplets:dehydration` effect adds every tick (0.005 per level). Thirst never goes below zero |
+| `dehydrationMultiplier` | `1.0` | Multiplier (0-10) of the thirst exhaustion the `blue_droplets:dehydration` effect adds every tick (0.005 per level). Thirst never goes below zero |
 | `quenchnessIntervalTicks` | `40` | Quenchness restores (level) thirst and (level) quenched every this many ticks (1-1200) |
 | `quenchnessPotion` | `true` | Brewing recipes of the Quenchness potions. Not synced: keep the same value on the server and the clients, or the brewing stand may not accept prismarine crystals client side |
 | `waterBreathingReducesThirst` | `false` | While fully underwater with Water Breathing or Conduit Power, thirst loss is also multiplied by `underwaterBreathingMultiplier` (part of the `water` factor) |
 | `underwaterBreathingMultiplier` | `0.5` | See above (0-10), on top of `climate.underwater` |
-| `hydratedMultiplier` | `0.5` | Thirst loss with the `bluedroplets:hydrated` effect, applied once per level (0.5: Hydrated I halves it, II quarters it; 0-1) |
+| `hydratedMultiplier` | `0.5` | Thirst loss with the `blue_droplets:hydrated` effect, applied once per level (0.5: Hydrated I halves it, II quarters it; 0-1) |
 
 ### `[hydration]`
 
@@ -150,7 +150,7 @@ A dimension type can replace the climate multiplier with `thirst_multiplier` in 
 
 ### `[overhydration]`
 
-Thirst and quenched drunk past full (items, hand drinking, rain, `DropletsAPI.drink`; not the Quenchness effect) add up as overflow. At the threshold the player gets `bluedroplets:overhydrated` (harmful, 10% slower movement per level) and the overflow starts over. On by default.
+Thirst and quenched drunk past full (items, hand drinking, rain, `DropletsAPI.drink`; not the Quenchness effect) add up as overflow. At the threshold the player gets `blue_droplets:overhydrated` (harmful, 10% slower movement per level) and the overflow starts over. On by default.
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -203,7 +203,7 @@ If you only want the thirst bar, set `general.enabled = false`. The server's val
 - Drinking any water, from an item or by hand, restores thirst and never gives purity effects, including the Dehydration of `hotDirtyWater`. `DrinkEvent` reports `NO_PURITY`.
 - The purification recipes (furnace, campfire and smoker packs) are not loaded, and Create's cactus compacting gives plain water. Recipes are checked when datapacks load, so this part applies after `/reload` or a restart.
 - The Sand Filter and the bowls stay, because registered blocks and items cannot depend on a config. The Sand Filter then works as a pass-through: water goes through it unchanged, at `sandFilterMbPerTick`. The bowls are plain water containers.
-- `/bluedroplets debug purity` only says that purity is off. For other mods, `DropletsAPI.isPurityEnabled()` returns `false` and `withPurity` returns an unchanged copy.
+- `/blue_droplets debug purity` only says that purity is off. For other mods, `DropletsAPI.isPurityEnabled()` returns `false` and `withPurity` returns an unchanged copy.
 - The other keys of this file and the purity keys of `compat.toml` (`sandFilterFiltrationAmount`, `sandFilterMaxPurity`, `openEndedPipePurity`) do nothing.
 - Purity already stored on items and fluids from before is ignored and not shown. Such items may not stack with new water until they are used up.
 
@@ -218,14 +218,14 @@ One list per purity: `dirty`, `slightlyDirty`, `acceptable`, `purified`. Each en
 | `acceptable` | `["minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5"]` |
 | `purified` | `[]` |
 
-- Any mob effect id works, also from other mods, including `bluedroplets:dehydration` (for example `"bluedroplets:dehydration,600,0,20"`). An unknown id is skipped (listed by `/bluedroplets config check`).
+- Any mob effect id works, also from other mods, including `blue_droplets:dehydration` (for example `"blue_droplets:dehydration,600,0,20"`). An unknown id is skipped (listed by `/blue_droplets config check`).
 - **One roll per drink** is shared by the whole list: an entry applies when the roll is below its chance. With the defaults, poisoned water always also gives nausea and hunger, as before.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
 - Old configs: the eight `*Percentage` values are turned into these lists once, with the old effects and durations (nausea 5 s and hunger 30 s share the nausea chance; poison 10 s blocks hydration).
 
 ### `[hotDirtyWater]`
 
-Drinking water of low purity (bottle or by hand) in a hot climate also gives `bluedroplets:dehydration`, on top of the `[effects]` list. It is decided at drink time only.
+Drinking water of low purity (bottle or by hand) in a hot climate also gives `blue_droplets:dehydration`, on top of the `[effects]` list. It is decided at drink time only.
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -259,7 +259,7 @@ An ultra-warm dimension (the Nether) always counts as hot.
 | `overrides.drinks` / `overrides.foods` | `[]` | `["namespace:item" or "#tag", thirst, quenched]`; win over datapacks. Thirst -20 to 20, quenched -20 or more; negative values remove them (salty) |
 | `overrides.blacklist` | `[]` | Items that never restore thirst |
 | `containers.containers` | `[]` | Drinks that carry a water purity |
-| `salty.thirstPenalty` / `salty.quenchedPenalty` | `-2` / `-2` | Values (-20 to 20) of items in the item tag `bluedroplets:salty` that have none from overrides, datapacks or other mods |
+| `salty.thirstPenalty` / `salty.quenchedPenalty` | `-2` / `-2` | Values (-20 to 20) of items in the item tag `blue_droplets:salty` that have none from overrides, datapacks or other mods |
 | `keywords.enabled` | `false` | Give values to items by name patterns |
 | `inference.enabled` | `false` | Estimate values from recipe ingredients (see below) |
 | `inference.onlyConsumables` | `true` | Only items that are eaten or drunk get an estimate; others still pass their value on |
@@ -280,7 +280,7 @@ Off by default. When on, the server gives values to items that have none from an
 - Loops (ingot to block to ingot) are cut, and so is anything deeper than `maxDepth`.
 - Items that are drunk go to the drink table and the rest to the food table; tooltips show "Thirst N, quenched M (est.)". The values are sent to clients like the rest of the table.
 
-It runs when the world loads, after `/reload` and when `items.toml` changes, never while playing. The log shows one line with how many items were estimated and how long it took. Recipes that could not be read are listed in the config warning and in `/bluedroplets config check`.
+It runs when the world loads, after `/reload` and when `items.toml` changes, never while playing. The log shows one line with how many items were estimated and how long it took. Recipes that could not be read are listed in the config warning and in `/blue_droplets config check`.
 
 ## `client.toml`
 

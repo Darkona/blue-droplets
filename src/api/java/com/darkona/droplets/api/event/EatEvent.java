@@ -8,7 +8,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 /**
  * A player eats something that restores thirst, or removes it (salty, negative values): food items (anything that is
  * not drunk: no {@code UseAnim.DRINK} and not a water container), also when another mod calls {@code Player#eat}
- * directly, block foods of the {@code bluedroplets:hydrating_blocks} data map (a cake slice) and
+ * directly, block foods of the {@code blue_droplets:hydrating_blocks} data map (a cake slice) and
  * {@code DropletsAPI.eat}. Posted on {@code NeoForge.EVENT_BUS}, on the server, once per bite. Drinks post
  * {@link DrinkEvent} instead. Food never rolls purity effects. The hydration itself also posts a
  * {@link ThirstChangeEvent} with cause {@code EAT}.

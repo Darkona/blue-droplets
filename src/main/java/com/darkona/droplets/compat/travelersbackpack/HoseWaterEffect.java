@@ -26,7 +26,7 @@ final class HoseWaterEffect extends EffectFluid
 
     private HoseWaterEffect()
     {
-        super("bluedroplets:water", Fluids.WATER, AMOUNT);
+        super("blue_droplets:water", Fluids.WATER, AMOUNT);
     }
 
     static void register()

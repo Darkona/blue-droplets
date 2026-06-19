@@ -19,12 +19,12 @@ public interface DropletsView
         return DropletsAPI.MAX_THIRST;
     }
 
-    /** Whether thirst is active for this player (the {@code /bluedroplets enable} flag). */
+    /** Whether thirst is active for this player (the {@code /blue_droplets enable} flag). */
     boolean isEnabled();
 
     /**
      * Last computed multiplier of the surroundings, armor, effects and registered {@link ExhaustionModifier}s, without
-     * the {@code bluedroplets:thirst_drain} attribute. Refreshed about once a second on the server; 1 on clients.
+     * the {@code blue_droplets:thirst_drain} attribute. Refreshed about once a second on the server; 1 on clients.
      */
     float lastModifier();
 }

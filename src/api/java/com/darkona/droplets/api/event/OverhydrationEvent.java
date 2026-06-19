@@ -6,7 +6,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 /**
  * A player drank past full until the wasted water reached {@code overhydration.threshold}, and is about to get the
- * {@code bluedroplets:overhydrated} effect (and Nausea with {@code overhydration.nausea}). Posted on
+ * {@code blue_droplets:overhydrated} effect (and Nausea with {@code overhydration.nausea}). Posted on
  * {@code NeoForge.EVENT_BUS}, on the server. The overflow is reset afterwards, also when the event is canceled.
  * Cancel to apply nothing.
  */

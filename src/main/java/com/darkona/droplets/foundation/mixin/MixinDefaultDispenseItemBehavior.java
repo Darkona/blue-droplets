@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinDefaultDispenseItemBehavior
 {
     @Inject(method = "consumeWithRemainder", at = @At("HEAD"))
-    private void bluedroplets$worldWaterPurity(BlockSource source, ItemStack stack, ItemStack remainder, CallbackInfoReturnable<ItemStack> cir)
+    private void blue_droplets$worldWaterPurity(BlockSource source, ItemStack stack, ItemStack remainder, CallbackInfoReturnable<ItemStack> cir)
     {
         if (WaterPurity.enabled() && source.state().hasProperty(DispenserBlock.FACING) && WaterPurity.isWaterFilledContainer(remainder) && !WaterPurity.hasPurity(remainder))
             WaterPurity.addPurity(remainder, WaterPurity.takenWaterPurity(source.level(), source.pos().relative(source.state().getValue(DispenserBlock.FACING))));

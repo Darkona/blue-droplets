@@ -82,7 +82,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     public PlayerThirst() {}
 
     /**
-     * Whether an active effect is in {@code bluedroplets:stops_thirst} or {@code bluedroplets:pauses_thirst}; read
+     * Whether an active effect is in {@code blue_droplets:stops_thirst} or {@code blue_droplets:pauses_thirst}; read
      * when effects change and every {@code MODIFIER_INTERVAL_TICKS}, not every tick.
      */
     private void readThirstEffects(Player player)
@@ -618,7 +618,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
 
     /**
      * {@link ExhaustionFactors} cached (recomputed every {@code MODIFIER_INTERVAL_TICKS}, staggered per player, and
-     * after {@link #invalidateModifier()}) times the {@code bluedroplets:thirst_drain} attribute (cached by vanilla).
+     * after {@link #invalidateModifier()}) times the {@code blue_droplets:thirst_drain} attribute (cached by vanilla).
      */
     public float exhaustionModifier(Player player)
     {

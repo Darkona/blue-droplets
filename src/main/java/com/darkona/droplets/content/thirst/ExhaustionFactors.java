@@ -18,7 +18,7 @@ import java.util.TreeMap;
 
 /**
  * The part of the thirst loss multiplier that depends on the surroundings, armor and effects. {@link PlayerThirst}
- * caches it (recomputed every second or after a change) and multiplies it by the {@code bluedroplets:thirst_drain}
+ * caches it (recomputed every second or after a change) and multiplies it by the {@code blue_droplets:thirst_drain}
  * attribute each tick. Modifiers registered through the API run last, in id order.
  */
 public final class ExhaustionFactors

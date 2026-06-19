@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Posted on the game bus every time the thirst tables are rebuilt (world load and {@code /reload}).
- * Values added here can be overridden by the config, the {@code bluedroplets:drinks} data map and
+ * Values added here can be overridden by the config, the {@code blue_droplets:drinks} data map and
  * {@code DropletsAPI.registerDrink}.
  *
  * @deprecated register once with {@link com.darkona.droplets.api.DropletsAPI#registerDrink},
