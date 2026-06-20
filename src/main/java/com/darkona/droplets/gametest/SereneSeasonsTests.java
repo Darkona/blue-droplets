@@ -75,7 +75,7 @@ public class SereneSeasonsTests
         float none = withoutSeasons(helper, desert);
         // Mid summer is the early dry season in the tropics, mid spring the late wet one.
         helper.assertValueEqual(inSeason(helper, desert, Season.SubSeason.MID_SUMMER), CompatConfig.SERENE_SEASONS_TROPICAL_DRY.get().floatValue() * none, "desert, dry season");
-        helper.assertValueEqual(inSeason(helper, desert, Season.SubSeason.MID_SPRING), none, "desert, wet season");
+        helper.assertValueEqual(inSeason(helper, desert, Season.SubSeason.MID_SPRING), CompatConfig.SERENE_SEASONS_TROPICAL_WET.get().floatValue() * none, "desert, wet season");
         helper.succeed();
     }
 
