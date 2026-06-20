@@ -125,6 +125,8 @@ public class BlueDroplets
         addPack(event, "purify_smelting", "Water purification: furnace", PackSource.BUILT_IN);
         addPack(event, "purify_campfire", "Water purification: campfire", PackSource.BUILT_IN);
         addPack(event, "purify_smoking", "Water purification: smoker", PackSource.FEATURE);
+        addPack(event, "purify_cooking_pot", "Water purification: cooking pot", PackSource.BUILT_IN);
+        addPack(event, "clean_water_cooking", "Clean water for cooking recipes", PackSource.BUILT_IN);
         addPack(event, "preset_casual", "casual preset", PackSource.FEATURE);
         addPack(event, "preset_hardcore", "hardcore preset", PackSource.FEATURE);
     }
