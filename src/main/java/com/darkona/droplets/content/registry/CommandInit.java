@@ -3,6 +3,7 @@ package com.darkona.droplets.content.registry;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.data.DimensionWater;
@@ -14,6 +15,7 @@ import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.RecipeInference;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.config.ConfigCheck;
+import com.darkona.droplets.foundation.dev.ItemDump;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.IThirst;
@@ -37,13 +39,17 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 @EventBusSubscriber(modid = BlueDroplets.ID)
 public class CommandInit {
@@ -106,6 +112,30 @@ public class CommandInit {
                                 .executes(context -> infer(context.getSource(), ItemArgument.getItem(context, "item").getItem()))))
         );
         dispatcher.register(Commands.literal("thirst").requires(cs->cs.hasPermission(2)).redirect(root));
+        if (!FMLEnvironment.production)
+            dispatcher.register(Commands.literal(BlueDroplets.ID).requires(cs->cs.hasPermission(2))
+                    .then(Commands.literal("dev")
+                            .then(Commands.literal("dump_items")
+                                    .then(Commands.argument("namespaces", StringArgumentType.greedyString())
+                                            .executes(context -> dumpItems(context.getSource(), StringArgumentType.getString(context, "namespaces")))))));
+    }
+
+    /**
+     * Development only: {@link ItemDump} of the items of the given namespaces (separated by spaces).
+     */
+    private static int dumpItems(CommandSourceStack source, String namespaces)
+    {
+        try
+        {
+            int rows = ItemDump.dump(Set.copyOf(Arrays.asList(namespaces.trim().split("\\s+"))));
+            source.sendSuccess(() -> Component.literal("Wrote " + rows + " items to " + ItemDump.file()), false);
+            return rows;
+        }
+        catch (IOException e)
+        {
+            source.sendFailure(Component.literal("Could not write " + ItemDump.file() + ": " + e.getMessage()));
+            return 0;
+        }
     }
 
     private static int debugExhaustion(CommandSourceStack source, ServerPlayer player)
