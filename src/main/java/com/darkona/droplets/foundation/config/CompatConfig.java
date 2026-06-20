@@ -53,8 +53,8 @@ public final class CompatConfig
 
         BUILDER.comment("Serene Seasons, only without Cold Sweat (its body temperature already follows the seasons)").push("sereneseasons");
         SERENE_SEASONS_ENABLED = BUILDER.comment("Whether the biome climate formula uses the biome temperature as the season changes it (Serene Seasons' biome_temp_adjustment per sub-season)").define("enabled", true);
-        SERENE_SEASONS_TROPICAL_DRY = BUILDER.comment("With enabled: climate multiplier in a tropical biome's dry season (their temperature does not change with the season)").defineInRange("tropicalDrySeasonMultiplier", 1.1, 0.0, 10.0);
-        SERENE_SEASONS_TROPICAL_WET = BUILDER.comment("With enabled: climate multiplier in a tropical biome's wet season").defineInRange("tropicalWetSeasonMultiplier", 1.0, 0.0, 10.0);
+        SERENE_SEASONS_TROPICAL_DRY = BUILDER.comment("With enabled: multiplies thirst loss in a tropical biome's dry season; the temperature is not changed").defineInRange("tropicalDrySeasonMultiplier", 1.1, 0.0, 10.0);
+        SERENE_SEASONS_TROPICAL_WET = BUILDER.comment("With enabled: multiplies thirst loss in a tropical biome's wet season; the temperature is not changed").defineInRange("tropicalWetSeasonMultiplier", 1.0, 0.0, 10.0);
         SERENE_SEASONS_SPRING = defineSeason("spring");
         SERENE_SEASONS_SUMMER = defineSeason("summer");
         SERENE_SEASONS_AUTUMN = defineSeason("autumn");
@@ -68,7 +68,7 @@ public final class CompatConfig
 
     private static ModConfigSpec.DoubleValue defineSeason(String season)
     {
-        return BUILDER.comment("With enabled: climate multiplier in " + season + ", on top of the season's temperature, in biomes with the four seasons (1 = only the temperature)")
+        return BUILDER.comment("With enabled: multiplies thirst loss in " + season + " in biomes with the four seasons; the temperature is not changed (1 = no change)")
                 .defineInRange(season + "Multiplier", 1.0, 0.0, 10.0);
     }
 }
