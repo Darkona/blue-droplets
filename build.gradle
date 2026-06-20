@@ -122,7 +122,12 @@ dependencies {
     compileOnly "com.tterrag.registrate:Registrate:${registrate_version}"
 
     compileOnly 'curse.maven:vampirism-become-a-vampire-233029:5547201'
-    compileOnly 'curse.maven:farmers-delight-398521:6154807'
+    compileOnly 'maven.modrinth:farmers-delight:1.21.1-1.3.4'
+    compileOnly 'maven.modrinth:extradelight:2.6.6'
+    compileOnly 'maven.modrinth:lets-do-farm-charm:1.1.26'
+    compileOnly 'maven.modrinth:lets-do-herbalbrews:1.1.4'
+    compileOnly 'maven.modrinth:lets-do-brewery-farmcharm-compat:2.1.11'
+    compileOnly 'maven.modrinth:architectury-api:13.0.8+neoforge'
     compileOnly 'maven.modrinth:cold-sweat:2.4.3.1'
     compileOnly 'curse.maven:jade-324717:6291517'
     compileOnly 'curse.maven:supernatural-610880:6500773'
@@ -138,13 +143,27 @@ dependencies {
         localRuntime("net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}") { transitive = false }
         localRuntime "dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}"
         localRuntime "com.tterrag.registrate:Registrate:${registrate_version}"
-        localRuntime 'curse.maven:farmers-delight-398521:6154807'
+        localRuntime 'maven.modrinth:farmers-delight:1.21.1-1.3.4'
         localRuntime 'maven.modrinth:cold-sweat:2.4.3.1'
         localRuntime 'curse.maven:jade-324717:6291517'
         localRuntime 'curse.maven:appleskin-248787:5586600'
         localRuntime 'maven.modrinth:travelersbackpack:1.21.1-10.1.39'
         localRuntime 'maven.modrinth:serene-seasons:pHEgQQUE'
         localRuntime 'maven.modrinth:glitchcore:S2TfWrZR'
+    }
+
+    // ./gradlew runGameTestServer -PwithDelight: the Farmer's Delight addons of the first batch, kept apart from
+    // -PwithCompat so that one stays fast. Brewin' and Chewin' bundles its config library.
+    if (project.hasProperty('withDelight')) {
+        localRuntime 'maven.modrinth:farmers-delight:1.21.1-1.3.4'
+        localRuntime 'maven.modrinth:brewin-and-chewin:4.5.0+1.21.1-neoforge'
+        localRuntime 'maven.modrinth:extradelight:2.6.6'
+        localRuntime 'maven.modrinth:oceans-delight:1.0.4'
+        localRuntime 'maven.modrinth:enders-delight:1.3.1'
+        localRuntime 'maven.modrinth:architectury-api:13.0.8+neoforge'
+        localRuntime 'maven.modrinth:lets-do-farm-charm:1.1.26'
+        localRuntime 'maven.modrinth:lets-do-herbalbrews:1.1.4'
+        localRuntime 'maven.modrinth:lets-do-brewery-farmcharm-compat:2.1.11'
     }
 
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
