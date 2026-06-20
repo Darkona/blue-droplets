@@ -561,7 +561,7 @@ public class ThirstHelper
     {
         Biome biome = biomeHolder.value();
         float temperature = seasons ? SereneSeasonsCompat.temperature(level, biomeHolder, pos, biome.getBaseTemperature()) : biome.getBaseTemperature();
-        float season = seasons ? SereneSeasonsCompat.tropicalMultiplier(level, biomeHolder) : 1.0F;
+        float season = seasons ? SereneSeasonsCompat.seasonMultiplier(level, biomeHolder) : 1.0F;
         float downfall = biome.getModifiedClimateSettings().downfall();
         if (GameplayConfig.CLIMATE_FORMULA.get() == GameplayConfig.ClimateFormula.CURVE)
             return season * multiplier * (float) (NumberRows.curve(TEMPERATURE_CURVE.get(GameplayConfig.TEMPERATURE_CURVE.get()), temperature)

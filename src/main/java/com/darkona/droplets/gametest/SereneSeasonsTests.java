@@ -80,6 +80,23 @@ public class SereneSeasonsTests
     }
 
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void seasonMultiplierScalesTheClimate(GameTestHelper helper)
+    {
+        Holder<Biome> plains = biome(helper.getLevel(), Biomes.PLAINS);
+        float plain = inSeason(helper, plains, Season.SubSeason.MID_SUMMER);
+        try
+        {
+            CompatConfig.SERENE_SEASONS_SUMMER.set(1.5);
+            helper.assertValueEqual(inSeason(helper, plains, Season.SubSeason.MID_SUMMER), 1.5F * plain, "plains in summer with summerMultiplier 1.5");
+        }
+        finally
+        {
+            CompatConfig.SERENE_SEASONS_SUMMER.set(1.0);
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void biomeWithoutSeasonsDoesNotChange(GameTestHelper helper)
     {
         Holder<Biome> river = biome(helper.getLevel(), Biomes.RIVER);

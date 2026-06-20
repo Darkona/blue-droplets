@@ -253,6 +253,7 @@ An ultra-warm dimension (the Nether) always counts as hot.
 | `coldsweat.drinkCoolingTicks` | `0` | `0`: `drinkCooling` lowers the body temperature once and it drifts back with the surroundings; more: it lowers the base temperature for that many ticks instead, like Cold Sweat's cold foods (another drink restarts it, it does not stack) |
 | `sereneseasons.enabled` | `true` | With Serene Seasons and without Cold Sweat, the biome climate formula reads the biome's temperature as Serene Seasons changes it with the season (its `biome_temp_adjustment` per sub-season, in Serene Seasons' `seasons.toml`). Biomes without seasons (`sereneseasons:blacklisted_biomes`), the Nether and a dimension's own thirst multiplier are left alone. With Cold Sweat it does nothing: Cold Sweat's body temperature already follows the seasons |
 | `sereneseasons.tropicalDrySeasonMultiplier` | `1.1` | With `enabled`: climate multiplier in a tropical biome's dry season (their temperature does not change with the season, their heat already counts through the formula); the wet season is 1 |
+| `sereneseasons.springMultiplier`, `summerMultiplier`, `autumnMultiplier`, `winterMultiplier` | `1.0` | With `enabled`: climate multiplier for each season in biomes with the four seasons, on top of the season's temperature (1 = only the temperature). With Serene Seasons' default config summer does not warm biomes, so `summerMultiplier` is the simple way to make summer thirstier |
 
 ## `items.toml`
 

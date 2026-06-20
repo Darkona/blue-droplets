@@ -28,10 +28,19 @@ public final class SereneSeasonsCompat
         return CompatConfig.SERENE_SEASONS_ENABLED.get() ? SereneSeasonsBridge.temperature(level, biome, pos) : base;
     }
 
-    /** {@code sereneseasons.tropicalDrySeasonMultiplier} in a tropical biome's dry season, else 1. Serene Seasons must be loaded. */
-    public static float tropicalMultiplier(Level level, Holder<Biome> biome)
+    /** The {@code sereneseasons} multiplier of the biome's current season (spring to winter, tropical dry), else 1. Serene Seasons must be loaded. */
+    public static float seasonMultiplier(Level level, Holder<Biome> biome)
     {
-        return CompatConfig.SERENE_SEASONS_ENABLED.get() && SereneSeasonsBridge.isDryTropical(level, biome)
-                ? CompatConfig.SERENE_SEASONS_TROPICAL_DRY.get().floatValue() : 1.0F;
+        if (!CompatConfig.SERENE_SEASONS_ENABLED.get())
+            return 1.0F;
+        return switch (SereneSeasonsBridge.season(level, biome))
+        {
+            case 0 -> CompatConfig.SERENE_SEASONS_SPRING.get().floatValue();
+            case 1 -> CompatConfig.SERENE_SEASONS_SUMMER.get().floatValue();
+            case 2 -> CompatConfig.SERENE_SEASONS_AUTUMN.get().floatValue();
+            case 3 -> CompatConfig.SERENE_SEASONS_WINTER.get().floatValue();
+            case SereneSeasonsBridge.TROPICAL_DRY -> CompatConfig.SERENE_SEASONS_TROPICAL_DRY.get().floatValue();
+            default -> 1.0F;
+        };
     }
 }

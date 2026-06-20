@@ -28,11 +28,18 @@ final class SereneSeasonsBridge
         return SeasonHooks.getBiomeTemperature(level, biome, pos);
     }
 
-    /** A tropical biome with seasons, in the dry season (early, mid or late dry). */
-    static boolean isDryTropical(Level level, Holder<Biome> biome)
+    /** No seasons here. */
+    static final int NONE = -1;
+    /** Tropical dry and wet season; 0-3 are spring, summer, autumn and winter. */
+    static final int TROPICAL_DRY = 4, TROPICAL_WET = 5;
+
+    /** The season of {@code biome}: {@link #NONE}, 0-3 (spring to winter), or a tropical one. */
+    static int season(Level level, Holder<Biome> biome)
     {
-        return SeasonHelper.usesTropicalSeasons(biome) && !biome.is(ModTags.Biomes.BLACKLISTED_BIOMES)
-                && ModConfig.seasons.isDimensionWhitelisted(level.dimension())
-                && SeasonHelper.getSeasonState(level).getTropicalSeason().ordinal() < 3;
+        if (biome.is(ModTags.Biomes.BLACKLISTED_BIOMES) || !ModConfig.seasons.isDimensionWhitelisted(level.dimension()))
+            return NONE;
+        if (SeasonHelper.usesTropicalSeasons(biome))
+            return SeasonHelper.getSeasonState(level).getTropicalSeason().ordinal() < 3 ? TROPICAL_DRY : TROPICAL_WET;
+        return SeasonHelper.getSeasonState(level).getSeason().ordinal();
     }
 }
