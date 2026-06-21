@@ -472,6 +472,23 @@ public class WaterPurity
     }
 
     /**
+     * Thirst added to water of this purity when drunk: {@code purifiedWater.thirstBonus} for purified water (3), 0 for
+     * any other purity or with purity off. Only for water, never for other drinks with a purity.
+     */
+    public static int waterThirstBonus(int purity)
+    {
+        return purity == MAX_PURITY && enabled() ? SyncedValues.purifiedThirstBonus() : 0;
+    }
+
+    /**
+     * Quenched added to water of this purity when drunk, as {@link #waterThirstBonus}.
+     */
+    public static int waterQuenchedBonus(int purity)
+    {
+        return purity == MAX_PURITY && enabled() ? SyncedValues.purifiedQuenchedBonus() : 0;
+    }
+
+    /**
      * Purity a drink rolls effects for: the stored purity of a water container, the fixed purity of other drinks, or -1.
      */
     public static int drinkPurity(ItemStack item)

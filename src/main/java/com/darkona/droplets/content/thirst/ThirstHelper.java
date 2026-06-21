@@ -496,6 +496,32 @@ public class ThirstHelper
         return provider == null ? null : provider.values(stack);
     }
 
+    private record PurifiedValues(ThirstValues base, int thirst, int quenched, ThirstValues values) {}
+
+    private static volatile PurifiedValues lastPurified = new PurifiedValues(new ThirstValues(0, 0), 0, 0, new ThirstValues(0, 0));
+
+    /**
+     * What drinking or eating the stack gives: {@link #valuesOf} plus, for a water container of purified water, the
+     * {@code purifiedWater} bonus. The last result with a bonus is kept, so tooltips and the HUD preview allocate
+     * nothing while they show the same stack.
+     */
+    public static @Nullable ThirstValues drinkValuesOf(ItemStack stack)
+    {
+        ThirstValues values = valuesOf(stack);
+        if (values == null || !WaterPurity.isWaterFilledContainer(stack))
+            return values;
+        int purity = WaterPurity.getPurity(stack);
+        int thirst = WaterPurity.waterThirstBonus(purity);
+        int quenched = WaterPurity.waterQuenchedBonus(purity);
+        if (thirst == 0 && quenched == 0)
+            return values;
+        PurifiedValues last = lastPurified;
+        if (last.thirst() != thirst || last.quenched() != quenched || !last.base().equals(values))
+            lastPurified = last = new PurifiedValues(values, thirst, quenched,
+                    new ThirstValues(values.thirst() + thirst, values.quenched() + quenched, values.purity(), values.estimated()));
+        return last.values();
+    }
+
     public static int getPurity(ItemStack item)
     {
         return WaterPurity.getPurity(item);

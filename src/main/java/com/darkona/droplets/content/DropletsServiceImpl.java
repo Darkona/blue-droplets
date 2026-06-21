@@ -58,7 +58,7 @@ public final class DropletsServiceImpl implements DropletsService
     @Override
     public @Nullable ThirstValues getDrinkValues(ItemStack stack)
     {
-        return ThirstHelper.valuesOf(stack);
+        return ThirstHelper.drinkValuesOf(stack);
     }
 
     @Override

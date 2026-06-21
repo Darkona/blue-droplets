@@ -16,8 +16,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
- * Water drunk with the hose hydrates like a water bottle (its drink values, so datapacks and the config apply) with the
- * purity of the water in the tank. It replaces Traveler's Backpack's own water effect (put out fire, regeneration in
+ * Water drunk with the hose hydrates like a water bottle (its drink values, so datapacks and the config apply, and the
+ * bonus of purified water) with the purity of the water in the tank. It replaces Traveler's Backpack's own water effect (put out fire, regeneration in
  * hot biomes), so a sip drains {@value #AMOUNT} mB, a bottle's worth.
  */
 final class HoseWaterEffect extends EffectFluid
@@ -41,7 +41,7 @@ final class HoseWaterEffect extends EffectFluid
         if (level.isClientSide() || !(entity instanceof Player player))
             return;
         ItemStack bottle = PotionContents.createItemStack(Items.POTION, Potions.WATER);
-        PlayerThirst.drink(player, ItemStack.EMPTY, ThirstHelper.getThirst(bottle), ThirstHelper.getQuenched(bottle), WaterPurity.getPurity(fluid));
+        PlayerThirst.drinkWater(player, ThirstHelper.getThirst(bottle), ThirstHelper.getQuenched(bottle), WaterPurity.getPurity(fluid));
     }
 
     @Override

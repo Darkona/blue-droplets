@@ -1,5 +1,6 @@
 package com.darkona.droplets.gametest;
 
+import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.data.DimensionWater;
@@ -59,9 +60,32 @@ public class ThirstTests
         PlayerThirst thirst = thirst(player);
         thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
         PlayerThirst.consume(waterBottle(WaterPurity.MAX_PURITY), player);
-        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a purified water bottle (6)");
-        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a purified water bottle (8)");
+        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a purified water bottle (4 + 2 purified)");
+        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a purified water bottle (5 + 3 purified)");
         helper.assertValueEqual(lastCause, ThirstChangeEvent.Cause.DRINK, "cause of drinking a water bottle");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void onlyPurifiedWaterGetsTheBonus(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
+        PlayerThirst.consume(waterBottle(2), player);
+        helper.assertValueEqual(thirst.getThirst(), 8, "thirst after an acceptable water bottle (4)");
+        helper.assertValueEqual(thirst.getQuenched(), 5, "quenched after an acceptable water bottle (5)");
+
+        ThirstValues purified = ThirstHelper.drinkValuesOf(waterBottle(WaterPurity.MAX_PURITY));
+        helper.assertTrue(purified != null && purified.thirst() == 6 && purified.quenched() == 8, "values shown for a purified water bottle: " + purified);
+        helper.assertTrue(ThirstHelper.drinkValuesOf(waterBottle(WaterPurity.MAX_PURITY)) == purified, "the purified values are built again for the same stack");
+        ThirstValues acceptable = ThirstHelper.drinkValuesOf(waterBottle(2));
+        helper.assertTrue(acceptable != null && acceptable.thirst() == 4 && acceptable.quenched() == 5, "values shown for an acceptable water bottle: " + acceptable);
+
+        thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
+        PlayerThirst.drinkWater(player, 3, 2, WaterPurity.MAX_PURITY);
+        helper.assertValueEqual(thirst.getThirst(), 9, "thirst after a sip of purified water by hand (3 + 2)");
+        helper.assertValueEqual(thirst.getQuenched(), 5, "quenched after a sip of purified water by hand (2 + 3)");
         helper.succeed();
     }
 

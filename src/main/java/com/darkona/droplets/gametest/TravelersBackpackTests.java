@@ -39,8 +39,8 @@ public class TravelersBackpackTests
         PlayerThirst thirst = thirst(player);
         thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
         effect.affectDrinker(sip, helper.getLevel(), player);
-        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a sip of purified water (a water bottle: 6)");
-        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a sip of purified water (8)");
+        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a sip of purified water (a water bottle: 4, + 2 purified)");
+        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a sip of purified water (5 + 3 purified)");
         helper.succeed();
     }
 }

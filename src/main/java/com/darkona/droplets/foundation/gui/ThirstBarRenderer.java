@@ -173,7 +173,7 @@ public final class ThirstBarRenderer
         FoodProperties food = stack.getFoodProperties(player);
         if (food != null && !player.canEat(food.canAlwaysEat()))
             return null;
-        return ThirstHelper.valuesOf(stack);
+        return ThirstHelper.drinkValuesOf(stack);
     }
 
     private static boolean shouldHideBar(Minecraft minecraft, Player player, IThirst thirst)

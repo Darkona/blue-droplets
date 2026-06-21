@@ -69,7 +69,7 @@ public final class DrinkTooltip implements TooltipComponent, ClientTooltipCompon
     {
         if (!ClientConfig.SHOW_TOOLTIP_ICONS.get() || !AppleSkinCompat.tooltip())
             return;
-        ThirstValues values = ThirstHelper.valuesOf(event.getItemStack());
+        ThirstValues values = ThirstHelper.drinkValuesOf(event.getItemStack());
         if (values == null || values.thirst() == 0 && values.quenched() == 0)
             return;
         DrinkTooltip tooltip = last;

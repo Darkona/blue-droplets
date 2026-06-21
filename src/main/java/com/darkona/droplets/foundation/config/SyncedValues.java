@@ -10,6 +10,8 @@ public final class SyncedValues
     private static volatile int waterBottleStackSize = -1;
     private static volatile int purityEnabled = -1;
     private static volatile int canFillFromFlowingWater = -1;
+    private static volatile int purifiedThirstBonus = -1;
+    private static volatile int purifiedQuenchedBonus = -1;
 
     private SyncedValues() {}
 
@@ -37,12 +39,27 @@ public final class SyncedValues
         return value >= 0 ? value == 1 : GameplayConfig.CAN_FILL_FROM_FLOWING_WATER.get();
     }
 
-    public static void useServerValues(int defaultPurity, int waterBottleStackSize, boolean purityEnabled, boolean canFillFromFlowingWater)
+    public static int purifiedThirstBonus()
+    {
+        int value = purifiedThirstBonus;
+        return value >= 0 ? value : PurityConfig.PURIFIED_THIRST_BONUS.get();
+    }
+
+    public static int purifiedQuenchedBonus()
+    {
+        int value = purifiedQuenchedBonus;
+        return value >= 0 ? value : PurityConfig.PURIFIED_QUENCHED_BONUS.get();
+    }
+
+    public static void useServerValues(int defaultPurity, int waterBottleStackSize, boolean purityEnabled, boolean canFillFromFlowingWater,
+                                       int purifiedThirstBonus, int purifiedQuenchedBonus)
     {
         SyncedValues.defaultPurity = defaultPurity;
         SyncedValues.waterBottleStackSize = waterBottleStackSize;
         SyncedValues.purityEnabled = purityEnabled ? 1 : 0;
         SyncedValues.canFillFromFlowingWater = canFillFromFlowingWater ? 1 : 0;
+        SyncedValues.purifiedThirstBonus = purifiedThirstBonus;
+        SyncedValues.purifiedQuenchedBonus = purifiedQuenchedBonus;
     }
 
     public static void clear()
@@ -51,5 +68,7 @@ public final class SyncedValues
         waterBottleStackSize = -1;
         purityEnabled = -1;
         canFillFromFlowingWater = -1;
+        purifiedThirstBonus = -1;
+        purifiedQuenchedBonus = -1;
     }
 }

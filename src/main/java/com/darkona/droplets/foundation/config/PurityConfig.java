@@ -15,6 +15,8 @@ public final class PurityConfig
     public static final ModConfigSpec.BooleanValue ENABLED;
     public static final ModConfigSpec.IntValue DEFAULT_PURITY;
     public static final ModConfigSpec.BooleanValue QUENCH_WHEN_DEBUFFED;
+    public static final ModConfigSpec.IntValue PURIFIED_THIRST_BONUS;
+    public static final ModConfigSpec.IntValue PURIFIED_QUENCHED_BONUS;
 
     public static final ModConfigSpec.ConfigValue<List<? extends String>> ALTITUDE_BANDS;
     public static final ModConfigSpec.BooleanValue ALTITUDE_RELATIVE_TO_SEA_LEVEL;
@@ -45,6 +47,13 @@ public final class PurityConfig
                 "and the purification recipes are not loaded (after /reload or a restart)").define("enabled", true);
         DEFAULT_PURITY = BUILDER.comment("Purity of water that has none stored (0 dirty, 1 slightly dirty, 2 acceptable, 3 purified)").defineInRange("defaultPurity", 2, 0, 3);
         QUENCH_WHEN_DEBUFFED = BUILDER.comment("Whether drinking still restores thirst when a purity effect blocks hydration").define("quenchWhenDebuffed", true);
+        BUILDER.pop();
+
+        BUILDER.comment("Purified water (purity 3) hydrates more than other water: these points are added to what the container or the sip gives.",
+                "Any water drunk counts: bottles, buckets, bowls, drinking by hand, the Traveler's Backpack hose, Cold Sweat waterskins and other purity containers.",
+                "Other drinks with a purity do not get it. 2 points = 1 droplet on the HUD").push("purifiedWater");
+        PURIFIED_THIRST_BONUS = BUILDER.comment("Thirst added when drinking purified water").defineInRange("thirstBonus", 2, 0, 20);
+        PURIFIED_QUENCHED_BONUS = BUILDER.comment("Quenched added when drinking purified water").defineInRange("quenchedBonus", 3, 0, 20);
         BUILDER.pop();
 
         BUILDER.push("world");

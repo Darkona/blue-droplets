@@ -57,8 +57,9 @@ public final class DropletsAPI
     }
 
     /**
-     * Resolved values of a stack (config, datapacks, registered drinks and providers, estimates), or null when it
-     * does not restore thirst. Synced: the same on a remote client.
+     * Resolved values of a stack (config, datapacks, registered drinks and providers, estimates), with the bonus of
+     * purified water for a water container of purity 3, or null when it does not restore thirst. Synced: the same on a
+     * remote client.
      */
     public static @Nullable ThirstValues getDrinkValues(ItemStack stack)
     {
