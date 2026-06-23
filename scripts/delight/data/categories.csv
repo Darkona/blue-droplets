@@ -1,0 +1,805 @@
+item_id,category,reason
+brewery:beer_barley,alcohol,Fermented alcoholic drink
+brewery:beer_haley,alcohol,Fermented alcoholic drink
+brewery:beer_hops,alcohol,Fermented alcoholic drink
+brewery:beer_nettle,alcohol,Fermented alcoholic drink
+brewery:beer_oat,alcohol,Fermented alcoholic drink
+brewery:beer_wheat,alcohol,Fermented alcoholic drink
+brewery:dumplings,meal,Prepared food or complete dish
+brewery:fried_chicken,meat_cooked,Cooked meat or fish
+brewery:half_chicken,meal,Prepared food or complete dish
+brewery:mashed_potatoes,fresh_produce,Fresh produce
+brewery:pork_knuckle,meal,Prepared food or complete dish
+brewery:potato_salad,fresh_produce,Salad or vegetable mix
+brewery:pretzel,salty,Salted or cured food
+brewery:sausage,salty,Salted or cured food
+brewery:whiskey_ak,salty,Salted or cured food
+brewery:whiskey_carrasconlabel,salty,Salted or cured food
+brewery:whiskey_cristelwalker,salty,Salted or cured food
+brewery:whiskey_highland_hearth,salty,Salted or cured food
+brewery:whiskey_jamesons_malt,salty,Salted or cured food
+brewery:whiskey_jojannik,salty,Salted or cured food
+brewery:whiskey_lilitusinglemalt,salty,Salted or cured food
+brewery:whiskey_maggoallan,salty,Salted or cured food
+brewery:whiskey_smokey_reverie,salty,Salted or cured food
+brewinandchewin:apple_jelly,drink_simple,Non-alcoholic beverage
+brewinandchewin:beer,alcohol,Fermented alcoholic drink
+brewinandchewin:bloody_mary,salty,Salted or cured food
+brewinandchewin:cheesy_pasta,meal,Prepared meal or composed dish
+brewinandchewin:cocoa_fudge,sweet,Candy or confection
+brewinandchewin:creamy_onion_soup,soup,Soup or broth in bowl
+brewinandchewin:dread_nog,alcohol,Alcoholic beverage
+brewinandchewin:egg_grog,salty,Salted or cured food
+brewinandchewin:fiery_fondue,meal,Prepared food or complete dish
+brewinandchewin:flaxen_cheese_wedge,salty,Salted or cured food
+brewinandchewin:glittering_grenadine,alcohol,Alcoholic beverage
+brewinandchewin:glow_berry_marmalade,drink_simple,Fruit juice or squash
+brewinandchewin:ham_and_cheese_sandwich,salty,Salted or cured food
+brewinandchewin:horror_lasagna,meal,Complex prepared dish
+brewinandchewin:jerky,salty,Salted or cured food
+brewinandchewin:kimchi,salty,Salted or cured food
+brewinandchewin:kippers,salty,Salted or cured food
+brewinandchewin:kombucha,alcohol,Alcoholic beverage
+brewinandchewin:mead,alcohol,Fermented alcoholic drink
+brewinandchewin:pale_jane,alcohol,Fermented alcoholic drink
+brewinandchewin:pickled_pickles,salty,Salted or cured food
+brewinandchewin:pizza_slice,meal,Prepared meal or composed dish
+brewinandchewin:quiche_slice,meal,Prepared food or complete dish
+brewinandchewin:red_rum,salty,Salted or cured food
+brewinandchewin:rice_wine,alcohol,Fermented alcoholic drink
+brewinandchewin:saccharine_rum,salty,Salted or cured food
+brewinandchewin:salty_folly,alcohol,Alcoholic beverage
+brewinandchewin:scarlet_cheese_wedge,salty,Salted or cured food
+brewinandchewin:scarlet_pierogi,meal,Savory pie or tart
+brewinandchewin:steel_toe_stout,alcohol,Fermented alcoholic drink
+brewinandchewin:strongroot_ale,alcohol,Fermented alcoholic drink
+brewinandchewin:sweet_berry_jam,drink_simple,Non-alcoholic beverage
+brewinandchewin:vegetable_omelet,meal,Prepared food or complete dish
+brewinandchewin:vodka,salty,Salted or cured food
+brewinandchewin:withering_dross,salty,Salted or cured food
+endersdelight:amberveil_stew,stew,Stew or braised dish
+endersdelight:amberveiled_curry,stew,Stew or braised dish
+endersdelight:chicken_curry,stew,Stew or braised dish
+endersdelight:chorus_juice,meal,Prepared food or complete dish
+endersdelight:chorus_pie_slice,baked_sweet,Baked dessert slice
+endersdelight:chorus_stew,stew,Stew or braised dish
+endersdelight:crawling_sandwich,meal,Prepared meal or composed dish
+endersdelight:crispy_skewer,dry,Dry crunchy food
+endersdelight:ender_paella,stew,Stew or braised dish
+endersdelight:endermite_stew,stew,Stew or braised dish
+endersdelight:mite_crust,meal,Prepared food or complete dish
+endersdelight:pearl_pasta,meal,Prepared meal or composed dish
+endersdelight:shulker_filet,meal,Prepared food or complete dish
+endersdelight:shulker_mollusk,meal,Prepared food or complete dish
+endersdelight:steak_fries,salty,Salted or cured food
+endersdelight:strange_eclair,meal,Prepared food or complete dish
+endersdelight:stuffed_shulker_bowl,meal,Prepared food or complete dish
+endersdelight:twisted_cereal,dry,Dry crunchy food
+endersdelight:uncanny_cookies,baked_sweet,Sweet baked good
+endersdelight:veil_of_flames_risotto,stew,Stew or braised dish
+extradelight:aebleflaesk,meal,Prepared food or complete dish
+extradelight:affogato,meal,Prepared food or complete dish
+extradelight:aglio_e_olio,meal,Prepared food or complete dish
+extradelight:aioli_jar_item,drink_simple,Fruit juice or squash
+extradelight:alfredo_sauce,meal,Prepared food or complete dish
+extradelight:apple_cheesecake_slice,salty,Cheese (salty)
+extradelight:apple_chips,salty,Salted or cured food
+extradelight:apple_cookie,baked_sweet,Sweet baked good
+extradelight:apple_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:apple_crisp,dry,Dry crunchy food
+extradelight:apple_custard,sweet,Creamy dessert or custard
+extradelight:apple_fritters,fresh_produce,Fresh produce
+extradelight:apple_ice_cream,sweet,Frozen or creamy dessert
+extradelight:apple_milkshake,drink_simple,Fruit juice or squash
+extradelight:apple_popsicle,sweet,Frozen or creamy dessert
+extradelight:apple_sauce,fresh_produce,Fresh produce
+extradelight:apple_slaw,fresh_produce,Fresh produce
+extradelight:bacon_cheeseburger,salty,Salted or cured food
+extradelight:bacon_egg_cheese_sandwich,salty,Salted or cured food
+extradelight:bacon_egg_pie_slice,salty,Salted or cured food
+extradelight:bacon_egg_sandwich,salty,Salted or cured food
+extradelight:bad_food,meal,Prepared food or complete dish
+extradelight:baked_alaska_serving,meal,Prepared food or complete dish
+extradelight:baked_cod_serving,meal,Cooked fish dish
+extradelight:bbq_jar_item,drink_simple,Fruit juice or squash
+extradelight:bbq_ribs,meal,Prepared food or complete dish
+extradelight:beef_bulgogi,meal,Prepared food or complete dish
+extradelight:beef_stew_rice,stew,Stew or braised dish
+extradelight:beef_wellington,meal,Complex prepared dish
+extradelight:beet_mint_salad,fresh_produce,Salad or vegetable mix
+extradelight:black_forest_trifle,sweet,Layered dessert
+extradelight:blondie,meal,Prepared food or complete dish
+extradelight:blood_chocolate_bar,sweet,Chocolate confection
+extradelight:blood_chocolate_chips,salty,Salted or cured food
+extradelight:blood_chocolate_dipped_apple_slice,sweet,Chocolate-dipped fruit
+extradelight:blood_chocolate_dipped_bacon,salty,Salted or cured food
+extradelight:blood_chocolate_dipped_coffee_bean,ingredient,Spice or seasoning ingredient
+extradelight:blood_chocolate_dipped_glow_berry,sweet,Chocolate-dipped fruit
+extradelight:blood_chocolate_dipped_graham_cracker,salty,Salted or cured food
+extradelight:blood_chocolate_dipped_marshmallow,sweet,Chocolate-dipped treat
+extradelight:blood_chocolate_dipped_sweet_berry,sweet,Chocolate-dipped fruit
+extradelight:blood_chocolate_filled_bar,sweet,Chocolate confection
+extradelight:blood_chocolate_syrup_bottle,sweet,Chocolate confection
+extradelight:blood_chocolate_truffle,sweet,Candy or confection
+extradelight:boiled_egg,meal,Prepared egg dish
+extradelight:borscht,meal,Prepared food or complete dish
+extradelight:bread_slice,dry,Dry crunchy food
+extradelight:breadcrumbs,dry,Dry crunchy food
+extradelight:brownie,baked_sweet,Baked sweet dessert
+extradelight:bruschetta,meal,Prepared food or complete dish
+extradelight:butter,meal,Prepared food or complete dish
+extradelight:buttered_pasta,meal,Prepared meal or composed dish
+extradelight:butterscotch,meal,Prepared food or complete dish
+extradelight:cactus,fresh_produce,Fresh produce
+extradelight:cactus_eggs,fresh_produce,Fresh produce
+extradelight:cactus_juice,drink_simple,Fruit juice or squash
+extradelight:cactus_salad,fresh_produce,Salad or vegetable mix
+extradelight:cactus_soup,soup,Soup or broth in bowl
+extradelight:candied_citrus_zest,meal,Prepared food or complete dish
+extradelight:candied_ginger,ingredient,Spice or seasoning ingredient
+extradelight:candy_apple,sweet,Candy or confection
+extradelight:candy_bar_salad,sweet,Candy or confection
+extradelight:candy_black,sweet,Candy or confection
+extradelight:candy_blue,sweet,Candy or confection
+extradelight:candy_brown,sweet,Candy or confection
+extradelight:candy_cane_blue,sweet,Candy or confection
+extradelight:candy_cane_green,sweet,Candy or confection
+extradelight:candy_cane_red,sweet,Candy or confection
+extradelight:candy_cyan,sweet,Candy or confection
+extradelight:candy_golden_apple,sweet,Candy or confection
+extradelight:candy_gray,sweet,Candy or confection
+extradelight:candy_green,sweet,Candy or confection
+extradelight:candy_light_blue,sweet,Candy or confection
+extradelight:candy_light_gray,sweet,Candy or confection
+extradelight:candy_lime,sweet,Candy or confection
+extradelight:candy_magenta,sweet,Candy or confection
+extradelight:candy_orange,sweet,Candy or confection
+extradelight:candy_pink,sweet,Candy or confection
+extradelight:candy_purple,sweet,Candy or confection
+extradelight:candy_red,sweet,Candy or confection
+extradelight:candy_white,sweet,Candy or confection
+extradelight:candy_yellow,sweet,Candy or confection
+extradelight:caramel_apple,sweet,Candy or confection
+extradelight:caramel_candy,sweet,Candy or confection
+extradelight:caramel_cheescake_slice,baked_sweet,Baked sweet dessert
+extradelight:caramel_chicken,sweet,Candy or confection
+extradelight:caramel_custard,sweet,Candy or confection
+extradelight:caramel_golden_apple,sweet,Candy or confection
+extradelight:caramel_popcorn,salty,Salted or cured food
+extradelight:caramel_popsicle,sweet,Candy or confection
+extradelight:caramel_sauce,sweet,Candy or confection
+extradelight:carrot_salad,fresh_produce,Salad or vegetable mix
+extradelight:carrot_soup,soup,Soup or broth in bowl
+extradelight:charcuterie_board,meal,Prepared food or complete dish
+extradelight:cheese,salty,Salted or cured food
+extradelight:cheese_sandwich,salty,Salted or cured food
+extradelight:cheese_souffle,salty,Salted or cured food
+extradelight:cheeseburger,salty,Cheese (salty)
+extradelight:cheeseburger_pickle,salty,Salted or cured food
+extradelight:cheesecake_slice,salty,Cheese (salty)
+extradelight:cheesy_garlic_bread,dry,Dry crunchy food
+extradelight:cheesymite_scroll,dry,Dry crunchy food
+extradelight:chicken_alfredo,meal,Prepared food or complete dish
+extradelight:chicken_fried_steak,meat_cooked,Cooked meat or fish
+extradelight:chicken_kiev,meal,Prepared food or complete dish
+extradelight:chicken_parm,meal,Prepared food or complete dish
+extradelight:chicken_stew,stew,Stew or braised dish
+extradelight:chicken_stew_rice,stew,Stew or braised dish
+extradelight:chili,stew,Stew or braised dish
+extradelight:chili_cheese_cornbread_muffin,salty,Salted or cured food
+extradelight:chili_con_carne,stew,Stew or braised dish
+extradelight:chocolate_cake,baked_sweet,Baked sweet dessert
+extradelight:chocolate_cheesecake_slice,salty,Cheese (salty)
+extradelight:chocolate_chip_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:chocolate_cookie,baked_sweet,Sweet baked good
+extradelight:chocolate_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:chocolate_custard,sweet,Creamy dessert or custard
+extradelight:chocolate_ice_cream,sweet,Frozen or creamy dessert
+extradelight:chocolate_milk,drink_crafted,Hot chocolate or cocoa
+extradelight:chocolate_milkshake,drink_crafted,Hot chocolate or cocoa
+extradelight:chocolate_mousse,sweet,Frozen or creamy dessert
+extradelight:chocolate_orange,meal,Prepared food or complete dish
+extradelight:christmas_pudding,baked_sweet,Baked sweet dessert
+extradelight:cinnamon_popsicle,ingredient,Spice or seasoning ingredient
+extradelight:cinnamon_rolls,ingredient,Spice or seasoning ingredient
+extradelight:cinnamon_toast,ingredient,Spice or seasoning ingredient
+extradelight:citrus_onion_salad,fresh_produce,Salad or vegetable mix
+extradelight:coffee,drink_crafted,Coffee or coffee drink
+extradelight:coffee_beans,ingredient,Spice or seasoning ingredient
+extradelight:coffee_cake_slice,baked_sweet,Baked sweet dessert
+extradelight:coffee_cherries,meal,Prepared food or complete dish
+extradelight:coffee_jelly,sweet,Jam or preserve
+extradelight:congee,meal,Prepared food or complete dish
+extradelight:cooked_cactus,meal,Prepared food or complete dish
+extradelight:cooked_corn,meal,Prepared food or complete dish
+extradelight:cooked_pasta,meal,Prepared meal or composed dish
+extradelight:cooked_soybeans_item,meal,Prepared food or complete dish
+extradelight:cooked_wheat_seeds,dry,Nuts or seeds
+extradelight:cookie_dough_ice_cream,ingredient,Raw ingredient or dough
+extradelight:cookie_dough_milkshake,drink_simple,Fruit juice or squash
+extradelight:corn_chowder,soup,Soup or broth in bowl
+extradelight:corn_flakes,meal,Prepared food or complete dish
+extradelight:corn_flakes_cereal,dry,Dry crunchy food
+extradelight:corn_fritters,meal,Prepared food or complete dish
+extradelight:corn_pudding,baked_sweet,Baked sweet dessert
+extradelight:cornbread,dry,Dry crunchy food
+extradelight:crackers,salty,Salted or cured food
+extradelight:cream_corn,meal,Prepared food or complete dish
+extradelight:crisp_rice,dry,Dry crunchy food
+extradelight:crisp_rice_cereal,dry,Dry crunchy food
+extradelight:crisp_rice_treat,dry,Dry crunchy food
+extradelight:croque_madame,meal,Prepared food or complete dish
+extradelight:croque_monsieur,meal,Prepared food or complete dish
+extradelight:croutons,meal,Prepared food or complete dish
+extradelight:cucumber,fresh_produce,Fresh produce
+extradelight:cucumber_salad,fresh_produce,Salad or vegetable mix
+extradelight:curry,stew,Stew or braised dish
+extradelight:curry_rice,stew,Stew or braised dish
+extradelight:currywurst,stew,Stew or braised dish
+extradelight:dalgona_coffee,drink_crafted,Coffee or coffee drink
+extradelight:dark_chocolate_bar,sweet,Chocolate confection
+extradelight:dark_chocolate_chips,salty,Salted or cured food
+extradelight:dark_chocolate_dipped_apple_slice,sweet,Chocolate-dipped fruit
+extradelight:dark_chocolate_dipped_bacon,salty,Salted or cured food
+extradelight:dark_chocolate_dipped_coffee_bean,ingredient,Spice or seasoning ingredient
+extradelight:dark_chocolate_dipped_glow_berry,sweet,Chocolate-dipped fruit
+extradelight:dark_chocolate_dipped_graham_cracker,salty,Salted or cured food
+extradelight:dark_chocolate_dipped_marshmallow,sweet,Chocolate-dipped treat
+extradelight:dark_chocolate_dipped_sweet_berry,sweet,Chocolate-dipped fruit
+extradelight:dark_chocolate_filled_bar,sweet,Chocolate confection
+extradelight:dark_chocolate_syrup_bottle,sweet,Chocolate confection
+extradelight:dark_chocolate_truffle,sweet,Candy or confection
+extradelight:devilled_sausages,salty,Cured or preserved meat
+extradelight:dirt_cake,baked_sweet,Baked sweet dessert
+extradelight:dried_chili,salty,Salted or cured food
+extradelight:dried_fruit,salty,Salted or cured food
+extradelight:dynamic_jam,sweet,Jam or preserve
+extradelight:dynamic_toast,dry,Dry crunchy food
+extradelight:easter_egg,meal,Prepared egg dish
+extradelight:edamame,meal,Prepared food or complete dish
+extradelight:egg_in_the_basket,meal,Prepared egg dish
+extradelight:egg_salad,fresh_produce,Salad or vegetable mix
+extradelight:egg_salad_sandwich,fresh_produce,Salad or vegetable mix
+extradelight:eggnog,drink_simple,Fruit juice or squash
+extradelight:eton_mess,meal,Prepared food or complete dish
+extradelight:fat_potatoes,fresh_produce,Fresh produce
+extradelight:fish_cakes,baked_sweet,Baked sweet dessert
+extradelight:fish_chips,salty,Salted or cured food
+extradelight:fish_salad,fresh_produce,Salad or vegetable mix
+extradelight:fish_salad_sandwich,fresh_produce,Salad or vegetable mix
+extradelight:fish_sauce_item,salty,Salted or cured food
+extradelight:fish_soup,soup,Soup or broth in bowl
+extradelight:fish_stew_rice,stew,Stew or braised dish
+extradelight:fluffer_nutter,dry,Nuts or seeds
+extradelight:french_fries,salty,Salted or cured food
+extradelight:french_toast,dry,Dry crunchy food
+extradelight:fried_brains,meal,Prepared food or complete dish
+extradelight:fried_chicken,meat_cooked,Cooked meat or fish
+extradelight:fried_fish,meal,Cooked fish dish
+extradelight:fried_mushrooms,meal,Prepared food or complete dish
+extradelight:frosting_black,meal,Prepared food or complete dish
+extradelight:frosting_blue,meal,Prepared food or complete dish
+extradelight:frosting_brown,meal,Prepared food or complete dish
+extradelight:frosting_cyan,meal,Prepared food or complete dish
+extradelight:frosting_gray,meal,Prepared food or complete dish
+extradelight:frosting_green,meal,Prepared food or complete dish
+extradelight:frosting_light_blue,meal,Prepared food or complete dish
+extradelight:frosting_light_gray,meal,Prepared food or complete dish
+extradelight:frosting_lime,fresh_produce,Fresh produce
+extradelight:frosting_magenta,meal,Prepared food or complete dish
+extradelight:frosting_orange,fresh_produce,Fresh produce
+extradelight:frosting_pink,meal,Prepared food or complete dish
+extradelight:frosting_purple,meal,Prepared food or complete dish
+extradelight:frosting_red,meal,Prepared food or complete dish
+extradelight:frosting_white,meal,Prepared food or complete dish
+extradelight:frosting_yellow,meal,Prepared food or complete dish
+extradelight:fruit_bread,dry,Dry crunchy food
+extradelight:fudge,sweet,Candy or confection
+extradelight:fudge_popsicle,sweet,Candy or confection
+extradelight:furikake_rice,meal,Prepared meal or composed dish
+extradelight:garlic,meal,Prepared food or complete dish
+extradelight:garlic_bread,dry,Dry crunchy food
+extradelight:garlic_clove,ingredient,Spice or seasoning ingredient
+extradelight:gazpacho,soup,Soup or broth in bowl
+extradelight:gherkin_item,salty,Salted or cured food
+extradelight:ginger,ingredient,Spice or seasoning ingredient
+extradelight:ginger_beer,alcohol,Fermented alcoholic drink
+extradelight:gingerbread_alex,ingredient,Spice or seasoning ingredient
+extradelight:gingerbread_cookie,ingredient,Spice or seasoning ingredient
+extradelight:gingerbread_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:gingerbread_creeper,ingredient,Spice or seasoning ingredient
+extradelight:gingerbread_diamond,ingredient,Spice or seasoning ingredient
+extradelight:gingerbread_emerald,ingredient,Spice or seasoning ingredient
+extradelight:gingerbread_pickaxe,ingredient,Spice or seasoning ingredient
+extradelight:gingerbread_steve,ingredient,Spice or seasoning ingredient
+extradelight:gingerbread_sword,ingredient,Spice or seasoning ingredient
+extradelight:gingerbread_villager,ingredient,Spice or seasoning ingredient
+extradelight:glazed_carrot,meal,Prepared food or complete dish
+extradelight:glow_berry_cheesecake_slice,salty,Cheese (salty)
+extradelight:glow_berry_cookie,baked_sweet,Sweet baked good
+extradelight:glow_berry_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:glow_berry_ice_cream,sweet,Frozen or creamy dessert
+extradelight:glow_berry_juice,drink_simple,Fruit juice or squash
+extradelight:glow_berry_milkshake,drink_simple,Fruit juice or squash
+extradelight:glow_berry_pie_slice,baked_sweet,Baked dessert slice
+extradelight:glow_berry_popsicle,sweet,Frozen or creamy dessert
+extradelight:gourmet_hot_chocolate,drink_crafted,Hot chocolate or cocoa
+extradelight:graham_cracker,salty,Salted or cured food
+extradelight:grapefruit,fresh_produce,Fresh produce
+extradelight:grapefruit_beetroot_salad,fresh_produce,Fruit salad
+extradelight:grapefruit_juice,drink_simple,Fruit juice or squash
+extradelight:grapefruit_sorbet,sweet,Frozen or creamy dessert
+extradelight:grasshopper_pie_slice,baked_sweet,Baked dessert slice
+extradelight:grated_carrot,ingredient,Raw ingredient or dough
+extradelight:grated_garlic,ingredient,Raw ingredient or dough
+extradelight:grated_ginger,ingredient,Raw ingredient or dough
+extradelight:grated_potato,ingredient,Raw ingredient or dough
+extradelight:green_coffee,meal,Prepared food or complete dish
+extradelight:grilled_cheese,salty,Salted or cured food
+extradelight:grilled_corn_on_cob,meal,Prepared food or complete dish
+extradelight:grilled_grapefruit,fresh_produce,Fresh produce
+extradelight:gummies,meal,Prepared food or complete dish
+extradelight:haggis,meal,Prepared food or complete dish
+extradelight:hash,meal,Prepared food or complete dish
+extradelight:hashbrowns,meal,Prepared food or complete dish
+extradelight:hazelnut_soup,soup,Soup or broth in bowl
+extradelight:hazelnut_spread_bottle,dry,Nuts or seeds
+extradelight:hazelnuts,dry,Nuts or seeds
+extradelight:honey_cheesecake_slice,salty,Cheese (salty)
+extradelight:honey_chili_chicken,stew,Stew or braised dish
+extradelight:honey_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:honey_custard,sweet,Honey or honeycomb
+extradelight:honey_ice_cream,sweet,Frozen or creamy dessert
+extradelight:honey_milkshake,drink_simple,Fruit juice or squash
+extradelight:honey_popsicle,sweet,Frozen or creamy dessert
+extradelight:horchata,drink_simple,Fruit juice or squash
+extradelight:hot_sauce_item,meal,Prepared food or complete dish
+extradelight:hot_wings,meal,Prepared food or complete dish
+extradelight:hotdish,meal,Prepared food or complete dish
+extradelight:ice_cream,sweet,Frozen or creamy dessert
+extradelight:ice_cream_sundae,sweet,Frozen or creamy dessert
+extradelight:ice_cubes,meal,Prepared food or complete dish
+extradelight:jaffa_cake,baked_sweet,Baked sweet dessert
+extradelight:jalapeno_popper,meal,Prepared food or complete dish
+extradelight:jalapeno_stuffed_potato,fresh_produce,Fresh produce
+extradelight:jelly_black,sweet,Jam or preserve
+extradelight:jelly_blue,sweet,Jam or preserve
+extradelight:jelly_brown,sweet,Jam or preserve
+extradelight:jelly_cyan,sweet,Jam or preserve
+extradelight:jelly_green,sweet,Jam or preserve
+extradelight:jelly_grey,sweet,Jam or preserve
+extradelight:jelly_light_blue,sweet,Jam or preserve
+extradelight:jelly_light_grey,sweet,Jam or preserve
+extradelight:jelly_lime,sweet,Jam or preserve
+extradelight:jelly_magenta,sweet,Jam or preserve
+extradelight:jelly_orange,sweet,Jam or preserve
+extradelight:jelly_pink,sweet,Jam or preserve
+extradelight:jelly_purple,sweet,Jam or preserve
+extradelight:jelly_red,sweet,Jam or preserve
+extradelight:jelly_white,sweet,Jam or preserve
+extradelight:jelly_yellow,sweet,Jam or preserve
+extradelight:jerky,salty,Salted or cured food
+extradelight:ketchup_jar_item,drink_simple,Fruit juice or squash
+extradelight:key_lime_pie_slice,baked_sweet,Baked dessert slice
+extradelight:kimchi_fried_rice,salty,Salted or cured food
+extradelight:kimchi_item,salty,Salted or cured food
+extradelight:kiwiburger,meal,Prepared meal or composed dish
+extradelight:kongjang,meal,Prepared food or complete dish
+extradelight:kyiv_cake_slice,baked_sweet,Baked sweet dessert
+extradelight:lamb_stew,stew,Stew or braised dish
+extradelight:lamb_stew_rice,stew,Stew or braised dish
+extradelight:lasanga,meal,Prepared food or complete dish
+extradelight:lava_cake,baked_sweet,Baked sweet dessert
+extradelight:lemon,fresh_produce,Fresh produce
+extradelight:lemon_cucumber_cake_slice,baked_sweet,Baked sweet dessert
+extradelight:lemon_curd,sweet,Jam or preserve
+extradelight:lemon_delicious,fresh_produce,Fresh produce
+extradelight:lemon_juice,drink_simple,Fruit juice or squash
+extradelight:lemon_meringue_pie_slice,baked_sweet,Baked dessert slice
+extradelight:lemon_posset,sweet,Creamy dessert or custard
+extradelight:lemonade,drink_simple,Fruit juice or squash
+extradelight:lime,fresh_produce,Fresh produce
+extradelight:lime_juice,drink_simple,Fruit juice or squash
+extradelight:lime_souffle,fresh_produce,Fresh produce
+extradelight:limeade,alcohol,Fermented alcoholic drink
+extradelight:liver_onions,fresh_produce,Fresh produce
+extradelight:lugaw,meal,Prepared food or complete dish
+extradelight:macaroni_cheese,salty,Salted or cured food
+extradelight:mallow_cup,meal,Prepared food or complete dish
+extradelight:marshmallow,meal,Prepared food or complete dish
+extradelight:marshmallow_fluff_bottle,meal,Prepared food or complete dish
+extradelight:marshmallow_slice,meal,Prepared food or complete dish
+extradelight:mashed_potato_gravy,fresh_produce,Fresh produce
+extradelight:mashed_soybeans_item,meal,Prepared food or complete dish
+extradelight:mayo_jar_item,drink_simple,Fruit juice or squash
+extradelight:meat_pie_slice,baked_sweet,Baked dessert slice
+extradelight:meatloaf,meal,Prepared food or complete dish
+extradelight:meatloaf_sandwich,meal,Prepared meal or composed dish
+extradelight:melon_fruit_salad_serving,fresh_produce,Fruit salad
+extradelight:melon_gazpacho,soup,Soup or broth in bowl
+extradelight:melon_layer_cake_slice,baked_sweet,Baked sweet dessert
+extradelight:melon_lime_glazed_chicken,meal,Prepared food or complete dish
+extradelight:melon_rind,fresh_produce,Fresh produce
+extradelight:melon_rind_stirfry,fresh_produce,Fresh produce
+extradelight:meringue,meal,Prepared food or complete dish
+extradelight:milk_chocolate_bar,sweet,Chocolate confection
+extradelight:milk_chocolate_chips,salty,Salted or cured food
+extradelight:milk_chocolate_dipped_apple_slice,sweet,Chocolate-dipped fruit
+extradelight:milk_chocolate_dipped_bacon,salty,Salted or cured food
+extradelight:milk_chocolate_dipped_coffee_bean,ingredient,Spice or seasoning ingredient
+extradelight:milk_chocolate_dipped_glow_berry,sweet,Chocolate-dipped fruit
+extradelight:milk_chocolate_dipped_graham_cracker,salty,Salted or cured food
+extradelight:milk_chocolate_dipped_marshmallow,sweet,Chocolate-dipped treat
+extradelight:milk_chocolate_dipped_sweet_berry,sweet,Chocolate-dipped fruit
+extradelight:milk_chocolate_filled_bar,sweet,Chocolate confection
+extradelight:milk_chocolate_syrup_bottle,sweet,Chocolate confection
+extradelight:milk_chocolate_truffle,sweet,Candy or confection
+extradelight:milk_tart_slice,baked_sweet,Baked sweet dessert
+extradelight:milkshake,drink_simple,Fruit juice or squash
+extradelight:mint_candy_blue,sweet,Candy or confection
+extradelight:mint_candy_green,sweet,Candy or confection
+extradelight:mint_candy_red,sweet,Candy or confection
+extradelight:mint_chip_ice_cream,dry,Dry crunchy food
+extradelight:mint_chip_milkshake,drink_simple,Fruit juice or squash
+extradelight:mint_lamb,meal,Prepared food or complete dish
+extradelight:miso_paste_item,meal,Prepared food or complete dish
+extradelight:miso_soup,soup,Soup or broth in bowl
+extradelight:mississippi_mud_pie_slice,baked_sweet,Baked dessert slice
+extradelight:monkey_bread,dry,Dry crunchy food
+extradelight:morkovcha,meal,Prepared food or complete dish
+extradelight:muffin_apple,baked_sweet,Baked sweet dessert
+extradelight:muffin_cinnamon,ingredient,Spice or seasoning ingredient
+extradelight:muffin_ginger,ingredient,Spice or seasoning ingredient
+extradelight:muffin_sweet_berry,baked_sweet,Baked sweet dessert
+extradelight:mulligatawny_soup,soup,Soup or broth in bowl
+extradelight:mushroom_burger,meal,Prepared meal or composed dish
+extradelight:mushroom_risotto,stew,Stew or braised dish
+extradelight:naem_moo_item,meal,Prepared food or complete dish
+extradelight:natto_and_rice,meal,Prepared meal or composed dish
+extradelight:natto_item,meal,Prepared food or complete dish
+extradelight:nougat,sweet,Candy or confection
+extradelight:nut_butter_cookie,dry,Nuts or seeds
+extradelight:nut_butter_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:nut_butter_custard,dry,Nuts or seeds
+extradelight:nut_butter_ice_cream,dry,Nuts or seeds
+extradelight:nut_butter_milkshake,drink_simple,Fruit juice or squash
+extradelight:omelette,meal,Prepared egg dish
+extradelight:onion_bhaji,fresh_produce,Fresh produce
+extradelight:onion_soup,soup,Soup or broth in bowl
+extradelight:orange,fresh_produce,Fresh produce
+extradelight:orange_chicken,fresh_produce,Fresh produce
+extradelight:orange_juice,drink_simple,Fruit juice or squash
+extradelight:orangeade,drink_simple,Fruit juice or squash
+extradelight:oxtail_soup,soup,Soup or broth in bowl
+extradelight:pamonha,meal,Prepared food or complete dish
+extradelight:panforte_slice,baked_sweet,Baked sweet dessert
+extradelight:pasta_alfredo,meal,Prepared meal or composed dish
+extradelight:pasta_tomato,fresh_produce,Fresh produce
+extradelight:pavlova_slice,meal,Prepared food or complete dish
+extradelight:peanut_brittle,dry,Nuts or seeds
+extradelight:peanut_butter_bottle,dry,Nuts or seeds
+extradelight:peanut_butter_cup,dry,Nuts or seeds
+extradelight:peanut_butter_jelly,dry,Nuts or seeds
+extradelight:peanuts,dry,Nuts or seeds
+extradelight:peeled_ginger,ingredient,Raw ingredient or dough
+extradelight:penne_all_arrabbiata,meal,Prepared food or complete dish
+extradelight:peppermint_bark,ingredient,Spice or seasoning ingredient
+extradelight:pickle_juice,salty,Salted or cured food
+extradelight:pickled_beet_item,salty,Salted or cured food
+extradelight:pickled_carrot_item,salty,Salted or cured food
+extradelight:pickled_egg_item,salty,Salted or cured food
+extradelight:pickled_fish_item,salty,Salted or cured food
+extradelight:pickled_ginger,salty,Salted or cured food
+extradelight:pickled_onion_item,salty,Salted or cured food
+extradelight:pickled_rind_item,salty,Salted or cured food
+extradelight:pickled_sausage_item,salty,Salted or cured food
+extradelight:popcorn,salty,Salted or cured food
+extradelight:pork_and_apples,fresh_produce,Fresh produce
+extradelight:pork_stew,stew,Stew or braised dish
+extradelight:pork_stew_rice,stew,Stew or braised dish
+extradelight:pork_tenderloin,meal,Prepared food or complete dish
+extradelight:pork_tenderloin_sandwich,meal,Prepared meal or composed dish
+extradelight:potato_au_gratin,fresh_produce,Fresh produce
+extradelight:potato_chips,salty,Salted or cured food
+extradelight:potato_salad,fresh_produce,Salad or vegetable mix
+extradelight:potato_soup,soup,Soup or broth in bowl
+extradelight:potato_sticks,fresh_produce,Fresh produce
+extradelight:potroast,meal,Prepared food or complete dish
+extradelight:preserved_lemon_item,fresh_produce,Fresh produce
+extradelight:preserved_lemon_pasta,fresh_produce,Fresh produce
+extradelight:pulled_pork_sandwich,meal,Prepared meal or composed dish
+extradelight:pumpkin_cheesecake_slice,salty,Cheese (salty)
+extradelight:pumpkin_cookie,baked_sweet,Sweet baked good
+extradelight:pumpkin_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:pumpkin_custard,sweet,Creamy dessert or custard
+extradelight:pumpkin_ice_cream,sweet,Frozen or creamy dessert
+extradelight:pumpkin_milkshake,drink_simple,Fruit juice or squash
+extradelight:pumpkin_pie_slice,baked_sweet,Baked dessert slice
+extradelight:pumpkin_roll,dry,Dry crunchy food
+extradelight:punch,drink_simple,Fruit juice or squash
+extradelight:quiche_slice,meal,Prepared food or complete dish
+extradelight:rabbit_stew_rice,stew,Stew or braised dish
+extradelight:rack_lamb,meal,Prepared food or complete dish
+extradelight:raw_gingerbread_alex,ingredient,Spice or seasoning ingredient
+extradelight:raw_gingerbread_creeper,ingredient,Spice or seasoning ingredient
+extradelight:raw_gingerbread_diamond,ingredient,Spice or seasoning ingredient
+extradelight:raw_gingerbread_emerald,ingredient,Spice or seasoning ingredient
+extradelight:raw_gingerbread_pickaxe,ingredient,Spice or seasoning ingredient
+extradelight:raw_gingerbread_steve,ingredient,Spice or seasoning ingredient
+extradelight:raw_gingerbread_sword,ingredient,Spice or seasoning ingredient
+extradelight:raw_gingerbread_villager,ingredient,Spice or seasoning ingredient
+extradelight:raw_sugar_cookie_alex,baked_sweet,Sweet baked good
+extradelight:raw_sugar_cookie_creeper,baked_sweet,Sweet baked good
+extradelight:raw_sugar_cookie_diamond,baked_sweet,Sweet baked good
+extradelight:raw_sugar_cookie_emerald,baked_sweet,Sweet baked good
+extradelight:raw_sugar_cookie_pickaxe,baked_sweet,Sweet baked good
+extradelight:raw_sugar_cookie_steve,baked_sweet,Sweet baked good
+extradelight:raw_sugar_cookie_sword,baked_sweet,Sweet baked good
+extradelight:raw_sugar_cookie_villager,baked_sweet,Sweet baked good
+extradelight:rice_pudding,baked_sweet,Baked sweet dessert
+extradelight:riceball,meal,Prepared meal or composed dish
+extradelight:riceball_filled,meal,Prepared meal or composed dish
+extradelight:roasted_apple,meal,Prepared food or complete dish
+extradelight:roasted_carrot,meal,Prepared food or complete dish
+extradelight:roasted_cocoa_beans,ingredient,Spice or seasoning ingredient
+extradelight:roasted_garlic,meal,Prepared food or complete dish
+extradelight:roasted_hazelnuts,dry,Nuts or seeds
+extradelight:roasted_peanuts,dry,Nuts or seeds
+extradelight:roasted_pumpkin_seeds,dry,Nuts or seeds
+extradelight:rocky_road,meal,Prepared food or complete dish
+extradelight:roll,dry,Dry crunchy food
+extradelight:rombosse,meal,Prepared food or complete dish
+extradelight:salad,fresh_produce,Salad or vegetable mix
+extradelight:salami_item,salty,Salted or cured food
+extradelight:salami_mix,salty,Salted or cured food
+extradelight:salisbury_steak,meal,Meat dish or plated main
+extradelight:sauerkraut_and_sausage,salty,Salted or cured food
+extradelight:sauerkraut_item,meal,Prepared food or complete dish
+extradelight:sauerkraut_soup,soup,Soup or broth in bowl
+extradelight:sausage_roll,salty,Salted or cured food
+extradelight:scotcharoo,meal,Prepared food or complete dish
+extradelight:scrambled_eggs,meal,Prepared egg dish
+extradelight:seaweed_crisps,salty,Salted or cured food
+extradelight:seaweed_salad,fresh_produce,Salad or vegetable mix
+extradelight:shirazi_salad,fresh_produce,Salad or vegetable mix
+extradelight:shredded_cabbage_item,fresh_produce,Sliced raw vegetable
+extradelight:sliced_apple,fresh_produce,Sliced raw vegetable
+extradelight:sliced_beetroot_item,fresh_produce,Sliced raw vegetable
+extradelight:sliced_chili,stew,Stew or braised dish
+extradelight:sliced_cucumber_item,fresh_produce,Sliced raw vegetable
+extradelight:sliced_gherkin_item,meal,Prepared food or complete dish
+extradelight:sliced_ginger,ingredient,Spice or seasoning ingredient
+extradelight:sliced_grapefruit,fresh_produce,Sliced raw vegetable
+extradelight:sliced_lemon,fresh_produce,Sliced raw vegetable
+extradelight:sliced_lime,fresh_produce,Sliced raw vegetable
+extradelight:sliced_onion,fresh_produce,Sliced raw vegetable
+extradelight:sliced_orange,fresh_produce,Sliced raw vegetable
+extradelight:sliced_potato,fresh_produce,Sliced raw vegetable
+extradelight:sliced_tomato,fresh_produce,Sliced raw vegetable
+extradelight:smore,meal,Prepared food or complete dish
+extradelight:soaked_soybeans_item,meal,Prepared food or complete dish
+extradelight:sos,meal,Prepared food or complete dish
+extradelight:soy_glazed_salmon_item,meal,Cooked fish dish
+extradelight:soy_milk,drink_simple,Fruit juice or squash
+extradelight:soy_sauce_item,salty,Salted or cured food
+extradelight:steak_pickled_onion_pie_slice,salty,Salted or cured food
+extradelight:stewed_apples,stew,Stew or braised dish
+extradelight:sticky_toffee_pudding_slice,baked_sweet,Baked sweet dessert
+extradelight:stirfry,meal,Prepared food or complete dish
+extradelight:stuffed_apple,fresh_produce,Fresh produce
+extradelight:stuffed_apple_ice_cream,sweet,Frozen or creamy dessert
+extradelight:stuffed_cactus,fresh_produce,Fresh produce
+extradelight:stuffed_heart,meal,Prepared food or complete dish
+extradelight:stuffed_mushrooms,meal,Prepared food or complete dish
+extradelight:stuffing,meal,Prepared food or complete dish
+extradelight:sugar_cookie,baked_sweet,Sweet baked good
+extradelight:sugar_cookie_alex,baked_sweet,Sweet baked good
+extradelight:sugar_cookie_creeper,baked_sweet,Sweet baked good
+extradelight:sugar_cookie_diamond,baked_sweet,Sweet baked good
+extradelight:sugar_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:sugar_cookie_emerald,baked_sweet,Sweet baked good
+extradelight:sugar_cookie_pickaxe,baked_sweet,Sweet baked good
+extradelight:sugar_cookie_steve,baked_sweet,Sweet baked good
+extradelight:sugar_cookie_sword,baked_sweet,Sweet baked good
+extradelight:sugar_cookie_villager,baked_sweet,Sweet baked good
+extradelight:sunflower_seeds,dry,Nuts or seeds
+extradelight:sweet_berry_cookie_dough,ingredient,Raw ingredient or dough
+extradelight:sweet_berry_custard,sweet,Creamy dessert or custard
+extradelight:sweet_berry_ice_cream,sweet,Frozen or creamy dessert
+extradelight:sweet_berry_juice,drink_simple,Fruit juice or squash
+extradelight:sweet_berry_milkshake,drink_simple,Fruit juice or squash
+extradelight:sweet_berry_pie_slice,meal,Prepared food or complete dish
+extradelight:sweet_berry_popsicle,sweet,Frozen or creamy dessert
+extradelight:tarte_tatin_slice,baked_sweet,Baked sweet dessert
+extradelight:tea,drink_crafted,Tea or herbal infusion
+extradelight:thai_melon_salad,fresh_produce,Fruit salad
+extradelight:toast,dry,Dry crunchy food
+extradelight:toffee,sweet,Candy or confection
+extradelight:tomato_juice,drink_simple,Fruit juice or squash
+extradelight:tomato_soup,soup,Soup or broth in bowl
+extradelight:trail_mix,meal,Prepared food or complete dish
+extradelight:unripe_salami_item,salty,Salted or cured food
+extradelight:whipped_cream,meal,Prepared food or complete dish
+extradelight:white_chili,stew,Stew or braised dish
+extradelight:white_chocolate_bar,sweet,Chocolate confection
+extradelight:white_chocolate_chips,salty,Salted or cured food
+extradelight:white_chocolate_dipped_apple_slice,sweet,Chocolate-dipped fruit
+extradelight:white_chocolate_dipped_bacon,salty,Salted or cured food
+extradelight:white_chocolate_dipped_coffee_bean,ingredient,Spice or seasoning ingredient
+extradelight:white_chocolate_dipped_glow_berry,sweet,Chocolate-dipped fruit
+extradelight:white_chocolate_dipped_graham_cracker,salty,Salted or cured food
+extradelight:white_chocolate_dipped_marshmallow,sweet,Chocolate-dipped treat
+extradelight:white_chocolate_dipped_sweet_berry,sweet,Chocolate-dipped fruit
+extradelight:white_chocolate_filled_bar,sweet,Chocolate confection
+extradelight:white_chocolate_syrup_bottle,sweet,Chocolate confection
+extradelight:white_chocolate_truffle,sweet,Candy or confection
+extradelight:xocolati,drink_crafted,Hot chocolate or cocoa
+extradelight:yeast_spread,salty,Salted or cured food
+extradelight:zupa_ogorkowa,meal,Prepared food or complete dish
+farm_and_charm:bacon,salty,Salted or cured food
+farm_and_charm:bacon_with_eggs,salty,Salted or cured food
+farm_and_charm:baked_lamb_ham,salty,Salted or cured food
+farm_and_charm:barley_patties_with_potatoes,fresh_produce,Fresh produce
+farm_and_charm:barley_soup,soup,Soup or broth in bowl
+farm_and_charm:beef_patty_with_vegetables,meal,Prepared food or complete dish
+farm_and_charm:butter,salty,Salted or cured food
+farm_and_charm:chicken_feed,meal,Prepared food or complete dish
+farm_and_charm:chicken_parts,salty,Salted or cured food
+farm_and_charm:chicken_wrapped_in_bacon,salty,Salted or cured food
+farm_and_charm:cooked_cod,meal,Cooked fish dish
+farm_and_charm:cooked_salmon,meal,Cooked fish dish
+farm_and_charm:corn,meal,Prepared food or complete dish
+farm_and_charm:corn_grits,meal,Prepared food or complete dish
+farm_and_charm:dough,ingredient,Raw ingredient or dough
+farm_and_charm:farmer_salad,fresh_produce,Salad or vegetable mix
+farm_and_charm:farmers_bread,dry,Dry crunchy food
+farm_and_charm:farmers_breakfast,meal,Prepared food or complete dish
+farm_and_charm:goulash,stew,Stew or braised dish
+farm_and_charm:grandmothers_strawberry_cake,baked_sweet,Baked sweet dessert
+farm_and_charm:lamb_ham,salty,Salted or cured food
+farm_and_charm:lamb_with_corn,meal,Prepared food or complete dish
+farm_and_charm:lettuce,fresh_produce,Fresh produce
+farm_and_charm:minced_beef,meal,Prepared food or complete dish
+farm_and_charm:nettle_tea,drink_crafted,Tea or herbal infusion
+farm_and_charm:nettle_tea_cup,drink_crafted,Tea or herbal infusion
+farm_and_charm:oat_pancake,baked_sweet,Baked sweet dessert
+farm_and_charm:oatmeal_with_strawberries,meal,Prepared food or complete dish
+farm_and_charm:onion,fresh_produce,Fresh produce
+farm_and_charm:onion_soup,soup,Soup or broth in bowl
+farm_and_charm:pasta_with_onion_sauce,fresh_produce,Fresh produce
+farm_and_charm:potato_soup,soup,Soup or broth in bowl
+farm_and_charm:potato_with_roast_meat,fresh_produce,Fresh produce
+farm_and_charm:raw_pasta,ingredient,Raw ingredient or dough
+farm_and_charm:ribwort_tea,drink_crafted,Tea or herbal infusion
+farm_and_charm:ribwort_tea_cup,drink_crafted,Tea or herbal infusion
+farm_and_charm:roasted_chicken,meat_cooked,Cooked meat or fish
+farm_and_charm:roasted_corn,meal,Prepared food or complete dish
+farm_and_charm:rotten_tomato,rotten_or_poison,Rotten or poisoned food
+farm_and_charm:sausage_with_oat_patty,salty,Salted or cured food
+farm_and_charm:simple_tomato_soup,soup,Soup or broth in bowl
+farm_and_charm:strawberry,fresh_produce,Fresh produce
+farm_and_charm:strawberry_tea,drink_crafted,Tea or herbal infusion
+farm_and_charm:strawberry_tea_cup,drink_crafted,Tea or herbal infusion
+farm_and_charm:stuffed_chicken,meal,Prepared food or complete dish
+farm_and_charm:stuffed_rabbit,meal,Prepared food or complete dish
+farm_and_charm:tomato,fresh_produce,Fresh produce
+farmersdelight:apple_cider,alcohol,Fermented alcoholic drink
+farmersdelight:apple_pie_slice,baked_sweet,Baked dessert slice
+farmersdelight:bacon,salty,Salted or cured food
+farmersdelight:bacon_and_eggs,salty,Salted or cured food
+farmersdelight:bacon_sandwich,salty,Salted or cured food
+farmersdelight:baked_cod_stew,stew,Stew or braised dish
+farmersdelight:barbecue_stick,meal,Prepared food or complete dish
+farmersdelight:beef_patty,meal,Prepared food or complete dish
+farmersdelight:beef_stew,stew,Stew or braised dish
+farmersdelight:bone_broth,soup,Bone broth or consomé
+farmersdelight:cabbage,fresh_produce,Fresh produce
+farmersdelight:cabbage_leaf,fresh_produce,Fresh produce
+farmersdelight:cabbage_rolls,dry,Dry crunchy food
+farmersdelight:cake_slice,baked_sweet,Baked sweet dessert
+farmersdelight:chicken_cuts,salty,Salted or cured food
+farmersdelight:chicken_sandwich,meal,Prepared meal or composed dish
+farmersdelight:chicken_soup,soup,Soup or broth in bowl
+farmersdelight:chocolate_pie_slice,baked_sweet,Baked dessert slice
+farmersdelight:cod_roll,dry,Dry crunchy food
+farmersdelight:cod_slice,meat_raw,Raw seafood or slice
+farmersdelight:cooked_bacon,salty,Salted or cured food
+farmersdelight:cooked_chicken_cuts,meat_cooked,Cooked meat or fish
+farmersdelight:cooked_cod_slice,meat_raw,Raw seafood or slice
+farmersdelight:cooked_mutton_chops,meat_cooked,Cooked meat or fish
+farmersdelight:cooked_rice,meal,Prepared meal or composed dish
+farmersdelight:cooked_salmon_slice,meat_raw,Raw seafood or slice
+farmersdelight:dog_food,meal,Prepared meal or composed dish
+farmersdelight:dumplings,meal,Prepared food or complete dish
+farmersdelight:egg_sandwich,meal,Prepared meal or composed dish
+farmersdelight:fish_stew,stew,Stew or braised dish
+farmersdelight:fried_egg,meal,Prepared egg dish
+farmersdelight:fried_rice,meal,Prepared meal or composed dish
+farmersdelight:fruit_salad,fresh_produce,Fruit salad
+farmersdelight:gleaming_salad,fresh_produce,Salad or vegetable mix
+farmersdelight:glow_berry_custard,sweet,Creamy dessert or custard
+farmersdelight:grilled_salmon,meal,Cooked fish dish
+farmersdelight:ham,salty,Salted or cured food
+farmersdelight:hamburger,salty,Cured or preserved meat
+farmersdelight:honey_cookie,baked_sweet,Sweet baked good
+farmersdelight:honey_glazed_ham,salty,Salted or cured food
+farmersdelight:hot_cocoa,drink_crafted,Hot chocolate or cocoa
+farmersdelight:kelp_roll,dry,Dry crunchy food
+farmersdelight:kelp_roll_slice,dry,Dry crunchy food
+farmersdelight:melon_juice,drink_simple,Fruit juice or squash
+farmersdelight:melon_popsicle,sweet,Frozen or creamy dessert
+farmersdelight:milk_bottle,drink_simple,Plain milk or milk drink
+farmersdelight:minced_beef,meal,Prepared food or complete dish
+farmersdelight:mixed_salad,fresh_produce,Salad or vegetable mix
+farmersdelight:mushroom_rice,meal,Prepared meal or composed dish
+farmersdelight:mutton_chops,meat_raw,Raw meat or offal
+farmersdelight:mutton_wrap,meal,Prepared meal or composed dish
+farmersdelight:nether_salad,fresh_produce,Salad or vegetable mix
+farmersdelight:noodle_soup,soup,Soup or broth in bowl
+farmersdelight:onion,fresh_produce,Fresh produce
+farmersdelight:onion_soup,soup,Soup or broth in bowl
+farmersdelight:pasta_with_meatballs,meal,Prepared meal or composed dish
+farmersdelight:pasta_with_mutton_chop,meat_raw,Raw meat or offal
+farmersdelight:pie_crust,meal,Savory pie or tart
+farmersdelight:pumpkin_pie_slice,baked_sweet,Baked dessert slice
+farmersdelight:pumpkin_slice,fresh_produce,Fresh produce
+farmersdelight:pumpkin_soup,soup,Soup or broth in bowl
+farmersdelight:ratatouille,meal,Prepared food or complete dish
+farmersdelight:raw_pasta,salty,Salted or cured food
+farmersdelight:roast_chicken,meat_cooked,Cooked meat or fish
+farmersdelight:roasted_mutton_chops,meat_raw,Raw meat or offal
+farmersdelight:salmon_roll,dry,Dry crunchy food
+farmersdelight:salmon_slice,meat_raw,Raw seafood or slice
+farmersdelight:shepherds_pie,meal,Savory pie or tart
+farmersdelight:smoked_ham,salty,Salted or cured food
+farmersdelight:squid_ink_pasta,seafood,Seaweed or cephalopod dish
+farmersdelight:steak_and_potatoes,fresh_produce,Fresh produce
+farmersdelight:stuffed_potato,fresh_produce,Fresh produce
+farmersdelight:stuffed_pumpkin,fresh_produce,Fresh produce
+farmersdelight:sweet_berry_cheesecake_slice,salty,Cheese (salty)
+farmersdelight:sweet_berry_cookie,baked_sweet,Sweet baked good
+farmersdelight:tomato,fresh_produce,Fresh produce
+farmersdelight:tomato_sauce,fresh_produce,Fresh produce
+farmersdelight:vegetable_noodles,meal,Prepared meal or composed dish
+farmersdelight:vegetable_soup,soup,Soup or broth in bowl
+farmersdelight:wheat_dough,salty,Salted or cured food
+herbalbrews:black_tea,drink_crafted,Tea or herbal infusion
+herbalbrews:coffee,drink_crafted,Coffee or coffee drink
+herbalbrews:coffee_beans,ingredient,Spice or seasoning ingredient
+herbalbrews:dried_black_tea,salty,Salted or cured food
+herbalbrews:dried_green_tea,salty,Salted or cured food
+herbalbrews:dried_oolong_tea,salty,Salted or cured food
+herbalbrews:flask,drink_crafted,Prepared drink
+herbalbrews:green_tea,drink_crafted,Tea or herbal infusion
+herbalbrews:hibiscus_tea,drink_crafted,Tea or herbal infusion
+herbalbrews:lavender_tea,drink_crafted,Tea or herbal infusion
+herbalbrews:milk_coffee,drink_crafted,Coffee or coffee drink
+herbalbrews:oolong_tea,drink_crafted,Tea or herbal infusion
+herbalbrews:rooibos_leaf,ingredient,Spice or seasoning ingredient
+herbalbrews:rooibos_tea,drink_crafted,Tea or herbal infusion
+herbalbrews:tea_blossom,ingredient,Spice or seasoning ingredient
+herbalbrews:yerba_mate_leaf,meal,Prepared food or complete dish
+herbalbrews:yerba_mate_tea,drink_crafted,Tea or herbal infusion
+oceansdelight:baked_tentacle_on_a_stick,seafood,Seaweed or cephalopod dish
+oceansdelight:bowl_of_guardian_soup,soup,Soup or broth in bowl
+oceansdelight:braised_sea_pickle,salty,Salted or cured food
+oceansdelight:cabbage_wrapped_elder_guardian,seafood,Seaweed or cephalopod dish
+oceansdelight:cooked_elder_guardian_slice,seafood,Seaweed or cephalopod dish
+oceansdelight:cooked_guardian_tail,seafood,Seaweed or cephalopod dish
+oceansdelight:cooked_stuffed_cod,meal,Cooked fish dish
+oceansdelight:cooked_stuffed_squid,seafood,Seaweed or cephalopod dish
+oceansdelight:cut_tentacles,seafood,Seaweed or cephalopod dish
+oceansdelight:elder_guardian_roll,dry,Dry crunchy food
+oceansdelight:elder_guardian_slab,seafood,Seaweed or cephalopod dish
+oceansdelight:elder_guardian_slice,seafood,Seaweed or cephalopod dish
+oceansdelight:fugu_roll,dry,Dry crunchy food
+oceansdelight:fugu_slice,meal,Prepared food or complete dish
+oceansdelight:guardian_tail,seafood,Seaweed or cephalopod dish
+oceansdelight:honey_fried_kelp,sweet,Honey or honeycomb
+oceansdelight:kelp_encrusted_cod,seafood,Seaweed or cephalopod dish
+oceansdelight:seagrass_salad,fresh_produce,Salad or vegetable mix
+oceansdelight:squid_rings,seafood,Seaweed or cephalopod dish
+oceansdelight:stuffed_cod,meal,Cooked fish dish
+oceansdelight:stuffed_squid,seafood,Seaweed or cephalopod dish
+oceansdelight:tentacle_on_a_stick,seafood,Seaweed or cephalopod dish
+oceansdelight:tentacles,seafood,Seaweed or cephalopod dish

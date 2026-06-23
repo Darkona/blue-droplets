@@ -1,0 +1,84 @@
+{
+  "_comment": "Calor de cada receta. Orden: overrides (recipe_id) > keywords (primera que coincida; palabras completas, separadas por no-letras) > by_type > default. Las palabras se buscan en el id del resultado y en la ruta de la receta.",
+  "purity_by_heat": {
+    "hot": 1,
+    "cold": 2
+  },
+  "default": "cold",
+  "overrides": {},
+  "by_type": {
+    "farmersdelight:cooking": "hot",
+    "farm_and_charm:pot_cooking": "hot",
+    "farm_and_charm:stove": "hot",
+    "extradelight:evaporator": "hot",
+    "extradelight:vat": "cold",
+    "brewinandchewin:fermenting": "cold",
+    "extradelight:mixing_bowl": "cold",
+    "create:mixing": "cold",
+    "farm_and_charm:crafting_bowl": "cold"
+  },
+  "_keyword_types": "Tipos donde tambien se miran las palabras del resultado. En los demas manda by_type.",
+  "keyword_types": [
+    "minecraft:crafting_shaped",
+    "minecraft:crafting_shapeless",
+    "extradelight:mixing_bowl",
+    "create:mixing",
+    "farm_and_charm:crafting_bowl",
+    "farmersdelight:cooking"
+  ],
+  "keywords": [
+    {
+      "heat": "cold",
+      "words": [
+        "iced",
+        "ice",
+        "cold",
+        "juice",
+        "lemonade",
+        "limeade",
+        "orangeade",
+        "punch",
+        "smoothie",
+        "milkshake",
+        "dough",
+        "gummies",
+        "nougat",
+        "marshmallow",
+        "sprinkler",
+        "trough",
+        "pot",
+        "tap",
+        "yeast",
+        "beer",
+        "wine",
+        "vodka",
+        "kombucha",
+        "vinegar"
+      ]
+    },
+    {
+      "heat": "hot",
+      "words": [
+        "tea",
+        "soup",
+        "stew",
+        "broth",
+        "pasta",
+        "noodle",
+        "porridge",
+        "chowder",
+        "curry",
+        "risotto",
+        "boil",
+        "coffee",
+        "cocoa",
+        "chocolate",
+        "cider",
+        "ramen",
+        "congee",
+        "sauce",
+        "rice"
+      ]
+    }
+  ]
+}
