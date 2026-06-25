@@ -29,6 +29,9 @@ public final class CompatConfig
     public static final ModConfigSpec.DoubleValue SERENE_SEASONS_AUTUMN;
     public static final ModConfigSpec.DoubleValue SERENE_SEASONS_WINTER;
 
+    public static final ModConfigSpec.IntValue KETTLE_MIN_PURITY;
+    public static final ModConfigSpec.BooleanValue WORLD_PURITY_WATER_SOURCES;
+
     public static final ModConfigSpec SPEC;
 
     static
@@ -59,6 +62,13 @@ public final class CompatConfig
         SERENE_SEASONS_SUMMER = defineSeason("summer");
         SERENE_SEASONS_AUTUMN = defineSeason("autumn");
         SERENE_SEASONS_WINTER = defineSeason("winter");
+        BUILDER.pop();
+
+        BUILDER.comment("Farmer's Delight addons and Let's Do mods").push("delight");
+        KETTLE_MIN_PURITY = BUILDER.comment("Lowest water purity that kettles take (they boil it): the HerbalBrews tea kettle, the Brewery brewing stations",
+                        "and any block in the block tag blue_droplets:rejects_dirty_water. Dirtier water stays in the slot or in the hand. 0 = any water").defineInRange("kettleMinPurity", 1, 0, 3);
+        WORLD_PURITY_WATER_SOURCES = BUILDER.comment("Whether taps and sinks (Extra Delight, Farm & Charm) and the Farm & Charm timber well give water with the purity of the world's water",
+                        "at their position, like water taken from a source block there; false = water without a purity, which reads as defaultPurity").define("worldPurityWaterSources", true);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

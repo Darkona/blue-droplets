@@ -9,6 +9,7 @@
   "blue_droplets.purity.slightly_dirty": "Algo sucia",
   "blue_droplets.purity.acceptable": "Aceptable",
   "blue_droplets.purity.purified": "Purificada",
+  "blue_droplets.message.water_too_dirty": "Esta agua está demasiado sucia para eso: hiérvela o fíltrala antes",
   "config.jade.plugin_blue_droplets.purity": "Pureza del agua",
   "attribute.name.blue_droplets.thirst_drain": "Consumo de sed",
   "block.blue_droplets.sand_filter": "Filtro de arena",

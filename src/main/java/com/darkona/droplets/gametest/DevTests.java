@@ -35,6 +35,10 @@ public class DevTests
         helper.assertTrue(row(rows, "minecraft:golden_apple").startsWith("minecraft:golden_apple,minecraft,false,4,9.60,\"minecraft:regeneration,100,1,1.00;minecraft:absorption,2400,0,1.00\",true,"),
                 "golden apple row: " + row(rows, "minecraft:golden_apple"));
         helper.assertTrue(row(rows, "minecraft:oak_log").contains("minecraft:logs"), "tags of the oak log");
+
+        List<String> all = ItemDump.rows(Set.of(ItemDump.ALL));
+        helper.assertFalse(row(all, "minecraft:apple").isEmpty(), "* leaves out minecraft");
+        helper.assertFalse(row(all, "blue_droplets:terracotta_water_bowl").isEmpty(), "* leaves out blue_droplets");
         helper.succeed();
     }
 

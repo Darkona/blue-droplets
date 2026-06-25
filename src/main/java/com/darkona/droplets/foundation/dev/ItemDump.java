@@ -19,16 +19,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * {@code /blue_droplets dev dump_items <namespace>...}, development only: one CSV row per item of those namespaces with
- * its food values, effects, tags and the thirst values Blue Droplets resolves today. Input for the data scripts.
+ * {@code /blue_droplets dev dump_items <namespace>...}, development only: one CSV row per item of those namespaces
+ * ({@code *}: every namespace with food or drinks) with its food values, effects, tags and the thirst values Blue
+ * Droplets resolves today. Input for the data scripts.
  */
 public final class ItemDump
 {
+    /** Namespace argument for every namespace with food or drinks. */
+    public static final String ALL = "*";
     public static final String HEADER = "id,mod,is_drink,nutrition,saturation,effects,always_edible,current_thirst,current_quenched,tags";
 
     private ItemDump() {}
@@ -55,13 +60,29 @@ public final class ItemDump
      */
     public static List<String> rows(Collection<String> namespaces)
     {
+        Set<String> wanted = namespaces.contains(ALL) ? consumableNamespaces() : Set.copyOf(namespaces);
         List<String> lines = new ArrayList<>();
         lines.add(HEADER);
         BuiltInRegistries.ITEM.keySet().stream()
-                .filter(id -> namespaces.contains(id.getNamespace()))
+                .filter(id -> wanted.contains(id.getNamespace()))
                 .sorted()
                 .forEach(id -> lines.add(row(id, BuiltInRegistries.ITEM.get(id))));
         return lines;
+    }
+
+    /**
+     * Namespaces with at least one item that is eaten or drunk, or that Blue Droplets gives thirst values.
+     */
+    private static Set<String> consumableNamespaces()
+    {
+        Set<String> namespaces = new HashSet<>();
+        for (ResourceLocation id : BuiltInRegistries.ITEM.keySet())
+        {
+            ItemStack stack = BuiltInRegistries.ITEM.get(id).getDefaultInstance();
+            if (stack.getFoodProperties(null) != null || stack.getUseAnimation() == UseAnim.DRINK || WaterPurity.isWaterFilledContainer(stack) || ThirstHelper.valuesOf(stack) != null)
+                namespaces.add(id.getNamespace());
+        }
+        return namespaces;
     }
 
     private static String row(ResourceLocation id, Item item)

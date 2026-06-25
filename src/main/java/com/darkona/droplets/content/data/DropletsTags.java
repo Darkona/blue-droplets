@@ -23,6 +23,8 @@ public final class DropletsTags
     public static final TagKey<Item> PURITY_CONTAINERS = TagKey.create(Registries.ITEM, BlueDroplets.asResource("purity_containers"));
     /** Blocks that heat a water cauldron above them: its water comes out with purity 2 instead of 1; blocks with a {@code lit} property only when lit. */
     public static final TagKey<Block> CAULDRON_HEAT_SOURCES = TagKey.create(Registries.BLOCK, BlueDroplets.asResource("cauldron_heat_sources"));
+    /** Blocks filled with water by clicking that boil it, e.g. kettles: they refuse water below {@code compat.toml} {@code delight.kettleMinPurity}. */
+    public static final TagKey<Block> REJECTS_DIRTY_WATER = TagKey.create(Registries.BLOCK, BlueDroplets.asResource("rejects_dirty_water"));
     /** Items that never restore thirst, whatever the config, datapacks or other mods say. */
     public static final TagKey<Item> NO_THIRST = TagKey.create(Registries.ITEM, BlueDroplets.asResource("no_thirst"));
     /** Items that take the {@code salty} penalties of {@code items.toml} when nothing else gives them values. */
