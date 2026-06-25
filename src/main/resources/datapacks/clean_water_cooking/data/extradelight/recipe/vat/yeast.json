@@ -1,0 +1,62 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "extradelight"
+    }
+  ],
+  "type": "extradelight:vat",
+  "fluids": {
+    "type": "neoforge:difference",
+    "base": {
+      "fluid": "minecraft:water"
+    },
+    "subtracted": {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "type": "neoforge:components",
+          "fluids": [
+            "minecraft:water"
+          ],
+          "components": {
+            "blue_droplets:purity": 0
+          }
+        },
+        {
+          "type": "neoforge:components",
+          "fluids": [
+            "minecraft:water"
+          ],
+          "components": {
+            "blue_droplets:purity": 1
+          }
+        }
+      ]
+    },
+    "amount": 1000
+  },
+  "ingredients": [
+    {
+      "tag": "c:fruit"
+    }
+  ],
+  "result": {
+    "count": 16,
+    "id": "extradelight:yeast"
+  },
+  "stage_ingredients": [
+    {
+      "ingredient": {
+        "item": "extradelight:yeast"
+      },
+      "lid": false,
+      "time": 168000
+    }
+  ],
+  "stages": 1,
+  "usedItem": {
+    "count": 16,
+    "id": "minecraft:glass_bottle"
+  }
+}

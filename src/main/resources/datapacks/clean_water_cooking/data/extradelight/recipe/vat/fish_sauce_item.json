@@ -1,0 +1,62 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "extradelight"
+    }
+  ],
+  "type": "extradelight:vat",
+  "fluids": {
+    "type": "neoforge:difference",
+    "base": {
+      "fluid": "minecraft:water"
+    },
+    "subtracted": {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "type": "neoforge:components",
+          "fluids": [
+            "minecraft:water"
+          ],
+          "components": {
+            "blue_droplets:purity": 0
+          }
+        },
+        {
+          "type": "neoforge:components",
+          "fluids": [
+            "minecraft:water"
+          ],
+          "components": {
+            "blue_droplets:purity": 1
+          }
+        }
+      ]
+    },
+    "amount": 250
+  },
+  "ingredients": [
+    {
+      "tag": "c:foods/raw_fish"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "extradelight:fish_sauce_item"
+  },
+  "stage_ingredients": [
+    {
+      "ingredient": {
+        "tag": "c:salt"
+      },
+      "lid": true,
+      "time": 336000
+    }
+  ],
+  "stages": 1,
+  "usedItem": {
+    "count": 1,
+    "id": "minecraft:glass_bottle"
+  }
+}

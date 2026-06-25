@@ -1,0 +1,416 @@
+{
+  "values": [
+    {
+      "id": "brewery:pretzel",
+      "required": false
+    },
+    {
+      "id": "brewery:sausage",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_ak",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_carrasconlabel",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_cristelwalker",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_highland_hearth",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_jamesons_malt",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_jojannik",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_lilitusinglemalt",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_maggoallan",
+      "required": false
+    },
+    {
+      "id": "brewery:whiskey_smokey_reverie",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:bloody_mary",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:egg_grog",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:flaxen_cheese_wedge",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:ham_and_cheese_sandwich",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:jerky",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:kimchi",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:kippers",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:pickled_pickles",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:red_rum",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:saccharine_rum",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:scarlet_cheese_wedge",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:vodka",
+      "required": false
+    },
+    {
+      "id": "brewinandchewin:withering_dross",
+      "required": false
+    },
+    {
+      "id": "endersdelight:steak_fries",
+      "required": false
+    },
+    {
+      "id": "extradelight:apple_chips",
+      "required": false
+    },
+    {
+      "id": "extradelight:bacon_cheeseburger",
+      "required": false
+    },
+    {
+      "id": "extradelight:bacon_egg_cheese_sandwich",
+      "required": false
+    },
+    {
+      "id": "extradelight:bacon_egg_pie_slice",
+      "required": false
+    },
+    {
+      "id": "extradelight:bacon_egg_sandwich",
+      "required": false
+    },
+    {
+      "id": "extradelight:blood_chocolate_chips",
+      "required": false
+    },
+    {
+      "id": "extradelight:blood_chocolate_dipped_bacon",
+      "required": false
+    },
+    {
+      "id": "extradelight:blood_chocolate_dipped_graham_cracker",
+      "required": false
+    },
+    {
+      "id": "extradelight:caramel_popcorn",
+      "required": false
+    },
+    {
+      "id": "extradelight:cheese",
+      "required": false
+    },
+    {
+      "id": "extradelight:cheese_sandwich",
+      "required": false
+    },
+    {
+      "id": "extradelight:cheese_souffle",
+      "required": false
+    },
+    {
+      "id": "extradelight:cheeseburger_pickle",
+      "required": false
+    },
+    {
+      "id": "extradelight:chili_cheese_cornbread_muffin",
+      "required": false
+    },
+    {
+      "id": "extradelight:crackers",
+      "required": false
+    },
+    {
+      "id": "extradelight:dark_chocolate_chips",
+      "required": false
+    },
+    {
+      "id": "extradelight:dark_chocolate_dipped_bacon",
+      "required": false
+    },
+    {
+      "id": "extradelight:dark_chocolate_dipped_graham_cracker",
+      "required": false
+    },
+    {
+      "id": "extradelight:dried_chili",
+      "required": false
+    },
+    {
+      "id": "extradelight:dried_fruit",
+      "required": false
+    },
+    {
+      "id": "extradelight:fish_chips",
+      "required": false
+    },
+    {
+      "id": "extradelight:fish_sauce_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:french_fries",
+      "required": false
+    },
+    {
+      "id": "extradelight:gherkin_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:graham_cracker",
+      "required": false
+    },
+    {
+      "id": "extradelight:grilled_cheese",
+      "required": false
+    },
+    {
+      "id": "extradelight:jerky",
+      "required": false
+    },
+    {
+      "id": "extradelight:kimchi_fried_rice",
+      "required": false
+    },
+    {
+      "id": "extradelight:kimchi_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:macaroni_cheese",
+      "required": false
+    },
+    {
+      "id": "extradelight:milk_chocolate_chips",
+      "required": false
+    },
+    {
+      "id": "extradelight:milk_chocolate_dipped_bacon",
+      "required": false
+    },
+    {
+      "id": "extradelight:milk_chocolate_dipped_graham_cracker",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickle_juice",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickled_beet_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickled_carrot_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickled_egg_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickled_fish_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickled_ginger",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickled_onion_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickled_rind_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:pickled_sausage_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:popcorn",
+      "required": false
+    },
+    {
+      "id": "extradelight:potato_chips",
+      "required": false
+    },
+    {
+      "id": "extradelight:salami_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:salami_mix",
+      "required": false
+    },
+    {
+      "id": "extradelight:sauerkraut_and_sausage",
+      "required": false
+    },
+    {
+      "id": "extradelight:sausage_roll",
+      "required": false
+    },
+    {
+      "id": "extradelight:seaweed_crisps",
+      "required": false
+    },
+    {
+      "id": "extradelight:soy_sauce_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:steak_pickled_onion_pie_slice",
+      "required": false
+    },
+    {
+      "id": "extradelight:unripe_salami_item",
+      "required": false
+    },
+    {
+      "id": "extradelight:white_chocolate_chips",
+      "required": false
+    },
+    {
+      "id": "extradelight:white_chocolate_dipped_bacon",
+      "required": false
+    },
+    {
+      "id": "extradelight:white_chocolate_dipped_graham_cracker",
+      "required": false
+    },
+    {
+      "id": "extradelight:yeast_spread",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:bacon",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:bacon_with_eggs",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:baked_lamb_ham",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:butter",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:chicken_parts",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:chicken_wrapped_in_bacon",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:lamb_ham",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:sausage_with_oat_patty",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:bacon",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:bacon_and_eggs",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:bacon_sandwich",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:chicken_cuts",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:cooked_bacon",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:ham",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:honey_glazed_ham",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:raw_pasta",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:smoked_ham",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:wheat_dough",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:dried_black_tea",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:dried_green_tea",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:dried_oolong_tea",
+      "required": false
+    },
+    {
+      "id": "oceansdelight:braised_sea_pickle",
+      "required": false
+    }
+  ]
+}
