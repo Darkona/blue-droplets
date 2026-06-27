@@ -8,7 +8,7 @@ Solo entran comida (nutrition no vacio) y bebidas (is_drink true). Columnas:
                los valores salen de "categories" en rules/items.json en vez de las palabras
   notes        libre; rule = como salio el valor; auto = el ultimo valor que dio la formula
 Al volver a correr, una fila cuyos valores siguen siendo los de la formula se actualiza con la formula nueva;
-una fila que Javier toco no se cambia (salvo con --force). notes nunca se pisa; category solo la cambia categories.csv.
+una fila que Javier toco (o con auto = manual) no se cambia (salvo con --force). notes nunca se pisa; category solo la cambia categories.csv.
 """
 import argparse
 import csv
@@ -241,24 +241,34 @@ def compute(row, steps, R, category=""):
     if _match(R["no_thirst"], toks, tags, path):
         return 0, 0, False, True, "no_thirst"
     cat = R["categories"].get(category) if category else None
-    salty = None
-    for lvl in ("strong", "medium", "light"):
-        if cat is None and _match(R["salty"][lvl], toks, tags, path):
-            salty = lvl
-            break
+    if cat is not None and "salty_grade" in cat:
+        salty = next((l for l in ("strong", "medium", "light") if _match(R["salty"][l], toks, tags, path)), cat["salty_grade"])
+        cat = None
+    else:
+        salty = None
+        for lvl in ("strong", "medium", "light"):
+            if cat is None and _match(R["salty"][lvl], toks, tags, path):
+                salty = lvl
+                break
     exempt = False
-    if cat is not None and cat["thirst"] < 0:
+    if cat is not None and cat["thirst"] < 0 and not cat.get("use_keywords"):
         t, q = cat["thirst"], cat["quenched"]
         why.append("cat:" + category)
     elif salty:
         t, q = R["salty"][salty]["thirst"], R["salty"][salty]["quenched"]
-        why.append("salty:" + salty)
+        why.append(("cat:%s " % category if category else "") + "salty:" + salty)
     else:
         classes, default = (R["drink_classes"], R["drink_default"]) if drink else (R["food_classes"], R["food_default"])
-        if cat is not None:
+        cls = None
+        if cat is not None and cat.get("use_keywords"):
+            allowed = cat.get("keyword_classes")
+            cls = next((k for k in classes if (allowed is None or k["name"] in allowed) and _match(k, toks, tags, path)), None)
+            if cls is not None:
+                why.append("cat:%s>%s" % (category, cls["name"]))
+        if cls is None and cat is not None:
             cls = dict(cat, name=category)
             why.append("cat:" + category)
-        else:
+        elif cls is None:
             cls = next((k for k in classes if _match(k, toks, tags, path)), default)
             why.append(("drink:" if drink else "food:") + cls["name"])
         t, q = cls["thirst"], cls["quenched"]
@@ -324,6 +334,15 @@ def main():
     old = {r["item_id"]: r for r in c.read_csv(os.path.join(c.DATA, "items.csv"))}
     cats = {r["item_id"]: r["category"].strip() for r in c.read_csv(os.path.join(c.DATA, "categories.csv"))}
     unknown = set()
+    import json as _json
+    try:
+        cur_map = _json.load(open(os.path.join(c.REPO, "src", "main", "resources", "data", "blue_droplets",
+                                               "data_maps", "item", "drinks.json"), encoding="utf-8"))["values"]
+    except (OSError, ValueError, KeyError):
+        cur_map = {}
+    no_recipes = sorted({r["mod"] for r in raw} - {m["id"] for m in mods} - {"minecraft"})
+    if no_recipes:
+        print("aviso: sin recetas en mods.json (craft_steps = 0): " + ", ".join(no_recipes))
     rows = []
     kept = 0
     for r in raw:
@@ -337,13 +356,28 @@ def main():
                "craft_steps": steps, "thirst": t, "quenched": q, "salty": sn(salty), "no_thirst": sn(nothirst),
                "category": cat, "notes": "", "rule": rule, "auto": auto}
         prev = old.get(r["id"])
+        if r["id"] in R["manual_ids"]:
+            cur = cur_map.get(r["id"], {})
+            if prev is not None:
+                cur = {"thirst": prev["thirst"], "quenched": prev["quenched"]}
+            elif not cur and r["current_thirst"] != "":
+                cur = {"thirst": r["current_thirst"], "quenched": r["current_quenched"]}
+            if cur:
+                row.update({"thirst": cur["thirst"], "quenched": cur["quenched"], "salty": sn(int(cur["thirst"]) < 0),
+                            "no_thirst": "no"})
+            row.update({"auto": "manual", "rule": "manual (fijo por el codigo o por Javier)"})
+            if prev is not None:
+                row["notes"] = prev["notes"]
+            rows.append(row)
+            kept += 1
+            continue
         if prev is None:
             if r["current_thirst"] != "":
                 row["notes"] = "antes: %s/%s" % (r["current_thirst"], r["current_quenched"])
         else:
             row["category"], row["notes"] = cat or prev["category"], prev["notes"]
             now = "%s/%s/%s/%s" % (prev["thirst"], prev["quenched"], prev["salty"], prev["no_thirst"])
-            if not args.force and now != prev["auto"]:
+            if not args.force and (prev["auto"] == "manual" or now != prev["auto"]):
                 for k in ("thirst", "quenched", "salty", "no_thirst"):
                     row[k] = prev[k]
                 kept += 1

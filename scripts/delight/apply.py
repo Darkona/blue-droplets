@@ -3,7 +3,9 @@
 
   datapacks/clean_water_cooking   una receta sobrescrita por fila activa de data/recipes.csv
   datapacks/purify_cooking_pot    hervir agua en la olla de Farmer's Delight (derivado de purify_campfire)
-  data/blue_droplets/data_maps/item/drinks.json   entradas de data/items.csv (solo las claves que estan en el CSV)
+  data/blue_droplets/data_maps/item/drinks.json   entradas de data/items.csv de TODOS los mods, vanilla y
+                    blue_droplets incluidos (sin condicion los dos ultimos, con mod_loaded el resto). Las claves
+                    que no estan en el CSV (tags, mods no volcados) se dejan como estan
   data/blue_droplets/tags/item/salty.json y no_thirst.json   desde data/items.csv
 
   --check          no escribe: compara y sale con 1 si algo difiere
@@ -168,6 +170,9 @@ def build_drinks(rows, problems):
         if r["mod"] not in ("minecraft", "blue_droplets"):
             entry["neoforge:conditions"] = [mod_loaded(r["mod"])]
         entry["thirst"], entry["quenched"] = th, qu
+        for k, v in cur.get(r["item_id"], {}).items():  # campos que el CSV no maneja (por ejemplo purity)
+            if k not in ("thirst", "quenched", "neoforge:conditions"):
+                entry[k] = v
         gen.append((r["item_id"], entry))
     for k, v in gen:
         values[k] = v
@@ -283,9 +288,11 @@ def main():
         print(("diferencia: " if args.check else "escrito: ") + d)
     if not diffs:
         print("sin cambios")
-    print("\nFalta en Java (no lo toco): registrar en BlueDroplets.addPacks\n"
-          '    addPack(event, "clean_water_cooking", "Clean water for cooking recipes", PackSource.BUILT_IN);\n'
-          '    addPack(event, "purify_cooking_pot", "Water purification: cooking pot", PackSource.BUILT_IN);')
+    java = os.path.join(c.REPO, "src", "main", "java", "com", "darkona", "droplets", "BlueDroplets.java")
+    src = open(java, encoding="utf-8").read() if os.path.exists(java) else ""
+    missing = [p for p in ("clean_water_cooking", "purify_cooking_pot") if '"%s"' % p not in src]
+    if missing:
+        print("\nFalta en Java (no lo toco): registrar en BlueDroplets.addPacks (PackSource.BUILT_IN): " + ", ".join(missing))
     if problems or (args.check and diffs):
         return 1
     return 0

@@ -5,10 +5,6 @@
       "required": false
     },
     {
-      "id": "brewery:sausage",
-      "required": false
-    },
-    {
       "id": "brewery:whiskey_ak",
       "required": false
     },
@@ -57,10 +53,6 @@
       "required": false
     },
     {
-      "id": "brewinandchewin:ham_and_cheese_sandwich",
-      "required": false
-    },
-    {
       "id": "brewinandchewin:jerky",
       "required": false
     },
@@ -101,38 +93,6 @@
       "required": false
     },
     {
-      "id": "extradelight:apple_chips",
-      "required": false
-    },
-    {
-      "id": "extradelight:bacon_cheeseburger",
-      "required": false
-    },
-    {
-      "id": "extradelight:bacon_egg_cheese_sandwich",
-      "required": false
-    },
-    {
-      "id": "extradelight:bacon_egg_pie_slice",
-      "required": false
-    },
-    {
-      "id": "extradelight:bacon_egg_sandwich",
-      "required": false
-    },
-    {
-      "id": "extradelight:blood_chocolate_chips",
-      "required": false
-    },
-    {
-      "id": "extradelight:blood_chocolate_dipped_bacon",
-      "required": false
-    },
-    {
-      "id": "extradelight:blood_chocolate_dipped_graham_cracker",
-      "required": false
-    },
-    {
       "id": "extradelight:caramel_popcorn",
       "required": false
     },
@@ -141,51 +101,7 @@
       "required": false
     },
     {
-      "id": "extradelight:cheese_sandwich",
-      "required": false
-    },
-    {
-      "id": "extradelight:cheese_souffle",
-      "required": false
-    },
-    {
-      "id": "extradelight:cheeseburger_pickle",
-      "required": false
-    },
-    {
-      "id": "extradelight:chili_cheese_cornbread_muffin",
-      "required": false
-    },
-    {
-      "id": "extradelight:crackers",
-      "required": false
-    },
-    {
-      "id": "extradelight:dark_chocolate_chips",
-      "required": false
-    },
-    {
-      "id": "extradelight:dark_chocolate_dipped_bacon",
-      "required": false
-    },
-    {
-      "id": "extradelight:dark_chocolate_dipped_graham_cracker",
-      "required": false
-    },
-    {
-      "id": "extradelight:dried_chili",
-      "required": false
-    },
-    {
-      "id": "extradelight:dried_fruit",
-      "required": false
-    },
-    {
-      "id": "extradelight:fish_chips",
-      "required": false
-    },
-    {
-      "id": "extradelight:fish_sauce_item",
+      "id": "extradelight:devilled_sausages",
       "required": false
     },
     {
@@ -197,43 +113,11 @@
       "required": false
     },
     {
-      "id": "extradelight:graham_cracker",
-      "required": false
-    },
-    {
-      "id": "extradelight:grilled_cheese",
-      "required": false
-    },
-    {
       "id": "extradelight:jerky",
       "required": false
     },
     {
-      "id": "extradelight:kimchi_fried_rice",
-      "required": false
-    },
-    {
       "id": "extradelight:kimchi_item",
-      "required": false
-    },
-    {
-      "id": "extradelight:macaroni_cheese",
-      "required": false
-    },
-    {
-      "id": "extradelight:milk_chocolate_chips",
-      "required": false
-    },
-    {
-      "id": "extradelight:milk_chocolate_dipped_bacon",
-      "required": false
-    },
-    {
-      "id": "extradelight:milk_chocolate_dipped_graham_cracker",
-      "required": false
-    },
-    {
-      "id": "extradelight:pickle_juice",
       "required": false
     },
     {
@@ -277,6 +161,10 @@
       "required": false
     },
     {
+      "id": "extradelight:preserved_lemon_item",
+      "required": false
+    },
+    {
       "id": "extradelight:salami_item",
       "required": false
     },
@@ -285,11 +173,7 @@
       "required": false
     },
     {
-      "id": "extradelight:sauerkraut_and_sausage",
-      "required": false
-    },
-    {
-      "id": "extradelight:sausage_roll",
+      "id": "extradelight:sauerkraut_item",
       "required": false
     },
     {
@@ -297,11 +181,7 @@
       "required": false
     },
     {
-      "id": "extradelight:soy_sauce_item",
-      "required": false
-    },
-    {
-      "id": "extradelight:steak_pickled_onion_pie_slice",
+      "id": "extradelight:sliced_gherkin_item",
       "required": false
     },
     {
@@ -309,71 +189,7 @@
       "required": false
     },
     {
-      "id": "extradelight:white_chocolate_chips",
-      "required": false
-    },
-    {
-      "id": "extradelight:white_chocolate_dipped_bacon",
-      "required": false
-    },
-    {
-      "id": "extradelight:white_chocolate_dipped_graham_cracker",
-      "required": false
-    },
-    {
-      "id": "extradelight:yeast_spread",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:bacon",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:bacon_with_eggs",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:baked_lamb_ham",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:butter",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:chicken_parts",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:chicken_wrapped_in_bacon",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:lamb_ham",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:sausage_with_oat_patty",
-      "required": false
-    },
-    {
-      "id": "farmersdelight:bacon",
-      "required": false
-    },
-    {
-      "id": "farmersdelight:bacon_and_eggs",
-      "required": false
-    },
-    {
-      "id": "farmersdelight:bacon_sandwich",
-      "required": false
-    },
-    {
-      "id": "farmersdelight:chicken_cuts",
-      "required": false
-    },
-    {
-      "id": "farmersdelight:cooked_bacon",
+      "id": "farm_and_charm:rotten_tomato",
       "required": false
     },
     {
@@ -385,27 +201,23 @@
       "required": false
     },
     {
-      "id": "farmersdelight:raw_pasta",
-      "required": false
-    },
-    {
       "id": "farmersdelight:smoked_ham",
       "required": false
     },
     {
-      "id": "farmersdelight:wheat_dough",
+      "id": "minecraft:poisonous_potato",
       "required": false
     },
     {
-      "id": "herbalbrews:dried_black_tea",
+      "id": "minecraft:pufferfish",
       "required": false
     },
     {
-      "id": "herbalbrews:dried_green_tea",
+      "id": "minecraft:rotten_flesh",
       "required": false
     },
     {
-      "id": "herbalbrews:dried_oolong_tea",
+      "id": "minecraft:spider_eye",
       "required": false
     },
     {

@@ -1,9 +1,6 @@
 {
   "_comment": "Formula inicial de thirst/quenched (puntos: 2 puntos = 1 gotita; el agua de 250 mB = 4). Es un punto de partida: Javier la ajusta aqui y vuelve a correr prepare_items.py. Las palabras se comparan con las palabras completas de la ruta del id (separadas por no-letras) y las tags con las tags del item.",
-  "exclude_mods": [
-    "minecraft",
-    "blue_droplets"
-  ],
+  "exclude_mods": [],
   "recipe_extra_jars": [
     "build/moddev/artifacts/neoforge-21.1.252-client-extra-aka-minecraft-resources.jar",
     "build/moddev/artifacts/neoforge-21.1.252.jar"
@@ -16,7 +13,7 @@
   "food_max_thirst": 4,
   "drink_max_thirst": 4,
   "drink_max_thirst_complex": 6,
-  "min_thirst": -4,
+  "min_thirst": -20,
   "_order": "1) no_thirst 2) salado 3) clase de bebida o comida 4) bonus por pasos (solo bebidas) 5) penalizacion por efectos 6) topes",
   "no_thirst": {
     "words": [],
@@ -277,6 +274,22 @@
       "quenched": 2
     },
     {
+      "name": "crisp_veg",
+      "words": [
+        "carrot",
+        "beetroot",
+        "radish",
+        "turnip",
+        "celery",
+        "pepper",
+        "zucchini",
+        "pumpkin"
+      ],
+      "tags": [],
+      "thirst": 1,
+      "quenched": 1
+    },
+    {
       "name": "moist_dessert",
       "words": [
         "custard",
@@ -382,11 +395,11 @@
         "rot"
       ],
       "rotten_penalty": 2,
-      "raw_penalty": 1
+      "raw_penalty": 0
     }
   },
   "categories": {
-    "_comment": "Valores por categoria (data/categories.csv, la llena el agente de categorias). Si un item tiene categoria conocida, manda sobre las palabras de drink_classes/food_classes/salty. Los topes, el bonus por pasos (bebidas) y los efectos se siguen aplicando. Una categoria que no este aqui se ignora con un aviso.",
+    "_comment": "Valores por categoria (data/categories.csv, la llena el agente de categorias). Con categoria conocida manda sobre las palabras, salvo: use_keywords = antes se prueban las clases de palabras (drink_classes o food_classes; keyword_classes las limita por nombre) y la categoria es el valor por defecto; salty_grade = el grado de sal sale de las palabras de 'salty' y, si ninguna coincide, es este. Los topes, el bonus por pasos (bebidas) y los efectos se siguen aplicando. Una categoria que no este aqui se ignora con un aviso.",
     "water": {
       "thirst": 4,
       "quenched": 5
@@ -467,6 +480,96 @@
     "salty_light": {
       "thirst": -1,
       "quenched": -1
+    },
+    "alcohol": {
+      "use_keywords": true,
+      "thirst": 1,
+      "quenched": 0
+    },
+    "drink_simple": {
+      "use_keywords": true,
+      "thirst": 3,
+      "quenched": 4
+    },
+    "drink_crafted": {
+      "use_keywords": true,
+      "thirst": 2,
+      "quenched": 3
+    },
+    "fresh_produce": {
+      "use_keywords": true,
+      "keyword_classes": [
+        "melon",
+        "fruit",
+        "salad",
+        "crisp_veg"
+      ],
+      "thirst": 2,
+      "quenched": 2
+    },
+    "sweet": {
+      "use_keywords": true,
+      "keyword_classes": [
+        "frozen",
+        "moist_dessert"
+      ],
+      "thirst": 0,
+      "quenched": 0
+    },
+    "baked_sweet": {
+      "thirst": 0,
+      "quenched": 0
+    },
+    "meal": {
+      "thirst": 0,
+      "quenched": 0
+    },
+    "ingredient": {
+      "thirst": 0,
+      "quenched": 0
+    },
+    "meat_cooked": {
+      "thirst": 0,
+      "quenched": 0
+    },
+    "meat_raw": {
+      "thirst": 0,
+      "quenched": 0
+    },
+    "seafood": {
+      "thirst": 0,
+      "quenched": 0
+    },
+    "stew": {
+      "thirst": 2,
+      "quenched": 2
+    },
+    "salty": {
+      "salty_grade": "medium"
+    },
+    "dry": {
+      "thirst": 0,
+      "quenched": 0
+    },
+    "rotten_or_poison": {
+      "thirst": -1,
+      "quenched": -1
+    },
+    "non_food": {
+      "thirst": 0,
+      "quenched": 0
+    },
+    "unclassified": {
+      "use_keywords": true,
+      "thirst": 0,
+      "quenched": 0
     }
-  }
+  },
+  "_manual": "Items cuyos valores fija Javier o el codigo (agua). Al crear la fila se toman de drinks.json (o del volcado si no estan) y la columna auto queda en 'manual': prepare_items.py nunca los cambia. Escribe 'manual' en la columna auto de cualquier fila para congelarla.",
+  "manual_ids": [
+    "minecraft:potion",
+    "minecraft:water_bucket",
+    "blue_droplets:terracotta_water_bowl",
+    "cold_sweat:filled_waterskin"
+  ]
 }
