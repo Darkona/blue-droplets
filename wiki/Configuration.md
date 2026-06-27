@@ -155,7 +155,7 @@ Thirst and quenched drunk past full (items, hand drinking, rain, `DropletsAPI.dr
 | Key | Default | Meaning |
 |---|---|---|
 | `enabled` | `true` | `false` turns the mechanic off (overflow is no longer counted) |
-| `threshold` | `20` | Overflow that causes Overhydrated (1-1000). A water bottle (6/8) drunk while full adds 14 |
+| `threshold` | `20` | Overflow that causes Overhydrated (1-1000). A water bottle (4/5) drunk while full adds 9 |
 | `decayPerSecond` | `1.0` | Overflow lost per second (0-100), applied once a second |
 | `durationTicks` | `400` | Duration of Overhydrated (20-12000) |
 | `nausea` | `true` | Also 5 seconds of Nausea when it is applied |
@@ -175,9 +175,9 @@ The level is I, plus one per half threshold past it, or one more than the active
 | `drinking.rainMaxPitch` | `-80` | How far up to look (-90 = straight up) |
 | `drinking.rainIntervalTicks` | `11` | Ticks between two sips |
 | `drinking.rainThirst` / `rainQuenched` | `1` / `1` | Restored per sip |
-| `hand.enabled` | `false` | Drink water in the world by sneaking and right-clicking with an empty hand |
+| `hand.enabled` | `true` | Drink water in the world by sneaking and right-clicking with an empty hand |
 | `hand.bothHandsEmpty` | `true` | Both hands must be empty |
-| `hand.thirst` / `hand.quenched` | `3` / `2` | Restored per sip |
+| `hand.thirst` / `hand.quenched` | `1` / `1` | Restored per sip |
 | `hand.cooldownTicks` | `10` | Minimum ticks between two sips |
 | `hand.effects` | `true` | Swing the arm and splash particles when drinking by hand (visual only) |
 | `death.respawnThirst` / `respawnQuenched` | `20` / `5` | Values after respawning; `-1` keeps what the player died with |
@@ -192,6 +192,8 @@ The maximum thirst stays 20: the HUD, its overlays and commands assume it.
 | `general.enabled` | `true` | Water has a purity at all. `false` turns the whole purity mechanic off and leaves only thirst: see [Thirst only](#thirst-only-purity-off) |
 | `general.defaultPurity` | `2` | Purity of water with none stored |
 | `general.quenchWhenDebuffed` | `true` | Drinking still restores thirst when a purity effect blocks hydration |
+| `purifiedWater.thirstBonus` | `2` | Thirst added when drinking purified water (purity 3): a bottle then gives 6 instead of 4. Any water counts (bottles, buckets, bowls, drinking by hand, the Traveler's Backpack hose, Cold Sweat waterskins); other drinks with a purity do not. Sent to clients; tooltips and the HUD preview include it. Nothing with `general.enabled = false` |
+| `purifiedWater.quenchedBonus` | `3` | Quenched added when drinking purified water: a bottle then gives 8 instead of 5 |
 | `world.*` | | See [Water purity in the world](Modpack-Makers#water-purity-in-the-world) |
 
 ### Thirst only (purity off)
@@ -255,6 +257,8 @@ An ultra-warm dimension (the Nether) always counts as hot.
 | `sereneseasons.tropicalDrySeasonMultiplier` | `1.1` | With `enabled`: multiplies thirst loss in a tropical biome's dry season. The temperature is not changed; tropical biomes are hot all year and that already counts |
 | `sereneseasons.tropicalWetSeasonMultiplier` | `1.0` | With `enabled`: multiplies thirst loss in a tropical biome's wet season. The temperature is not changed |
 | `sereneseasons.springMultiplier`, `summerMultiplier`, `autumnMultiplier`, `winterMultiplier` | `1.0` | With `enabled`: multiply thirst loss in that season, in biomes with the four seasons. The temperature is not changed: it is Serene Seasons' seasonal temperature. With Serene Seasons' default config summer does not warm biomes, so `summerMultiplier` is the simple way to make summer thirstier |
+| `delight.kettleMinPurity` | `1` | Lowest water purity that kettles take, because they boil it: the HerbalBrews tea kettle (dirtier water stays in its water slot) and the Brewery brewing stations or any block in the block tag `blue_droplets:rejects_dirty_water` (clicking with dirtier water does nothing and says why). `0` = any water. Nothing with purity off |
+| `delight.worldPurityWaterSources` | `true` | Taps and sinks of Extra Delight, the Let's Do sink and the Farm & Charm timber well give water with the purity of the world's water where they stand, as from a source block there (`/blue_droplets debug purity` at that spot shows it). `false` = water without a purity, read as `defaultPurity` |
 
 ## `items.toml`
 
