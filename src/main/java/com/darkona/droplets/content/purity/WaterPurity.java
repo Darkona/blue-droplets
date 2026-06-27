@@ -395,7 +395,14 @@ public class WaterPurity
      */
     public static int getWaterPurity(Level level, BlockPos pos, boolean source, @Nullable List<String> trace)
     {
-        Holder<Biome> biome = level.getBiome(pos);
+        return getWaterPurity(level, level.getBiome(pos), pos, source, trace);
+    }
+
+    /**
+     * Same, for a given {@code biome} instead of the one at {@code pos} (the position still gives the altitude).
+     */
+    public static int getWaterPurity(Level level, Holder<Biome> biome, BlockPos pos, boolean source, @Nullable List<String> trace)
+    {
         int salt = PurityConfig.SALT_WATER_PURITY.get();
         if (salt >= MIN_PURITY && biome.is(DropletsTags.SALT_WATER))
         {

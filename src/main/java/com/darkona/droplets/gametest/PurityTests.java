@@ -222,4 +222,46 @@ public class PurityTests
         helper.assertTrue(purity >= WaterPurity.MIN_PURITY && purity <= WaterPurity.MAX_PURITY, "world water purity " + purity);
         helper.succeed();
     }
+
+    private static int biomePurity(GameTestHelper helper, net.minecraft.resources.ResourceKey<net.minecraft.world.level.biome.Biome> biome, boolean source)
+    {
+        var level = helper.getLevel();
+        BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
+        level.setBlockAndUpdate(pos, source ? Blocks.WATER.defaultBlockState() : Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 1));
+        var holder = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME).getHolderOrThrow(biome);
+        return WaterPurity.getWaterPurity(level, holder, pos, source, null);
+    }
+
+    /** Built-in {@code biome_water} data map: swamp cap 1, plains untouched, snowy and taiga base 1, deserts cap 2. */
+    @GameTest(template = "box")
+    public static void defaultBiomeWaterValues(GameTestHelper helper)
+    {
+        // The altitude band of the test position is the plains result with a base of 0 and no flow amount (default 0).
+        int alt = biomePurity(helper, net.minecraft.world.level.biome.Biomes.PLAINS, true);
+        helper.assertTrue(alt == 0 || alt == 1, "altitude delta " + alt);
+        int run = Math.min(3, alt + 1);
+        check(helper, "plains running", biomePurity(helper, net.minecraft.world.level.biome.Biomes.PLAINS, false), run);
+        for (var swamp : List.of(net.minecraft.world.level.biome.Biomes.SWAMP, net.minecraft.world.level.biome.Biomes.MANGROVE_SWAMP))
+        {
+            check(helper, swamp.location() + " still", biomePurity(helper, swamp, true), Math.min(1, alt));
+            check(helper, swamp.location() + " running", biomePurity(helper, swamp, false), 1);
+        }
+        for (var cold : List.of(net.minecraft.world.level.biome.Biomes.SNOWY_PLAINS, net.minecraft.world.level.biome.Biomes.TAIGA,
+                net.minecraft.world.level.biome.Biomes.FROZEN_PEAKS, net.minecraft.world.level.biome.Biomes.FROZEN_RIVER))
+        {
+            check(helper, cold.location() + " still", biomePurity(helper, cold, true), Math.min(3, 1 + alt));
+            check(helper, cold.location() + " running", biomePurity(helper, cold, false), Math.min(3, 2 + alt));
+        }
+        for (var dry : List.of(net.minecraft.world.level.biome.Biomes.DESERT, net.minecraft.world.level.biome.Biomes.BADLANDS))
+        {
+            check(helper, dry.location() + " still", biomePurity(helper, dry, true), alt);
+            check(helper, dry.location() + " running", biomePurity(helper, dry, false), Math.min(2, alt + 1));
+        }
+        helper.succeed();
+    }
+
+    private static void check(GameTestHelper helper, String what, int actual, int expected)
+    {
+        helper.assertTrue(actual == expected, what + ": purity " + actual + ", expected " + expected);
+    }
 }
