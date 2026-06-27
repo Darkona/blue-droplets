@@ -202,10 +202,10 @@ public final class GameplayConfig
         BUILDER.pop();
 
         BUILDER.push("hand");
-        HAND_DRINKING = BUILDER.comment("Whether players can drink water in the world by sneaking and right-clicking with an empty hand").define("enabled", false);
+        HAND_DRINKING = BUILDER.comment("Whether players can drink water in the world by sneaking and right-clicking with an empty hand").define("enabled", true);
         HAND_DRINKING_BOTH_HANDS = BUILDER.comment("Whether both hands must be empty").define("bothHandsEmpty", true);
-        HAND_DRINKING_THIRST = BUILDER.comment("Thirst restored per sip").defineInRange("thirst", 3, 0, 20);
-        HAND_DRINKING_QUENCHED = BUILDER.comment("Quenched restored per sip").defineInRange("quenched", 2, 0, 20);
+        HAND_DRINKING_THIRST = BUILDER.comment("Thirst restored per sip").defineInRange("thirst", 1, 0, 20);
+        HAND_DRINKING_QUENCHED = BUILDER.comment("Quenched restored per sip").defineInRange("quenched", 1, 0, 20);
         HAND_DRINKING_COOLDOWN = BUILDER.comment("Minimum ticks between two sips (20 ticks = 1 second)").defineInRange("cooldownTicks", 10, 0, 1200);
         HAND_DRINKING_EFFECTS = BUILDER.comment("Swing the arm and splash water particles when drinking by hand (visual only)").define("effects", true);
         BUILDER.pop();
