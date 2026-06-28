@@ -32,6 +32,13 @@
             "components": {
               "blue_droplets:purity": 1
             }
+          },
+          {
+            "type": "neoforge:components",
+            "items": "#c:buckets/water",
+            "components": {
+              "blue_droplets:purity": 2
+            }
           }
         ]
       }

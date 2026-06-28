@@ -2,7 +2,7 @@
 """Genera, de forma idempotente, los datos de Blue Droplets a partir de los CSV.
 
   datapacks/clean_water_cooking   una receta sobrescrita por fila activa de data/recipes.csv
-  datapacks/purify_cooking_pot    hervir agua en la olla de Farmer's Delight (derivado de purify_campfire)
+  (los packs purify_* y las recetas de Create los genera scripts/purify/generate.py)
   data/blue_droplets/data_maps/item/drinks.json   entradas de data/items.csv de TODOS los mods, vanilla y
                     blue_droplets incluidos (sin condicion los dos ultimos, con mod_loaded el resto). Las claves
                     que no estan en el CSV (tags, mods no volcados) se dejan como estan
@@ -19,7 +19,6 @@ import sys
 import common as c
 
 PACK_CLEAN = os.path.join(c.PACKS, "clean_water_cooking")
-PACK_POT = os.path.join(c.PACKS, "purify_cooking_pot")
 MAIN_DATA = os.path.join(c.REPO, "src", "main", "resources", "data", "blue_droplets")
 DRINKS = os.path.join(MAIN_DATA, "data_maps", "item", "drinks.json")
 TAG_SALTY = os.path.join(MAIN_DATA, "tags", "item", "salty.json")
@@ -60,8 +59,8 @@ def build_clean(source, problems, info):
         if mp == 0:
             info.append("%s: min_purity 0 = acepta todo, no se escribe" % tag)
             continue
-        if mp not in (1, 2):
-            problems.append("%s: min_purity %d no soportado (1 o 2; el agua sin componente cuenta como 2)" % (tag, mp))
+        if not 1 <= mp <= c.DEFAULT_PURITY:
+            problems.append("%s: min_purity %d no soportado (1 a %d; el agua sin componente cuenta como %d)" % (tag, mp, c.DEFAULT_PURITY, c.DEFAULT_PURITY))
             continue
         if mod not in cache:
             cache[mod] = c.load_recipes(cfg, by_id[mod], source)
@@ -97,43 +96,6 @@ def build_clean(source, problems, info):
         ns, path = rid.split(":", 1)
         files["data/%s/recipe/%s.json" % (ns, path)] = c.dump_json(out)
     files["pack.mcmeta"] = mcmeta("Blue Droplets: recipes of Farmer's Delight addons need clean water")
-    return files
-
-
-# ------------------------------------------------------------------ purify_cooking_pot
-
-def ingredient_of(ing):
-    """Un solo Ingredient: varias alternativas van en neoforge:compound (un array solo admite items o tags)."""
-    if isinstance(ing, list):
-        return ing[0] if len(ing) == 1 else {"type": "neoforge:compound", "children": ing}
-    return ing
-
-
-def build_pot():
-    src = os.path.join(c.PACKS, "purify_campfire", "data", "blue_droplets", "recipe")
-    files = {}
-    for fn in sorted(os.listdir(src)):
-        if not fn.endswith(".json"):
-            continue
-        rec = c.load_json(os.path.join(src, fn))
-        if rec.get("type") != "minecraft:campfire_cooking":
-            continue
-        conds = [x for x in rec["neoforge:conditions"]]
-        conds.append(mod_loaded("farmersdelight"))
-        out = {
-            "neoforge:conditions": conds,
-            "type": "farmersdelight:cooking",
-            "ingredients": [ingredient_of(rec["ingredient"])],
-            "result": rec["result"],
-            "cookingtime": 200,
-            "experience": rec.get("experience", 0.0),
-            "recipe_book_tab": "drinks",
-        }
-        name = fn[:-5].replace("campfire_cooking", "cooking_pot").replace("from_campfire", "from_cooking_pot")
-        if "cooking_pot" not in name:
-            name += "_cooking_pot"
-        files["data/blue_droplets/recipe/%s_manual_only.json" % name] = c.dump_json(out)
-    files["pack.mcmeta"] = mcmeta("Blue Droplets: water purification in the Farmer's Delight cooking pot")
     return files
 
 
@@ -239,7 +201,7 @@ def sync_file(path, text, check, diffs):
 def verify_disk(root, rows, wr, problems):
     """--check: vuelve a comprobar los ficheros que hay en disco (por si alguien los toco a mano)."""
     want = {(r["recipe_id"]): int(r["min_purity"]) for r in rows
-            if c.yes(r["enabled"]) and r["min_purity"] in ("1", "2")}
+            if c.yes(r["enabled"]) and r["min_purity"] in ("1", "2", "3")}
     for rel, p in walk_files(root).items():
         if not rel.startswith("data/") or "/recipe/" not in rel:
             continue
@@ -261,11 +223,8 @@ def main():
 
     problems, info, diffs = [], [], []
     clean = build_clean(args.source, problems, info)
-    pot = build_pot()
     sync_dir(PACK_CLEAN, clean, args.check, diffs)
-    sync_dir(PACK_POT, pot, args.check, diffs)
     print("clean_water_cooking: %d recetas" % (len(clean) - 1))
-    print("purify_cooking_pot:  %d recetas" % (len(pot) - 1))
 
     if args.check:
         wr = c.load_json(os.path.join(c.RULES, "water.json"))

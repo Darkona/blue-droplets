@@ -17,6 +17,8 @@ RULES = os.path.join(HERE, "rules")
 PACKS = os.path.join(REPO, "src", "main", "resources", "datapacks")
 MOD_ID = "blue_droplets"
 PURITY = "blue_droplets:purity"
+MAX_PURITY = 5      # niveles 0..5 (notes/NIVELES-PUREZA.md)
+DEFAULT_PURITY = 3  # el agua sin componente cuenta como 3
 
 RECIPE_FIELDS = ["mod", "recipe_id", "recipe_type", "water_form", "water_amount", "result_id",
                  "result_count", "heat", "min_purity", "enabled", "notes", "recipe_sha"]
@@ -259,7 +261,7 @@ def heat_for(recipe_id, rtype, result_id, hr):
 # ---------------------------------------------------------------- ingredientes de agua limpia
 
 def purity_levels_below(min_purity):
-    """Purezas a restar: todas las menores que el minimo (el agua sin componente cuenta como 2)."""
+    """Purezas a restar: todas las menores que el minimo (el agua sin componente cuenta como DEFAULT_PURITY)."""
     return list(range(0, min_purity))
 
 
@@ -366,7 +368,7 @@ def find_differences(node, out=None):
 
 
 def _samples_for(diff, wr):
-    """Ejemplares de agua que el ingrediente debe distinguir: sin pureza y purezas 0..3."""
+    """Ejemplares de agua que el ingrediente debe distinguir: sin pureza y purezas 0..MAX_PURITY."""
     base = diff["base"]
     subs = diff["subtracted"]["children"]
     first = subs[0] if subs else None
@@ -397,7 +399,7 @@ def verify_diff(diff, expected_min, wr):
     Devuelve una lista de errores (vacia si esta bien)."""
     errs = []
     ident, tags, extra = _samples_for(diff, wr)
-    for purity in (None, 0, 1, 2, 3):
+    for purity in [None] + list(range(0, MAX_PURITY + 1)):
         comps = dict(extra)
         if purity is not None:
             comps[PURITY] = purity

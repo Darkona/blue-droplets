@@ -1,8 +1,8 @@
 {
   "_comment": "Calor de cada receta. Orden: overrides (recipe_id) > keywords (primera que coincida; palabras completas, separadas por no-letras) > by_type > default. Las palabras se buscan en el id del resultado y en la ruta de la receta.",
   "purity_by_heat": {
-    "hot": 1,
-    "cold": 2
+    "hot": 2,
+    "cold": 3
   },
   "default": "cold",
   "overrides": {},

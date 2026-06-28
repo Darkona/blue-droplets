@@ -48,6 +48,15 @@
             "components": {
               "blue_droplets:purity": 1
             }
+          },
+          {
+            "type": "neoforge:components",
+            "fluids": [
+              "minecraft:water"
+            ],
+            "components": {
+              "blue_droplets:purity": 2
+            }
           }
         ]
       },

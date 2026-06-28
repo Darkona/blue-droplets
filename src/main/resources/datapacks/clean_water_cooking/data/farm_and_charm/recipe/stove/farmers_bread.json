@@ -24,6 +24,13 @@
             "components": {
               "blue_droplets:purity": 0
             }
+          },
+          {
+            "type": "neoforge:components",
+            "items": "#farm_and_charm:water_bottles",
+            "components": {
+              "blue_droplets:purity": 1
+            }
           }
         ]
       }
