@@ -194,7 +194,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
 
     /**
      * Drinking or eating an item with thirst values; nothing for other items. Drunk when it has the drink animation or
-     * is a water container, eaten otherwise. Purified water gets the {@code purifiedWater} bonus.
+     * is a water container, eaten otherwise. Pure water gets the {@code pureWater} bonus.
      */
     public static void consume(ItemStack item, Player player)
     {
@@ -211,8 +211,8 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     }
 
     /**
-     * Water drunk without a container (by hand, from a hose): {@link #drink} with the {@code purifiedWater} bonus for
-     * purified water.
+     * A container's worth of water drunk without the container (the Traveler's Backpack hose): {@link #drink} with the
+     * {@code pureWater} bonus for pure water. A sip by hand is not a container's worth: it calls {@link #drink}.
      */
     public static boolean drinkWater(Player player, int thirst, int quenched, int purity)
     {

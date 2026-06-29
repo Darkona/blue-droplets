@@ -32,10 +32,10 @@ public final class DropletsAPI
 
     public static final int MAX_THIRST = 20;
     public static final int NO_PURITY = -1;
-    public static final int DIRTY = 0;
-    public static final int SLIGHTLY_DIRTY = 1;
-    public static final int ACCEPTABLE = 2;
-    public static final int PURIFIED = 3;
+    /** Lowest purity, {@link PurityLevel#CONTAMINATED}; the levels are named by {@link PurityLevel}. */
+    public static final int MIN_PURITY = PurityLevel.MIN;
+    /** Highest purity, {@link PurityLevel#PURE}. */
+    public static final int MAX_PURITY = PurityLevel.MAX;
 
     private static DropletsService service;
 
@@ -58,7 +58,7 @@ public final class DropletsAPI
 
     /**
      * Resolved values of a stack (config, datapacks, registered drinks and providers, estimates), with the bonus of
-     * purified water for a water container of purity 3, or null when it does not restore thirst. Synced: the same on a
+     * pure water for a water container of {@link PurityLevel#PURE}, or null when it does not restore thirst. Synced: the same on a
      * remote client.
      */
     public static @Nullable ThirstValues getDrinkValues(ItemStack stack)
@@ -113,7 +113,7 @@ public final class DropletsAPI
     /**
      * Drinks water of this purity: rolls its purity effects first, which may prevent hydration.
      *
-     * @param purity {@link #DIRTY} to {@link #PURIFIED}, or {@link #NO_PURITY} for no effects
+     * @param purity {@link #MIN_PURITY} to {@link #MAX_PURITY} ({@link PurityLevel#level()}), or {@link #NO_PURITY} for no effects
      * @return whether it hydrated
      */
     public static boolean drink(Player player, int thirst, int quenched, int purity)

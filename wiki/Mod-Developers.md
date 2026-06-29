@@ -73,10 +73,22 @@ Item values and purity:
 ThirstValues values = DropletsAPI.getDrinkValues(stack);  // null if it restores nothing
 if (values != null && !values.estimated()) { ... }       // estimated = guessed from recipes
 
-int purity = DropletsAPI.getPurity(stack);               // DIRTY (0) .. PURIFIED (3)
-ItemStack clean = DropletsAPI.withPurity(stack, DropletsAPI.PURIFIED);  // a copy
+int purity = DropletsAPI.getPurity(stack);               // MIN_PURITY (0) .. MAX_PURITY (5)
+PurityLevel named = PurityLevel.byLevel(purity);          // CONTAMINATED .. PURE, null if out of range
+ItemStack pure = DropletsAPI.withPurity(stack, PurityLevel.PURE.level());  // a copy
 int here = DropletsAPI.getWaterPurity(level, pos);       // server side
 ```
+
+Purity is an int from 0 to 5; `PurityLevel` names the levels and gives each its id (`contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `pure`, as in the config keys), its translation key (`blue_droplets.purity.<id>`) and the colour Blue Droplets uses for its name.
+
+| Level | `PurityLevel` | Default effects when drunk |
+|---|---|---|
+| 0 | `CONTAMINATED` | Nausea and Hunger, 40% Poison (blocks hydration) |
+| 1 | `DIRTY` | 60% Nausea and Hunger, 15% Poison (blocks hydration) |
+| 2 | `MURKY` | 25% Nausea and Hunger |
+| 3 | `ACCEPTABLE` | 5% Nausea and Hunger; `defaultPurity` of water with none stored |
+| 4 | `CLEAN` | Nothing |
+| 5 | `PURE` | Nothing, and the `pureWater` bonus for water |
 
 Purity can be turned off (`purity.toml` `general.enabled = false`, synced to clients). Then `isPurityEnabled()` is `false`, `withPurity` returns an unchanged copy, drinking never rolls purity effects and `DrinkEvent` carries `NO_PURITY`. `getPurity` and `getWaterPurity` still answer (`defaultPurity` for most water), so check `isPurityEnabled()` before letting a purity change anything in your mod.
 
@@ -86,7 +98,7 @@ Purity can be turned off (`purity.toml` `general.enabled = false`, synced to cli
 DropletsAPI.setThirst(player, 10);            // clamped; quenched follows down
 DropletsAPI.addThirst(player, -2, 0);         // not a drink: no effects, no drink events
 DropletsAPI.drink(player, 4, 2);              // like drinking: extra thirst may become quenched
-DropletsAPI.drink(player, 4, 2, DropletsAPI.DIRTY);  // also rolls the purity effects
+DropletsAPI.drink(player, 4, 2, PurityLevel.DIRTY.level());  // also rolls the purity effects
 DropletsAPI.addExhaustion(player, 0.5f);      // multiplied like Blue Droplets' own activities
 ```
 
@@ -102,7 +114,7 @@ a `blue_droplets:drinks` data map entry instead.
 
 ```java
 DropletsAPI.registerDrink(MyItems.LEMONADE, 6, 4);                          // thirst, quenched
-DropletsAPI.registerDrink(MyItems.SPRING_WATER, 6, 2, DropletsAPI.PURIFIED); // with a purity for its effects
+DropletsAPI.registerDrink(MyItems.SPRING_WATER, 6, 2, PurityLevel.CLEAN.level()); // with a purity for its effects
 ```
 
 Whether an item hydrates as food or as a drink follows the item: if it can be eaten, when eaten.
@@ -204,7 +216,7 @@ happens (never once per tick). Listen to `Pre`/`Post`, not to the abstract base 
 | `EatEvent.Post` | after it | read the values and `hydrated()` |
 | `DrinkEvent.Pre` | before a drink's purity effects and hydration: items with the drink animation (potions, milk, honey bottle, most modded drinks), water containers, hand drinking and `DropletsAPI.drink`; `getItem()` is empty for hand drinking and `DropletsAPI.drink`; `getSaltiness()`/`isSalty()` for values that remove thirst | cancel, `setThirst`, `setQuenched`, `setPurity` (negative values remove thirst) |
 | `DrinkEvent.Post` | after it | read the values and `hydrated()` |
-| `PurityEffectEvent` | purity effects were rolled; the Dehydration of `hotDirtyWater` (dirty water in a hot climate) is already in `getEffects()` | cancel (no effects, hydrates), edit `getEffects()`, `setHydrates` |
+| `PurityEffectEvent` | purity effects were rolled; the Dehydration of `hotDirtyWater` (murky or dirtier water in a hot climate) is already in `getEffects()` | cancel (no effects, hydrates), edit `getEffects()`, `setHydrates` |
 | `DehydrationDamageEvent` | a player at zero thirst is about to be hurt | cancel, `setAmount` |
 | `OverhydrationEvent` | a player drank past full until the overflow reached `overhydration.threshold` and is about to get Overhydrated (the overflow resets either way) | cancel, `setDuration`, `setAmplifier`; read `getOverflow()` |
 
@@ -217,7 +229,7 @@ public static void noThirstInTheHub(ThirstChangeEvent.Pre event) {
 
 @SubscribeEvent
 public static void coldWaterRefreshes(DrinkEvent.Pre event) {
-    if (event.getPurity() == DropletsAPI.PURIFIED)
+    if (event.getPurity() == PurityLevel.PURE.level())
         event.setQuenched(event.getQuenched() + 2);
 }
 

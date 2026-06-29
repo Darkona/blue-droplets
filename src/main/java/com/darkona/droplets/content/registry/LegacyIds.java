@@ -1,6 +1,7 @@
 package com.darkona.droplets.content.registry;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -14,8 +15,10 @@ import java.util.Map;
 
 /**
  * Registry aliases from the Thirst Was Taken namespace ({@code thirst:*}) to {@code blue_droplets:*},
- * so items, blocks, block entities, effects, the purity component and the player attachment saved
- * by Thirst Was Taken load under the new ids. Saving writes the new id, so each entry migrates once.
+ * so items, blocks, block entities, effects and the player attachment saved by Thirst Was Taken load under the new
+ * ids. Saving writes the new id, so each entry migrates once. The purity component is the exception: Thirst Was
+ * Taken had four levels, so {@code thirst:purity} loads as {@link ThirstComponent#LEGACY_PURITY}, which stacks turn
+ * into {@link ThirstComponent#PURITY} on the new scale as they load ({@link #purityFromLegacy}).
  * Never remove: unloaded chunks and offline players can keep old ids indefinitely.
  */
 public final class LegacyIds
@@ -27,12 +30,22 @@ public final class LegacyIds
             Registries.BLOCK, List.of("sand_filter"),
             Registries.BLOCK_ENTITY_TYPE, List.of("sand_filter"),
             Registries.MOB_EFFECT, List.of("quenchness"),
-            Registries.DATA_COMPONENT_TYPE, List.of("purity"),
             NeoForgeRegistries.Keys.ATTACHMENT_TYPES, List.of("player_thirst"),
             NeoForgeRegistries.Keys.CONDITION_CODECS, List.of("loot_config")
     );
 
+    /** Blue Droplets level of each Thirst Was Taken level: dirty, slightly dirty, acceptable, purified. */
+    private static final int[] LEGACY_PURITY = {PurityLevel.CONTAMINATED.level(), PurityLevel.DIRTY.level(), PurityLevel.ACCEPTABLE.level(), PurityLevel.PURE.level()};
+
     private LegacyIds() {}
+
+    /**
+     * A Thirst Was Taken purity (0-3) as a Blue Droplets level; anything else, like -1 for "no fixed purity", is kept.
+     */
+    public static int purityFromLegacy(int purity)
+    {
+        return purity >= 0 && purity < LEGACY_PURITY.length ? LEGACY_PURITY[purity] : purity;
+    }
 
     public static void register(IEventBus modBus)
     {
@@ -41,6 +54,8 @@ public final class LegacyIds
 
     private static void addAliases(RegisterEvent event)
     {
+        if (event.getRegistryKey().equals(Registries.DATA_COMPONENT_TYPE))
+            event.getRegistry().addAlias(ResourceLocation.fromNamespaceAndPath(LEGACY_NAMESPACE, "purity"), BlueDroplets.asResource("legacy_purity"));
         List<String> paths = ALIASES.get(event.getRegistryKey());
         if (paths == null)
             return;

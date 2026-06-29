@@ -25,7 +25,7 @@ import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
 
 /**
- * Jade: water purity of water cauldrons (1, or 2 on a heat source) and of the tanks of any block exposing a fluid handler
+ * Jade: water purity of water cauldrons (murky, or clean on a heat source) and of the tanks of any block exposing a fluid handler
  * (sent by the server). Jade finds and loads this class itself, only when installed; nothing else imports Jade.
  */
 @WailaPlugin(BlueDroplets.ID)

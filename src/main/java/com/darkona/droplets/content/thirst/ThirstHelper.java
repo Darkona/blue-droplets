@@ -496,13 +496,13 @@ public class ThirstHelper
         return provider == null ? null : provider.values(stack);
     }
 
-    private record PurifiedValues(ThirstValues base, int thirst, int quenched, ThirstValues values) {}
+    private record PureValues(ThirstValues base, int thirst, int quenched, ThirstValues values) {}
 
-    private static volatile PurifiedValues lastPurified = new PurifiedValues(new ThirstValues(0, 0), 0, 0, new ThirstValues(0, 0));
+    private static volatile PureValues lastPure = new PureValues(new ThirstValues(0, 0), 0, 0, new ThirstValues(0, 0));
 
     /**
-     * What drinking or eating the stack gives: {@link #valuesOf} plus, for a water container of purified water, the
-     * {@code purifiedWater} bonus. The last result with a bonus is kept, so tooltips and the HUD preview allocate
+     * What drinking or eating the stack gives: {@link #valuesOf} plus, for a water container of pure water, the
+     * {@code pureWater} bonus. The last result with a bonus is kept, so tooltips and the HUD preview allocate
      * nothing while they show the same stack.
      */
     public static @Nullable ThirstValues drinkValuesOf(ItemStack stack)
@@ -515,9 +515,9 @@ public class ThirstHelper
         int quenched = WaterPurity.waterQuenchedBonus(purity);
         if (thirst == 0 && quenched == 0)
             return values;
-        PurifiedValues last = lastPurified;
+        PureValues last = lastPure;
         if (last.thirst() != thirst || last.quenched() != quenched || !last.base().equals(values))
-            lastPurified = last = new PurifiedValues(values, thirst, quenched,
+            lastPure = last = new PureValues(values, thirst, quenched,
                     new ThirstValues(values.thirst() + thirst, values.quenched() + quenched, values.purity(), values.estimated()));
         return last.values();
     }

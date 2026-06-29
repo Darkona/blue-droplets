@@ -135,8 +135,8 @@ public class SaveTests
         helper.assertValueEqual(received.foods().size(), sent.foods().size(), "foods sent");
         helper.assertValueEqual(received.drinks().get(Items.POTION)[0], sent.drinks().get(Items.POTION)[0], "water bottle thirst");
         helper.assertValueEqual(received.defaultPurity(), sent.defaultPurity(), "defaultPurity sent");
-        helper.assertValueEqual(received.purifiedThirstBonus(), sent.purifiedThirstBonus(), "purifiedWater.thirstBonus sent");
-        helper.assertValueEqual(received.purifiedQuenchedBonus(), sent.purifiedQuenchedBonus(), "purifiedWater.quenchedBonus sent");
+        helper.assertValueEqual(received.pureThirstBonus(), sent.pureThirstBonus(), "pureWater.thirstBonus sent");
+        helper.assertValueEqual(received.pureQuenchedBonus(), sent.pureQuenchedBonus(), "pureWater.quenchedBonus sent");
         helper.succeed();
     }
 

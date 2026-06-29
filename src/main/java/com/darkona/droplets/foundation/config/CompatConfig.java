@@ -1,5 +1,6 @@
 package com.darkona.droplets.foundation.config;
 
+import com.darkona.droplets.api.PurityLevel;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
@@ -37,9 +38,10 @@ public final class CompatConfig
     static
     {
         BUILDER.push("create");
-        SAND_FILTER_FILTRATION_AMOUNT = BUILDER.comment("Purification levels gained by filtering water through a Sand Filter").defineInRange("sandFilterFiltrationAmount", 1, 0, 3);
+        SAND_FILTER_FILTRATION_AMOUNT = BUILDER.comment("Purification levels gained by filtering water through a Sand Filter").defineInRange("sandFilterFiltrationAmount", 1, 0, PurityLevel.MAX);
         SAND_FILTER_MB_PER_TICK = BUILDER.comment("Millibuckets of water filtered per game tick with a Sand Filter").defineInRange("sandFilterMbPerTick", 10, 1, 1000);
-        SAND_FILTER_MAX_PURITY = BUILDER.comment("Highest purity a Sand Filter raises water to (0 dirty ... 3 purified); water already purer passes unchanged. Below 3, the last steps need another method (boiling, smelting)").defineInRange("sandFilterMaxPurity", 3, 0, 3);
+        SAND_FILTER_MAX_PURITY = BUILDER.comment("Highest purity a Sand Filter raises water to (0 contaminated ... 5 pure); water already purer passes unchanged.",
+                        "With Create, filters are the only way to pure water: cooking stops at clean (4)").defineInRange("sandFilterMaxPurity", PurityLevel.PURE.level(), PurityLevel.MIN, PurityLevel.MAX);
         OPEN_ENDED_PIPE_PURITY = BUILDER.comment("Whether water pulled from the world or from a water cauldron by an open pipe end keeps its purity there, like buckets and the hose pulley; false = it reads as defaultPurity").define("openEndedPipePurity", true);
         BUILDER.pop();
 
@@ -66,7 +68,8 @@ public final class CompatConfig
 
         BUILDER.comment("Farmer's Delight addons and Let's Do mods").push("delight");
         KETTLE_MIN_PURITY = BUILDER.comment("Lowest water purity that kettles take (they boil it): the HerbalBrews tea kettle, the Brewery brewing stations",
-                        "and any block in the block tag blue_droplets:rejects_dirty_water. Dirtier water stays in the slot or in the hand. 0 = any water").defineInRange("kettleMinPurity", 1, 0, 3);
+                        "and any block in the block tag blue_droplets:rejects_dirty_water. Dirtier water stays in the slot or in the hand. 0 = any water")
+                .defineInRange("kettleMinPurity", PurityLevel.MURKY.level(), PurityLevel.MIN, PurityLevel.MAX);
         WORLD_PURITY_WATER_SOURCES = BUILDER.comment("Whether taps and sinks (Extra Delight, Farm & Charm) and the Farm & Charm timber well give water with the purity of the world's water",
                         "at their position, like water taken from a source block there; false = water without a purity, which reads as defaultPurity").define("worldPurityWaterSources", true);
         BUILDER.pop();

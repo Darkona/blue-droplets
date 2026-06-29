@@ -51,7 +51,7 @@ On first start, if a new file does not exist yet, its values are copied from the
 | `Drinking Mechanics.canDrinkByHand`, `DrinkBothHandNeeded`, `handDrinkingHydration`, `handDrinkingQuenched`, `handDrinkingCooldown` | `hand.enabled`, `hand.bothHandsEmpty`, `hand.thirst`, `hand.quenched`, `hand.cooldownTicks` |
 | `World.*` | `purity.toml` `world.*` (same key names) |
 | `Purity-related Effects.defaultPurity`, `quenchThirstWhenDebuffed` | `purity.toml` `general.defaultPurity`, `general.quenchWhenDebuffed` |
-| `Purity-related Effects.*Percentage` (8 values) | `purity.toml` `effects.dirty`, `slightlyDirty`, `acceptable`, `purified` (lists, see below) |
+| `Purity-related Effects.*Percentage` (8 values) | `purity.toml` `effects.contaminated`, `dirty`, `acceptable`, `pure` (lists, see below) |
 | `Create compatibility.*` | `compat.toml` `create.*` |
 | `item_settings.toml` `drinks`, `foods`, `itemsBlacklist` | `items.toml` `overrides.drinks`, `overrides.foods`, `overrides.blacklist` |
 | `container.toml` `Containers` | `items.toml` `containers.containers` |
@@ -187,13 +187,24 @@ The maximum thirst stays 20: the HUD, its overlays and commands assume it.
 
 ## `purity.toml`
 
+Water purity has six levels, and every purity value in the config files is one of these numbers:
+
+| Level | Name | Default effects when drunk |
+|---|---|---|
+| 0 | Contaminated | Nausea and Hunger, 40% Poison (blocks hydration) |
+| 1 | Dirty | 60% Nausea and Hunger, 15% Poison (blocks hydration) |
+| 2 | Murky | 25% Nausea and Hunger |
+| 3 | Acceptable | 5% Nausea and Hunger |
+| 4 | Clean | Nothing |
+| 5 | Pure | Nothing, and the `pureWater` bonus |
+
 | Key | Default | Meaning |
 |---|---|---|
 | `general.enabled` | `true` | Water has a purity at all. `false` turns the whole purity mechanic off and leaves only thirst: see [Thirst only](#thirst-only-purity-off) |
-| `general.defaultPurity` | `2` | Purity of water with none stored |
+| `general.defaultPurity` | `3` | Purity of water with none stored (0-5) |
 | `general.quenchWhenDebuffed` | `true` | Drinking still restores thirst when a purity effect blocks hydration |
-| `purifiedWater.thirstBonus` | `2` | Thirst added when drinking purified water (purity 3): a bottle then gives 6 instead of 4. Any water counts (bottles, buckets, bowls, drinking by hand, the Traveler's Backpack hose, Cold Sweat waterskins); other drinks with a purity do not. Sent to clients; tooltips and the HUD preview include it. Nothing with `general.enabled = false` |
-| `purifiedWater.quenchedBonus` | `3` | Quenched added when drinking purified water: a bottle then gives 8 instead of 5 |
+| `pureWater.thirstBonus` | `2` | Thirst added when drinking pure water (purity 5): a bottle then gives 6 instead of 4. Water from a container counts (bottles, buckets, bowls, the Traveler's Backpack hose, Cold Sweat waterskins); a sip by hand does not, and neither do other drinks with a purity. Sent to clients; tooltips and the HUD preview include it. Nothing with `general.enabled = false` |
+| `pureWater.quenchedBonus` | `3` | Quenched added when drinking pure water: a bottle then gives 8 instead of 5 |
 | `world.*` | | See [Water purity in the world](Modpack-Makers#water-purity-in-the-world) |
 
 ### Thirst only (purity off)
@@ -211,19 +222,21 @@ If you only want the thirst bar, set `general.enabled = false`. The server's val
 
 ### `[effects]`
 
-One list per purity: `dirty`, `slightlyDirty`, `acceptable`, `purified`. Each entry is `"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`.
+One list per purity: `contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `pure`. Each entry is `"effect_id,durationTicks,amplifier,chancePercent[,blocksHydration]"`.
 
 | Key | Default |
 |---|---|
-| `dirty` | `["minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,30,true"]` |
-| `slightlyDirty` | `["minecraft:nausea,100,0,50", "minecraft:hunger,600,0,50", "minecraft:poison,200,0,10,true"]` |
+| `contaminated` | `["minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,40,true"]` |
+| `dirty` | `["minecraft:nausea,100,0,60", "minecraft:hunger,600,0,60", "minecraft:poison,200,0,15,true"]` |
+| `murky` | `["minecraft:nausea,100,0,25", "minecraft:hunger,600,0,25"]` |
 | `acceptable` | `["minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5"]` |
-| `purified` | `[]` |
+| `clean` | `[]` |
+| `pure` | `[]` |
 
 - Any mob effect id works, also from other mods, including `blue_droplets:dehydration` (for example `"blue_droplets:dehydration,600,0,20"`). An unknown id is skipped (listed by `/blue_droplets config check`).
 - **One roll per drink** is shared by the whole list: an entry applies when the roll is below its chance. With the defaults, poisoned water always also gives nausea and hunger, as before.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
-- Old configs: the eight `*Percentage` values are turned into these lists once, with the old effects and durations (nausea 5 s and hunger 30 s share the nausea chance; poison 10 s blocks hydration).
+- Old configs: the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and durations (nausea 5 s and hunger 30 s share the nausea chance; poison 10 s blocks hydration). Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`; `murky` and `clean` keep their defaults. Other Thirst Was Taken purity values (`defaultPurity`, `worldWaterBasePurity`, `saltWaterPurity`) move the same way: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
 
 ### `[hotDirtyWater]`
 
@@ -232,7 +245,7 @@ Drinking water of low purity (bottle or by hand) in a hot climate also gives `bl
 | Key | Default | Meaning |
 |---|---|---|
 | `enabled` | `true` | Turn the mechanic off |
-| `maxPurity` | `0` | Highest purity that counts (0 dirty ... 3 purified) |
+| `maxPurity` | `2` | Highest purity that counts (0-5; 2 is murky) |
 | `durationTicks` | `600` | Duration of the effect |
 | `amplifier` | `0` | Amplifier (0 is level I) |
 | `minBiomeTemperature` | `1.0` | Biome base temperature from which the climate is hot (desert, savanna, badlands 2.0; jungle 0.95) |
@@ -245,9 +258,9 @@ An ultra-warm dimension (the Nether) always counts as hot.
 
 | Key | Default | Meaning |
 |---|---|---|
-| `create.sandFilterFiltrationAmount` | `1` | Purity levels gained in a Sand Filter |
+| `create.sandFilterFiltrationAmount` | `1` | Purity levels gained in a Sand Filter (0-5) |
 | `create.sandFilterMbPerTick` | `10` | Millibuckets filtered per tick |
-| `create.sandFilterMaxPurity` | `3` | Highest purity a Sand Filter raises water to (0-3); purer water passes unchanged. Filters in a row facing the same way pass water on, one step each |
+| `create.sandFilterMaxPurity` | `5` | Highest purity a Sand Filter raises water to (0-5); purer water passes unchanged. Filters in a row facing the same way pass water on, one step each. With Create, cooking stops at clean (4), so the filter is the only way to pure water |
 | `create.openEndedPipePurity` | `true` | Water that an open pipe end pulls from the world or from a water cauldron keeps its purity there (as buckets and the hose pulley); `false` = it reads as `defaultPurity` |
 | `coldsweat.useBodyTemperature` | `true` | The climate multiplier comes from Cold Sweat's body temperature (`bodyTemperatureCurve`) instead of the biome's temperature and downfall. The dimension's thirst multiplier and `netherMultiplier` still come first |
 | `coldsweat.bodyTemperatureCurve` | `["-100,0.8", "0,1.0", "50,1.3", "100,2.0", "150,3.0"]` | `"bodyTemperature,multiplier"` points in ascending order (Cold Sweat units: 0 comfortable, 100 burning, -100 freezing), straight lines between them, flat beyond the ends; times `depletion.multiplier` |
@@ -257,7 +270,7 @@ An ultra-warm dimension (the Nether) always counts as hot.
 | `sereneseasons.tropicalDrySeasonMultiplier` | `1.1` | With `enabled`: multiplies thirst loss in a tropical biome's dry season. The temperature is not changed; tropical biomes are hot all year and that already counts |
 | `sereneseasons.tropicalWetSeasonMultiplier` | `1.0` | With `enabled`: multiplies thirst loss in a tropical biome's wet season. The temperature is not changed |
 | `sereneseasons.springMultiplier`, `summerMultiplier`, `autumnMultiplier`, `winterMultiplier` | `1.0` | With `enabled`: multiply thirst loss in that season, in biomes with the four seasons. The temperature is not changed: it is Serene Seasons' seasonal temperature. With Serene Seasons' default config summer does not warm biomes, so `summerMultiplier` is the simple way to make summer thirstier |
-| `delight.kettleMinPurity` | `1` | Lowest water purity that kettles take, because they boil it: the HerbalBrews tea kettle (dirtier water stays in its water slot) and the Brewery brewing stations or any block in the block tag `blue_droplets:rejects_dirty_water` (clicking with dirtier water does nothing and says why). `0` = any water. Nothing with purity off |
+| `delight.kettleMinPurity` | `2` | Lowest water purity that kettles take (0-5; 2 is murky), because they boil it: the HerbalBrews tea kettle (dirtier water stays in its water slot) and the Brewery brewing stations or any block in the block tag `blue_droplets:rejects_dirty_water` (clicking with dirtier water does nothing and says why). `0` = any water. Nothing with purity off |
 | `delight.worldPurityWaterSources` | `true` | Taps and sinks of Extra Delight, the Let's Do sink and the Farm & Charm timber well give water with the purity of the world's water where they stand, as from a source block there (`/blue_droplets debug purity` at that spot shows it). `false` = water without a purity, read as `defaultPurity` |
 
 ## `items.toml`

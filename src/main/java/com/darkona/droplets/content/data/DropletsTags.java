@@ -1,6 +1,7 @@
 package com.darkona.droplets.content.data;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
@@ -21,7 +22,7 @@ public final class DropletsTags
     public static final TagKey<Item> PURITY_OPT_OUT = TagKey.create(Registries.ITEM, BlueDroplets.asResource("purity_opt_out"));
     /** Drinks that carry a water purity (static containers: they can be filled by machines but not from the world). */
     public static final TagKey<Item> PURITY_CONTAINERS = TagKey.create(Registries.ITEM, BlueDroplets.asResource("purity_containers"));
-    /** Blocks that heat a water cauldron above them: its water comes out with purity 2 instead of 1; blocks with a {@code lit} property only when lit. */
+    /** Blocks that heat a water cauldron above them: its water comes out clean instead of murky; blocks with a {@code lit} property only when lit. */
     public static final TagKey<Block> CAULDRON_HEAT_SOURCES = TagKey.create(Registries.BLOCK, BlueDroplets.asResource("cauldron_heat_sources"));
     /** Blocks filled with water by clicking that boil it, e.g. kettles: they refuse water below {@code compat.toml} {@code delight.kettleMinPurity}. */
     public static final TagKey<Block> REJECTS_DIRTY_WATER = TagKey.create(Registries.BLOCK, BlueDroplets.asResource("rejects_dirty_water"));
@@ -40,7 +41,7 @@ public final class DropletsTags
     @SuppressWarnings("unchecked")
     private static TagKey<Biome>[] waterPurityTags()
     {
-        TagKey<Biome>[] tags = new TagKey[4];
+        TagKey<Biome>[] tags = new TagKey[PurityLevel.MAX + 1];
         for (int purity = 0; purity < tags.length; purity++)
             tags[purity] = TagKey.create(Registries.BIOME, BlueDroplets.asResource("water_purity/" + purity));
         return tags;

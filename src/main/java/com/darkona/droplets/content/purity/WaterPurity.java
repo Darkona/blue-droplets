@@ -3,7 +3,7 @@ package com.darkona.droplets.content.purity;
 import com.darkona.droplets.foundation.config.ClientConfig;
 import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
-import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.api.event.PurityEffectEvent;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.content.data.BiomeWater;
@@ -77,10 +77,12 @@ public class WaterPurity
     private static final List<ContainerWithPurity> codeContainers = new CopyOnWriteArrayList<>();
     private static volatile Map<Item, ContainerWithPurity> waterContainers = Map.of();
     private static volatile List<ContainerWithPurity> dataContainers = List.of();
-    public static final int MIN_PURITY = 0;
-    public static final int MAX_PURITY = 3;
-    public static final int CAULDRON_PURITY = 1;
-    public static final int HEATED_CAULDRON_PURITY = 2;
+    public static final int MIN_PURITY = PurityLevel.MIN;
+    public static final int MAX_PURITY = PurityLevel.MAX;
+    /** Purity of water taken from a water cauldron. */
+    public static final int CAULDRON_PURITY = PurityLevel.MURKY.level();
+    /** Purity of water taken from a water cauldron on a heat source. */
+    public static final int HEATED_CAULDRON_PURITY = PurityLevel.CLEAN.level();
 
     public static void init()
     {
@@ -261,25 +263,26 @@ public class WaterPurity
     }
 
     /**
-     * Returns the purity string in the language selected by the player
+     * Returns the purity string in the language selected by the player; out-of-range values read as the default purity.
      */
     public static String getPurityText(int purity)
     {
-        String purityText = purity == 0 ? "dirty" :
-                purity == 1 ? "slightly_dirty" :
-                        purity == 2 ? "acceptable" : "purified";
-
-        return MutableComponent.create(new TranslatableContents(BlueDroplets.ID + ".purity." + purityText,purityText,TranslatableContents.NO_ARGS)).getString();
+        PurityLevel level = level(purity);
+        return MutableComponent.create(new TranslatableContents(level.translationKey(), level.id(), TranslatableContents.NO_ARGS)).getString();
     }
 
     /**
-     * Returns the purity color in decimal format
+     * Returns the purity color, {@code 0xRRGGBB}
      */
     public static int getPurityColor(int purity)
     {
-        return purity == 0 ? 11028517 :
-                purity == 1 ? 7957617 :
-                purity == 2 ? 6128285 : 2208255;
+        return level(purity).color();
+    }
+
+    private static PurityLevel level(int purity)
+    {
+        PurityLevel level = PurityLevel.byLevel(purity);
+        return level != null ? level : Objects.requireNonNull(PurityLevel.byLevel(sanitizePurity(purity)));
     }
 
     public static boolean hasPurity(ItemStack item)
@@ -370,9 +373,9 @@ public class WaterPurity
 
     /**
      * Purity of water taken from a water cauldron. The cauldron stores nothing: the purity is decided when the water
-     * leaves it, {@value #CAULDRON_PURITY}, or {@value #HEATED_CAULDRON_PURITY} while it stands on a heat source (block
-     * tag {@code blue_droplets:cauldron_heat_sources}; blocks with a {@code lit} property only when lit). Never purified:
-     * that is what filters are for.
+     * leaves it, {@link #CAULDRON_PURITY}, or {@link #HEATED_CAULDRON_PURITY} while it stands on a heat source (block
+     * tag {@code blue_droplets:cauldron_heat_sources}; blocks with a {@code lit} property only when lit). Never pure:
+     * that is what filters and cooking are for.
      */
     public static int cauldronPurity(BlockGetter level, BlockPos pos)
     {
@@ -479,12 +482,13 @@ public class WaterPurity
     }
 
     /**
-     * Thirst added to water of this purity when drunk: {@code purifiedWater.thirstBonus} for purified water (3), 0 for
-     * any other purity or with purity off. Only for water, never for other drinks with a purity.
+     * Thirst added to water of this purity when drunk: {@code pureWater.thirstBonus} for pure water
+     * ({@link PurityLevel#PURE}), 0 for any other purity or with purity off. Only for water, never for other drinks
+     * with a purity.
      */
     public static int waterThirstBonus(int purity)
     {
-        return purity == MAX_PURITY && enabled() ? SyncedValues.purifiedThirstBonus() : 0;
+        return purity == PurityLevel.PURE.level() && enabled() ? SyncedValues.pureThirstBonus() : 0;
     }
 
     /**
@@ -492,7 +496,7 @@ public class WaterPurity
      */
     public static int waterQuenchedBonus(int purity)
     {
-        return purity == MAX_PURITY && enabled() ? SyncedValues.purifiedQuenchedBonus() : 0;
+        return purity == PurityLevel.PURE.level() && enabled() ? SyncedValues.pureQuenchedBonus() : 0;
     }
 
     /**

@@ -23,11 +23,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * One-time config migrations, run from the mod constructor before any config is registered:
  * {@code config/thirst/*.toml} (Thirst Was Taken) to {@code config/blue_droplets/}, then the old single files
  * ({@code common.toml}, {@code item_settings.toml}, {@code container.toml}, {@code keyword.toml}) to the files by concern.
+ * Thirst Was Taken had four purity levels; values that are a level move to the six of Blue Droplets with
+ * {@link LegacyIds#purityFromLegacy}.
  */
 public final class LegacyConfigMigration
 {
@@ -80,7 +83,14 @@ public final class LegacyConfigMigration
             {"keyword", "Keyword config.Default Hydration values.Fruit Keywords.keyword_fruit", "items", "keywords.fruit"},
     };
 
+    /** New paths whose value is a purity level, not an amount. */
+    private static final Set<String> LEVEL_PATHS = Set.of("general.defaultPurity", "world.worldWaterBasePurity", "world.saltWaterPurity");
+
+    /** Thirst Was Taken's effect list keys, by its purity 0-3. */
+    private static final String[] LEGACY_LEVELS = {"dirty", "slightlyDirty", "acceptable", "purified"};
+
     private LegacyConfigMigration() {}
+
 
     public static void run()
     {
@@ -125,6 +135,8 @@ public final class LegacyConfigMigration
                 continue;
             Optional<Config> old = oldFiles.computeIfAbsent(move[0], name -> read(dir.resolve(name + ".toml")));
             Object value = old.map(config -> config.get(path(move[1]))).orElse(null);
+            if (value instanceof Number number && LEVEL_PATHS.contains(move[3]))
+                value = LegacyIds.purityFromLegacy(number.intValue());
             if (value != null)
                 newFiles.computeIfAbsent(move[2], name -> TomlFormat.newConfig()).set(path(move[3]), value);
         }
@@ -154,17 +166,19 @@ public final class LegacyConfigMigration
     }
 
     /**
-     * The eight {@code *NauseaPercentage}/{@code *PoisonPercentage} values become the effect lists of each purity,
-     * with the old fixed effects: nausea 5 s and hunger 30 s sharing the nausea chance, poison 10 s blocking hydration.
+     * The eight {@code *NauseaPercentage}/{@code *PoisonPercentage} values become the effect lists of the purities
+     * they map to, with the old fixed effects: nausea 5 s and hunger 30 s sharing the nausea chance, poison 10 s
+     * blocking hydration. The levels Thirst Was Taken did not have keep their defaults.
      */
     private static void moveEffectPercentages(Config common, Map<String, CommentedConfig> newFiles)
     {
         int[][] defaults = {{100, 30}, {50, 10}, {5, 0}, {0, 0}};
-        for (int purity = 0; purity < PurityConfig.EFFECT_LEVELS.length; purity++)
+        for (int purity = 0; purity < LEGACY_LEVELS.length; purity++)
         {
-            String level = PurityConfig.EFFECT_LEVELS[purity];
-            Number nausea = common.get(List.of("Purity-related Effects", level + "NauseaPercentage"));
-            Number poison = common.get(List.of("Purity-related Effects", level + "PoisonPercentage"));
+            String legacy = LEGACY_LEVELS[purity];
+            String level = PurityConfig.EFFECT_LEVELS[LegacyIds.purityFromLegacy(purity)];
+            Number nausea = common.get(List.of("Purity-related Effects", legacy + "NauseaPercentage"));
+            Number poison = common.get(List.of("Purity-related Effects", legacy + "PoisonPercentage"));
             if (nausea == null && poison == null)
                 continue;
             int nauseaChance = nausea == null ? defaults[purity][0] : nausea.intValue();
