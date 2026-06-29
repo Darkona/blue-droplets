@@ -6,9 +6,7 @@
   "item.blue_droplets.clay_bowl": "Gliniana Miska",
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "Brudna",
-  "blue_droplets.purity.slightly_dirty": "Lekko Zabrudzona",
   "blue_droplets.purity.acceptable": "Akceptowalna",
-  "blue_droplets.purity.purified": "Oczyszczona",
   "block.blue_droplets.sand_filter": "Filtr Piaskowy",
 
   "blue_droplets.ponder.sand_filter.header": "Oczyszczanie wody Filtrem Piaskowym",

@@ -6,9 +6,7 @@
   "item.blue_droplets.clay_bowl": "Глиняная миска",
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "Грязная",
-  "blue_droplets.purity.slightly_dirty": "Грязноватая",
   "blue_droplets.purity.acceptable": "Приемлемая",
-  "blue_droplets.purity.purified": "Чистая",
   "block.blue_droplets.sand_filter": "Песочный фильтр",
 
   "blue_droplets.ponder.sand_filter.header": "Очищайте воду с помощью песочного фильтра",

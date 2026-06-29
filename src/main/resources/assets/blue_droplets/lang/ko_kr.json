@@ -6,9 +6,7 @@
   "item.blue_droplets.clay_bowl": "점토 그릇",
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "더러움",
-  "blue_droplets.purity.slightly_dirty": "약간 더러움",
   "blue_droplets.purity.acceptable": "허용",
-  "blue_droplets.purity.purified": "정제된",
   "block.blue_droplets.sand_filter": "모래 필터",
 
   "blue_droplets.ponder.sand_filter.header": "Purifying Water with a Sand Filter",

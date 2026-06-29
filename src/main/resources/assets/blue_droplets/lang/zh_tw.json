@@ -6,9 +6,7 @@
   "item.blue_droplets.clay_bowl": "黏土碗",
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "骯髒",
-  "blue_droplets.purity.slightly_dirty": "有點髒",
   "blue_droplets.purity.acceptable": "可接受的",
-  "blue_droplets.purity.purified": "純淨",
   "block.blue_droplets.sand_filter": "砂濾器",
 
   "blue_droplets.ponder.sand_filter.header": "用砂濾器淨化水",

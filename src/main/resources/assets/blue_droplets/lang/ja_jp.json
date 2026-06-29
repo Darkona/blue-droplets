@@ -6,9 +6,7 @@
   "item.blue_droplets.clay_bowl": "粘土の器",
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "汚れ",
-  "blue_droplets.purity.slightly_dirty": "やや汚れ",
   "blue_droplets.purity.acceptable": "許容",
-  "blue_droplets.purity.purified": "精製された",
   "block.blue_droplets.sand_filter": "砂フィルター",
 
   "blue_droplets.ponder.sand_filter.header": "Purifying Water with a Sand Filter",

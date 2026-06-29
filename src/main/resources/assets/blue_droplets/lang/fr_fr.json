@@ -6,9 +6,7 @@
   "item.blue_droplets.clay_bowl": "Bol en argile",
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "Sale",
-  "blue_droplets.purity.slightly_dirty": "Un peu sale",
   "blue_droplets.purity.acceptable": "Buvable",
-  "blue_droplets.purity.purified": "Purifiée",
   "block.blue_droplets.sand_filter": "Filtre à sable",
 
   "blue_droplets.ponder.sand_filter.header": "Purifier de l'eau avec un Filtre à sable",
