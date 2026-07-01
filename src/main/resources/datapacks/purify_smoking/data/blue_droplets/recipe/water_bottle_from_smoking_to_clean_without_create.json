@@ -1,0 +1,39 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "blue_droplets:purity_enabled"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "create"
+      }
+    }
+  ],
+  "type": "minecraft:smoking",
+  "ingredient": [
+    {
+      "type": "neoforge:components",
+      "items": "minecraft:potion",
+      "components": {
+        "blue_droplets:purity": 2,
+        "potion_contents": {
+          "potion": "minecraft:water"
+        }
+      }
+    }
+  ],
+  "result": {
+    "id": "minecraft:potion",
+    "count": 1,
+    "components": {
+      "blue_droplets:purity": 4,
+      "potion_contents": {
+        "potion": "minecraft:water"
+      }
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}
