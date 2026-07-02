@@ -23,7 +23,7 @@
             {
               "function": "minecraft:set_components",
               "components": {
-                "blue_droplets:purity": 3
+                "blue_droplets:purity": 5
               },
               "conditions": [{"condition": "blue_droplets:purity_enabled"}]
             }
@@ -37,7 +37,7 @@
             {
               "function": "minecraft:set_components",
               "components": {
-                "blue_droplets:purity": 3
+                "blue_droplets:purity": 5
               },
               "conditions": [{"condition": "blue_droplets:purity_enabled"}]
             }
