@@ -8,22 +8,22 @@
       "type": "blue_droplets:purity_enabled"
     }
   ],
-  "type": "create:compacting",
+  "type": "create:splashing",
   "ingredients": [
     {
-      "item": "minecraft:cactus"
+      "type": "neoforge:components",
+      "items": "blue_droplets:terracotta_water_bowl",
+      "components": {
+        "blue_droplets:purity": 2
+      }
     }
   ],
   "results": [
     {
-      "id": "minecraft:water",
-      "amount": 250,
+      "id": "blue_droplets:terracotta_water_bowl",
       "components": {
         "blue_droplets:purity": 3
       }
-    },
-    {
-      "id": "minecraft:green_dye"
     }
   ]
 }

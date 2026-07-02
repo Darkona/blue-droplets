@@ -8,10 +8,16 @@
       "type": "blue_droplets:purity_enabled"
     }
   ],
-  "type": "create:compacting",
+  "type": "create:mixing",
+  "heat_requirement": "heated",
   "ingredients": [
     {
-      "item": "minecraft:cactus"
+      "type": "neoforge:components",
+      "fluids": "minecraft:water",
+      "components": {
+        "blue_droplets:purity": 0
+      },
+      "amount": 250
     }
   ],
   "results": [
@@ -19,11 +25,8 @@
       "id": "minecraft:water",
       "amount": 250,
       "components": {
-        "blue_droplets:purity": 3
+        "blue_droplets:purity": 1
       }
-    },
-    {
-      "id": "minecraft:green_dye"
     }
   ]
 }

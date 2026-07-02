@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "blue_droplets:purity_enabled"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "type": "neoforge:components",
+          "items": "blue_droplets:terracotta_water_bowl",
+          "components": {
+            "blue_droplets:purity": 3
+          }
+        },
+        {
+          "type": "neoforge:components",
+          "items": "blue_droplets:terracotta_water_bowl",
+          "components": {},
+          "strict": true
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "blue_droplets:terracotta_water_bowl",
+      "components": {
+        "blue_droplets:purity": 4
+      }
+    }
+  ]
+}
