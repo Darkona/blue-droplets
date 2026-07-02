@@ -1,6 +1,7 @@
 package com.darkona.droplets.gametest;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.data.DrinkValues;
 import com.darkona.droplets.content.purity.WaterPurity;
@@ -22,6 +23,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.network.connection.ConnectionType;
@@ -92,6 +94,35 @@ public class SaveTests
         helper.succeed();
     }
 
+    /** Thirst Was Taken's {@code thirst:purity} had four levels: 0, 1, 2 and 3 load as 0, 1, 3 and 5. */
+    @GameTest(template = "empty")
+    public static void thirstWasTakenPurityMovesToSixLevels(GameTestHelper helper)
+    {
+        RegistryOps<Tag> ops = helper.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE);
+        int[] expected = {PurityLevel.CONTAMINATED.level(), PurityLevel.DIRTY.level(), PurityLevel.ACCEPTABLE.level(), PurityLevel.PURE.level()};
+        for (int old = 0; old < expected.length; old++)
+        {
+            CompoundTag components = new CompoundTag();
+            components.putInt("thirst:purity", old);
+            CompoundTag item = new CompoundTag();
+            item.putString("id", "minecraft:water_bucket");
+            item.putInt("count", 1);
+            item.put("components", components);
+            ItemStack bucket = ItemStack.CODEC.parse(ops, item).getOrThrow();
+            helper.assertValueEqual(bucket.get(ThirstComponent.PURITY), expected[old], "item purity from Thirst Was Taken " + old);
+            helper.assertFalse(bucket.has(ThirstComponent.LEGACY_PURITY), "the old purity stayed on the item");
+
+            CompoundTag fluid = new CompoundTag();
+            fluid.putString("id", "minecraft:water");
+            fluid.putInt("amount", 1000);
+            fluid.put("components", components.copy());
+            FluidStack water = FluidStack.CODEC.parse(ops, fluid).getOrThrow();
+            helper.assertValueEqual(water.get(ThirstComponent.PURITY), expected[old], "fluid purity from Thirst Was Taken " + old);
+            helper.assertFalse(water.has(ThirstComponent.LEGACY_PURITY), "the old purity stayed on the fluid");
+        }
+        helper.succeed();
+    }
+
     @GameTest(template = "empty")
     public static void purityComponentCrossesTheNetwork(GameTestHelper helper)
     {
@@ -106,10 +137,10 @@ public class SaveTests
     public static void drinksDataMapAcceptsSaltyAndRejectsOutOfRange(GameTestHelper helper)
     {
         helper.assertTrue(parse("{\"thirst\": -2, \"quenched\": -2}"), "salty entry rejected");
-        helper.assertTrue(parse("{\"thirst\": 6, \"quenched\": 8, \"purity\": 3}"), "water entry rejected");
+        helper.assertTrue(parse("{\"thirst\": 6, \"quenched\": 8, \"purity\": 5}"), "water entry of purity 5 rejected");
         helper.assertFalse(parse("{\"thirst\": 21, \"quenched\": 0}"), "thirst 21 accepted");
         helper.assertFalse(parse("{\"thirst\": 2, \"quenched\": -30}"), "quenched -30 accepted");
-        helper.assertFalse(parse("{\"thirst\": 2, \"quenched\": 2, \"purity\": 4}"), "purity 4 accepted");
+        helper.assertFalse(parse("{\"thirst\": 2, \"quenched\": 2, \"purity\": 6}"), "purity 6 accepted");
         helper.succeed();
     }
 

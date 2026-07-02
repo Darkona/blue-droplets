@@ -2,6 +2,7 @@ package com.darkona.droplets.gametest;
 
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
+import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.tiviacz.travelersbackpack.api.fluids.EffectFluid;
@@ -31,7 +32,7 @@ public class TravelersBackpackTests
         helper.assertTrue(EffectFluidRegistry.getEffectsForFluid(Fluids.WATER).size() == 1, "Traveler's Backpack's own water effect is still registered");
         helper.assertValueEqual(EffectFluidRegistry.getHighestFluidEffectAmount(Fluids.WATER), 250, "mB drained per sip");
 
-        FluidStack sip = WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), WaterPurity.MAX_PURITY);
+        FluidStack sip = WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), PurityLevel.PURE.level());
         ServerPlayer player = player(helper);
         helper.assertTrue(effect.canExecuteEffect(sip, helper.getLevel(), player), "cannot drink 1000 mB");
         helper.assertFalse(effect.canExecuteEffect(sip.copyWithAmount(100), helper.getLevel(), player), "can drink 100 mB");
@@ -39,8 +40,8 @@ public class TravelersBackpackTests
         PlayerThirst thirst = thirst(player);
         thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
         effect.affectDrinker(sip, helper.getLevel(), player);
-        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a sip of purified water (a water bottle: 4, + 2 purified)");
-        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a sip of purified water (5 + 3 purified)");
+        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a sip of pure water (a water bottle: 4, + 2 pure)");
+        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a sip of pure water (5 + 3 pure)");
         helper.succeed();
     }
 }

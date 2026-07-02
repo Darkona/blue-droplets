@@ -1,6 +1,11 @@
 package com.darkona.droplets.gametest;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.PurityLevel;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
@@ -37,7 +42,7 @@ import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 /**
- * Purity of water taken from cauldrons (1, or 2 on a heat source) and of water in the world.
+ * Purity of water taken from cauldrons (murky, or clean on a heat source) and of water in the world.
  */
 @GameTestHolder(BlueDroplets.ID)
 @PrefixGameTestTemplate(false)
@@ -46,6 +51,8 @@ public class PurityTests
     @GameTest(template = "box")
     public static void cauldronPurityDependsOnHeat(GameTestHelper helper)
     {
+        helper.assertValueEqual(WaterPurity.CAULDRON_PURITY, PurityLevel.MURKY.level(), "cauldron purity");
+        helper.assertValueEqual(WaterPurity.HEATED_CAULDRON_PURITY, PurityLevel.CLEAN.level(), "heated cauldron purity");
         BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
         helper.getLevel().setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3));
         helper.getLevel().setBlockAndUpdate(pos.below(), Blocks.STONE.defaultBlockState());
@@ -119,9 +126,9 @@ public class PurityTests
         helper.assertTrue(WaterPurity.hasPurity(inBucket), "water read from a bucket has no purity");
         helper.assertValueEqual(WaterPurity.getPurity(inBucket), 0, "purity of water read from a bucket");
 
-        ItemStack filled = FluidUtil.getFilledBucket(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), 3));
+        ItemStack filled = FluidUtil.getFilledBucket(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), PurityLevel.PURE.level()));
         helper.assertTrue(filled.is(Items.WATER_BUCKET), "no water bucket for water with a purity");
-        helper.assertValueEqual(WaterPurity.getPurity(filled), 3, "purity of a bucket filled with water");
+        helper.assertValueEqual(WaterPurity.getPurity(filled), PurityLevel.PURE.level(), "purity of a bucket filled with water");
         helper.assertFalse(WaterPurity.hasPurity(FluidUtil.getFilledBucket(new FluidStack(Fluids.WATER, 1000))), "a bucket of water without purity got one");
         helper.succeed();
     }
@@ -188,7 +195,7 @@ public class PurityTests
     }
 
     @GameTest(template = "empty")
-    public static void cookingReachesPurifiedOnlyWithoutCreate(GameTestHelper helper)
+    public static void cookingReachesPureOnlyWithoutCreate(GameTestHelper helper)
     {
         int max = -1;
         for (RecipeType<? extends AbstractCookingRecipe> type : List.of(RecipeType.SMELTING, RecipeType.CAMPFIRE_COOKING))
@@ -199,7 +206,7 @@ public class PurityTests
                     if (purity != null)
                         max = Math.max(max, purity);
                 }
-        int expected = ModList.get().isLoaded("create") ? 2 : WaterPurity.MAX_PURITY;
+        int expected = ModList.get().isLoaded("create") ? PurityLevel.CLEAN.level() : PurityLevel.PURE.level();
         helper.assertValueEqual(max, expected, "highest purity from cooking water");
         helper.succeed();
     }
@@ -223,39 +230,59 @@ public class PurityTests
         helper.succeed();
     }
 
-    private static int biomePurity(GameTestHelper helper, net.minecraft.resources.ResourceKey<net.minecraft.world.level.biome.Biome> biome, boolean source)
+    private static int biomePurity(GameTestHelper helper, ResourceKey<Biome> biome, boolean source)
     {
         var level = helper.getLevel();
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
         level.setBlockAndUpdate(pos, source ? Blocks.WATER.defaultBlockState() : Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 1));
-        var holder = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME).getHolderOrThrow(biome);
+        var holder = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(biome);
         return WaterPurity.getWaterPurity(level, holder, pos, source, null);
     }
 
-    /** Built-in {@code biome_water} data map: swamp cap 1, plains untouched, snowy and taiga base 1, deserts cap 2. */
+    /**
+     * Built-in {@code biome_water} data map: jungles and dark forests start at 1 like plains, taiga, birch and snowy
+     * biomes at 2, mountains and windswept at 3, deserts and badlands at 0 capped at 2, swamps at 0 capped at 1.
+     */
     @GameTest(template = "box")
     public static void defaultBiomeWaterValues(GameTestHelper helper)
     {
-        // The altitude band of the test position is the plains result with a base of 0 and no flow amount (default 0).
-        int alt = biomePurity(helper, net.minecraft.world.level.biome.Biomes.PLAINS, true);
-        helper.assertTrue(alt == 0 || alt == 1, "altitude delta " + alt);
-        int run = Math.min(3, alt + 1);
-        check(helper, "plains running", biomePurity(helper, net.minecraft.world.level.biome.Biomes.PLAINS, false), run);
-        for (var swamp : List.of(net.minecraft.world.level.biome.Biomes.SWAMP, net.minecraft.world.level.biome.Biomes.MANGROVE_SWAMP))
+        // Plains still water is worldWaterBasePurity (1) plus the altitude band of the test position.
+        int alt = biomePurity(helper, Biomes.PLAINS, true) - 1;
+        helper.assertTrue(alt >= 0 && alt <= 3, "altitude delta " + alt);
+        int max = PurityLevel.PURE.level();
+        for (var biome : List.of(Biomes.PLAINS, Biomes.JUNGLE, Biomes.DARK_FOREST))
+            base(helper, biome, 1, max, alt);
+        for (var biome : List.of(Biomes.TAIGA, Biomes.BIRCH_FOREST, Biomes.SNOWY_PLAINS, Biomes.FROZEN_RIVER))
+            base(helper, biome, 2, max, alt);
+        for (var biome : List.of(Biomes.FROZEN_PEAKS, Biomes.JAGGED_PEAKS, Biomes.WINDSWEPT_HILLS))
+            base(helper, biome, 3, max, alt);
+        for (var biome : List.of(Biomes.DESERT, Biomes.BADLANDS))
+            base(helper, biome, 0, 2, alt);
+        for (var biome : List.of(Biomes.SWAMP, Biomes.MANGROVE_SWAMP))
+            base(helper, biome, 0, 1, alt);
+        helper.succeed();
+    }
+
+    /** Still water: base plus altitude; running water one more; both capped. */
+    private static void base(GameTestHelper helper, ResourceKey<Biome> biome, int base, int max, int alt)
+    {
+        check(helper, biome.location() + " still", biomePurity(helper, biome, true), Math.min(max, base + alt));
+        check(helper, biome.location() + " running", biomePurity(helper, biome, false), Math.min(max, base + alt + 1));
+    }
+
+    /** Default {@code altitudeBands}: +1, +2, +3 from 30, 60 and 100 blocks above sea level and from 16, 48 and 80 below it. */
+    @GameTest(template = "box")
+    public static void altitudeBandsAddUpToThree(GameTestHelper helper)
+    {
+        var level = helper.getLevel();
+        int sea = level.getSeaLevel();
+        int[][] bands = {{0, 0}, {29, 0}, {30, 1}, {59, 1}, {60, 2}, {99, 2}, {100, 3}, {-15, 0}, {-16, 1}, {-47, 1}, {-48, 2}, {-79, 2}, {-80, 3}};
+        var plains = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS);
+        for (int[] band : bands)
         {
-            check(helper, swamp.location() + " still", biomePurity(helper, swamp, true), Math.min(1, alt));
-            check(helper, swamp.location() + " running", biomePurity(helper, swamp, false), 1);
-        }
-        for (var cold : List.of(net.minecraft.world.level.biome.Biomes.SNOWY_PLAINS, net.minecraft.world.level.biome.Biomes.TAIGA,
-                net.minecraft.world.level.biome.Biomes.FROZEN_PEAKS, net.minecraft.world.level.biome.Biomes.FROZEN_RIVER))
-        {
-            check(helper, cold.location() + " still", biomePurity(helper, cold, true), Math.min(3, 1 + alt));
-            check(helper, cold.location() + " running", biomePurity(helper, cold, false), Math.min(3, 2 + alt));
-        }
-        for (var dry : List.of(net.minecraft.world.level.biome.Biomes.DESERT, net.minecraft.world.level.biome.Biomes.BADLANDS))
-        {
-            check(helper, dry.location() + " still", biomePurity(helper, dry, true), alt);
-            check(helper, dry.location() + " running", biomePurity(helper, dry, false), Math.min(2, alt + 1));
+            BlockPos pos = new BlockPos(0, sea + band[0], 0);
+            int purity = WaterPurity.getWaterPurity(level, plains, pos, true, null);
+            check(helper, "still plains water " + band[0] + " from sea level", purity, 1 + band[1]);
         }
         helper.succeed();
     }

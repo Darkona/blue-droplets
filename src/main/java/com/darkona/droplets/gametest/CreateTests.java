@@ -4,6 +4,7 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.SandFilterBlock;
 import com.darkona.droplets.compat.create.SandFilterBlockEntity;
+import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.PurityConfig;
@@ -112,9 +113,12 @@ public class CreateTests
         try
         {
             CompatConfig.SAND_FILTER_MAX_PURITY.set(1);
-            helper.assertValueEqual(SandFilterBlockEntity.filteredPurity(0), 1, "dirty water with sandFilterMaxPurity 1");
-            helper.assertValueEqual(SandFilterBlockEntity.filteredPurity(1), 1, "slightly dirty water with sandFilterMaxPurity 1");
-            helper.assertValueEqual(SandFilterBlockEntity.filteredPurity(3), 3, "purified water is never made dirtier");
+            helper.assertValueEqual(SandFilterBlockEntity.filteredPurity(0), 1, "contaminated water with sandFilterMaxPurity 1");
+            helper.assertValueEqual(SandFilterBlockEntity.filteredPurity(1), 1, "dirty water with sandFilterMaxPurity 1");
+            helper.assertValueEqual(SandFilterBlockEntity.filteredPurity(3), 3, "acceptable water is never made dirtier");
+            CompatConfig.SAND_FILTER_MAX_PURITY.set(max);
+            helper.assertValueEqual(max, PurityLevel.PURE.level(), "default sandFilterMaxPurity");
+            helper.assertValueEqual(SandFilterBlockEntity.filteredPurity(PurityLevel.CLEAN.level()), PurityLevel.PURE.level(), "clean water through a filter");
         }
         finally
         {
@@ -169,13 +173,15 @@ public class CreateTests
     }
 
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
-    public static void fanWashingPurifiesUpToAcceptable(GameTestHelper helper)
+    public static void fanWashingPurifiesUpToClean(GameTestHelper helper)
     {
+        int clean = PurityLevel.CLEAN.level();
         for (ItemStack container : List.of(PotionContents.createItemStack(Items.POTION, Potions.WATER), new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get())))
         {
-            helper.assertValueEqual(fanned(helper, AllFanProcessingTypes.SPLASHING, container, 0), 1, "dirty " + container + " washed by a fan");
-            helper.assertValueEqual(fanned(helper, AllFanProcessingTypes.SPLASHING, container, 1), 2, "slightly dirty " + container + " washed by a fan");
-            helper.assertFalse(AllFanProcessingTypes.SPLASHING.canProcess(WaterPurity.addPurity(container.copy(), 2), helper.getLevel()), "a fan washes acceptable " + container);
+            for (int purity = PurityLevel.MIN; purity < clean; purity++)
+                helper.assertValueEqual(fanned(helper, AllFanProcessingTypes.SPLASHING, container, purity), purity + 1, "purity " + purity + " " + container + " washed by a fan");
+            for (int purity = clean; purity <= PurityLevel.MAX; purity++)
+                helper.assertFalse(AllFanProcessingTypes.SPLASHING.canProcess(WaterPurity.addPurity(container.copy(), purity), helper.getLevel()), "a fan washes " + container + " of purity " + purity);
         }
         // Create hands back a bucket's crafting remainder next to the result: washing water buckets would make buckets.
         helper.assertFalse(AllFanProcessingTypes.SPLASHING.canProcess(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 0), helper.getLevel()), "a fan washes water buckets");
@@ -190,8 +196,10 @@ public class CreateTests
     public static void smokingFanPurifiesWithTheSmokerRecipes(GameTestHelper helper)
     {
         ItemStack bottle = PotionContents.createItemStack(Items.POTION, Potions.WATER);
-        helper.assertValueEqual(fanned(helper, AllFanProcessingTypes.SMOKING, bottle, 0), 2, "dirty water bottle smoked by a fan");
-        helper.assertValueEqual(fanned(helper, AllFanProcessingTypes.SMOKING, bottle, 1), 2, "slightly dirty water bottle smoked by a fan");
+        // Smoker recipes add two levels, and stop at clean with Create.
+        int clean = PurityLevel.CLEAN.level();
+        for (int purity = PurityLevel.MIN; purity < clean; purity++)
+            helper.assertValueEqual(fanned(helper, AllFanProcessingTypes.SMOKING, bottle, purity), Math.min(purity + 2, clean), "water bottle of purity " + purity + " smoked by a fan");
         helper.succeed();
     }
 
@@ -210,19 +218,19 @@ public class CreateTests
     }
 
     @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
-    public static void heatedBasinPurifiesUpToAcceptable(GameTestHelper helper)
+    public static void heatedBasinPurifiesUpToClean(GameTestHelper helper)
     {
         BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
         helper.getLevel().setBlockAndUpdate(pos.below(), AllBlocks.BLAZE_BURNER.getDefaultState().setValue(BlazeBurnerBlock.HEAT_LEVEL, BlazeBurnerBlock.HeatLevel.KINDLED));
         helper.getLevel().setBlockAndUpdate(pos, AllBlocks.BASIN.getDefaultState());
         BasinBlockEntity basin = (BasinBlockEntity) helper.getLevel().getBlockEntity(pos);
-        Recipe<?> recipe = helper.getLevel().getRecipeManager().byKey(BlueDroplets.asResource("compat/create/water_from_heated_mixing_dirty")).orElseThrow().value();
+        Recipe<?> recipe = helper.getLevel().getRecipeManager().byKey(BlueDroplets.asResource("compat/create/water_from_heated_mixing_to_dirty")).orElseThrow().value();
         helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, null).fill(water(0, 250), IFluidHandler.FluidAction.EXECUTE);
         helper.assertTrue(BasinRecipe.match(basin, recipe), "dirty water does not match the heated mixing recipe");
         helper.assertTrue(BasinRecipe.apply(basin, recipe), "the heated mixing recipe did not run");
         FluidStack out = basin.getTanks().getSecond().getPrimaryHandler().getFluidInTank(0);
         helper.assertValueEqual(out.getAmount(), 250, "water out of the heated basin");
-        helper.assertValueEqual(WaterPurity.getPurity(out), 2, "purity out of the heated basin");
+        helper.assertValueEqual(WaterPurity.getPurity(out), PurityLevel.DIRTY.level(), "purity out of the heated basin, contaminated water in");
 
         helper.getLevel().setBlockAndUpdate(pos.below(), Blocks.AIR.defaultBlockState());
         helper.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
@@ -238,9 +246,9 @@ public class CreateTests
     {
         ItemStack bowl = FillingBySpout.fillItem(helper.getLevel(), 250, new ItemStack(ItemInit.TERRACOTTA_BOWL.get()), water(0, 1000));
         helper.assertTrue(bowl.is(ItemInit.TERRACOTTA_WATER_BOWL.get()), "a spout filled a terracotta bowl into " + bowl);
-        helper.assertValueEqual(WaterPurity.getPurity(bowl), 0, "purity of a terracotta bowl filled by a spout with dirty water");
+        helper.assertValueEqual(WaterPurity.getPurity(bowl), 0, "purity of a terracotta bowl filled by a spout with contaminated water");
         ItemStack bottle = FillingBySpout.fillItem(helper.getLevel(), 250, new ItemStack(Items.GLASS_BOTTLE), water(1, 1000));
-        helper.assertValueEqual(WaterPurity.getPurity(bottle), 1, "purity of a bottle filled by a spout with slightly dirty water");
+        helper.assertValueEqual(WaterPurity.getPurity(bottle), 1, "purity of a bottle filled by a spout with dirty water");
         helper.succeed();
     }
 
@@ -250,13 +258,13 @@ public class CreateTests
         ItemStack bottle = WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), 0);
         FluidStack fromBottle = GenericItemEmptying.emptyItem(helper.getLevel(), bottle, false).getFirst();
         helper.assertTrue(bottle.isEmpty(), "the last bottle was not used up");
-        helper.assertValueEqual(WaterPurity.getPurity(fromBottle), 0, "purity of water emptied from the last dirty bottle");
+        helper.assertValueEqual(WaterPurity.getPurity(fromBottle), 0, "purity of water emptied from the last contaminated bottle");
 
         ItemStack bowl = WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), 1);
         Pair<FluidStack, ItemStack> fromBowl = GenericItemEmptying.emptyItem(helper.getLevel(), bowl, true);
         helper.assertTrue(fromBowl.getSecond().is(ItemInit.TERRACOTTA_BOWL.get()), "emptying a terracotta water bowl gave " + fromBowl.getSecond());
         helper.assertValueEqual(fromBowl.getFirst().getAmount(), 250, "water emptied from a terracotta bowl");
-        helper.assertValueEqual(WaterPurity.getPurity(fromBowl.getFirst()), 1, "purity of water emptied from a slightly dirty terracotta bowl");
+        helper.assertValueEqual(WaterPurity.getPurity(fromBowl.getFirst()), 1, "purity of water emptied from a dirty terracotta bowl");
         FluidStack plain = GenericItemEmptying.emptyItem(helper.getLevel(), new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), true).getFirst();
         helper.assertFalse(WaterPurity.hasPurity(plain), "the emptying recipe kept the purity of an earlier bowl");
         helper.succeed();

@@ -1,7 +1,9 @@
 package com.darkona.droplets.gametest;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.foundation.config.CompatConfig;
 import com.lance5057.extradelight.util.BottleFluidRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -67,9 +69,9 @@ public class DelightTests
         helper.assertFalse(WaterPurity.hasPurity(BottleFluidRegistry.getFluidFromBottle(PotionContents.createItemStack(Items.POTION, Potions.WATER))),
                 "the registry's own water stack took the purity of an earlier bottle");
 
-        ItemStack purified = BottleFluidRegistry.getBottleFromFluid(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), WaterPurity.MAX_PURITY));
-        helper.assertTrue(WaterPurity.isWaterFilledContainer(purified), "250 mB of water is not a water bottle");
-        helper.assertValueEqual(WaterPurity.hasPurity(purified) ? WaterPurity.getPurity(purified) : -1, WaterPurity.MAX_PURITY, "purity of a bottle of purified water");
+        ItemStack pure = BottleFluidRegistry.getBottleFromFluid(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), WaterPurity.MAX_PURITY));
+        helper.assertTrue(WaterPurity.isWaterFilledContainer(pure), "250 mB of water is not a water bottle");
+        helper.assertValueEqual(WaterPurity.hasPurity(pure) ? WaterPurity.getPurity(pure) : -1, WaterPurity.MAX_PURITY, "purity of a bottle of pure water");
         helper.succeed();
     }
 
@@ -129,17 +131,22 @@ public class DelightTests
     }
 
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
-    public static void teaKettleTakesWaterOfPurityOneOrMore(GameTestHelper helper)
+    public static void teaKettleTakesWaterOfPurityTwoOrMore(GameTestHelper helper)
     {
         BlockPos pos = new BlockPos(1, 2, 1);
         helper.setBlock(pos, block("herbalbrews:tea_kettle"));
         TeaKettleBlockEntity kettle = helper.getBlockEntity(pos);
-        kettle.setItem(KETTLE_WATER_SLOT, waterBottle(0));
-        kettle.tick(helper.getLevel(), helper.absolutePos(pos), helper.getBlockState(pos));
-        helper.assertValueEqual(kettle.getWaterLevel(), 0, "water level after dirty water");
-        helper.assertTrue(WaterPurity.isWaterFilledContainer(kettle.getItem(KETTLE_WATER_SLOT)), "the dirty water left the slot");
+        int min = CompatConfig.KETTLE_MIN_PURITY.get();
+        helper.assertValueEqual(min, PurityLevel.MURKY.level(), "default kettleMinPurity");
+        for (int purity = WaterPurity.MIN_PURITY; purity < min; purity++)
+        {
+            kettle.setItem(KETTLE_WATER_SLOT, waterBottle(purity));
+            kettle.tick(helper.getLevel(), helper.absolutePos(pos), helper.getBlockState(pos));
+            helper.assertValueEqual(kettle.getWaterLevel(), 0, "water level after water of purity " + purity);
+            helper.assertTrue(WaterPurity.isWaterFilledContainer(kettle.getItem(KETTLE_WATER_SLOT)), "water of purity " + purity + " left the slot");
+        }
 
-        for (int purity = 1; purity <= WaterPurity.MAX_PURITY; purity++)
+        for (int purity = min; purity <= WaterPurity.MAX_PURITY; purity++)
         {
             int before = kettle.getWaterLevel();
             kettle.setItem(KETTLE_WATER_SLOT, waterBottle(purity));
@@ -159,7 +166,7 @@ public class DelightTests
         {
             player.setItemInHand(InteractionHand.MAIN_HAND, WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), purity));
             PlayerInteractEvent.RightClickBlock event = NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(pos), hit(helper, pos)));
-            helper.assertValueEqual(event.isCanceled(), purity < 1, "brewing station refuses water of purity " + purity);
+            helper.assertValueEqual(event.isCanceled(), purity < CompatConfig.KETTLE_MIN_PURITY.get(), "brewing station refuses water of purity " + purity);
         }
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WATER_BUCKET));
         helper.assertFalse(NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(pos), hit(helper, pos))).isCanceled(),

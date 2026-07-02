@@ -5,7 +5,9 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DropletsDataMaps;
+import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
@@ -59,33 +61,37 @@ public class ThirstTests
         ServerPlayer player = player(helper);
         PlayerThirst thirst = thirst(player);
         thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
-        PlayerThirst.consume(waterBottle(WaterPurity.MAX_PURITY), player);
-        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a purified water bottle (4 + 2 purified)");
-        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a purified water bottle (5 + 3 purified)");
+        PlayerThirst.consume(waterBottle(PurityLevel.PURE.level()), player);
+        helper.assertValueEqual(thirst.getThirst(), 10, "thirst after a pure water bottle (4 + 2 pure)");
+        helper.assertValueEqual(thirst.getQuenched(), 8, "quenched after a pure water bottle (5 + 3 pure)");
         helper.assertValueEqual(lastCause, ThirstChangeEvent.Cause.DRINK, "cause of drinking a water bottle");
         helper.succeed();
     }
 
     @GameTest(template = "empty")
-    public static void onlyPurifiedWaterGetsTheBonus(GameTestHelper helper)
+    public static void onlyPureWaterGetsTheBonus(GameTestHelper helper)
     {
         ServerPlayer player = player(helper);
         PlayerThirst thirst = thirst(player);
+        int pure = PurityLevel.PURE.level();
         thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
-        PlayerThirst.consume(waterBottle(2), player);
-        helper.assertValueEqual(thirst.getThirst(), 8, "thirst after an acceptable water bottle (4)");
-        helper.assertValueEqual(thirst.getQuenched(), 5, "quenched after an acceptable water bottle (5)");
+        PlayerThirst.consume(waterBottle(PurityLevel.CLEAN.level()), player);
+        helper.assertValueEqual(thirst.getThirst(), 8, "thirst after a clean water bottle (4)");
+        helper.assertValueEqual(thirst.getQuenched(), 5, "quenched after a clean water bottle (5)");
 
-        ThirstValues purified = ThirstHelper.drinkValuesOf(waterBottle(WaterPurity.MAX_PURITY));
-        helper.assertTrue(purified != null && purified.thirst() == 6 && purified.quenched() == 8, "values shown for a purified water bottle: " + purified);
-        helper.assertTrue(ThirstHelper.drinkValuesOf(waterBottle(WaterPurity.MAX_PURITY)) == purified, "the purified values are built again for the same stack");
-        ThirstValues acceptable = ThirstHelper.drinkValuesOf(waterBottle(2));
-        helper.assertTrue(acceptable != null && acceptable.thirst() == 4 && acceptable.quenched() == 5, "values shown for an acceptable water bottle: " + acceptable);
+        ThirstValues values = ThirstHelper.drinkValuesOf(waterBottle(pure));
+        helper.assertTrue(values != null && values.thirst() == 6 && values.quenched() == 8, "values shown for a pure water bottle: " + values);
+        helper.assertTrue(ThirstHelper.drinkValuesOf(waterBottle(pure)) == values, "the pure values are built again for the same stack");
+        for (int purity = PurityLevel.MIN; purity < pure; purity++)
+        {
+            ThirstValues other = ThirstHelper.drinkValuesOf(waterBottle(purity));
+            helper.assertTrue(other != null && other.thirst() == 4 && other.quenched() == 5, "values shown for a water bottle of purity " + purity + ": " + other);
+        }
 
         thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
-        PlayerThirst.drinkWater(player, 3, 2, WaterPurity.MAX_PURITY);
-        helper.assertValueEqual(thirst.getThirst(), 9, "thirst after a sip of purified water by hand (3 + 2)");
-        helper.assertValueEqual(thirst.getQuenched(), 5, "quenched after a sip of purified water by hand (2 + 3)");
+        PlayerThirst.drinkWater(player, 3, 2, pure);
+        helper.assertValueEqual(thirst.getThirst(), 9, "thirst after a hose sip of pure water (3 + 2)");
+        helper.assertValueEqual(thirst.getQuenched(), 5, "quenched after a hose sip of pure water (2 + 3)");
         helper.succeed();
     }
 
@@ -179,11 +185,34 @@ public class ThirstTests
     }
 
     @GameTest(template = "empty")
-    public static void purifiedWaterGivesNoEffects(GameTestHelper helper)
+    public static void cleanAndPureWaterGiveNoEffects(GameTestHelper helper)
     {
         ServerPlayer player = player(helper);
-        PlayerThirst.consume(waterBottle(WaterPurity.MAX_PURITY), player);
-        helper.assertTrue(player.getActiveEffects().isEmpty(), "purified water gave " + player.getActiveEffects());
+        PlayerThirst.consume(waterBottle(PurityLevel.CLEAN.level()), player);
+        helper.assertTrue(player.getActiveEffects().isEmpty(), "clean water gave " + player.getActiveEffects());
+        PlayerThirst.consume(waterBottle(PurityLevel.PURE.level()), player);
+        helper.assertTrue(player.getActiveEffects().isEmpty(), "pure water gave " + player.getActiveEffects());
+        helper.succeed();
+    }
+
+    /** Default {@code [effects]}: contaminated and dirty water can poison, murky and acceptable only sicken, clean and pure do nothing. */
+    @GameTest(template = "empty")
+    public static void defaultEffectTablesFollowTheSixLevels(GameTestHelper helper)
+    {
+        double[][] chances = {{100, 100, 40}, {60, 60, 15}, {25, 25}, {5, 5}, {}, {}};
+        helper.assertValueEqual(PurityConfig.EFFECTS.size(), PurityLevel.values().length, "effect lists");
+        for (PurityLevel level : PurityLevel.values())
+        {
+            WaterPurity.PurityEffect[] table = WaterPurity.effectTable(level.level());
+            double[] expected = chances[level.level()];
+            helper.assertValueEqual(table.length, expected.length, "effects of " + level.id());
+            for (int i = 0; i < table.length; i++)
+            {
+                helper.assertTrue(Math.abs(table[i].chance() * 100 - expected[i]) < 0.001, level.id() + " effect " + i + " chance " + table[i].chance());
+                helper.assertValueEqual(table[i].blocksHydration(), i == 2, level.id() + " effect " + i + " blocks hydration");
+            }
+        }
+        helper.assertValueEqual(PurityConfig.HOT_DIRTY_WATER_MAX_PURITY.getDefault(), PurityLevel.MURKY.level(), "hotDirtyWater.maxPurity default");
         helper.succeed();
     }
 

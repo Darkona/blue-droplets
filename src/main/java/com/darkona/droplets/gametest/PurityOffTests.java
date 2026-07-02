@@ -4,6 +4,7 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.api.event.DrinkEvent;
 import com.darkona.droplets.compat.jei.PurificationEntry;
+import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
@@ -172,7 +173,7 @@ public class PurityOffTests
             helper.assertTrue(player.getActiveEffects().isEmpty(), "drinking dirty water by hand gave effects with purity off");
             helper.assertValueEqual(lastDrinkPurity, DropletsAPI.NO_PURITY, "purity of hand drinking with purity off");
             helper.assertTrue(WaterPurity.givePurityEffects(player, 0), "dirty water blocks hydration with purity off");
-            helper.assertValueEqual(WaterPurity.waterThirstBonus(WaterPurity.MAX_PURITY) + WaterPurity.waterQuenchedBonus(WaterPurity.MAX_PURITY), 0, "purified water bonus with purity off");
+            helper.assertValueEqual(WaterPurity.waterThirstBonus(PurityLevel.PURE.level()) + WaterPurity.waterQuenchedBonus(PurityLevel.PURE.level()), 0, "pure water bonus with purity off");
         });
         helper.succeed();
     }
@@ -205,7 +206,7 @@ public class PurityOffTests
     @GameTest(template = "empty")
     public static void creativeTabHasOneOfEachWater(GameTestHelper helper)
     {
-        helper.assertValueEqual(waterStacks(ThirstTab.DisplayItems()), 12, "water stacks in the tab with purity on (three containers, four purities)");
+        helper.assertValueEqual(waterStacks(ThirstTab.DisplayItems()), 3 * PurityLevel.values().length, "water stacks in the tab with purity on (three containers, six purities)");
         withPurityOff(() -> {
             Collection<ItemStack> items = ThirstTab.DisplayItems();
             helper.assertValueEqual(waterStacks(items), 3, "water stacks in the tab with purity off");
