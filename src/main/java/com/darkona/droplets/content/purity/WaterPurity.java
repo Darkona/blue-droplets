@@ -331,15 +331,20 @@ public class WaterPurity
     }
 
     /**
-     * Purity of water just taken from {@code pos} by a machine or a dispenser: the water or water cauldron still there,
-     * or else a source that was picked up (world water purity depends on the biome and height, not on the block).
+     * Purity of water just taken from {@code pos} by a container, a machine or a dispenser: the water or water cauldron
+     * still there, or else a source that was picked up. A picked up source keeps the purity of poured water
+     * ({@link PouredWater#pickedUp}, which also hands it to the sources beside it); otherwise world water purity
+     * depends on the biome and height, not on the block.
      */
     public static int takenWaterPurity(Level level, BlockPos pos)
     {
         FluidState fluid = level.getFluidState(pos);
         if (fluid.is(FluidTags.WATER))
             return getWaterPurity(level, pos, fluid.isSource());
-        return level.getBlockState(pos).is(Blocks.WATER_CAULDRON) ? cauldronPurity(level, pos) : getWaterPurity(level, pos, true);
+        if (level.getBlockState(pos).is(Blocks.WATER_CAULDRON))
+            return cauldronPurity(level, pos);
+        int poured = PouredWater.pickedUp(level, pos);
+        return poured >= MIN_PURITY ? poured : getWaterPurity(level, pos, true);
     }
 
     /** Purity for water leaving the water cauldron being used right now, -1 outside one. Server thread only. */
@@ -385,7 +390,7 @@ public class WaterPurity
     }
 
     /**
-     * Purity of water in the world: salt water rule, then base (biome data map, biome tag, dimension data map,
+     * Purity of water in the world: poured water ({@link PouredWater}), salt water rule, then base (biome data map, biome tag, dimension data map,
      * {@code worldWaterBasePurity}), plus altitude, running water and biome deltas, capped by the biome's {@code max}.
      */
     public static int getWaterPurity(Level level, BlockPos pos, boolean source)
@@ -394,10 +399,21 @@ public class WaterPurity
     }
 
     /**
-     * Same, writing each step to {@code trace} when given ({@code /blue_droplets debug purity}).
+     * Same, writing each step to {@code trace} when given ({@code /blue_droplets debug purity}). A water source poured
+     * into the world, or next to poured ones, has the purity of the water poured ({@link PouredWater}).
      */
     public static int getWaterPurity(Level level, BlockPos pos, boolean source, @Nullable List<String> trace)
     {
+        if (source)
+        {
+            int poured = PouredWater.purityAt(level, pos);
+            if (poured >= MIN_PURITY)
+            {
+                if (trace != null)
+                    trace.add("poured water: fixed " + poured);
+                return poured;
+            }
+        }
         return getWaterPurity(level, level.getBiome(pos), pos, source, trace);
     }
 

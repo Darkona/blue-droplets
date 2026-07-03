@@ -183,7 +183,8 @@ public final class DropletsAPI
     }
 
     /**
-     * Purity of the water at this position (biome, dimension, altitude, running or still) or of a water cauldron. It
+     * Purity of the water at this position (biome, dimension, altitude, running or still; a source poured into the world
+     * keeps the purity of the water poured) or of a water cauldron. It
      * still answers when purity is off: check {@link #isPurityEnabled()} before letting it change anything.
      * Server side: biome and dimension data are not synced.
      */

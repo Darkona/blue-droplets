@@ -75,6 +75,25 @@ public class CreateTests
     }
 
     @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
+    public static void openPipePouredWaterKeepsItsPurity(GameTestHelper helper)
+    {
+        BlockPos water = helper.absolutePos(new BlockPos(2, 1, 2));
+        int contaminated = PurityLevel.CONTAMINATED.level();
+        helper.assertTrue(WaterPurity.getWaterPurity(helper.getLevel(), helper.getLevel().getBiome(water), water, true, null) > contaminated, "world water at the test position is already contaminated");
+        OpenEndedPipe pipe = new OpenEndedPipe(new BlockFace(water.above(), Direction.DOWN));
+        pipe.manageSource(helper.getLevel(), null);
+        IFluidHandler handler = pipe.provideHandler().getCapability();
+        // The pipe pours once its internal tank is full, like a pump filling it tick after tick.
+        for (int i = 0; i < 10 && !helper.getLevel().getFluidState(water).isSource(); i++)
+            handler.fill(water(contaminated, 250), IFluidHandler.FluidAction.EXECUTE);
+        helper.assertTrue(helper.getLevel().getFluidState(water).isSource(), "the open pipe end placed no water source");
+        helper.assertValueEqual(WaterPurity.getBlockPurity(helper.getLevel(), water), contaminated, "purity of water poured by an open pipe end");
+        FluidStack drained = drainThroughPipe(helper, water.above());
+        helper.assertValueEqual(WaterPurity.getPurity(drained), contaminated, "purity of poured water drained back by a pipe");
+        helper.succeed();
+    }
+
+    @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
     public static void sandFilterTurnsWithItsFacing(GameTestHelper helper)
     {
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));

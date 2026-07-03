@@ -207,6 +207,16 @@ Water purity has six levels, and every purity value in the config files is one o
 | `pureWater.quenchedBonus` | `3` | Quenched added when drinking pure water: a bottle then gives 8 instead of 5 |
 | `world.*` | | See [Water purity in the world](Modpack-Makers#water-purity-in-the-world) |
 
+### Poured water
+
+Water poured into the world keeps the purity it had, so sea water poured into a meadow is not clean when you fill a bucket there again. There is no key for it: it follows `general.enabled`.
+
+- A water source left by a bucket (a player or a dispenser), by NeoForge's `FluidUtil.tryPlaceFluid` (the fluid containers of many mods) or by a Create open pipe end is remembered with the purity of the water poured; water without a stored purity counts as `defaultPurity`.
+- Anything that takes or drinks water there reads that purity: bottles, bowls, buckets, drinking by hand, dispensers, Create pipes and hose pulleys, the Traveler's Backpack hose.
+- The infinite source that forms between two poured sources takes the worst purity beside it. Picking up a poured source hands its purity to the water sources beside it, so the one that refills its place is not clean either.
+- A remembered position that no longer holds a water source is ignored, and forgotten when read. Water placed in other ways (commands, other mods placing blocks directly) has the world's purity, unless it is next to poured water.
+- It is stored per chunk with the world and never sent to clients. `/blue_droplets debug purity` shows "poured water" when it applies.
+
 ### Thirst only (purity off)
 
 If you only want the thirst bar, set `general.enabled = false`. The server's value is sent to clients, so players do not need to change their own file. With it off:

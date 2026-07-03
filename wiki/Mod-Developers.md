@@ -76,7 +76,7 @@ if (values != null && !values.estimated()) { ... }       // estimated = guessed 
 int purity = DropletsAPI.getPurity(stack);               // MIN_PURITY (0) .. MAX_PURITY (5)
 PurityLevel named = PurityLevel.byLevel(purity);          // CONTAMINATED .. PURE, null if out of range
 ItemStack pure = DropletsAPI.withPurity(stack, PurityLevel.PURE.level());  // a copy
-int here = DropletsAPI.getWaterPurity(level, pos);       // server side
+int here = DropletsAPI.getWaterPurity(level, pos);       // server side; poured water keeps its purity
 ```
 
 Purity is an int from 0 to 5; `PurityLevel` names the levels and gives each its id (`contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `pure`, as in the config keys), its translation key (`blue_droplets.purity.<id>`) and the colour Blue Droplets uses for its name.
