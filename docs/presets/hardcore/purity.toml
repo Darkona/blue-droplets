@@ -5,4 +5,4 @@ worldWaterBasePurity = 0
 runningWaterPurificationAmount = 0
 
 [effects]
-dirty = ["minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,60,true"]
+contaminated = ["minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,60,true"]

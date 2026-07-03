@@ -1,5 +1,6 @@
 # Blue Droplets "casual" preset: copy these keys into config/blue_droplets/purity.toml.
 
 [effects]
-dirty = ["minecraft:nausea,100,0,50", "minecraft:hunger,600,0,50"]
-slightlyDirty = ["minecraft:nausea,100,0,25", "minecraft:hunger,600,0,25"]
+contaminated = ["minecraft:nausea,100,0,50", "minecraft:hunger,600,0,50"]
+dirty = ["minecraft:nausea,100,0,25", "minecraft:hunger,600,0,25"]
+murky = ["minecraft:nausea,100,0,10", "minecraft:hunger,600,0,10"]
