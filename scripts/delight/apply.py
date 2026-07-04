@@ -17,6 +17,7 @@ import os
 import sys
 
 import common as c
+import generate_keg_pouring as keg
 
 PACK_CLEAN = os.path.join(c.PACKS, "clean_water_cooking")
 MAIN_DATA = os.path.join(c.REPO, "src", "main", "resources", "data", "blue_droplets")
@@ -95,6 +96,8 @@ def build_clean(source, problems, info):
             out[k] = v
         ns, path = rid.split(":", 1)
         files["data/%s/recipe/%s.json" % (ns, path)] = c.dump_json(out)
+    # Keg de Brewin' and Chewin': recetas de vertido estrictas por pureza (generate_keg_pouring.py)
+    files.update(keg.build_keg_pouring(False, problems, info))
     files["pack.mcmeta"] = mcmeta("Blue Droplets: recipes of Farmer's Delight addons need clean water")
     return files
 

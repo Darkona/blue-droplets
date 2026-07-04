@@ -20,5 +20,6 @@
       "blue_droplets:purity": 1
     }
   },
+  "strict": true,
   "unit": "millibuckets"
 }

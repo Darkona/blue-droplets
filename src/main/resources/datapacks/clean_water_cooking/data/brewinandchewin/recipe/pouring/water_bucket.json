@@ -6,23 +6,13 @@
     }
   ],
   "type": "brewinandchewin:keg_pouring",
-  "container": {
-    "count": 1,
-    "id": "minecraft:glass_bottle"
-  },
   "fluid": {
-    "amount": 250,
+    "amount": 1000,
     "id": "minecraft:water"
   },
   "output": {
-    "components": {
-      "minecraft:potion_contents": {
-        "potion": "minecraft:water"
-      },
-      "blue_droplets:purity": 3
-    },
     "count": 1,
-    "id": "minecraft:potion"
+    "id": "minecraft:water_bucket"
   },
   "strict": true,
   "unit": "millibuckets"

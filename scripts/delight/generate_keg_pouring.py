@@ -95,13 +95,14 @@ def build_keg_pouring(check, problems, info):
             "type": "brewinandchewin:keg_pouring",
             "fluid": fluid_with_purity(purity),
             "output": water_bucket_output_with_purity(purity),
+            "strict": True,
             "unit": "millibuckets"
         }
         ns, path = rid.split(":", 1)
         files[f"data/{ns}/recipe/{path}.json"] = c.dump_json(recipe)
 
-    # Receta para agua sin componente (que da pureza 3)
-    rid = "brewinandchewin:pouring/water_bucket_no_purity"
+    # La receta original, estricta: solo el cubo sin pureza (se lee como la pureza por defecto)
+    rid = "brewinandchewin:pouring/water_bucket"
     recipe = {
         "neoforge:conditions": conditions,
         "type": "brewinandchewin:keg_pouring",
@@ -109,7 +110,8 @@ def build_keg_pouring(check, problems, info):
             "amount": 1000,
             "id": "minecraft:water"
         },
-        "output": water_bucket_output_with_purity(c.DEFAULT_PURITY),
+        "output": {"count": 1, "id": "minecraft:water_bucket"},
+        "strict": True,
         "unit": "millibuckets"
     }
     ns, path = rid.split(":", 1)
@@ -133,8 +135,8 @@ def build_keg_pouring(check, problems, info):
         ns, path = rid.split(":", 1)
         files[f"data/{ns}/recipe/{path}.json"] = c.dump_json(recipe)
 
-    # Receta para poción sin componente (que da pureza 3)
-    rid = "brewinandchewin:pouring/potion_no_purity"
+    # La receta original, estricta: solo la botella sin pureza
+    rid = "brewinandchewin:pouring/potion"
     recipe = {
         "neoforge:conditions": conditions,
         "type": "brewinandchewin:keg_pouring",
@@ -146,14 +148,13 @@ def build_keg_pouring(check, problems, info):
             "amount": 250,
             "id": "minecraft:water"
         },
-        "output": potion_output_with_purity(c.DEFAULT_PURITY),
+        "output": {"components": {"minecraft:potion_contents": {"potion": "minecraft:water"}}, "count": 1, "id": "minecraft:potion"},
         "strict": True,
         "unit": "millibuckets"
     }
     ns, path = rid.split(":", 1)
     files[f"data/{ns}/recipe/{path}.json"] = c.dump_json(recipe)
 
-    files["pack.mcmeta"] = mcmeta("Blue Droplets: Brewin' and Chewin' keg pouring recipes with purity levels")
 
     return files
 
@@ -198,28 +199,9 @@ def sync_dir(root, files, check, diffs):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--check", action="store_true")
-    args = ap.parse_args()
-
-    problems, info, diffs = [], [], []
-    recipes = build_keg_pouring(args.check, problems, info)
-    sync_dir(PACK_CLEAN, recipes, args.check, diffs)
-
-    print(f"keg_pouring: {len(recipes) - 1} recetas generadas")
-
-    for i in info:
-        print("aviso: " + i)
-    for p in problems:
-        print("ERROR: " + p)
-    for d in diffs:
-        print(("diferencia: " if args.check else "escrito: ") + d)
-    if not diffs:
-        print("sin cambios")
-
-    if problems or (args.check and diffs):
-        return 1
-    return 0
+    """Las recetas del keg las escribe apply.py junto con el resto de clean_water_cooking; esto solo lo invoca."""
+    import apply
+    return apply.main()
 
 
 if __name__ == "__main__":
