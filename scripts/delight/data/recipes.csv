@@ -3,8 +3,8 @@ brewinandchewin,brewinandchewin:fermenting/beer_from_water,brewinandchewin:ferme
 brewinandchewin,brewinandchewin:fermenting/glittering_grenadine_from_water,brewinandchewin:fermenting,tag,1000,brewinandchewin:glittering_grenadine,1000,cold,3,1,,363428b19105
 brewinandchewin,brewinandchewin:fermenting/rice_wine_from_water,brewinandchewin:fermenting,tag,1000,brewinandchewin:rice_wine,1000,cold,3,1,,55eba7f65581
 brewinandchewin,brewinandchewin:fermenting/vodka_from_water,brewinandchewin:fermenting,tag,1000,brewinandchewin:vodka,1000,cold,3,1,,c787e67fb99d
-brewinandchewin,brewinandchewin:pouring/potion,brewinandchewin:keg_pouring,bottle,250,minecraft:potion,1,cold,3,0,Vertido del keg con botella: igual que pouring/water_bucket.,1dbb9185673c
-brewinandchewin,brewinandchewin:pouring/water_bucket,brewinandchewin:keg_pouring,fluid,1000,minecraft:water_bucket,1,cold,3,0,"Vertido del keg: el tanque pierde la pureza al llenarse. Hace falta una receta estricta por pureza (ver estudio 3.2), no un difference.",8f6ea653fb3d
+brewinandchewin,brewinandchewin:pouring/potion,brewinandchewin:keg_pouring,bottle,250,minecraft:potion,1,cold,3,1,Resuelta con 7 recetas estrictas por pureza (purity 0-5 + sin componente → 3) en generate_keg_pouring.py,1dbb9185673c
+brewinandchewin,brewinandchewin:pouring/water_bucket,brewinandchewin:keg_pouring,fluid,1000,minecraft:water_bucket,1,cold,3,1,Resuelta con 7 recetas estrictas por pureza (purity 0-5 + sin componente → 3) en generate_keg_pouring.py,8f6ea653fb3d
 extradelight,create:mixing/dalgona_coffee_mixing,create:mixing,fluid,50,extradelight:dalgona_coffee,1,hot,2,1,,5f45e3377b13
 extradelight,create:mixing/gummies,create:mixing,fluid,100,extradelight:gummies,4,cold,3,1,,8618a367c890
 extradelight,create:mixing/marshmallow,create:mixing,fluid,250,extradelight:marshmallow,4,cold,3,1,,c70fb091a6a0
