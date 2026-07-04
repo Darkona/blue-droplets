@@ -10,6 +10,7 @@ public final class ClientConfig
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     public static final ModConfigSpec.BooleanValue ONLY_SHOW_PURITY_WHEN_SHIFTING;
+    public static final ModConfigSpec.BooleanValue TINT_WATER_BY_PURITY;
     public static final ModConfigSpec.BooleanValue SHOW_TOOLTIP_ICONS;
     public static final ModConfigSpec.BooleanValue FOLLOW_APPLESKIN;
     public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_Y_OFFSET;
@@ -35,6 +36,7 @@ public final class ClientConfig
     {
         BUILDER.push("Purity tooltip");
         ONLY_SHOW_PURITY_WHEN_SHIFTING = BUILDER.comment("If the purity tooltip should be shown only when the player is pressing the shift key").define("onlyShowPurityWhenShifting", false);
+        TINT_WATER_BY_PURITY = BUILDER.comment("Tint the water in bottles and terracotta bowls by its purity (brown when contaminated, blue when acceptable, near white when pure); off draws them as in vanilla").define("tintWaterByPurity", true);
         BUILDER.pop();
 
         BUILDER.push("Tooltip");

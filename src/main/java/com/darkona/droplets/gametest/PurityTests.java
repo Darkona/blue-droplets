@@ -6,7 +6,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
+import com.darkona.droplets.content.purity.PurityTint;
 import com.darkona.droplets.content.purity.WaterPurity;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import net.minecraft.core.BlockPos;
@@ -284,6 +287,28 @@ public class PurityTests
             int purity = WaterPurity.getWaterPurity(level, plains, pos, true, null);
             check(helper, "still plains water " + band[0] + " from sea level", purity, 1 + band[1]);
         }
+        helper.succeed();
+    }
+
+    /** The tint function is pure: only water containers with a stored purity change, and level 3 keeps vanilla blue. */
+    @GameTest(template = "box")
+    public static void tintChangesOnlyPurifiedWater(GameTestHelper helper)
+    {
+        int vanilla = 0xFF385DC6;
+        for (int level = PurityLevel.MIN; level <= PurityLevel.MAX; level++)
+        {
+            ItemStack bottle = WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), level);
+            ItemStack bowl = WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), level);
+            int expected = PurityTint.colorOf(level);
+            check(helper, "bottle tint at level " + level, PurityTint.color(bottle, 0, vanilla), expected);
+            check(helper, "bowl tint at level " + level, PurityTint.color(bowl, 0, vanilla), expected);
+            check(helper, "glass layer at level " + level, PurityTint.color(bottle, 1, -1), -1);
+        }
+        check(helper, "level 3 keeps vanilla blue", PurityTint.colorOf(3), vanilla);
+        ItemStack plain = PotionContents.createItemStack(Items.POTION, Potions.WATER);
+        check(helper, "water without purity", PurityTint.color(plain, 0, vanilla), vanilla);
+        ItemStack healing = WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.HEALING), 0);
+        check(helper, "healing potion", PurityTint.color(healing, 0, 0xFFF82423), 0xFFF82423);
         helper.succeed();
     }
 

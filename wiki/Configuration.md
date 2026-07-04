@@ -318,6 +318,7 @@ It runs when the world loads, after `/reload` and when `items.toml` changes, nev
 | Key | Default | Meaning |
 |---|---|---|
 | `Purity tooltip.onlyShowPurityWhenShifting` | `false` | Shows the purity line of water containers only while Shift is held |
+| `Purity tooltip.tintWaterByPurity` | `true` | Tints the water in bottles and terracotta bowls by its purity, from brown (0) to near white (5); nothing is tinted while purity is off, and off here draws them as in vanilla |
 | `Tooltip.showTooltipIcons` | `true` | Thirst and quenched of items as icons in the tooltip (`(est.)` for estimated values); when off, estimated values are shown as a text line |
 | `Tooltip.followAppleSkin` | `true` | With AppleSkin installed, the quenched outline, drink preview, exhaustion underlay and tooltip icons are also hidden when their food counterpart is turned off in AppleSkin's config, so both are set in one place; the tooltip icons then also follow its "hold Shift" option. Nothing is drawn through AppleSkin |
 | `Thirst Bar.thirstBarXOffset` / `thirstBarYOffset` | `0` | Moves the thirst bar |

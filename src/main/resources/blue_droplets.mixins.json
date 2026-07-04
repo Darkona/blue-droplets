@@ -21,6 +21,7 @@
     "MixinPotionItem"
   ],
   "client": [
+    "MixinItemColors",
     "MixinLocalPlayer"
   ],
   "injectors": {
