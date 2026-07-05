@@ -146,6 +146,13 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
+modId="reliquary"
+type="optional"
+versionRange="[2.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
 modId="sereneseasons"
 type="optional"
 versionRange="[10.1,)"

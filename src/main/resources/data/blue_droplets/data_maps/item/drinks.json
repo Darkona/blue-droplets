@@ -58,6 +58,7 @@
     "brewinandchewin:vodka": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "brewinandchewin"}], "thirst": -1, "quenched": -1},
     "brewinandchewin:withering_dross": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "brewinandchewin"}], "thirst": -1, "quenched": -2},
     "cold_sweat:filled_waterskin": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "cold_sweat"}], "thirst": 6, "quenched": 3},
+    "reliquary:emperor_chalice": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "reliquary"}], "thirst": 4, "quenched": 5, "purity": 5},
     "create:builders_tea": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "create"}], "thirst": 3, "quenched": 4},
     "create:chocolate_glazed_berries": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "create"}], "thirst": 2, "quenched": 2},
     "create:honeyed_apple": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "create"}], "thirst": 2, "quenched": 2},

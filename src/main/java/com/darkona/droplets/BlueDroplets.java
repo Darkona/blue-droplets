@@ -2,6 +2,7 @@ package com.darkona.droplets;
 
 import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
+import com.darkona.droplets.compat.reliquary.ReliquaryCompat;
 import com.darkona.droplets.compat.delight.DelightCompat;
 import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.SandFilterBlockEntity;
@@ -64,6 +65,7 @@ public class BlueDroplets
         modBus.addListener(DropletsGameTests::register);
         TravelersBackpackCompat.init(modBus);
         ColdSweatCompat.init();
+        ReliquaryCompat.init();
         DelightCompat.init();
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);

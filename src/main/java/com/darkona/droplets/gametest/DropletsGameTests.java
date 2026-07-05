@@ -19,6 +19,8 @@ public final class DropletsGameTests
             event.register(TravelersBackpackTests.class);
         if (ModList.get().isLoaded("cold_sweat"))
             event.register(ColdSweatTests.class);
+        if (ModList.get().isLoaded("reliquary"))
+            event.register(ReliquaryTests.class);
         if (ModList.get().isLoaded("sereneseasons"))
             event.register(SereneSeasonsTests.class);
         if (ModList.get().isLoaded("extradelight") && ModList.get().isLoaded("farm_and_charm") && ModList.get().isLoaded("herbalbrews") && ModList.get().isLoaded("brewery"))
