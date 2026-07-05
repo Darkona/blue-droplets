@@ -6,6 +6,11 @@
 Parsing error loading recipe (farmersdelight|cold_sweat):
 ^com\.google\.gson\.JsonParseException: Failed to parse either\. First: No key (amount|id) in MapLike
 
+# -PwithCompat: recipe errors of the mods' own recipes (Farmer's Delight, Ender's Delight, Create integrations), not ours.
+Parsing error loading recipe (minecraft:dough|endersdelight:chorus_pie_slice|create:mixing/melon_fruit_salad_lime_mixing)$
+^com\.google\.gson\.JsonParseException: No key item in MapLike
+^com\.google\.gson\.JsonParseException: Unknown registry key in ResourceKey\[minecraft:root / (minecraft:recipe_serializer\]: create:mixing|neoforge:condition_codecs\]: neoforge:never)
+
 # Dev environment: no Mojang account, so no chat signing keys or profile lookups.
 Failed to fetch user properties
 Failed to retrieve profile key pair
