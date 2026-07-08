@@ -15,7 +15,8 @@
     "brewinandchewin:fermenting": "cold",
     "extradelight:mixing_bowl": "cold",
     "create:mixing": "cold",
-    "farm_and_charm:crafting_bowl": "cold"
+    "farm_and_charm:crafting_bowl": "cold",
+    "culturaldelights:aging": "cold"
   },
   "_keyword_types": "Tipos donde tambien se miran las palabras del resultado. En los demas manda by_type.",
   "keyword_types": [

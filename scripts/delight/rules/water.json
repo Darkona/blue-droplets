@@ -35,7 +35,8 @@
     "extradelight:vat", "extradelight:mixing_bowl", "extradelight:evaporator",
     "brewinandchewin:fermenting",
     "create:mixing",
-    "farm_and_charm:pot_cooking", "farm_and_charm:stove", "farm_and_charm:crafting_bowl"
+    "farm_and_charm:pot_cooking", "farm_and_charm:stove", "farm_and_charm:crafting_bowl",
+    "culturaldelights:aging"
   ],
 
   "_manual_rows": "Recetas que usan agua pero no se detectan solas ni se pueden sobrescribir con datos simples: van al CSV con enabled=0 y la nota.",
