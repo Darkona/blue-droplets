@@ -1174,7 +1174,7 @@ minecraft:golden_carrot,minecraft,food,0,1,1,no,no,fresh_produce,antes: 1/2,cat:
 minecraft:honey_bottle,minecraft,drink,3,3,4,no,no,drink_crafted,,cat:drink_crafted steps3:+1,3/4/no/no
 minecraft:lingering_potion,minecraft,drink,0,0,0,no,no,non_food,,cat:non_food,0/0/no/no
 minecraft:melon_slice,minecraft,food,0,4,4,no,no,fresh_produce,antes: 4/5,cat:fresh_produce>melon,4/4/no/no
-minecraft:milk_bucket,minecraft,drink,1,3,3,no,no,drink_simple,,cat:drink_simple>milk,3/3/no/no
+minecraft:milk_bucket,minecraft,drink,1,4,4,no,no,drink_simple,Fijado a mano: 4/4 desde el primer volcado,cat:drink_simple>milk,3/3/no/no
 minecraft:mushroom_stew,minecraft,food,1,2,2,no,no,stew,antes: 2/3,cat:stew,2/2/no/no
 minecraft:mutton,minecraft,food,0,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
 minecraft:ominous_bottle,minecraft,drink,0,0,0,no,no,non_food,,cat:non_food,0/0/no/no
@@ -1341,7 +1341,7 @@ oceansdelight:stuffed_cod,oceansdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/n
 oceansdelight:stuffed_squid,oceansdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 oceansdelight:tentacle_on_a_stick,oceansdelight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 oceansdelight:tentacles,oceansdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
-reliquary:emperor_chalice,reliquary,drink,0,2,3,no,no,drink_crafted,antes: 4/5,cat:drink_crafted,2/3/no/no
+reliquary:emperor_chalice,reliquary,drink,0,4,5,no,no,drink_crafted,"Valor fijado a mano (Reliquary compat): agua pura, purity 5 en drinks.json",cat:drink_crafted,2/3/no/no
 reliquary:glowing_bread,reliquary,food,0,0,0,no,no,dry,,cat:dry,0/0/no/no
 reliquary:potion,reliquary,drink,0,2,3,no,no,drink_crafted,,cat:drink_crafted,2/3/no/no
 rusticdelight:baked_potato_slices,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
