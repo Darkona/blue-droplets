@@ -11,6 +11,15 @@ Parsing error loading recipe (minecraft:dough|endersdelight:chorus_pie_slice|cre
 ^com\.google\.gson\.JsonParseException: No key item in MapLike
 ^com\.google\.gson\.JsonParseException: Unknown registry key in ResourceKey\[minecraft:root / (minecraft:recipe_serializer\]: create:mixing|neoforge:condition_codecs\]: neoforge:never)
 
+# -PwithDelight, second batch: recipes of the mods' own data that fail to load. Expanded Delight replaces farmersdelight:melon_juice and
+# farmersrespite:brewing/melon_juice_from_water with a neoforge:never condition that NeoForge 21.1 does not know (the exception line is
+# already accepted above); Cook's Collection ships brewinandchewin:pizza_from_dough with the item farmersdelight:dough, which does not exist.
+Parsing error loading recipe (farmersrespite:brewing/melon_juice_from_water|farmersdelight:melon_juice|brewinandchewin:pizza_from_dough)$
+^com\.google\.gson\.JsonParseException: No key tag in MapLike\[\{"item":"farmersdelight:dough"\}\]; Unknown registry key in ResourceKey\[minecraft:root / minecraft:item\]: farmersdelight:dough
+
+# -PwithDelight, second batch: Crabber's Delight adds a spawn entry for crabbersdelight:crab without a spawn placement.
+The following entities have not registered to the RegisterSpawnPlacementsEvent
+
 # Dev environment: no Mojang account, so no chat signing keys or profile lookups.
 Failed to fetch user properties
 Failed to retrieve profile key pair
