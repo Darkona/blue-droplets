@@ -1,0 +1,52 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "expandeddelight"
+    }
+  ],
+  "type": "farmersdelight:cooking",
+  "container": {
+    "count": 1,
+    "id": "minecraft:bowl"
+  },
+  "experience": 0.8,
+  "ingredients": [
+    {
+      "type": "neoforge:difference",
+      "base": {
+        "item": "minecraft:water_bucket"
+      },
+      "subtracted": {
+        "type": "neoforge:compound",
+        "children": [
+          {
+            "type": "neoforge:components",
+            "items": "minecraft:water_bucket",
+            "components": {
+              "blue_droplets:purity": 0
+            }
+          },
+          {
+            "type": "neoforge:components",
+            "items": "minecraft:water_bucket",
+            "components": {
+              "blue_droplets:purity": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "c:crops/asparagus"
+    },
+    {
+      "tag": "c:foods/leafy_green"
+    }
+  ],
+  "recipe_book_tab": "meals",
+  "result": {
+    "count": 1,
+    "id": "expandeddelight:asparagus_soup"
+  }
+}

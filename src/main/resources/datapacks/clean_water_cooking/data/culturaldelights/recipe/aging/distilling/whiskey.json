@@ -1,0 +1,64 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "culturaldelights"
+    }
+  ],
+  "type": "culturaldelights:aging",
+  "cooktime": 200,
+  "ingredients": [
+    {
+      "type": "neoforge:difference",
+      "base": {
+        "tag": "c:buckets/water"
+      },
+      "subtracted": {
+        "type": "neoforge:compound",
+        "children": [
+          {
+            "type": "neoforge:components",
+            "items": "#c:buckets/water",
+            "components": {
+              "blue_droplets:purity": 0
+            }
+          },
+          {
+            "type": "neoforge:components",
+            "items": "#c:buckets/water",
+            "components": {
+              "blue_droplets:purity": 1
+            }
+          },
+          {
+            "type": "neoforge:components",
+            "items": "#c:buckets/water",
+            "components": {
+              "blue_droplets:purity": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "c:crops/wheat"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:brown_mushroom"
+    }
+  ],
+  "temperature": "hot",
+  "container": {
+    "item": "minecraft:glass_bottle"
+  },
+  "result": {
+    "id": "culturaldelights:whiskey",
+    "count": 1
+  }
+}
