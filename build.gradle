@@ -87,6 +87,9 @@ neoForge {
         }
         gameTestServer {
             type = 'gameTestServer'
+            // -PwithKubeJS keeps to its own folder, with the example scripts, so it never collides with other runs.
+            if (project.hasProperty('withKubeJS'))
+                gameDirectory = project.file('run/kubejs-test')
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
         data {
@@ -184,7 +187,23 @@ dependencies {
         localRuntime 'maven.modrinth:my-nethers-delight:1.10.4.1'
     }
 
+    // ./gradlew runGameTestServer -PwithKubeJS: KubeJS with its scripting engine (Rhino), to try examples/kubejs.
+    if (project.hasProperty('withKubeJS')) {
+        localRuntime 'maven.modrinth:kubejs:THIGFPwf'
+        localRuntime 'maven.modrinth:rhino:cQ4POTah'
+    }
+
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+}
+
+// -PwithKubeJS: copy the example scripts into run/kubejs-test/kubejs before the game tests, which run in that folder.
+if (project.hasProperty('withKubeJS')) {
+    var installKubeJSExamples = tasks.register('installKubeJSExamples', Copy) {
+        from 'examples/kubejs'
+        include '*_scripts/**'
+        into 'run/kubejs-test/kubejs'
+    }
+    tasks.matching { it.name == 'runGameTestServer' }.configureEach { dependsOn installKubeJSExamples }
 }
 
 tasks.withType(ProcessResources).configureEach {
