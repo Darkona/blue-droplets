@@ -183,6 +183,33 @@ public final class DropletsAPI
     }
 
     /**
+     * {@link #getPurity(ItemStack)} under a name of its own. Script languages such as KubeJS choose between overloads
+     * by the values they hold and fail when both {@link ItemStack} and {@link FluidStack} fit; call these there.
+     */
+    public static int getItemPurity(ItemStack stack)
+    {
+        return getPurity(stack);
+    }
+
+    /** {@link #getPurity(FluidStack)} under a name of its own, see {@link #getItemPurity}. */
+    public static int getFluidPurity(FluidStack fluid)
+    {
+        return getPurity(fluid);
+    }
+
+    /** {@link #withPurity(ItemStack, int)} under a name of its own, see {@link #getItemPurity}. */
+    public static ItemStack withItemPurity(ItemStack stack, int purity)
+    {
+        return withPurity(stack, purity);
+    }
+
+    /** {@link #withPurity(FluidStack, int)} under a name of its own, see {@link #getItemPurity}. */
+    public static FluidStack withFluidPurity(FluidStack fluid, int purity)
+    {
+        return withPurity(fluid, purity);
+    }
+
+    /**
      * Purity of the water at this position (biome, dimension, altitude, running or still; a source poured into the world
      * keeps the purity of the water poured) or of a water cauldron. It
      * still answers when purity is off: check {@link #isPurityEnabled()} before letting it change anything.

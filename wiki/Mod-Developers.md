@@ -246,6 +246,47 @@ public static void immuneToDirtyWater(PurityEffectEvent event) {
 }
 ```
 
+## KubeJS
+
+Modpacks can use the API from KubeJS 7 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in `examples/kubejs` in the repository; the tests of `./gradlew runGameTestServer -PwithKubeJS` run them inside KubeJS 2101.7.2 (build 377).
+
+```js
+var DropletsAPI = Java.loadClass('com.darkona.droplets.api.DropletsAPI')
+var PurityLevel = Java.loadClass('com.darkona.droplets.api.PurityLevel')
+
+// Read and change thirst (server scripts)
+ItemEvents.rightClicked('minecraft:clock', event => {
+  let thirst = DropletsAPI.view(event.player)
+  event.player.tell(`Thirst ${thirst.thirst()}/${thirst.maxThirst()}`)
+  if (event.player.shiftKeyDown) DropletsAPI.setThirst(event.player, 20)
+})
+
+// Hydrate when eating
+ItemEvents.foodEaten('minecraft:golden_carrot', event => {
+  if (event.entity.isPlayer()) DropletsAPI.drink(event.entity, 4, 2)
+})
+
+// Read purity: DropletsAPI.getItemPurity(stack), DropletsAPI.getWaterPurity(level, pos)
+
+// Events: nested classes are loaded with a $
+var DrinkPre = Java.loadClass('com.darkona.droplets.api.event.DrinkEvent$Pre')
+NativeEvents.onEvent(DrinkPre, event => {
+  if (event.purity <= PurityLevel.DIRTY.level() && event.entity.level.dimension.toString() == 'minecraft:the_nether')
+    event.canceled = true
+})
+
+// Register a drink in a startup script, after the item exists
+StartupEvents.postInit(() => {
+  DropletsAPI.registerDrink(Item.of('kubejs:lemonade').item, 6, 4, PurityLevel.CLEAN.level())
+})
+```
+
+- Use `getItemPurity`, `getFluidPurity`, `withItemPurity` and `withFluidPurity` instead of the `getPurity` and `withPurity` overloads: KubeJS cannot choose between an `ItemStack` and a `FluidStack` and fails with "the choice of Java method is ambiguous".
+- Top level `const` and `let` are shared by all scripts of one type, so declare the loaded classes with `var` when several files load the same one.
+- Registered drinks belong in `startup_scripts` (`StartupEvents.postInit`, when the items exist). `items.toml`, the `blue_droplets:drinks` data map and `#blue_droplets:no_thirst` still win over them.
+- Exhaustion modifiers take a JavaScript function and a string id: `DropletsAPI.registerExhaustionModifier('kubejs:night', (player, multiplier) => player.level.isNight() ? multiplier * 0.75 : multiplier)`.
+- In KubeJS, `entity.level` and `level.dimension` are properties, not methods.
+
 ## Deprecated
 
 `RegisterThirstValueEvent` (posted on each table rebuild) still works but is not in the API jar; use
