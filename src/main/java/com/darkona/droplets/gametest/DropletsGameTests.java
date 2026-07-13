@@ -31,5 +31,7 @@ public final class DropletsGameTests
             event.register(MinersDelightTests.class);
         if (ModList.get().isLoaded("minersdelight") && ModList.get().isLoaded("create"))
             event.register(MinersDelightCreateTests.class);
+        if (ModList.get().isLoaded("culturaldelights"))
+            event.register(CulturalDelightsTests.class);
     }
 }

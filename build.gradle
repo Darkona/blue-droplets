@@ -131,6 +131,7 @@ dependencies {
     compileOnly 'maven.modrinth:lets-do-herbalbrews:1.1.4'
     compileOnly 'maven.modrinth:lets-do-brewery-farmcharm-compat:2.1.11'
     compileOnly 'maven.modrinth:miners-delight:1.4.5'
+    compileOnly 'maven.modrinth:cultural-delights:0.18.1-1.21.1'
     compileOnly 'maven.modrinth:architectury-api:13.0.8+neoforge'
     compileOnly 'maven.modrinth:cold-sweat:2.4.3.1'
     compileOnly 'maven.modrinth:reliquary-reincarnations:kOKl8h6O'
