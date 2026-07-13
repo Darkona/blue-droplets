@@ -21,6 +21,7 @@
     "farm_and_charm.MixinSinkBlock",
     "farm_and_charm.MixinTimberWellBlock",
     "herbalbrews.MixinTeaKettleBlockEntity",
+    "minersdelight.MixinCopperCupItem",
     "travelersbackpack.MixinHoseItem"
   ],
   "injectors": {

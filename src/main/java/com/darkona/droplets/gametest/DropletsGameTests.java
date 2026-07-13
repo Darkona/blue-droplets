@@ -27,5 +27,9 @@ public final class DropletsGameTests
             event.register(KubeJSTests.class);
         if (ModList.get().isLoaded("extradelight") && ModList.get().isLoaded("farm_and_charm") && ModList.get().isLoaded("herbalbrews") && ModList.get().isLoaded("brewery"))
             event.register(DelightTests.class);
+        if (ModList.get().isLoaded("minersdelight"))
+            event.register(MinersDelightTests.class);
+        if (ModList.get().isLoaded("minersdelight") && ModList.get().isLoaded("create"))
+            event.register(MinersDelightCreateTests.class);
     }
 }
