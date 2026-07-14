@@ -48,7 +48,36 @@
         }
       },
       {
-        "item": "minersdelight:water_cup"
+        "type": "neoforge:difference",
+        "base": {
+          "item": "minersdelight:water_cup"
+        },
+        "subtracted": {
+          "type": "neoforge:compound",
+          "children": [
+            {
+              "type": "neoforge:components",
+              "items": "minersdelight:water_cup",
+              "components": {
+                "blue_droplets:purity": 0
+              }
+            },
+            {
+              "type": "neoforge:components",
+              "items": "minersdelight:water_cup",
+              "components": {
+                "blue_droplets:purity": 1
+              }
+            },
+            {
+              "type": "neoforge:components",
+              "items": "minersdelight:water_cup",
+              "components": {
+                "blue_droplets:purity": 2
+              }
+            }
+          ]
+        }
       }
     ]
   },

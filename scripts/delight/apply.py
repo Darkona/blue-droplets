@@ -98,6 +98,13 @@ def build_clean(source, problems, info):
         files["data/%s/recipe/%s.json" % (ns, path)] = c.dump_json(out)
     # Keg de Brewin' and Chewin': recetas de vertido estrictas por pureza (generate_keg_pouring.py)
     files.update(keg.build_keg_pouring(False, problems, info))
+    # Archivos fijos escritos a mano (por ejemplo, arreglos de recetas rotas de otros mods): static/clean_water_cooking
+    static = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "clean_water_cooking")
+    for dp, _, fns in os.walk(static):
+        for fn in fns:
+            src = os.path.join(dp, fn)
+            with open(src, encoding="utf-8") as f:
+                files[os.path.relpath(src, static).replace(os.sep, "/")] = f.read()
     files["pack.mcmeta"] = mcmeta("Blue Droplets: recipes of Farmer's Delight addons need clean water")
     return files
 

@@ -43,3 +43,7 @@ Scripts en Python 3 estándar. Se corren desde cualquier carpeta; los CSV de `da
 - Opcional, para `craft_steps` y las recetas con agua: agregarlo a `mods.json` (id, `modrinth` y `version`, o `repo` y `data_roots`). Sin eso `craft_steps` queda en 0.
 - Correr `extract_recipes.py`, `prepare_items.py`, `apply.py` y `report.py`. No hay que tocar código.
 - Los packs `clean_water_cooking` y `purify_cooking_pot` los registra `BlueDroplets.addPacks`; `apply.py` avisa si falta alguno.
+
+## Archivos fijos
+
+Lo que haya en `static/clean_water_cooking/` se copia tal cual al pack `clean_water_cooking` cada vez que corre `apply.py` (por ejemplo, los arreglos de recetas rotas de otros mods, como el zumo de melón de Expanded Delight). Todo lo demás del pack que no genere el script se borra.
