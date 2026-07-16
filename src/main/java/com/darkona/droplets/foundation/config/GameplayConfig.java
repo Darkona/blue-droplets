@@ -1,7 +1,7 @@
 package com.darkona.droplets.foundation.config;
 
 import com.darkona.droplets.core.NumberRows;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
@@ -10,104 +10,104 @@ import java.util.List;
  */
 public final class GameplayConfig
 {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
     public enum Mode { MIRROR_FOOD, OWN }
 
     public enum ClimateFormula { LEGACY, CURVE }
 
-    public static final ModConfigSpec.EnumValue<Mode> MODE;
-    public static final ModConfigSpec.DoubleValue BASAL_PER_TICK;
-    public static final ModConfigSpec.DoubleValue EXHAUSTION_PER_POINT;
-    public static final ModConfigSpec.DoubleValue NAUSEA_PER_TICK;
-    public static final ModConfigSpec.DoubleValue DEPLETION_MULTIPLIER;
-    public static final ModConfigSpec.BooleanValue DEPLETES_IN_PEACEFUL;
-    public static final ModConfigSpec.DoubleValue NETHER_MULTIPLIER;
-    public static final ModConfigSpec.IntValue FIRE_RESISTANCE_PERCENT;
-    public static final ModConfigSpec.BooleanValue DEPLETES_WHEN_NAUSEOUS;
-    public static final ModConfigSpec.DoubleValue DEHYDRATION_MULTIPLIER;
-    public static final ModConfigSpec.IntValue QUENCHNESS_INTERVAL_TICKS;
-    public static final ModConfigSpec.BooleanValue QUENCHNESS_POTION;
-    public static final ModConfigSpec.DoubleValue HYDRATED_MULTIPLIER;
-    public static final ModConfigSpec.BooleanValue WATER_BREATHING_REDUCES_THIRST;
-    public static final ModConfigSpec.DoubleValue UNDERWATER_BREATHING_MULTIPLIER;
-    public static final ModConfigSpec.BooleanValue FULL_HYDRATION_BONUS;
-    public static final ModConfigSpec.IntValue FULL_HYDRATION_MIN_QUENCHED;
-    public static final ModConfigSpec.IntValue FULL_HYDRATION_SECONDS;
-    public static final ModConfigSpec.IntValue FULL_HYDRATION_DURATION_TICKS;
-    public static final ModConfigSpec.BooleanValue OVERHYDRATION;
-    public static final ModConfigSpec.IntValue OVERHYDRATION_THRESHOLD;
-    public static final ModConfigSpec.DoubleValue OVERHYDRATION_DECAY;
-    public static final ModConfigSpec.IntValue OVERHYDRATION_DURATION_TICKS;
-    public static final ModConfigSpec.BooleanValue OVERHYDRATION_NAUSEA;
-    public static final ModConfigSpec.DoubleValue FIRE_PROTECTION_PER_LEVEL;
-    public static final ModConfigSpec.IntValue FIRE_PROTECTION_MAX_LEVELS;
+    public static final ForgeConfigSpec.EnumValue<Mode> MODE;
+    public static final ForgeConfigSpec.DoubleValue BASAL_PER_TICK;
+    public static final ForgeConfigSpec.DoubleValue EXHAUSTION_PER_POINT;
+    public static final ForgeConfigSpec.DoubleValue NAUSEA_PER_TICK;
+    public static final ForgeConfigSpec.DoubleValue DEPLETION_MULTIPLIER;
+    public static final ForgeConfigSpec.BooleanValue DEPLETES_IN_PEACEFUL;
+    public static final ForgeConfigSpec.DoubleValue NETHER_MULTIPLIER;
+    public static final ForgeConfigSpec.IntValue FIRE_RESISTANCE_PERCENT;
+    public static final ForgeConfigSpec.BooleanValue DEPLETES_WHEN_NAUSEOUS;
+    public static final ForgeConfigSpec.DoubleValue DEHYDRATION_MULTIPLIER;
+    public static final ForgeConfigSpec.IntValue QUENCHNESS_INTERVAL_TICKS;
+    public static final ForgeConfigSpec.BooleanValue QUENCHNESS_POTION;
+    public static final ForgeConfigSpec.DoubleValue HYDRATED_MULTIPLIER;
+    public static final ForgeConfigSpec.BooleanValue WATER_BREATHING_REDUCES_THIRST;
+    public static final ForgeConfigSpec.DoubleValue UNDERWATER_BREATHING_MULTIPLIER;
+    public static final ForgeConfigSpec.BooleanValue FULL_HYDRATION_BONUS;
+    public static final ForgeConfigSpec.IntValue FULL_HYDRATION_MIN_QUENCHED;
+    public static final ForgeConfigSpec.IntValue FULL_HYDRATION_SECONDS;
+    public static final ForgeConfigSpec.IntValue FULL_HYDRATION_DURATION_TICKS;
+    public static final ForgeConfigSpec.BooleanValue OVERHYDRATION;
+    public static final ForgeConfigSpec.IntValue OVERHYDRATION_THRESHOLD;
+    public static final ForgeConfigSpec.DoubleValue OVERHYDRATION_DECAY;
+    public static final ForgeConfigSpec.IntValue OVERHYDRATION_DURATION_TICKS;
+    public static final ForgeConfigSpec.BooleanValue OVERHYDRATION_NAUSEA;
+    public static final ForgeConfigSpec.DoubleValue FIRE_PROTECTION_PER_LEVEL;
+    public static final ForgeConfigSpec.IntValue FIRE_PROTECTION_MAX_LEVELS;
 
-    public static final ModConfigSpec.EnumValue<ClimateFormula> CLIMATE_FORMULA;
-    public static final ModConfigSpec.DoubleValue LEGACY_HARSHNESS;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> TEMPERATURE_CURVE;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> HUMIDITY_CURVE;
-    public static final ModConfigSpec.DoubleValue RAIN_MULTIPLIER;
-    public static final ModConfigSpec.DoubleValue THUNDER_MULTIPLIER;
-    public static final ModConfigSpec.DoubleValue DAY_MULTIPLIER;
-    public static final ModConfigSpec.DoubleValue NIGHT_MULTIPLIER;
-    public static final ModConfigSpec.DoubleValue SUN_MULTIPLIER;
-    public static final ModConfigSpec.DoubleValue IN_WATER_MULTIPLIER;
-    public static final ModConfigSpec.DoubleValue UNDERWATER_MULTIPLIER;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> ALTITUDE_MULTIPLIERS;
+    public static final ForgeConfigSpec.EnumValue<ClimateFormula> CLIMATE_FORMULA;
+    public static final ForgeConfigSpec.DoubleValue LEGACY_HARSHNESS;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> TEMPERATURE_CURVE;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> HUMIDITY_CURVE;
+    public static final ForgeConfigSpec.DoubleValue RAIN_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue THUNDER_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue DAY_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue NIGHT_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue SUN_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue IN_WATER_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue UNDERWATER_MULTIPLIER;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ALTITUDE_MULTIPLIERS;
 
-    public static final ModConfigSpec.DoubleValue SPRINT_PER_METER;
-    public static final ModConfigSpec.DoubleValue SWIM_PER_METER;
-    public static final ModConfigSpec.DoubleValue JUMP;
-    public static final ModConfigSpec.DoubleValue SPRINT_JUMP;
-    public static final ModConfigSpec.DoubleValue ATTACK;
-    public static final ModConfigSpec.DoubleValue BLOCK_BREAK;
-    public static final ModConfigSpec.DoubleValue DAMAGE_MULTIPLIER;
-    public static final ModConfigSpec.DoubleValue HEAL_PER_HEALTH;
-    public static final ModConfigSpec.DoubleValue RIDING_MULTIPLIER;
-    public static final ModConfigSpec.DoubleValue SLEEPING_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue SPRINT_PER_METER;
+    public static final ForgeConfigSpec.DoubleValue SWIM_PER_METER;
+    public static final ForgeConfigSpec.DoubleValue JUMP;
+    public static final ForgeConfigSpec.DoubleValue SPRINT_JUMP;
+    public static final ForgeConfigSpec.DoubleValue ATTACK;
+    public static final ForgeConfigSpec.DoubleValue BLOCK_BREAK;
+    public static final ForgeConfigSpec.DoubleValue DAMAGE_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue HEAL_PER_HEALTH;
+    public static final ForgeConfigSpec.DoubleValue RIDING_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue SLEEPING_MULTIPLIER;
 
-    public static final ModConfigSpec.BooleanValue REGEN_HALTED_WHEN_THIRSTY;
-    public static final ModConfigSpec.BooleanValue REGEN_DEPLETES_THIRST;
-    public static final ModConfigSpec.BooleanValue REGEN_CLIMATE_DEPENDENT;
-    public static final ModConfigSpec.IntValue FULL_REGEN_MIN_THIRST;
-    public static final ModConfigSpec.IntValue SLOW_REGEN_MIN_THIRST;
-    public static final ModConfigSpec.IntValue SLOW_REGEN_INTERVAL_TICKS;
-    public static final ModConfigSpec.IntValue HUNGER_REGEN_MIN_THIRST;
-    public static final ModConfigSpec.IntValue PEACEFUL_REGEN_AMOUNT;
-    public static final ModConfigSpec.IntValue PEACEFUL_REGEN_INTERVAL_TICKS;
+    public static final ForgeConfigSpec.BooleanValue REGEN_HALTED_WHEN_THIRSTY;
+    public static final ForgeConfigSpec.BooleanValue REGEN_DEPLETES_THIRST;
+    public static final ForgeConfigSpec.BooleanValue REGEN_CLIMATE_DEPENDENT;
+    public static final ForgeConfigSpec.IntValue FULL_REGEN_MIN_THIRST;
+    public static final ForgeConfigSpec.IntValue SLOW_REGEN_MIN_THIRST;
+    public static final ForgeConfigSpec.IntValue SLOW_REGEN_INTERVAL_TICKS;
+    public static final ForgeConfigSpec.IntValue HUNGER_REGEN_MIN_THIRST;
+    public static final ForgeConfigSpec.IntValue PEACEFUL_REGEN_AMOUNT;
+    public static final ForgeConfigSpec.IntValue PEACEFUL_REGEN_INTERVAL_TICKS;
 
-    public static final ModConfigSpec.DoubleValue DAMAGE_AMOUNT;
-    public static final ModConfigSpec.IntValue DAMAGE_INTERVAL_TICKS;
-    public static final ModConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_EASY;
-    public static final ModConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_NORMAL;
-    public static final ModConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_HARD;
-    public static final ModConfigSpec.BooleanValue DAMAGE_CAN_KILL;
+    public static final ForgeConfigSpec.DoubleValue DAMAGE_AMOUNT;
+    public static final ForgeConfigSpec.IntValue DAMAGE_INTERVAL_TICKS;
+    public static final ForgeConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_EASY;
+    public static final ForgeConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_NORMAL;
+    public static final ForgeConfigSpec.DoubleValue DAMAGE_MIN_HEALTH_HARD;
+    public static final ForgeConfigSpec.BooleanValue DAMAGE_CAN_KILL;
 
-    public static final ModConfigSpec.BooleanValue SPRINT_BLOCKED_WHEN_THIRSTY;
-    public static final ModConfigSpec.IntValue SPRINT_MIN_THIRST;
+    public static final ForgeConfigSpec.BooleanValue SPRINT_BLOCKED_WHEN_THIRSTY;
+    public static final ForgeConfigSpec.IntValue SPRINT_MIN_THIRST;
 
-    public static final ModConfigSpec.BooleanValue EXTRA_THIRST_TO_QUENCHED;
-    public static final ModConfigSpec.IntValue WATER_BOTTLE_STACK_SIZE;
-    public static final ModConfigSpec.BooleanValue CAN_FILL_FROM_FLOWING_WATER;
-    public static final ModConfigSpec.BooleanValue RAIN_DRINKING;
-    public static final ModConfigSpec.DoubleValue RAIN_MAX_PITCH;
-    public static final ModConfigSpec.IntValue RAIN_INTERVAL_TICKS;
-    public static final ModConfigSpec.IntValue RAIN_THIRST;
-    public static final ModConfigSpec.IntValue RAIN_QUENCHED;
-    public static final ModConfigSpec.BooleanValue HAND_DRINKING;
-    public static final ModConfigSpec.BooleanValue HAND_DRINKING_BOTH_HANDS;
-    public static final ModConfigSpec.IntValue HAND_DRINKING_THIRST;
-    public static final ModConfigSpec.IntValue HAND_DRINKING_QUENCHED;
-    public static final ModConfigSpec.IntValue HAND_DRINKING_COOLDOWN;
-    public static final ModConfigSpec.BooleanValue HAND_DRINKING_EFFECTS;
+    public static final ForgeConfigSpec.BooleanValue EXTRA_THIRST_TO_QUENCHED;
+    public static final ForgeConfigSpec.IntValue WATER_BOTTLE_STACK_SIZE;
+    public static final ForgeConfigSpec.BooleanValue CAN_FILL_FROM_FLOWING_WATER;
+    public static final ForgeConfigSpec.BooleanValue RAIN_DRINKING;
+    public static final ForgeConfigSpec.DoubleValue RAIN_MAX_PITCH;
+    public static final ForgeConfigSpec.IntValue RAIN_INTERVAL_TICKS;
+    public static final ForgeConfigSpec.IntValue RAIN_THIRST;
+    public static final ForgeConfigSpec.IntValue RAIN_QUENCHED;
+    public static final ForgeConfigSpec.BooleanValue HAND_DRINKING;
+    public static final ForgeConfigSpec.BooleanValue HAND_DRINKING_BOTH_HANDS;
+    public static final ForgeConfigSpec.IntValue HAND_DRINKING_THIRST;
+    public static final ForgeConfigSpec.IntValue HAND_DRINKING_QUENCHED;
+    public static final ForgeConfigSpec.IntValue HAND_DRINKING_COOLDOWN;
+    public static final ForgeConfigSpec.BooleanValue HAND_DRINKING_EFFECTS;
 
-    public static final ModConfigSpec.IntValue RESPAWN_THIRST;
-    public static final ModConfigSpec.IntValue RESPAWN_QUENCHED;
+    public static final ForgeConfigSpec.IntValue RESPAWN_THIRST;
+    public static final ForgeConfigSpec.IntValue RESPAWN_QUENCHED;
 
-    public static final ModConfigSpec.BooleanValue LOOT;
+    public static final ForgeConfigSpec.BooleanValue LOOT;
 
-    public static final ModConfigSpec SPEC;
+    public static final ForgeConfigSpec SPEC;
 
     static
     {
@@ -135,9 +135,9 @@ public final class GameplayConfig
                 .defineEnum("formula", ClimateFormula.LEGACY);
         LEGACY_HARSHNESS = BUILDER.comment("LEGACY: how much of a multiplier below 1 is kept (0.5 = halfway to 1)").defineInRange("legacyHarshness", 0.5, 0.0, 1.0);
         TEMPERATURE_CURVE = BUILDER.comment("CURVE: [\"temperature,multiplier\", ...] in ascending temperature; straight lines between points, flat beyond the ends")
-                .<String>defineListAllowEmpty("temperatureCurve", List.of("-0.5,0.7", "0.8,1.0", "2.0,1.5"), () -> "0.8,1.0", GameplayConfig::isValidPair);
+                .<String>defineListAllowEmpty("temperatureCurve", List.of("-0.5,0.7", "0.8,1.0", "2.0,1.5"), GameplayConfig::isValidPair);
         HUMIDITY_CURVE = BUILDER.comment("CURVE: [\"downfall,multiplier\", ...] in ascending downfall (0 dry to 1 wet)")
-                .<String>defineListAllowEmpty("humidityCurve", List.of("0.0,1.2", "0.4,1.0", "1.0,0.8"), () -> "0.4,1.0", GameplayConfig::isValidPair);
+                .<String>defineListAllowEmpty("humidityCurve", List.of("0.0,1.2", "0.4,1.0", "1.0,0.8"), GameplayConfig::isValidPair);
         RAIN_MULTIPLIER = BUILDER.comment("When rain falls on the player").defineInRange("rain", 1.0, 0.0, 10.0);
         THUNDER_MULTIPLIER = BUILDER.comment("When rain falls on the player during a thunderstorm (replaces rain)").defineInRange("thunder", 1.0, 0.0, 10.0);
         DAY_MULTIPLIER = BUILDER.comment("During the day, in dimensions with a day cycle").defineInRange("day", 1.0, 0.0, 10.0);
@@ -146,7 +146,7 @@ public final class GameplayConfig
         IN_WATER_MULTIPLIER = BUILDER.comment("While in water with the head out").defineInRange("inWater", 1.0, 0.0, 10.0);
         UNDERWATER_MULTIPLIER = BUILDER.comment("While fully underwater").defineInRange("underwater", 1.0, 0.0, 10.0);
         ALTITUDE_MULTIPLIERS = BUILDER.comment("[\"minY,maxY,multiplier\", ...] measured from the dimension's sea level; the first band containing the player applies")
-                .<String>defineListAllowEmpty("altitude", List.of(), () -> "64,4096,1.0", GameplayConfig::isValidAltitude);
+                .<String>defineListAllowEmpty("altitude", List.of(), GameplayConfig::isValidAltitude);
         BUILDER.pop();
 
         BUILDER.comment("Exhaustion per activity. In OWN mode these are the sources (defaults = vanilla hunger exhaustion);",

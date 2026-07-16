@@ -1,7 +1,7 @@
 package com.darkona.droplets.compat.appleskin;
 
 import com.darkona.droplets.foundation.config.ClientConfig;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 /**
  * AppleSkin, client only: with {@code followAppleSkin}, each thirst HUD visual and the tooltip icons are also turned

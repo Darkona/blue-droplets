@@ -4,7 +4,7 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 public final class SupernaturalCompat
 {
@@ -15,7 +15,7 @@ public final class SupernaturalCompat
     public static void initClient()
     {
         if (LOADED)
-            ThirstBarStyles.register(BlueDroplets.asResource("supernatural_vampire"), SupernaturalBridge::hasVampirism, ThirstBarStyles.VAMPIRE_COLOR, ThirstBarStyles.VAMPIRE_PRIORITY);
+            ThirstBarStyles.register(BlueDroplets.asResource("supernatural_vampire"), SupernaturalBridge::isVampire, ThirstBarStyles.VAMPIRE_COLOR, ThirstBarStyles.VAMPIRE_PRIORITY);
     }
 
     public static boolean canDrinkItem(ItemStack stack, Player player)

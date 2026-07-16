@@ -4,7 +4,7 @@ import com.simibubi.create.content.fluids.transfer.FluidDrainingBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
 import net.minecraft.core.BlockPos;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

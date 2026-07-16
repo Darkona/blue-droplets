@@ -2,14 +2,13 @@ package com.darkona.droplets.api;
 
 import com.darkona.droplets.api.spi.DropletsService;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -307,7 +306,7 @@ public final class DropletsAPI
      * has {@code effect} (built in: Quenchness). Meant for positive thirst effects. Client side only (for example in
      * {@code FMLClientSetupEvent}).
      */
-    public static void registerWaveEffect(Holder<MobEffect> effect)
+    public static void registerWaveEffect(MobEffect effect)
     {
         service().registerWaveEffect(effect);
     }

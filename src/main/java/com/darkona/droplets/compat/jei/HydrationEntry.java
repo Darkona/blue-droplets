@@ -6,7 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public record HydrationEntry(ItemStack stack, ThirstValues values)
     {
         for (Item item : items)
         {
-            ItemStack stack = item == Items.POTION ? PotionContents.createItemStack(Items.POTION, Potions.WATER) : new ItemStack(item);
+            ItemStack stack = item == Items.POTION ? PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER) : new ItemStack(item);
             ThirstValues values = ThirstHelper.valuesOf(stack);
             if (values != null && (values.thirst() != 0 || values.quenched() != 0))
                 entries.add(new HydrationEntry(stack, values));

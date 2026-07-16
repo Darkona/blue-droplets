@@ -19,9 +19,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
+
+import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 
 /**
  * Miner's Delight ({@code -PwithDelight}): the water cup carries a purity like a bottle. Registered by
@@ -34,7 +36,7 @@ public class MinersDelightTests
 
     static Item item(String id)
     {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.parse("minersdelight:" + id));
+        return BuiltInRegistries.ITEM.get(new ResourceLocation("minersdelight:" + id));
     }
 
     private static ItemStack useFromAbove(ServerPlayer player, BlockPos water, ItemStack stack)
@@ -59,12 +61,12 @@ public class MinersDelightTests
         BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
         helper.getLevel().setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
         com.darkona.droplets.content.purity.PouredWater.poured(helper.getLevel(), pos, CONTAMINATED);
-        helper.assertValueEqual(WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of the poured source");
+        assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of the poured source");
 
         ItemStack cup = useFromAbove(player(helper), pos, new ItemStack(item("copper_cup")));
         helper.assertTrue(cup.is(item("water_cup")), "the copper cup was not filled: " + cup);
         helper.assertTrue(WaterPurity.hasPurity(cup), "a cup filled from the world has no purity");
-        helper.assertValueEqual(WaterPurity.getPurity(cup), CONTAMINATED, "purity of a cup filled from poured water");
+        assertValueEqual(helper, WaterPurity.getPurity(cup), CONTAMINATED, "purity of a cup filled from poured water");
         helper.succeed();
     }
 
@@ -76,7 +78,7 @@ public class MinersDelightTests
         ItemStack cup = WaterPurity.addPurity(new ItemStack(item("water_cup")), CONTAMINATED);
         helper.assertTrue(((CopperCupItem) cup.getItem()).emptyContents(player, helper.getLevel(), pos, null, cup), "the cup was not emptied at " + pos);
         helper.assertTrue(helper.getLevel().getFluidState(pos).isSource(), "no water source where the cup was emptied");
-        helper.assertValueEqual(WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of the source a dirty cup left");
+        assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of the source a dirty cup left");
         helper.succeed();
     }
 
@@ -93,7 +95,7 @@ public class MinersDelightTests
         ItemStack cup = player.getMainHandItem();
         helper.assertTrue(cup.is(item("water_cup")), "the copper cup was not filled at the cauldron: " + cup);
         helper.assertTrue(WaterPurity.hasPurity(cup), "a cup filled from a cauldron has no purity");
-        helper.assertValueEqual(WaterPurity.getPurity(cup), WaterPurity.cauldronPurity(helper.getLevel(), pos), "purity of a cup filled from a cauldron");
+        assertValueEqual(helper, WaterPurity.getPurity(cup), WaterPurity.cauldronPurity(helper.getLevel(), pos), "purity of a cup filled from a cauldron");
         helper.assertTrue(CauldronInteraction.WATER.map().containsKey(item("copper_cup")), "no cauldron interaction for the copper cup");
         helper.succeed();
     }

@@ -9,8 +9,8 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -18,13 +18,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import java.util.UUID;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
+
+import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 
 /**
  * The scripts of {@code examples/kubejs}, running inside KubeJS. Registered by {@link DropletsGameTests} only when
@@ -38,13 +40,13 @@ public class KubeJSTests
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void startupScriptRegistersADrink(GameTestHelper helper)
     {
-        Item lemonade = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("kubejs", "lemonade"));
+        Item lemonade = BuiltInRegistries.ITEM.get(new ResourceLocation("kubejs", "lemonade"));
         helper.assertTrue(lemonade != net.minecraft.world.item.Items.AIR, "kubejs:lemonade does not exist" + HINT);
         ThirstValues values = DropletsAPI.getDrinkValues(new ItemStack(lemonade));
         helper.assertTrue(values != null, "kubejs:lemonade has no thirst values" + HINT);
-        helper.assertValueEqual(values.thirst(), 6, "lemonade thirst");
-        helper.assertValueEqual(values.quenched(), 4, "lemonade quenched");
-        helper.assertValueEqual(values.purity(), PurityLevel.CLEAN.level(), "lemonade purity");
+        assertValueEqual(helper, values.thirst(), 6, "lemonade thirst");
+        assertValueEqual(helper, values.quenched(), 4, "lemonade quenched");
+        assertValueEqual(helper, values.purity(), PurityLevel.CLEAN.level(), "lemonade purity");
         helper.succeed();
     }
 
@@ -54,11 +56,11 @@ public class KubeJSTests
         ServerPlayer player = player(helper);
         thirst(player).change(player, 10, 0, ThirstChangeEvent.Cause.COMMAND);
         DropletsAPI.drink(player, 4, 2, PurityLevel.PURE.level());
-        helper.assertValueEqual(DropletsAPI.view(player).quenched(), 2, "quenched without the tag");
+        assertValueEqual(helper, DropletsAPI.view(player).quenched(), 2, "quenched without the tag");
         player.addTag("hydro");
         DropletsAPI.drink(player, 4, 2, PurityLevel.PURE.level());
-        helper.assertValueEqual(DropletsAPI.view(player).thirst(), 18, "thirst after two drinks");
-        helper.assertValueEqual(DropletsAPI.view(player).quenched(), 6, "quenched with the tag (2 and 2 from the script)" + HINT);
+        assertValueEqual(helper, DropletsAPI.view(player).thirst(), 18, "thirst after two drinks");
+        assertValueEqual(helper, DropletsAPI.view(player).quenched(), 6, "quenched with the tag (2 and 2 from the script)" + HINT);
         helper.succeed();
     }
 
@@ -70,12 +72,12 @@ public class KubeJSTests
         thirst(nether).change(nether, 10, 0, ThirstChangeEvent.Cause.COMMAND);
         boolean hydrated = DropletsAPI.drink(nether, 4, 2, PurityLevel.CONTAMINATED.level());
         helper.assertFalse(hydrated, "contaminated water hydrated in the Nether" + HINT);
-        helper.assertValueEqual(DropletsAPI.view(nether).thirst(), 10, "thirst after the drink");
+        assertValueEqual(helper, DropletsAPI.view(nether).thirst(), 10, "thirst after the drink");
 
         ServerPlayer overworld = player(helper);
         thirst(overworld).change(overworld, 10, 0, ThirstChangeEvent.Cause.COMMAND);
         DropletsAPI.drink(overworld, 4, 2, PurityLevel.CLEAN.level());
-        helper.assertValueEqual(DropletsAPI.view(overworld).thirst(), 14, "thirst after clean water in the overworld");
+        assertValueEqual(helper, DropletsAPI.view(overworld).thirst(), 14, "thirst after clean water in the overworld");
         helper.succeed();
     }
 
@@ -87,17 +89,17 @@ public class KubeJSTests
         player.addTag("hub");
         DropletsAPI.addExhaustion(player, 40f);
         thirst(player).tick(player);
-        helper.assertValueEqual(DropletsAPI.view(player).thirst(), 10, "thirst in the hub" + HINT);
+        assertValueEqual(helper, DropletsAPI.view(player).thirst(), 10, "thirst in the hub" + HINT);
         player.removeTag("hub");
         thirst(player).tick(player);
-        helper.assertValueEqual(DropletsAPI.view(player).thirst(), 9, "thirst outside the hub");
+        assertValueEqual(helper, DropletsAPI.view(player).thirst(), 9, "thirst outside the hub");
         helper.succeed();
     }
 
     private static void rightClick(ServerPlayer player, Item item)
     {
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
-        NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickItem(player, InteractionHand.MAIN_HAND));
+        MinecraftForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickItem(player, InteractionHand.MAIN_HAND));
     }
 
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
@@ -111,19 +113,19 @@ public class KubeJSTests
         ThirstValues own = DropletsAPI.getDrinkValues(carrot);
         int expected = 14 + (own == null ? 0 : own.thirst());
         player.eat(helper.getLevel(), carrot);
-        helper.assertValueEqual(DropletsAPI.view(player).thirst(), expected, "thirst after the golden carrot" + HINT);
+        assertValueEqual(helper, DropletsAPI.view(player).thirst(), expected, "thirst after the golden carrot" + HINT);
 
         // The sponge dries 2 points
         rightClick(player, Items.SPONGE);
-        helper.assertValueEqual(DropletsAPI.view(player).thirst(), expected - 2, "thirst after the sponge" + HINT);
+        assertValueEqual(helper, DropletsAPI.view(player).thirst(), expected - 2, "thirst after the sponge" + HINT);
 
         // The clock refills when sneaking, and only reads otherwise
         rightClick(player, Items.CLOCK);
-        helper.assertValueEqual(DropletsAPI.view(player).thirst(), expected - 2, "thirst after reading the clock");
+        assertValueEqual(helper, DropletsAPI.view(player).thirst(), expected - 2, "thirst after reading the clock");
         player.setShiftKeyDown(true);
         rightClick(player, Items.CLOCK);
-        helper.assertValueEqual(DropletsAPI.view(player).thirst(), 20, "thirst after refilling with the clock");
-        helper.assertValueEqual(DropletsAPI.view(player).quenched(), 20, "quenched after refilling with the clock");
+        assertValueEqual(helper, DropletsAPI.view(player).thirst(), 20, "thirst after refilling with the clock");
+        assertValueEqual(helper, DropletsAPI.view(player).quenched(), 20, "quenched after refilling with the clock");
         helper.succeed();
     }
 

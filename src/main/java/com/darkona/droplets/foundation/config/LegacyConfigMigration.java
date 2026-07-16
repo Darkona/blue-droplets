@@ -6,7 +6,7 @@ import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import com.mojang.logging.LogUtils;
-import net.neoforged.fml.loading.FMLPaths;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.slf4j.Logger;
 
 import java.io.IOException;

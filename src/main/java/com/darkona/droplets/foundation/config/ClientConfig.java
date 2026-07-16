@@ -1,36 +1,36 @@
 package com.darkona.droplets.foundation.config;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 /**
  * {@code config/blue_droplets/client.toml}: visuals only.
  */
 public final class ClientConfig
 {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    public static final ModConfigSpec.BooleanValue ONLY_SHOW_PURITY_WHEN_SHIFTING;
-    public static final ModConfigSpec.BooleanValue TINT_WATER_BY_PURITY;
-    public static final ModConfigSpec.BooleanValue SHOW_TOOLTIP_ICONS;
-    public static final ModConfigSpec.BooleanValue FOLLOW_APPLESKIN;
-    public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_Y_OFFSET;
-    public static final ModConfigSpec.ConfigValue<Integer> THIRST_BAR_X_OFFSET;
+    public static final ForgeConfigSpec.BooleanValue ONLY_SHOW_PURITY_WHEN_SHIFTING;
+    public static final ForgeConfigSpec.BooleanValue TINT_WATER_BY_PURITY;
+    public static final ForgeConfigSpec.BooleanValue SHOW_TOOLTIP_ICONS;
+    public static final ForgeConfigSpec.BooleanValue FOLLOW_APPLESKIN;
+    public static final ForgeConfigSpec.ConfigValue<Integer> THIRST_BAR_Y_OFFSET;
+    public static final ForgeConfigSpec.ConfigValue<Integer> THIRST_BAR_X_OFFSET;
 
-    public static final ModConfigSpec.BooleanValue HIDE_BAR_WHEN_FULL;
-    public static final ModConfigSpec.IntValue HIDE_BAR_DELAY_TICKS;
-    public static final ModConfigSpec.BooleanValue SHOW_QUENCHED_OVERLAY;
-    public static final ModConfigSpec.BooleanValue SHOW_DRINK_PREVIEW;
-    public static final ModConfigSpec.BooleanValue SHOW_EXHAUSTION_UNDERLAY;
-    public static final ModConfigSpec.BooleanValue BUFF_WAVE;
+    public static final ForgeConfigSpec.BooleanValue HIDE_BAR_WHEN_FULL;
+    public static final ForgeConfigSpec.IntValue HIDE_BAR_DELAY_TICKS;
+    public static final ForgeConfigSpec.BooleanValue SHOW_QUENCHED_OVERLAY;
+    public static final ForgeConfigSpec.BooleanValue SHOW_DRINK_PREVIEW;
+    public static final ForgeConfigSpec.BooleanValue SHOW_EXHAUSTION_UNDERLAY;
+    public static final ForgeConfigSpec.BooleanValue BUFF_WAVE;
 
-    public static final ModConfigSpec.ConfigValue<String> VAMPIRE_COLOR;
-    public static final ModConfigSpec.ConfigValue<String> DEHYDRATION_COLOR;
-    public static final ModConfigSpec.ConfigValue<String> OVERHYDRATED_COLOR;
-    public static final ModConfigSpec.ConfigValue<String> POISON_COLOR;
-    public static final ModConfigSpec.ConfigValue<String> QUENCHNESS_COLOR;
-    public static final ModConfigSpec.ConfigValue<String> HYDRATED_COLOR;
+    public static final ForgeConfigSpec.ConfigValue<String> VAMPIRE_COLOR;
+    public static final ForgeConfigSpec.ConfigValue<String> DEHYDRATION_COLOR;
+    public static final ForgeConfigSpec.ConfigValue<String> OVERHYDRATED_COLOR;
+    public static final ForgeConfigSpec.ConfigValue<String> POISON_COLOR;
+    public static final ForgeConfigSpec.ConfigValue<String> QUENCHNESS_COLOR;
+    public static final ForgeConfigSpec.ConfigValue<String> HYDRATED_COLOR;
 
-    public static final ModConfigSpec SPEC;
+    public static final ForgeConfigSpec SPEC;
 
     static
     {
@@ -67,7 +67,7 @@ public final class ClientConfig
         SPEC = BUILDER.build();
     }
 
-    private static ModConfigSpec.ConfigValue<String> defineColor(String key, String comment, String defaultColor)
+    private static ForgeConfigSpec.ConfigValue<String> defineColor(String key, String comment, String defaultColor)
     {
         return BUILDER.comment(comment).define(key, defaultColor, value -> value instanceof String hex && hex.matches("#[0-9a-fA-F]{6}"));
     }

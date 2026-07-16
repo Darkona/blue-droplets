@@ -1,0 +1,105 @@
+modLoader="javafml" #mandatory
+# FML 47: Forge 47 and NeoForge 47.1 for Minecraft 1.20.1.
+loaderVersion="${loader_version_range}" #mandatory
+license="${mod_license}"
+
+issueTrackerURL="https://github.com/Darkona/blue-droplets/issues"
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+
+# A URL to query for updates for this mod.
+#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+
+displayURL="https://github.com/Darkona/blue-droplets"
+logoFile="logo.png"
+credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka, Mikul (NeoForge 1.21.1 port) and the Thirst Was Taken contributors. Optional integrations use the public APIs of Cold Sweat, Create, Farmer's Delight and others; none of their code or assets is included."
+authors="${mod_authors}"
+
+# The description text for the mod (multi line!) (#mandatory)
+description='''${mod_description}'''
+
+# The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
+
+# One jar for Forge 47 and NeoForge 47.1: NeoForge 1.20.1 still presents itself as "forge" 47.1.x. Forge 47 has no
+# dependency types: "mandatory" only, mixin configs in the jar manifest, and the other thirst mods are warned about in
+# code (DiscouragedMods).
+[[dependencies.${mod_id}]]
+modId="forge"
+mandatory=true
+versionRange="${forge_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="minecraft"
+mandatory=true
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="create"
+mandatory=false
+versionRange="[6.0.6,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="jade"
+mandatory=false
+versionRange="[11.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="cold_sweat"
+mandatory=false
+versionRange="[2.4,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="reliquary"
+mandatory=false
+versionRange="[2.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="sereneseasons"
+mandatory=false
+versionRange="[9.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="travelersbackpack"
+mandatory=false
+versionRange="[9.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="farmersdelight"
+mandatory=false
+versionRange="[1.2,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="jei"
+mandatory=false
+versionRange="[15.20,)"
+ordering="NONE"
+side="CLIENT"
+
+# Thirst Was Taken and Thirst Was Reclaimed (mod id "thirst"): no version is accepted, so the game refuses to start with
+# both installed. Blue Droplets is its continuation and migrates its worlds and configs.
+[[dependencies.${mod_id}]]
+modId="thirst"
+mandatory=false
+versionRange="(,0)"
+ordering="NONE"
+side="BOTH"

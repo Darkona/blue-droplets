@@ -9,7 +9,7 @@ import com.tiviacz.travelersbackpack.items.HoseItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -18,17 +18,17 @@ import org.spongepowered.asm.mixin.injection.At;
  * stacks {@code use} builds in that branch get it: the one checked against the tank (so water of the purity already in
  * the tank still stacks) and the one filled in after the source is gone, which reuses the purity read before.
  */
-@Mixin(value = HoseItem.class, remap = false)
+@Mixin(HoseItem.class)
 public abstract class MixinHoseItem
 {
-    @ModifyExpressionValue(method = "use", at = @At(value = "NEW", target = "net/neoforged/neoforge/fluids/FluidStack", ordinal = 0))
+    @ModifyExpressionValue(method = "use", at = @At(value = "NEW", target = "net/minecraftforge/fluids/FluidStack", ordinal = 0, remap = false))
     private FluidStack blue_droplets$checkedStack(FluidStack fluid, @Local(argsOnly = true) Level level, @Local(ordinal = 0) BlockPos pos, @Share("purity") LocalIntRef purity)
     {
-        purity.set(fluid.is(FluidTags.WATER) && WaterPurity.enabled() ? WaterPurity.getBlockPurity(level, pos) : -1);
+        purity.set(fluid.getFluid().is(FluidTags.WATER) && WaterPurity.enabled() ? WaterPurity.getBlockPurity(level, pos) : -1);
         return withPurity(fluid, purity);
     }
 
-    @ModifyExpressionValue(method = "use", at = @At(value = "NEW", target = "net/neoforged/neoforge/fluids/FluidStack", ordinal = 1))
+    @ModifyExpressionValue(method = "use", at = @At(value = "NEW", target = "net/minecraftforge/fluids/FluidStack", ordinal = 1, remap = false))
     private FluidStack blue_droplets$filledStack(FluidStack fluid, @Share("purity") LocalIntRef purity)
     {
         return withPurity(fluid, purity);

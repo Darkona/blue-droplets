@@ -4,23 +4,24 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.common.item.DrinkableItem;
 import com.darkona.droplets.foundation.common.item.TerracottaBowlItem;
 import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 
 public class ItemInit {
-    public static final DeferredRegister.Items ITEMS;
-    public static final DeferredItem<Item> CLAY_BOWL;
-    public static final DeferredItem<Item>  TERRACOTTA_BOWL;
-    public static final DeferredItem<Item>  TERRACOTTA_WATER_BOWL;
+    public static final DeferredRegister<Item> ITEMS;
+    public static final RegistryObject<Item> CLAY_BOWL;
+    public static final RegistryObject<Item>  TERRACOTTA_BOWL;
+    public static final RegistryObject<Item>  TERRACOTTA_WATER_BOWL;
 
     public static void register(IEventBus modBus) {
         ITEMS.register(modBus);
     }
 
     static {
-        ITEMS = DeferredRegister.createItems(BlueDroplets.ID);
+        ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BlueDroplets.ID);
         CLAY_BOWL = ITEMS.register("clay_bowl", () -> new Item((new Item.Properties())
                 .stacksTo(64)
         ));

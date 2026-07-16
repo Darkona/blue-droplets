@@ -2,7 +2,7 @@ package com.darkona.droplets.foundation.common.event;
 
 import com.darkona.droplets.content.purity.ContainerWithPurity;
 import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
 import java.util.Map;

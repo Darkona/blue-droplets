@@ -1,10 +1,10 @@
 package com.darkona.droplets.foundation.network;
 
 import com.darkona.droplets.content.thirst.ThirstHelper;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientNetworkEvents

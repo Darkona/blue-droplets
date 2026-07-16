@@ -2,14 +2,11 @@ package com.darkona.droplets.foundation.mixin;
 
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.foundation.config.SyncedValues;
-import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,25 +20,21 @@ public abstract class MixinItemStack
 {
     @Shadow public abstract Item getItem();
 
-    @Shadow public abstract DataComponentMap getComponents();
-
     @Inject(method="getMaxStackSize", at = @At("HEAD"), cancellable = true)
     public void changeWaterBottleStackSize(CallbackInfoReturnable<Integer> cir)
     {
         if(getItem() != Items.POTION)
             return;
-        PotionContents contents = getComponents().get(DataComponents.POTION_CONTENTS);
-        if(contents != null && contents.is(Potions.WATER))
+        if(PotionUtils.getPotion((ItemStack) (Object) this) == Potions.WATER)
             cir.setReturnValue(SyncedValues.waterBottleStackSize());
     }
 
     /**
-     * Stacks read from a save or the network: a Thirst Was Taken purity becomes a purity on the new scale.
+     * Stacks read from a save: a Thirst Was Taken purity becomes a purity on the new scale.
      */
-    @Inject(method = "<init>(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/DataComponentPatch;)V", at = @At("TAIL"))
-    private void blue_droplets$migrateLegacyPurity(Holder<Item> item, int count, DataComponentPatch components, CallbackInfo ci)
+    @Inject(method = "<init>(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
+    private void blue_droplets$migrateLegacyPurity(CompoundTag tag, CallbackInfo ci)
     {
-        if (!components.isEmpty())
-            ThirstComponent.migrateLegacyPurity((ItemStack) (Object) this);
+        ThirstComponent.migrateLegacyPurity((ItemStack) (Object) this);
     }
 }

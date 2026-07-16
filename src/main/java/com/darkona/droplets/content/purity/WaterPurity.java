@@ -16,19 +16,17 @@ import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.contents.PlainTextContents;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -41,23 +39,26 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import com.darkona.droplets.foundation.common.event.Events;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import com.darkona.droplets.foundation.gui.ClientKeys;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class WaterPurity
      */
     public static void registerCauldronInteractions()
     {
-        CauldronInteraction.WATER.map().put(ItemInit.TERRACOTTA_BOWL.get(), fillFromCauldron(() -> new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), SoundEvents.BUCKET_FILL));
+        CauldronInteraction.WATER.put(ItemInit.TERRACOTTA_BOWL.get(), fillFromCauldron(() -> new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), SoundEvents.BUCKET_FILL));
     }
 
     /**
@@ -113,24 +114,18 @@ public class WaterPurity
                 level.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(level.isClientSide());
         };
     }
 
     private static void registerContainers()
     {
-        addContainer(new ContainerWithPurity(Items.GLASS_BOTTLE,
-                PotionContents.createItemStack(Items.POTION,Potions.WATER).getItem()).setEqualsFilled(itemStack ->
-                itemStack.is(Items.POTION) && isWater(itemStack.get(DataComponents.POTION_CONTENTS))));
+        addContainer(new ContainerWithPurity(Items.GLASS_BOTTLE, Items.POTION).setEqualsFilled(itemStack ->
+                itemStack.is(Items.POTION) && PotionUtils.getPotion(itemStack) == Potions.WATER));
         addContainer(new ContainerWithPurity(ItemInit.TERRACOTTA_BOWL.get(),
                 ItemInit.TERRACOTTA_WATER_BOWL.get()));
         addContainer(new ContainerWithPurity(Items.BUCKET,
                 Items.WATER_BUCKET, false).canHarvestRunningWater(false));
-    }
-
-    private static boolean isWater(@Nullable PotionContents contents)
-    {
-        return contents != null && contents.is(Potions.WATER);
     }
 
     /**
@@ -195,7 +190,7 @@ public class WaterPurity
     public static BlockHitResult pickFluid(Player player, ClipContext.Fluid fluid)
     {
         Vec3 eye = player.getEyePosition();
-        Vec3 end = eye.add(player.getViewVector(1.0F).scale(player.blockInteractionRange()));
+        Vec3 end = eye.add(player.getViewVector(1.0F).scale(player.getBlockReach()));
         return player.level().clip(new ClipContext(eye, end, ClipContext.Block.OUTLINE, fluid, player));
     }
 
@@ -206,7 +201,7 @@ public class WaterPurity
     @SubscribeEvent
     static void renderPurityTooltip(ItemTooltipEvent event)
     {
-        if(enabled() && isWaterFilledContainer(event.getItemStack()) && (event.getFlags().hasShiftDown() || !ClientConfig.ONLY_SHOW_PURITY_WHEN_SHIFTING.get()))
+        if(enabled() && isWaterFilledContainer(event.getItemStack()) && (!ClientConfig.ONLY_SHOW_PURITY_WHEN_SHIFTING.get() || FMLEnvironment.dist.isClient() && ClientKeys.shiftDown()))
         {
             int purity = getPurity(event.getItemStack());
             if(purity >= MIN_PURITY && purity <= MAX_PURITY)
@@ -217,9 +212,7 @@ public class WaterPurity
 
                 assert purityText != null;
                 event.getToolTip()
-                        .add(MutableComponent
-                                .create(new PlainTextContents.LiteralContents(purityText))
-                                .setStyle(Style.EMPTY.withColor(purityColor)));
+                        .add(Component.literal(purityText).setStyle(Style.EMPTY.withColor(purityColor)));
             }
         }
     }
@@ -239,7 +232,7 @@ public class WaterPurity
      */
     public static Integer getPurity(ItemStack item)
     {
-        Integer stored = item.get(ThirstComponent.PURITY);
+        Integer stored = ThirstComponent.get(item);
         if (stored == null)
         {
             int fixed = ThirstHelper.getDrinkPurity(item);
@@ -254,7 +247,7 @@ public class WaterPurity
      */
     public static Integer getPurity(FluidStack fluid)
     {
-        return sanitizePurity(fluid.get(ThirstComponent.PURITY));
+        return sanitizePurity(ThirstComponent.get(fluid));
     }
 
     public static int sanitizePurity(@Nullable Integer purity)
@@ -268,7 +261,7 @@ public class WaterPurity
     public static String getPurityText(int purity)
     {
         PurityLevel level = level(purity);
-        return MutableComponent.create(new TranslatableContents(level.translationKey(), level.id(), TranslatableContents.NO_ARGS)).getString();
+        return Component.translatableWithFallback(level.translationKey(), level.id()).getString();
     }
 
     /**
@@ -287,12 +280,12 @@ public class WaterPurity
 
     public static boolean hasPurity(ItemStack item)
     {
-        return item.get(ThirstComponent.PURITY) != null && !item.is(DropletsTags.PURITY_OPT_OUT);
+        return ThirstComponent.has(item) && !item.is(DropletsTags.PURITY_OPT_OUT);
     }
 
     public static boolean hasPurity(FluidStack fluid)
     {
-        return fluid.get(ThirstComponent.PURITY) != null;
+        return ThirstComponent.get(fluid) != null;
     }
 
 
@@ -303,7 +296,7 @@ public class WaterPurity
     public static ItemStack addPurity(ItemStack item, int purity)
     {
         if (enabled() && !item.is(DropletsTags.PURITY_OPT_OUT))
-            item.set(ThirstComponent.PURITY, sanitizePurity(purity));
+            ThirstComponent.set(item, sanitizePurity(purity));
         return item;
     }
 
@@ -314,7 +307,7 @@ public class WaterPurity
     public static FluidStack addPurity(FluidStack fluid, int purity)
     {
         if (enabled())
-            fluid.set(ThirstComponent.PURITY, sanitizePurity(purity));
+            ThirstComponent.set(fluid, sanitizePurity(purity));
         return fluid;
     }
 
@@ -345,6 +338,15 @@ public class WaterPurity
             return cauldronPurity(level, pos);
         int poured = PouredWater.pickedUp(level, pos);
         return poured >= MIN_PURITY ? poured : getWaterPurity(level, pos, true);
+    }
+
+    /**
+     * A dispenser filled a container: a water container without a purity gets the purity of the water in front of it.
+     */
+    public static void dispenserFilled(Level level, BlockPos dispenser, BlockState state, ItemStack filled)
+    {
+        if (enabled() && state.hasProperty(DispenserBlock.FACING) && isWaterFilledContainer(filled) && !hasPurity(filled))
+            addPurity(filled, takenWaterPurity(level, dispenser.relative(state.getValue(DispenserBlock.FACING))));
     }
 
     /** Purity for water leaving the water cauldron being used right now, -1 outside one. Server thread only. */
@@ -430,7 +432,7 @@ public class WaterPurity
             return salt;
         }
 
-        BiomeWater biomeWater = biome.getData(DropletsDataMaps.BIOME_WATER);
+        BiomeWater biomeWater = DropletsDataMaps.BIOME_WATER.get(biome);
         int purity = basePurity(level, biome, biomeWater, trace);
         int altitude = altitudeDelta(level, pos.getY());
         int flow = source ? PurityConfig.STILL_WATER_PURIFICATION_AMOUNT.get() : PurityConfig.RUNNING_WATER_PURIFICATION_AMOUNT.get();
@@ -474,7 +476,7 @@ public class WaterPurity
         }
         else if ((purity = taggedPurity(biome)) >= MIN_PURITY)
             from = "biome tag blue_droplets:water_purity/" + purity;
-        else if ((dimensionWater = level.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER)) != null && dimensionWater.base().isPresent())
+        else if ((dimensionWater = DropletsDataMaps.DIMENSION_WATER.get(level.dimensionTypeRegistration())) != null && dimensionWater.base().isPresent())
         {
             from = "dimension_water data map";
             purity = dimensionWater.base().get();
@@ -526,7 +528,7 @@ public class WaterPurity
     /**
      * One entry of a {@code purity.toml} effect list; {@code chance} is 0-1.
      */
-    public record PurityEffect(Holder<MobEffect> effect, int duration, int amplifier, float chance, boolean blocksHydration) {}
+    public record PurityEffect(MobEffect effect, int duration, int amplifier, float chance, boolean blocksHydration) {}
 
     private record EffectTables(List<List<? extends String>> source, PurityEffect[][] byPurity) {}
 
@@ -552,8 +554,8 @@ public class WaterPurity
             hydrate &= !effect.blocksHydration();
         }
         if (PurityConfig.HOT_DIRTY_WATER.get() && purity <= PurityConfig.HOT_DIRTY_WATER_MAX_PURITY.get() && player instanceof ServerPlayer && ThirstHelper.isHotClimate(player))
-            effects.add(new MobEffectInstance(EffectInit.DEHYDRATION, PurityConfig.HOT_DIRTY_WATER_DURATION.get(), PurityConfig.HOT_DIRTY_WATER_AMPLIFIER.get()));
-        PurityEffectEvent event = NeoForge.EVENT_BUS.post(new PurityEffectEvent(player, purity, effects, hydrate || PurityConfig.QUENCH_WHEN_DEBUFFED.get()));
+            effects.add(new MobEffectInstance(EffectInit.DEHYDRATION.get(), PurityConfig.HOT_DIRTY_WATER_DURATION.get(), PurityConfig.HOT_DIRTY_WATER_AMPLIFIER.get()));
+        PurityEffectEvent event = Events.post(new PurityEffectEvent(player, purity, effects, hydrate || PurityConfig.QUENCH_WHEN_DEBUFFED.get()));
         if (event.isCanceled())
             return true;
         if (player instanceof ServerPlayer)
@@ -592,7 +594,8 @@ public class WaterPurity
         if (!PurityConfig.isValidEffect(entry))
             return null;
         String[] parts = entry.split(",");
-        Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(parts[0].trim())).orElse(null);
+        ResourceLocation id = ResourceLocation.tryParse(parts[0].trim());
+        MobEffect effect = id == null ? null : BuiltInRegistries.MOB_EFFECT.getOptional(id).orElse(null);
         if (effect == null)
             return null;
         return new PurityEffect(effect, Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim()),

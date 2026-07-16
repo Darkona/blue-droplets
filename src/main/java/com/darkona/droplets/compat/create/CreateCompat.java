@@ -5,7 +5,7 @@ import com.darkona.droplets.foundation.config.CompatConfig;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 /**
  * What the rest of the mod may ask about Create without loading any Create class.

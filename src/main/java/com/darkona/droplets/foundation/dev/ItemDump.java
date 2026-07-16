@@ -3,6 +3,7 @@ package com.darkona.droplets.foundation.dev;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.ThirstHelper;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -11,7 +12,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
-import net.neoforged.fml.loading.FMLPaths;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -91,14 +92,14 @@ public final class ItemDump
         FoodProperties food = stack.getFoodProperties(null);
         ThirstValues values = ThirstHelper.valuesOf(stack);
         boolean drink = stack.getUseAnimation() == UseAnim.DRINK || WaterPurity.isWaterFilledContainer(stack);
-        String effects = food == null ? "" : food.effects().stream().map(ItemDump::effect).collect(Collectors.joining(";"));
+        String effects = food == null ? "" : food.getEffects().stream().map(ItemDump::effect).collect(Collectors.joining(";"));
         String tags = stack.getTags().map(TagKey::location).map(ResourceLocation::toString).sorted().collect(Collectors.joining(";"));
         return String.join(",",
                 id.toString(),
                 id.getNamespace(),
                 String.valueOf(drink),
-                food == null ? "" : String.valueOf(food.nutrition()),
-                food == null ? "" : String.format(Locale.ROOT, "%.2f", food.saturation()),
+                food == null ? "" : String.valueOf(food.getNutrition()),
+                food == null ? "" : String.format(Locale.ROOT, "%.2f", food.getNutrition() * food.getSaturationModifier() * 2.0F),
                 quote(effects),
                 food == null ? "" : String.valueOf(food.canAlwaysEat()),
                 values == null ? "" : String.valueOf(values.thirst()),
@@ -106,11 +107,15 @@ public final class ItemDump
                 quote(tags));
     }
 
-    private static String effect(FoodProperties.PossibleEffect possible)
+    /**
+     * The saturation column is the saturation a bite gives (nutrition x modifier x 2), as later versions store it.
+     */
+    private static String effect(Pair<MobEffectInstance, Float> possible)
     {
-        MobEffectInstance effect = possible.effect();
-        String id = effect.getEffect().unwrapKey().map(key -> key.location().toString()).orElse("?");
-        return id + "," + effect.getDuration() + "," + effect.getAmplifier() + "," + String.format(Locale.ROOT, "%.2f", possible.probability());
+        MobEffectInstance effect = possible.getFirst();
+        ResourceLocation key = BuiltInRegistries.MOB_EFFECT.getKey(effect.getEffect());
+        String id = key == null ? "?" : key.toString();
+        return id + "," + effect.getDuration() + "," + effect.getAmplifier() + "," + String.format(Locale.ROOT, "%.2f", possible.getSecond());
     }
 
     private static String quote(String field)

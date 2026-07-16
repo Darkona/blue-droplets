@@ -5,7 +5,7 @@ import com.darkona.droplets.core.NumberRows;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public final class ConfigCheck
                     problems.add("purity.toml effects." + PurityConfig.EFFECT_LEVELS[purity] + ": unknown effect " + id + " (skipped)");
             }
         if (ItemsConfig.KEYWORDS.get())
-            for (ModConfigSpec.ConfigValue<String> keyword : List.of(ItemsConfig.KEYWORD_BLACKLIST, ItemsConfig.KEYWORD_DRINK, ItemsConfig.KEYWORD_SOUP, ItemsConfig.KEYWORD_FRUIT))
+            for (ForgeConfigSpec.ConfigValue<String> keyword : List.of(ItemsConfig.KEYWORD_BLACKLIST, ItemsConfig.KEYWORD_DRINK, ItemsConfig.KEYWORD_SOUP, ItemsConfig.KEYWORD_FRUIT))
                 pattern(keyword, problems);
         if (GameplayConfig.SLOW_REGEN_MIN_THIRST.get() > GameplayConfig.FULL_REGEN_MIN_THIRST.get())
             problems.add("gameplay.toml regeneration.slowRegenMinThirst is above fullRegenMinThirst (slow regeneration never happens)");
@@ -59,7 +59,7 @@ public final class ConfigCheck
             LOGGER.warn("Blue Droplets config has {} problem(s):\n  {}", problems.size(), String.join("\n  ", problems));
     }
 
-    private static void overlaps(String key, ModConfigSpec.ConfigValue<List<? extends String>> value, List<String> problems)
+    private static void overlaps(String key, ForgeConfigSpec.ConfigValue<List<? extends String>> value, List<String> problems)
     {
         List<? extends String> rows = value.get();
         for (int i = 0; i < rows.size(); i++)
@@ -74,13 +74,13 @@ public final class ConfigCheck
         }
     }
 
-    private static void curve(String key, ModConfigSpec.ConfigValue<List<? extends String>> value, List<String> problems)
+    private static void curve(String key, ForgeConfigSpec.ConfigValue<List<? extends String>> value, List<String> problems)
     {
         if (!NumberRows.ascending(NumberRows.parse(value.get(), 2)))
             problems.add(key + ": points are not in ascending order " + value.get());
     }
 
-    private static void pattern(ModConfigSpec.ConfigValue<String> value, List<String> problems)
+    private static void pattern(ForgeConfigSpec.ConfigValue<String> value, List<String> problems)
     {
         try
         {
@@ -88,7 +88,7 @@ public final class ConfigCheck
         }
         catch (PatternSyntaxException e)
         {
-            problems.add("items.toml keywords." + value.getPath().getLast() + ": invalid pattern (" + e.getDescription() + ")");
+            problems.add("items.toml keywords." + value.getPath().get(value.getPath().size() - 1) + ": invalid pattern (" + e.getDescription() + ")");
         }
     }
 }

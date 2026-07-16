@@ -10,7 +10,6 @@ import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.ClientConfig;
 import com.darkona.droplets.foundation.config.GameplayConfig;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -20,8 +19,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -43,20 +43,24 @@ public final class ThirstBarRenderer
 
     private ThirstBarRenderer() {}
 
-    public static void registerLayer(RegisterGuiLayersEvent event)
+    /**
+     * The overlay {@code blue_droplets:thirst_level}, right above the hunger bar: the air bar and other mods' bars
+     * stack above it, and other mods can cancel it with {@code RenderGuiOverlayEvent.Pre}.
+     */
+    public static void registerLayer(RegisterGuiOverlaysEvent event)
     {
-        event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, LAYER, ThirstBarRenderer::render);
+        event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), LAYER.getPath(), ThirstBarRenderer::render);
     }
 
-    private static void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker)
+    private static void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight)
     {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
-        if (player == null || minecraft.options.hideGui || !minecraft.gameMode.canHurtPlayer() || !(minecraft.getCameraEntity() instanceof Player)
+        if (player == null || minecraft.options.hideGui || !gui.shouldDrawSurvivalElements()
                 || player.getVehicle() instanceof LivingEntity vehicle && vehicle.showVehicleHealth())
             return;
 
-        IThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+        IThirst thirst = ModAttachment.thirst(player);
         if (player.isAlive() && !thirst.getShouldTickThirst() || shouldHideBar(minecraft, player, thirst))
             return;
 
@@ -68,10 +72,10 @@ public final class ThirstBarRenderer
         ResourceLocation fill = tint < 0 ? THIRST_ICONS : THIRST_MASK;
         ResourceLocation outline = tint < 0 ? QUENCHED_ICONS : QUENCHED_MASK;
         int right = guiGraphics.guiWidth() / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
-        int top = guiGraphics.guiHeight() - minecraft.gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
-        minecraft.gui.rightHeight += 10;
+        int top = guiGraphics.guiHeight() - gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
+        gui.rightHeight += 10;
 
-        int ticks = minecraft.gui.getGuiTicks();
+        int ticks = gui.getGuiTicks();
         int level = thirst.getThirst();
         int quenched = thirst.getQuenched();
         boolean shake = quenched <= 0 && ticks % (level * 3 + 1) == 0;

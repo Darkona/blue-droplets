@@ -1,7 +1,7 @@
 package com.darkona.droplets.foundation.config;
 
 import com.darkona.droplets.api.PurityLevel;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
@@ -10,32 +10,32 @@ import java.util.List;
  */
 public final class CompatConfig
 {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    public static final ModConfigSpec.IntValue SAND_FILTER_FILTRATION_AMOUNT;
-    public static final ModConfigSpec.IntValue SAND_FILTER_MB_PER_TICK;
-    public static final ModConfigSpec.IntValue SAND_FILTER_MAX_PURITY;
-    public static final ModConfigSpec.BooleanValue OPEN_ENDED_PIPE_PURITY;
+    public static final ForgeConfigSpec.IntValue SAND_FILTER_FILTRATION_AMOUNT;
+    public static final ForgeConfigSpec.IntValue SAND_FILTER_MB_PER_TICK;
+    public static final ForgeConfigSpec.IntValue SAND_FILTER_MAX_PURITY;
+    public static final ForgeConfigSpec.BooleanValue OPEN_ENDED_PIPE_PURITY;
 
-    public static final ModConfigSpec.BooleanValue COLD_SWEAT_BODY_TEMPERATURE;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> COLD_SWEAT_BODY_TEMPERATURE_CURVE;
-    public static final ModConfigSpec.DoubleValue COLD_SWEAT_DRINK_COOLING;
-    public static final ModConfigSpec.IntValue COLD_SWEAT_DRINK_COOLING_TICKS;
+    public static final ForgeConfigSpec.BooleanValue COLD_SWEAT_BODY_TEMPERATURE;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> COLD_SWEAT_BODY_TEMPERATURE_CURVE;
+    public static final ForgeConfigSpec.DoubleValue COLD_SWEAT_DRINK_COOLING;
+    public static final ForgeConfigSpec.IntValue COLD_SWEAT_DRINK_COOLING_TICKS;
 
-    public static final ModConfigSpec.BooleanValue SERENE_SEASONS_ENABLED;
-    public static final ModConfigSpec.DoubleValue SERENE_SEASONS_TROPICAL_DRY;
-    public static final ModConfigSpec.DoubleValue SERENE_SEASONS_TROPICAL_WET;
-    public static final ModConfigSpec.DoubleValue SERENE_SEASONS_SPRING;
-    public static final ModConfigSpec.DoubleValue SERENE_SEASONS_SUMMER;
-    public static final ModConfigSpec.DoubleValue SERENE_SEASONS_AUTUMN;
-    public static final ModConfigSpec.DoubleValue SERENE_SEASONS_WINTER;
+    public static final ForgeConfigSpec.BooleanValue SERENE_SEASONS_ENABLED;
+    public static final ForgeConfigSpec.DoubleValue SERENE_SEASONS_TROPICAL_DRY;
+    public static final ForgeConfigSpec.DoubleValue SERENE_SEASONS_TROPICAL_WET;
+    public static final ForgeConfigSpec.DoubleValue SERENE_SEASONS_SPRING;
+    public static final ForgeConfigSpec.DoubleValue SERENE_SEASONS_SUMMER;
+    public static final ForgeConfigSpec.DoubleValue SERENE_SEASONS_AUTUMN;
+    public static final ForgeConfigSpec.DoubleValue SERENE_SEASONS_WINTER;
 
-    public static final ModConfigSpec.IntValue RELIQUARY_EMPEROR_CHALICE_COOLDOWN;
+    public static final ForgeConfigSpec.IntValue RELIQUARY_EMPEROR_CHALICE_COOLDOWN;
 
-    public static final ModConfigSpec.IntValue KETTLE_MIN_PURITY;
-    public static final ModConfigSpec.BooleanValue WORLD_PURITY_WATER_SOURCES;
+    public static final ForgeConfigSpec.IntValue KETTLE_MIN_PURITY;
+    public static final ForgeConfigSpec.BooleanValue WORLD_PURITY_WATER_SOURCES;
 
-    public static final ModConfigSpec SPEC;
+    public static final ForgeConfigSpec SPEC;
 
     static
     {
@@ -51,7 +51,7 @@ public final class CompatConfig
         COLD_SWEAT_BODY_TEMPERATURE = BUILDER.comment("Whether the climate multiplier of thirst comes from Cold Sweat's body temperature (bodyTemperatureCurve) instead of the biome's temperature and downfall").define("useBodyTemperature", true);
         COLD_SWEAT_BODY_TEMPERATURE_CURVE = BUILDER.comment("With useBodyTemperature: [\"bodyTemperature,multiplier\", ...] in ascending body temperature; straight lines between points, flat beyond the ends.",
                         "Times gameplay.toml depletion.multiplier; the dimension's thirst multiplier and netherMultiplier still come first")
-                .<String>defineListAllowEmpty("bodyTemperatureCurve", List.of("-100,0.8", "0,1.0", "50,1.3", "100,2.0", "150,3.0"), () -> "0,1.0", GameplayConfig::isValidPair);
+                .<String>defineListAllowEmpty("bodyTemperatureCurve", List.of("-100,0.8", "0,1.0", "50,1.3", "100,2.0", "150,3.0"), GameplayConfig::isValidPair);
         COLD_SWEAT_DRINK_COOLING = BUILDER.comment("How much drinking water (water containers, drinking by hand, the Traveler's Backpack hose) cools the body; 0 = off.",
                         "Cold Sweat's own filled waterskin is left alone: it already changes the temperature by the water it holds").defineInRange("drinkCooling", 0.0, 0.0, 100.0);
         COLD_SWEAT_DRINK_COOLING_TICKS = BUILDER.comment("0: drinkCooling lowers the body temperature once, which then drifts back with the surroundings;",
@@ -85,7 +85,7 @@ public final class CompatConfig
 
     private CompatConfig() {}
 
-    private static ModConfigSpec.DoubleValue defineSeason(String season)
+    private static ForgeConfigSpec.DoubleValue defineSeason(String season)
     {
         return BUILDER.comment("With enabled: multiplies thirst loss in " + season + " in biomes with the four seasons; the temperature is not changed (1 = no change)")
                 .defineInRange(season + "Multiplier", 1.0, 0.0, 10.0);

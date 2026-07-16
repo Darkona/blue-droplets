@@ -1,7 +1,7 @@
 package com.darkona.droplets.gametest;
 
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.event.RegisterGameTestsEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.event.RegisterGameTestsEvent;
 
 /**
  * Registers the test classes that link against optional mods, only when that mod is installed; the rest are found
@@ -13,8 +13,8 @@ public final class DropletsGameTests
 
     public static void register(RegisterGameTestsEvent event)
     {
-        if (ModList.get().isLoaded("create"))
-            event.register(CreateTests.class);
+        // PORT-TODO if (ModList.get().isLoaded("create"))
+        //    event.register(CreateTests.class);
         if (ModList.get().isLoaded("travelersbackpack"))
             event.register(TravelersBackpackTests.class);
         if (ModList.get().isLoaded("cold_sweat"))
@@ -23,15 +23,6 @@ public final class DropletsGameTests
             event.register(ReliquaryTests.class);
         if (ModList.get().isLoaded("sereneseasons"))
             event.register(SereneSeasonsTests.class);
-        if (ModList.get().isLoaded("kubejs"))
-            event.register(KubeJSTests.class);
-        if (ModList.get().isLoaded("extradelight") && ModList.get().isLoaded("farm_and_charm") && ModList.get().isLoaded("herbalbrews") && ModList.get().isLoaded("brewery"))
-            event.register(DelightTests.class);
-        if (ModList.get().isLoaded("minersdelight"))
-            event.register(MinersDelightTests.class);
-        if (ModList.get().isLoaded("minersdelight") && ModList.get().isLoaded("create"))
-            event.register(MinersDelightCreateTests.class);
-        if (ModList.get().isLoaded("culturaldelights"))
-            event.register(CulturalDelightsTests.class);
+        // PORT-TODO delight tests
     }
 }

@@ -8,9 +8,11 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
+
+import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 
 /**
  * Cultural Delights ({@code -PwithDelight}): the vat holds no fluid and hands out no water, water only goes in as
@@ -22,7 +24,7 @@ public class CulturalDelightsTests
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void coldAgingRecipesNeedAcceptableWater(GameTestHelper helper)
     {
-        VatRecipe beer = (VatRecipe) helper.getLevel().getRecipeManager().byKey(ResourceLocation.parse("culturaldelights:aging/fermenting/beer")).orElseThrow().value();
+        VatRecipe beer = (VatRecipe) helper.getLevel().getRecipeManager().byKey(new ResourceLocation("culturaldelights:aging/fermenting/beer")).orElseThrow().value();
         for (int purity = WaterPurity.MIN_PURITY; purity <= WaterPurity.MAX_PURITY; purity++)
         {
             ItemStackHandler slots = new ItemStackHandler(9);
@@ -32,7 +34,7 @@ public class CulturalDelightsTests
             slots.setStackInSlot(3, new ItemStack(Items.SUGAR));
             slots.setStackInSlot(4, new ItemStack(Items.BROWN_MUSHROOM));
             slots.setStackInSlot(6, new ItemStack(Items.GLASS_BOTTLE));
-            helper.assertValueEqual(beer.matches(new RecipeWrapper(slots), helper.getLevel()), purity >= 3, "beer with a water bucket of purity " + purity);
+            assertValueEqual(helper, beer.matches(new RecipeWrapper(slots), helper.getLevel()), purity >= 3, "beer with a water bucket of purity " + purity);
         }
         helper.succeed();
     }

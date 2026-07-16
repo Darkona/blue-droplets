@@ -1,0 +1,42 @@
+{
+  "conditions": [
+    {
+      "type": "blue_droplets:purity_enabled"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "cold_sweat"
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "create"
+      }
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "type": "forge:partial_nbt",
+      "item": "cold_sweat:filled_waterskin",
+      "nbt": {
+        "blue_droplets:purity": 4
+      }
+    }
+  ],
+  "result": {
+    "item": "cold_sweat:filled_waterskin",
+    "count": 1,
+    "nbt": {
+      "blue_droplets:purity": 5
+    }
+  },
+  "cookingtime": 200,
+  "experience": 0.35,
+  "recipe_book_tab": "drinks"
+}

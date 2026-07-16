@@ -23,7 +23,6 @@ import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -39,12 +38,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -130,8 +128,6 @@ public class ThirstHelper
     private static volatile List<String> unknownConfigIds = List.of();
     private static volatile RecipeInference.Inputs inferenceInputs = RecipeInference.Inputs.EMPTY;
     private static volatile RecipeInference.Result estimates = RecipeInference.Result.EMPTY;
-    private static @Nullable RegistryAccess fireProtectionAccess;
-    private static @Nullable Holder<Enchantment> fireProtectionHolder;
 
     /**
      * Rebuilds the drink/food tables and the purity containers. Call once tags and data maps are bound; the tables
@@ -142,7 +138,7 @@ public class ThirstHelper
      * ({@link RecipeInference}, server only: {@code recipes} is null on a remote client).
      */
     @SuppressWarnings("deprecation")
-    public static void rebuild(@Nullable RecipeManager recipes, @Nullable HolderLookup.Provider registries)
+    public static void rebuild(@Nullable RecipeManager recipes, @Nullable RegistryAccess registries)
     {
         Tables tables = new Tables();
         List<ContainerWithPurity> containers = new ArrayList<>();
@@ -157,7 +153,7 @@ public class ThirstHelper
         readValues(ItemsConfig.DRINKS.get(), tables, false, unknown, absentMods);
         readValues(ItemsConfig.FOODS.get(), tables, true, unknown, absentMods);
 
-        for (Map.Entry<ResourceKey<Item>, DrinkValues> entry : BuiltInRegistries.ITEM.getDataMap(DropletsDataMaps.DRINKS).entrySet())
+        for (Map.Entry<ResourceKey<Item>, DrinkValues> entry : DropletsDataMaps.DRINKS.getDataMap().entrySet())
         {
             Item item = BuiltInRegistries.ITEM.get(entry.getKey());
             DrinkValues value = entry.getValue();
@@ -171,7 +167,7 @@ public class ThirstHelper
 
         Map<Item, int[]> codeDrinks = new LinkedHashMap<>();
         Map<Item, int[]> codeFoods = new LinkedHashMap<>();
-        NeoForge.EVENT_BUS.post(new RegisterThirstValueEvent(codeDrinks, codeFoods, containers));
+        MinecraftForge.EVENT_BUS.post(new RegisterThirstValueEvent(codeDrinks, codeFoods, containers));
         for (CodeDrink drink : CODE_DRINKS)
         {
             Item item = drink.item().asItem();
@@ -363,7 +359,7 @@ public class ThirstHelper
             }
             else
             {
-                Optional<Holder.Reference<Item>> item = BuiltInRegistries.ITEM.getHolder(location);
+                Optional<Holder.Reference<Item>> item = BuiltInRegistries.ITEM.getHolder(ResourceKey.create(Registries.ITEM, location));
                 if (item.isPresent())
                 {
                     if (item.get().value() != Items.AIR)
@@ -529,24 +525,10 @@ public class ThirstHelper
 
     public static float getExhaustionFireProtModifier(Player player)
     {
-        Holder<Enchantment> fireProtection = fireProtection(player.level());
-        if(fireProtection == null)
-            return 1.0f;
         int levels = 0;
         for(ItemStack armor : player.getArmorSlots())
-            levels += armor.getEnchantmentLevel(fireProtection);
+            levels += armor.getEnchantmentLevel(Enchantments.FIRE_PROTECTION);
         return Math.max(0.0f, 1.0f - Math.min(levels, GameplayConfig.FIRE_PROTECTION_MAX_LEVELS.get()) * GameplayConfig.FIRE_PROTECTION_PER_LEVEL.get().floatValue());
-    }
-
-    private static @Nullable Holder<Enchantment> fireProtection(Level level)
-    {
-        RegistryAccess access = level.registryAccess();
-        if(access != fireProtectionAccess)
-        {
-            fireProtectionHolder = access.registryOrThrow(Registries.ENCHANTMENT).getHolder(Enchantments.FIRE_PROTECTION).orElse(null);
-            fireProtectionAccess = access;
-        }
-        return fireProtectionHolder;
     }
 
     public static float getExhaustionFireResistanceModifier(Player player){
@@ -564,7 +546,7 @@ public class ThirstHelper
     public static float getExhaustionBiomeModifier(Player player)
     {
         Level level = player.level();
-        DimensionWater dimension = level.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
+        DimensionWater dimension = DropletsDataMaps.DIMENSION_WATER.get(level.dimensionTypeRegistration());
         if (dimension != null && dimension.thirstMultiplier().isPresent())
             return dimension.thirstMultiplier().get();
         if (level.dimensionType().ultraWarm())

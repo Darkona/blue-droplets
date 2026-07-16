@@ -4,9 +4,6 @@ import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.reliquary.ReliquaryCompat;
 import com.darkona.droplets.compat.delight.DelightCompat;
-import com.darkona.droplets.compat.create.CreateRegistry;
-import com.darkona.droplets.compat.create.SandFilterBlockEntity;
-import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.DropletsServiceImpl;
@@ -17,7 +14,8 @@ import com.darkona.droplets.content.registry.ConditionInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.LegacyIds;
-import com.darkona.droplets.content.registry.ThirstComponent;
+import com.darkona.droplets.foundation.config.DiscouragedMods;
+import com.darkona.droplets.content.registry.LootInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.PlayerThirstManager;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
@@ -28,24 +26,27 @@ import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.darkona.droplets.foundation.network.ThirstModPacketHandler;
 import com.darkona.droplets.foundation.tab.ThirstTab;
 import com.darkona.droplets.gametest.DropletsGameTests;
-import net.createmod.ponder.foundation.PonderIndex;
+import com.darkona.droplets.compat.travelersbackpack.TravelersBackpackCompat;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
-import com.darkona.droplets.compat.travelersbackpack.TravelersBackpackCompat;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddPackFindersEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+
+import java.nio.file.Path;
 
 
 @Mod(BlueDroplets.ID)
@@ -53,22 +54,24 @@ public class BlueDroplets
 {
     public static final String ID = DropletsAPI.MOD_ID;
 
-    public BlueDroplets(IEventBus modBus, ModContainer modContainer)
+    public BlueDroplets()
     {
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         DropletsAPI.setService(DropletsServiceImpl.INSTANCE);
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::clientSetup);
-        modBus.addListener(DropletsDataMaps::register);
         modBus.addListener(PlayerThirstManager::onConfigReloaded);
         modBus.addListener(BlueDroplets::addPacks);
-        modBus.addListener(ThirstModPacketHandler::register);
         modBus.addListener(DropletsGameTests::register);
+        MinecraftForge.EVENT_BUS.addListener(DropletsDataMaps::addReloadListeners);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, DropletsDataMaps::bind);
+        ThirstModPacketHandler.register();
+        DiscouragedMods.warn();
         TravelersBackpackCompat.init(modBus);
         ColdSweatCompat.init();
         ReliquaryCompat.init();
         DelightCompat.init();
-        ModAttachment.ATTACHMENT_TYPES.register(modBus);
-        ThirstComponent.DR.register(modBus);
+        ModAttachment.register(modBus);
 
         if(FMLEnvironment.dist.isClient())
         {
@@ -77,47 +80,39 @@ public class BlueDroplets
             VampirismCompat.initClient();
             SupernaturalCompat.initClient();
             modBus.addListener(DrinkTooltip::registerFactory);
-            NeoForge.EVENT_BUS.addListener(EventPriority.LOW, DrinkTooltip::gather);
+            MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, DrinkTooltip::gather);
         }
 
         ItemInit.register(modBus);
         EffectInit.register(modBus);
         AttributeInit.register(modBus);
-        ConditionInit.CONDITION_CODECS.register(modBus);
-        ConditionInit.LOOT_CONDITIONS.register(modBus);
-        LegacyIds.register(modBus);
+        ConditionInit.register(modBus);
+        LootInit.register(modBus);
+        LegacyIds.register();
 
-        if(ModList.get().isLoaded("create"))
-        {
-            CreateRegistry.register();
-            modBus.addListener(SandFilterBlockEntity::registerCapabilities);
-        }
+        // PORT-TODO if(ModList.get().isLoaded("create"))
+        //    CreateRegistry.register();
 
         ThirstTab.register(modBus);
         LegacyConfigMigration.run();
-        modContainer.registerConfig(ModConfig.Type.COMMON, GameplayConfig.SPEC, ID + "/gameplay.toml");
-        modContainer.registerConfig(ModConfig.Type.COMMON, PurityConfig.SPEC, ID + "/purity.toml");
-        modContainer.registerConfig(ModConfig.Type.COMMON, ItemsConfig.SPEC, ID + "/items.toml");
-        modContainer.registerConfig(ModConfig.Type.COMMON, CompatConfig.SPEC, ID + "/compat.toml");
-        modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, ID + "/client.toml");
+        ModLoadingContext context = ModLoadingContext.get();
+        context.registerConfig(ModConfig.Type.COMMON, GameplayConfig.SPEC, ID + "/gameplay.toml");
+        context.registerConfig(ModConfig.Type.COMMON, PurityConfig.SPEC, ID + "/purity.toml");
+        context.registerConfig(ModConfig.Type.COMMON, ItemsConfig.SPEC, ID + "/items.toml");
+        context.registerConfig(ModConfig.Type.COMMON, CompatConfig.SPEC, ID + "/compat.toml");
+        context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, ID + "/client.toml");
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         WaterPurity.init();
         event.enqueueWork(WaterPurity::registerCauldronInteractions);
+        event.enqueueWork(EffectInit::registerBrewing);
     }
 
     private void clientSetup(final FMLClientSetupEvent event)
     {
-        if(ModList.get().isLoaded("create")){
-            event.enqueueWork(()-> new Object()
-            {
-                public void registerPonderPlugin(){
-                    PonderIndex.addPlugin(new ThirstPonderPlugin());
-                }
-            }.registerPonderPlugin());
-        }
+        // PORT-TODO ponder
     }
 
     /**
@@ -135,13 +130,26 @@ public class BlueDroplets
         addPack(event, "preset_hardcore", "hardcore preset", PackSource.FEATURE);
     }
 
+    /**
+     * Forge 1.20.1 has no helper for packs inside a mod jar: the pack is the jar's {@code datapacks/<name>} folder,
+     * with the id {@code mod/blue_droplets:datapacks/<name>} that later versions give it.
+     */
     private static void addPack(AddPackFindersEvent event, String name, String title, PackSource source)
     {
-        event.addPackFinders(asResource("datapacks/" + name), PackType.SERVER_DATA, Component.literal("Blue Droplets: " + title), source, false, Pack.Position.TOP);
+        if (event.getPackType() != PackType.SERVER_DATA)
+            return;
+        Path path = ModList.get().getModFileById(ID).getFile().findResource("datapacks/" + name);
+        String id = "mod/" + ID + ":datapacks/" + name;
+        event.addRepositorySource(packs -> {
+            Pack pack = Pack.readMetaAndCreate(id, Component.literal("Blue Droplets: " + title), false,
+                    packId -> new PathPackResources(packId, path, false), PackType.SERVER_DATA, Pack.Position.TOP, source);
+            if (pack != null)
+                packs.accept(pack);
+        });
     }
 
     public static ResourceLocation asResource(String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(ID, path);
+        return new ResourceLocation(ID, path);
     }
 }

@@ -2,13 +2,13 @@ package com.darkona.droplets.api.event;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 /**
  * A player drinks something that restores thirst, or removes it (salty, negative values): items drunk
  * ({@code UseAnim.DRINK}: potions, milk, most modded drinks) and water containers, drinking by hand and
- * {@code DropletsAPI.drink}. Food posts {@link EatEvent} instead. Posted on {@code NeoForge.EVENT_BUS}, on the server,
+ * {@code DropletsAPI.drink}. Food posts {@link EatEvent} instead. Posted on {@code MinecraftForge.EVENT_BUS}, on the server,
  * once per drink. The hydration itself also posts a {@link ThirstChangeEvent} with cause {@code DRINK}.
  */
 public abstract class DrinkEvent extends PlayerEvent
@@ -52,7 +52,8 @@ public abstract class DrinkEvent extends PlayerEvent
     /**
      * Before purity effects and hydration. Cancel to skip both, or change what the drink gives.
      */
-    public static final class Pre extends DrinkEvent implements ICancellableEvent
+    @Cancelable
+    public static final class Pre extends DrinkEvent
     {
         private int thirst;
         private int quenched;

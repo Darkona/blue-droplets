@@ -19,29 +19,30 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import com.darkona.droplets.foundation.network.ThirstModPacketHandler;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -58,7 +59,7 @@ public class PlayerThirstManager {
     public static void eatBlock(PlayerInteractEvent.RightClickBlock event) {
         if (event.getHand() != InteractionHand.MAIN_HAND || !(event.getEntity() instanceof ServerPlayer player))
             return;
-        DrinkValues values = event.getLevel().getBlockState(event.getPos()).getBlock().builtInRegistryHolder().getData(DropletsDataMaps.HYDRATING_BLOCKS);
+        DrinkValues values = DropletsDataMaps.HYDRATING_BLOCKS.get(event.getLevel().getBlockState(event.getPos()).getBlock().builtInRegistryHolder());
         if (values == null)
             return;
         int food = player.getFoodData().getFoodLevel();
@@ -71,13 +72,13 @@ public class PlayerThirstManager {
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide && event.getEntity().getData(ModAttachment.PLAYER_THIRST).handDrinkingAllowed())
+        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide && ModAttachment.thirst(event.getEntity()).handDrinkingAllowed())
             DrinkByHandClient.drinkByHand();
     }
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickEmpty event) {
-        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide && event.getEntity().getData(ModAttachment.PLAYER_THIRST).handDrinkingAllowed())
+        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide && ModAttachment.thirst(event.getEntity()).handDrinkingAllowed())
             DrinkByHandClient.drinkByHand();
     }
 
@@ -94,24 +95,23 @@ public class PlayerThirstManager {
             PlayerThirst.consume(item, player);
     }
 
-    @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent.Pre event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer && serverPlayer.isAlive()) {
-            serverPlayer.getData(ModAttachment.PLAYER_THIRST).tick(serverPlayer);
-        }
-    }
-
     /**
-     * The only place that sends thirst data: at most one packet per player and tick, and only when a synced value changed.
+     * Thirst ticks at the start of the player's tick; the only place that sends thirst data is its end: at most one
+     * packet per player and tick, and only when a synced value changed.
      */
     @SubscribeEvent
-    public static void syncThirst(PlayerTickEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            PlayerThirst thirst = serverPlayer.getData(ModAttachment.PLAYER_THIRST);
-            if ((serverPlayer.tickCount + serverPlayer.getId()) % ThirstConstants.SAFETY_RESYNC_TICKS == 0)
-                thirst.updateThirstData(serverPlayer);
-            thirst.syncIfChanged(serverPlayer);
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (event.side != LogicalSide.SERVER || !(event.player instanceof ServerPlayer serverPlayer))
+            return;
+        PlayerThirst thirst = ModAttachment.thirst(serverPlayer);
+        if (event.phase == TickEvent.Phase.START) {
+            if (serverPlayer.isAlive())
+                thirst.tick(serverPlayer);
+            return;
         }
+        if ((serverPlayer.tickCount + serverPlayer.getId()) % ThirstConstants.SAFETY_RESYNC_TICKS == 0)
+            thirst.updateThirstData(serverPlayer);
+        thirst.syncIfChanged(serverPlayer);
     }
 
     /**
@@ -119,38 +119,38 @@ public class PlayerThirstManager {
      */
     @SubscribeEvent
     public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        PlayerThirst thirst = event.getEntity().getData(ModAttachment.PLAYER_THIRST);
+        PlayerThirst thirst = ModAttachment.thirst(event.getEntity());
         thirst.updateThirstData(event.getEntity());
         thirst.invalidateModifier();
     }
 
     @SubscribeEvent
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        event.getEntity().getData(ModAttachment.PLAYER_THIRST).updateThirstData(event.getEntity());
+        ModAttachment.thirst(event.getEntity()).updateThirstData(event.getEntity());
     }
 
     @SubscribeEvent
     public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player && event.getSlot().getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
-            player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+        if (event.getEntity() instanceof ServerPlayer player && event.getSlot().getType() == EquipmentSlot.Type.ARMOR)
+            ModAttachment.thirst(player).invalidateModifier();
     }
 
     @SubscribeEvent
     public static void onEffectAdded(MobEffectEvent.Added event) {
         if (event.getEntity() instanceof ServerPlayer player)
-            player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+            ModAttachment.thirst(player).invalidateModifier();
     }
 
     @SubscribeEvent
     public static void onEffectRemoved(MobEffectEvent.Remove event) {
         if (event.getEntity() instanceof ServerPlayer player)
-            player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+            ModAttachment.thirst(player).invalidateModifier();
     }
 
     @SubscribeEvent
     public static void onEffectExpired(MobEffectEvent.Expired event) {
         if (event.getEntity() instanceof ServerPlayer player)
-            player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+            ModAttachment.thirst(player).invalidateModifier();
     }
 
     @SubscribeEvent
@@ -171,24 +171,27 @@ public class PlayerThirstManager {
             activity(player, GameplayConfig.BLOCK_BREAK, 1.0F);
     }
 
-    @SubscribeEvent
-    public static void onDamaged(LivingDamageEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer player && event.getNewDamage() > 0)
+    /**
+     * Lowest priority and not when canceled: the damage that goes through, like vanilla's exhaustion in {@code actuallyHurt}.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onDamaged(LivingDamageEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player && event.getAmount() > 0)
             activity(player, GameplayConfig.DAMAGE_MULTIPLIER, event.getSource().getFoodExhaustion());
     }
 
     /**
      * OWN mode only: the same activities vanilla charges to hunger.
      */
-    private static void activity(ServerPlayer player, ModConfigSpec.DoubleValue value, float factor) {
+    private static void activity(ServerPlayer player, ForgeConfigSpec.DoubleValue value, float factor) {
         if (GameplayConfig.MODE.get() == GameplayConfig.Mode.OWN)
-            player.getData(ModAttachment.PLAYER_THIRST).addActivity(player, value.get().floatValue() * factor);
+            ModAttachment.thirst(player).addActivity(player, value.get().floatValue() * factor);
     }
 
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event){
         if(event.getEntity() instanceof ServerPlayer player){
-            PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+            PlayerThirst thirst = ModAttachment.thirst(player);
             int respawnThirst = GameplayConfig.RESPAWN_THIRST.get();
             int respawnQuenched = GameplayConfig.RESPAWN_QUENCHED.get();
             thirst.change(player, respawnThirst >= 0 ? respawnThirst : thirst.getThirst(), respawnQuenched >= 0 ? respawnQuenched : thirst.getQuenched(), ThirstChangeEvent.Cause.DEATH);
@@ -204,7 +207,7 @@ public class PlayerThirstManager {
     }
 
     /**
-     * Lowest priority: NeoForge applies the reloaded data maps in its own {@code TagsUpdatedEvent} listener.
+     * Lowest priority: the data maps are resolved in a {@code TagsUpdatedEvent} listener of higher priority.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void rebuildDrinks(TagsUpdatedEvent event){
@@ -230,13 +233,14 @@ public class PlayerThirstManager {
      */
     @SubscribeEvent
     public static void syncValues(OnDatapackSyncEvent event){
-        sendValues(event.getRelevantPlayers());
+        ServerPlayer player = event.getPlayer();
+        sendValues(player != null ? Stream.of(player) : event.getPlayerList().getPlayers().stream());
     }
 
     private static void sendValues(Stream<ServerPlayer> players){
         ThirstValuesSyncMessage message = ThirstValuesSyncMessage.fromTables();
-        players.filter(player -> !player.connection.getConnection().isMemoryConnection())
-                .forEach(player -> PacketDistributor.sendToPlayer(player, message));
+        players.filter(player -> !player.connection.connection.isMemoryConnection())
+                .forEach(player -> ThirstModPacketHandler.sendToPlayer(player, message));
     }
 
     /**
@@ -251,7 +255,7 @@ public class PlayerThirstManager {
             ThirstHelper.rebuild(server.getRecipeManager(), server.registryAccess());
             List<ServerPlayer> players = server.getPlayerList().getPlayers();
             for (ServerPlayer player : players) {
-                PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+                PlayerThirst thirst = ModAttachment.thirst(player);
                 thirst.invalidateModifier();
                 thirst.updateThirstData(player);
             }

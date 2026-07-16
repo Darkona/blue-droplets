@@ -3,7 +3,7 @@ package com.darkona.droplets.compat.vampirism;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 public final class VampirismCompat
 {

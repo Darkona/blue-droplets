@@ -17,14 +17,13 @@ public class QuenchnessEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide && entity instanceof Player player)
-            player.getData(ModAttachment.PLAYER_THIRST).hydrate(player, amplifier + 1, amplifier + 1, false, ThirstChangeEvent.Cause.DRINK);
-        return true;
+            ModAttachment.thirst(player).hydrate(player, amplifier + 1, amplifier + 1, false, ThirstChangeEvent.Cause.DRINK);
     }
 
     @Override
-    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         return duration % GameplayConfig.QUENCHNESS_INTERVAL_TICKS.get() == 0;
     }
 }

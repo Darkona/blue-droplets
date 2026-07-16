@@ -1,22 +1,20 @@
 package com.darkona.droplets.foundation.network.message;
 
-import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.SyncedValues;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import com.darkona.droplets.foundation.network.ClientPayloadHandlers;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Values resolved by the server (config, data map, tags, keywords, {@code RegisterThirstValueEvent}, blacklist applied):
@@ -24,40 +22,50 @@ import java.util.Map;
  * items of data-driven purity containers, and the {@link SyncedValues}. Sent on join, after {@code /reload} and after a config file changes.
  */
 public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> foods, List<Item> estimated, List<Item> containers, int defaultPurity, int waterBottleStackSize, boolean purityEnabled, boolean canFillFromFlowingWater,
-                                      int pureThirstBonus, int pureQuenchedBonus) implements CustomPacketPayload
+                                      int pureThirstBonus, int pureQuenchedBonus)
 {
-    public static final CustomPacketPayload.Type<ThirstValuesSyncMessage> TYPE = new Type<>(BlueDroplets.asResource("thirst_values"));
+    public void encode(FriendlyByteBuf buffer)
+    {
+        writeTable(buffer, drinks);
+        writeTable(buffer, foods);
+        buffer.writeCollection(estimated, (buf, item) -> buf.writeId(BuiltInRegistries.ITEM, item));
+        buffer.writeCollection(containers, (buf, item) -> buf.writeId(BuiltInRegistries.ITEM, item));
+        buffer.writeVarInt(defaultPurity);
+        buffer.writeVarInt(waterBottleStackSize);
+        buffer.writeVarInt(pureThirstBonus);
+        buffer.writeVarInt(pureQuenchedBonus);
+        buffer.writeBoolean(purityEnabled);
+        buffer.writeBoolean(canFillFromFlowingWater);
+    }
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, Item> ITEM = ByteBufCodecs.registry(Registries.ITEM);
-    private static final StreamCodec<ByteBuf, int[]> VALUES = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, values -> values[0],
-            ByteBufCodecs.VAR_INT, values -> values[1],
-            ByteBufCodecs.VAR_INT, values -> values[2],
-            (thirst, quenched, purity) -> new int[]{thirst, quenched, purity});
-    private static final StreamCodec<RegistryFriendlyByteBuf, Map<Item, int[]>> TABLE = ByteBufCodecs.map(HashMap::new, ITEM, VALUES);
+    public static ThirstValuesSyncMessage decode(FriendlyByteBuf buffer)
+    {
+        Map<Item, int[]> drinks = readTable(buffer);
+        Map<Item, int[]> foods = readTable(buffer);
+        List<Item> estimated = buffer.readList(buf -> buf.readById(BuiltInRegistries.ITEM));
+        List<Item> containers = buffer.readList(buf -> buf.readById(BuiltInRegistries.ITEM));
+        int defaultPurity = buffer.readVarInt();
+        int stackSize = buffer.readVarInt();
+        int pureThirst = buffer.readVarInt();
+        int pureQuenched = buffer.readVarInt();
+        boolean purityEnabled = buffer.readBoolean();
+        boolean flowing = buffer.readBoolean();
+        return new ThirstValuesSyncMessage(drinks, foods, estimated, containers, defaultPurity, stackSize, purityEnabled, flowing, pureThirst, pureQuenched);
+    }
 
-    private static final StreamCodec<ByteBuf, boolean[]> FLAGS = StreamCodec.composite(
-            ByteBufCodecs.BOOL, flags -> flags[0],
-            ByteBufCodecs.BOOL, flags -> flags[1],
-            (first, second) -> new boolean[]{first, second});
+    private static void writeTable(FriendlyByteBuf buffer, Map<Item, int[]> table)
+    {
+        buffer.writeMap(table, (buf, item) -> buf.writeId(BuiltInRegistries.ITEM, item), (buf, values) -> {
+            buf.writeVarInt(values[0]);
+            buf.writeVarInt(values[1]);
+            buf.writeVarInt(values[2]);
+        });
+    }
 
-    /** defaultPurity, waterBottleStackSize, pureThirstBonus, pureQuenchedBonus. */
-    private static final StreamCodec<ByteBuf, int[]> NUMBERS = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, numbers -> numbers[0],
-            ByteBufCodecs.VAR_INT, numbers -> numbers[1],
-            ByteBufCodecs.VAR_INT, numbers -> numbers[2],
-            ByteBufCodecs.VAR_INT, numbers -> numbers[3],
-            (first, second, third, fourth) -> new int[]{first, second, third, fourth});
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, ThirstValuesSyncMessage> STREAM_CODEC = StreamCodec.composite(
-            TABLE, ThirstValuesSyncMessage::drinks,
-            TABLE, ThirstValuesSyncMessage::foods,
-            ITEM.apply(ByteBufCodecs.list()), ThirstValuesSyncMessage::estimated,
-            ITEM.apply(ByteBufCodecs.list()), ThirstValuesSyncMessage::containers,
-            NUMBERS, message -> new int[]{message.defaultPurity, message.waterBottleStackSize, message.pureThirstBonus, message.pureQuenchedBonus},
-            FLAGS, message -> new boolean[]{message.purityEnabled, message.canFillFromFlowingWater},
-            (drinks, foods, estimated, containers, numbers, flags) -> new ThirstValuesSyncMessage(drinks, foods, estimated, containers,
-                    numbers[0], numbers[1], flags[0], flags[1], numbers[2], numbers[3]));
+    private static Map<Item, int[]> readTable(FriendlyByteBuf buffer)
+    {
+        return buffer.readMap(HashMap::new, buf -> buf.readById(BuiltInRegistries.ITEM), buf -> new int[]{buf.readVarInt(), buf.readVarInt(), buf.readVarInt()});
+    }
 
     public static ThirstValuesSyncMessage fromTables()
     {
@@ -66,17 +74,8 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
                 SyncedValues.pureThirstBonus(), SyncedValues.pureQuenchedBonus());
     }
 
-    public static void clientHandle(final ThirstValuesSyncMessage message, final IPayloadContext context)
+    public static void clientHandle(final ThirstValuesSyncMessage message, final Supplier<NetworkEvent.Context> context)
     {
-        context.enqueueWork(() -> {
-            ThirstHelper.useServerTables(message.drinks, message.foods, message.containers, message.estimated);
-            SyncedValues.useServerValues(message.defaultPurity, message.waterBottleStackSize, message.purityEnabled, message.canFillFromFlowingWater,
-                    message.pureThirstBonus, message.pureQuenchedBonus);
-        });
-    }
-
-    @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPayloadHandlers.values(message));
     }
 }

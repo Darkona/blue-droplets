@@ -1,9 +1,11 @@
 {
-  "type": "neoforge:add_table",
-  "conditions":
-  [
+  "type": "blue_droplets:add_table",
+  "conditions": [
     {
-      "condition": "neoforge:loot_table_id",
+      "condition": "blue_droplets:loot_config"
+    },
+    {
+      "condition": "forge:loot_table_id",
       "loot_table_id": "minecraft:chests/abandoned_mineshaft"
     }
   ],

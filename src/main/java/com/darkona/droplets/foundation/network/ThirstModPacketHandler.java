@@ -1,38 +1,49 @@
 package com.darkona.droplets.foundation.network;
 
+import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.network.message.DrinkByHandMessage;
 import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
 import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 /**
- * Payloads; registered on the mod bus from the mod constructor.
+ * Payloads, on one channel; registered from the mod constructor.
  */
 public class ThirstModPacketHandler
 {
     private static final String PROTOCOL_VERSION = "0.1.12";
 
-    public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
-        registrar.playToServer(
-                DrinkByHandMessage.TYPE,
-                DrinkByHandMessage.STREAM_CODEC,
-                DrinkByHandMessage::serverHandle
-        );
-        registrar.playToClient(
-                ThirstValuesSyncMessage.TYPE,
-                ThirstValuesSyncMessage.STREAM_CODEC,
-                ThirstValuesSyncMessage::clientHandle
-        );
-        registrar.playBidirectional(
-                PlayerThirstSyncMessage.TYPE,
-                PlayerThirstSyncMessage.STREAM_CODEC,
-                new DirectionalPayloadHandler<>(
-                        PlayerThirstSyncMessage::clientHandle,
-                        PlayerThirstSyncMessage::serverHandle
-                )
-        );
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(BlueDroplets.asResource("main"),
+            () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+
+    public static void register() {
+        int id = 0;
+        CHANNEL.messageBuilder(DrinkByHandMessage.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(DrinkByHandMessage::encode)
+                .decoder(DrinkByHandMessage::decode)
+                .consumerMainThread(DrinkByHandMessage::serverHandle)
+                .add();
+        CHANNEL.messageBuilder(ThirstValuesSyncMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ThirstValuesSyncMessage::encode)
+                .decoder(ThirstValuesSyncMessage::decode)
+                .consumerMainThread(ThirstValuesSyncMessage::clientHandle)
+                .add();
+        CHANNEL.messageBuilder(PlayerThirstSyncMessage.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(PlayerThirstSyncMessage::encode)
+                .decoder(PlayerThirstSyncMessage::decode)
+                .consumerMainThread(PlayerThirstSyncMessage::clientHandle)
+                .add();
+    }
+
+    public static void sendToPlayer(ServerPlayer player, Object message) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
+
+    public static void sendToServer(Object message) {
+        CHANNEL.sendToServer(message);
     }
 }

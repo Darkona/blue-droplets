@@ -2,7 +2,7 @@ package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -10,10 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -67,7 +66,7 @@ public final class RecipeInference
     private final boolean onlyConsumables = ItemsConfig.INFERENCE_ONLY_CONSUMABLES.get();
     private int recipes, cycles, cutoffs;
 
-    private RecipeInference(Inputs inputs, RecipeManager recipeManager, HolderLookup.Provider registries)
+    private RecipeInference(Inputs inputs, RecipeManager recipeManager, RegistryAccess registries)
     {
         this.inputs = inputs;
         for (String id : ItemsConfig.INFERENCE_BLACKLIST.get())
@@ -82,11 +81,10 @@ public final class RecipeInference
             ignoredTypes.add(type == null ? id : type.toString());
         }
 
-        List<RecipeHolder<?>> holders = new ArrayList<>(recipeManager.getRecipes());
-        holders.sort(Comparator.comparing(RecipeHolder::id));
-        for (RecipeHolder<?> holder : holders)
+        List<Recipe<?>> holders = new ArrayList<>(recipeManager.getRecipes());
+        holders.sort(Comparator.comparing(Recipe::getId));
+        for (Recipe<?> recipe : holders)
         {
-            Recipe<?> recipe = holder.value();
             ResourceLocation type = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType());
             if (type == null || ignoredTypes.contains(type.toString()) || recipe.isSpecial())
                 continue;
@@ -96,7 +94,7 @@ public final class RecipeInference
                 if (result.isEmpty())
                     continue;
                 byResult.computeIfAbsent(result.getItem(), item -> new ArrayList<>())
-                        .add(new Entry(holder.id(), type, multiplier(recipe.getType()), result.getCount(), recipe.getIngredients()));
+                        .add(new Entry(recipe.getId(), type, multiplier(recipe.getType()), result.getCount(), recipe.getIngredients()));
                 recipes++;
             }
             catch (RuntimeException e)
@@ -107,7 +105,7 @@ public final class RecipeInference
         unreadable.forEach((type, count) -> problems.add("inference: " + count + " recipe(s) of type " + type + " could not be read (skipped)"));
     }
 
-    public static Result run(Inputs inputs, RecipeManager recipeManager, HolderLookup.Provider registries)
+    public static Result run(Inputs inputs, RecipeManager recipeManager, RegistryAccess registries)
     {
         long start = System.nanoTime();
         RecipeInference inference = new RecipeInference(inputs, recipeManager, registries);
@@ -131,7 +129,7 @@ public final class RecipeInference
     /**
      * Every recipe of the item with its ingredients' values, the estimate and why it would not be used.
      */
-    public static List<String> explain(Item item, Inputs inputs, RecipeManager recipeManager, HolderLookup.Provider registries)
+    public static List<String> explain(Item item, Inputs inputs, RecipeManager recipeManager, RegistryAccess registries)
     {
         RecipeInference inference = new RecipeInference(inputs, recipeManager, registries);
         List<String> lines = new ArrayList<>();

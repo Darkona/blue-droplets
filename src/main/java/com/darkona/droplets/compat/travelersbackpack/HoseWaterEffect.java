@@ -9,11 +9,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * Water drunk with the hose hydrates like a water bottle (its drink values, so datapacks and the config apply, and the
@@ -40,7 +40,7 @@ final class HoseWaterEffect extends EffectFluid
     {
         if (level.isClientSide() || !(entity instanceof Player player))
             return;
-        ItemStack bottle = PotionContents.createItemStack(Items.POTION, Potions.WATER);
+        ItemStack bottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
         PlayerThirst.drinkWater(player, ThirstHelper.getThirst(bottle), ThirstHelper.getQuenched(bottle), WaterPurity.getPurity(fluid));
     }
 

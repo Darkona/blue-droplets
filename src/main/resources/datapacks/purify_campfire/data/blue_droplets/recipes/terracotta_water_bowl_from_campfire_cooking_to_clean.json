@@ -1,0 +1,30 @@
+{
+  "conditions": [
+    {
+      "type": "blue_droplets:purity_enabled"
+    }
+  ],
+  "type": "minecraft:campfire_cooking",
+  "ingredient": [
+    {
+      "type": "forge:partial_nbt",
+      "item": "blue_droplets:terracotta_water_bowl",
+      "nbt": {
+        "blue_droplets:purity": 3
+      }
+    },
+    {
+      "type": "forge:nbt",
+      "item": "blue_droplets:terracotta_water_bowl"
+    }
+  ],
+  "result": {
+    "item": "blue_droplets:terracotta_water_bowl",
+    "count": 1,
+    "nbt": {
+      "blue_droplets:purity": 4
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 300
+}

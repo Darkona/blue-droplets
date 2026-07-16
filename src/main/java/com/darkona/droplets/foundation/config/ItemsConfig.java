@@ -1,7 +1,7 @@
 package com.darkona.droplets.foundation.config;
 
 import com.mojang.logging.LogUtils;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
@@ -17,55 +17,55 @@ public final class ItemsConfig
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Set<String> REPORTED = ConcurrentHashMap.newKeySet();
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    public static final ModConfigSpec.ConfigValue<List<? extends List<?>>> DRINKS;
-    public static final ModConfigSpec.ConfigValue<List<? extends List<?>>> FOODS;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> BLACKLIST;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> CONTAINERS;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends List<?>>> DRINKS;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends List<?>>> FOODS;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLIST;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CONTAINERS;
 
-    public static final ModConfigSpec.BooleanValue KEYWORDS;
-    public static final ModConfigSpec.IntValue KEYWORD_DRINK_THIRST;
-    public static final ModConfigSpec.IntValue KEYWORD_DRINK_QUENCHED;
-    public static final ModConfigSpec.IntValue KEYWORD_SOUP_THIRST;
-    public static final ModConfigSpec.IntValue KEYWORD_SOUP_QUENCHED;
-    public static final ModConfigSpec.IntValue KEYWORD_FRUIT_THIRST;
-    public static final ModConfigSpec.IntValue KEYWORD_FRUIT_QUENCHED;
-    public static final ModConfigSpec.ConfigValue<String> KEYWORD_BLACKLIST;
-    public static final ModConfigSpec.ConfigValue<String> KEYWORD_DRINK;
-    public static final ModConfigSpec.ConfigValue<String> KEYWORD_SOUP;
-    public static final ModConfigSpec.ConfigValue<String> KEYWORD_FRUIT;
+    public static final ForgeConfigSpec.BooleanValue KEYWORDS;
+    public static final ForgeConfigSpec.IntValue KEYWORD_DRINK_THIRST;
+    public static final ForgeConfigSpec.IntValue KEYWORD_DRINK_QUENCHED;
+    public static final ForgeConfigSpec.IntValue KEYWORD_SOUP_THIRST;
+    public static final ForgeConfigSpec.IntValue KEYWORD_SOUP_QUENCHED;
+    public static final ForgeConfigSpec.IntValue KEYWORD_FRUIT_THIRST;
+    public static final ForgeConfigSpec.IntValue KEYWORD_FRUIT_QUENCHED;
+    public static final ForgeConfigSpec.ConfigValue<String> KEYWORD_BLACKLIST;
+    public static final ForgeConfigSpec.ConfigValue<String> KEYWORD_DRINK;
+    public static final ForgeConfigSpec.ConfigValue<String> KEYWORD_SOUP;
+    public static final ForgeConfigSpec.ConfigValue<String> KEYWORD_FRUIT;
 
-    public static final ModConfigSpec.IntValue SALTY_THIRST;
-    public static final ModConfigSpec.IntValue SALTY_QUENCHED;
-    public static final ModConfigSpec.BooleanValue INFERENCE;
-    public static final ModConfigSpec.BooleanValue INFERENCE_ONLY_CONSUMABLES;
-    public static final ModConfigSpec.IntValue INFERENCE_MAX_DEPTH;
-    public static final ModConfigSpec.DoubleValue INFERENCE_CRAFTING;
-    public static final ModConfigSpec.DoubleValue INFERENCE_COOKING;
-    public static final ModConfigSpec.DoubleValue INFERENCE_OTHER;
-    public static final ModConfigSpec.IntValue INFERENCE_MAX_THIRST;
-    public static final ModConfigSpec.IntValue INFERENCE_MAX_QUENCHED;
-    public static final ModConfigSpec.IntValue INFERENCE_MIN_THIRST;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> INFERENCE_BLACKLIST;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> INFERENCE_IGNORED_RECIPE_TYPES;
+    public static final ForgeConfigSpec.IntValue SALTY_THIRST;
+    public static final ForgeConfigSpec.IntValue SALTY_QUENCHED;
+    public static final ForgeConfigSpec.BooleanValue INFERENCE;
+    public static final ForgeConfigSpec.BooleanValue INFERENCE_ONLY_CONSUMABLES;
+    public static final ForgeConfigSpec.IntValue INFERENCE_MAX_DEPTH;
+    public static final ForgeConfigSpec.DoubleValue INFERENCE_CRAFTING;
+    public static final ForgeConfigSpec.DoubleValue INFERENCE_COOKING;
+    public static final ForgeConfigSpec.DoubleValue INFERENCE_OTHER;
+    public static final ForgeConfigSpec.IntValue INFERENCE_MAX_THIRST;
+    public static final ForgeConfigSpec.IntValue INFERENCE_MAX_QUENCHED;
+    public static final ForgeConfigSpec.IntValue INFERENCE_MIN_THIRST;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> INFERENCE_BLACKLIST;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> INFERENCE_IGNORED_RECIPE_TYPES;
 
-    public static final ModConfigSpec SPEC;
+    public static final ForgeConfigSpec SPEC;
 
     static
     {
         BUILDER.comment("These entries win over the blue_droplets:drinks data map (datapacks) and over values registered by other mods.",
                 "Format: [[\"namespace:item\" or \"#namespace:tag\", thirst, quenched], ...]; thirst -20 to 20 and quenched -20 or more (negative values remove them)").push("overrides");
-        DRINKS = BUILDER.comment("Items that restore thirst when drunk").<List<?>>defineListAllowEmpty("drinks", List.of(), ItemsConfig::newEntry, ItemsConfig::checkEntry);
-        FOODS = BUILDER.comment("Items that restore thirst when eaten").<List<?>>defineListAllowEmpty("foods", List.of(), ItemsConfig::newEntry, ItemsConfig::checkEntry);
+        DRINKS = BUILDER.comment("Items that restore thirst when drunk").<List<?>>defineListAllowEmpty("drinks", List.of(), ItemsConfig::checkEntry);
+        FOODS = BUILDER.comment("Items that restore thirst when eaten").<List<?>>defineListAllowEmpty("foods", List.of(), ItemsConfig::checkEntry);
         BLACKLIST = BUILDER.comment("Items that never restore thirst, whatever datapacks or other mods say: [\"namespace:item\", \"#namespace:tag\"]")
-                .<String>defineListAllowEmpty("blacklist", List.of(), () -> "namespace:item", it -> it instanceof String);
+                .<String>defineListAllowEmpty("blacklist", List.of(), it -> it instanceof String);
         BUILDER.pop();
 
         BUILDER.push("containers");
         CONTAINERS = BUILDER.comment("Drinks that carry a water purity (added to the item tag blue_droplets:purity_containers, where the defaults live)",
                         "Format: [\"examplemod:example_item_1\", \"#examplemod:example_tag\"]")
-                .<String>defineListAllowEmpty("containers", List.of(), () -> "namespace:item", it -> it instanceof String);
+                .<String>defineListAllowEmpty("containers", List.of(), it -> it instanceof String);
         BUILDER.pop();
 
         BUILDER.comment("Items in the item tag blue_droplets:salty (empty by default) with no values from overrides, datapacks or other mods get these").push("salty");
@@ -100,9 +100,9 @@ public final class ItemsConfig
         INFERENCE_MAX_QUENCHED = BUILDER.comment("Highest estimated quenched").defineInRange("maxQuenched", 10, 0, 40);
         INFERENCE_MIN_THIRST = BUILDER.comment("Estimates below this thirst are dropped").defineInRange("minThirst", 1, 1, 20);
         INFERENCE_BLACKLIST = BUILDER.comment("Items never estimated nor passed on: [\"namespace:item\", \"#namespace:tag\", \"@namespace\"]")
-                .<String>defineListAllowEmpty("blacklist", List.of(), () -> "namespace:item", it -> it instanceof String);
+                .<String>defineListAllowEmpty("blacklist", List.of(), it -> it instanceof String);
         INFERENCE_IGNORED_RECIPE_TYPES = BUILDER.comment("Recipe types that are not used: [\"namespace:type\"]")
-                .<String>defineListAllowEmpty("ignoredRecipeTypes", List.of("minecraft:stonecutting", "minecraft:smithing"), () -> "namespace:type", it -> it instanceof String);
+                .<String>defineListAllowEmpty("ignoredRecipeTypes", List.of("minecraft:stonecutting", "minecraft:smithing"), it -> it instanceof String);
         BUILDER.pop();
 
         SPEC = BUILDER.build();
@@ -127,10 +127,5 @@ public final class ItemsConfig
         if (REPORTED.add(String.valueOf(entry)))
             LOGGER.warn("Skipping invalid entry {} in items.toml: expected [\"namespace:item\" or \"#namespace:tag\", thirst -20 to 20, quenched -20 or more]", entry);
         return false;
-    }
-
-    private static List<?> newEntry()
-    {
-        return Arrays.asList("namespace:item", 1, 1);
     }
 }

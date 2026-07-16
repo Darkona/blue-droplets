@@ -18,12 +18,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * Cold Sweat, through its public API (GPL-3.0 with an exception for use as a library; no code of it is copied):
@@ -43,7 +43,7 @@ public final class ColdSweatCompat
     {
         if (!LOADED)
             return;
-        NeoForge.EVENT_BUS.addListener(ColdSweatCompat::coolAfterDrinking);
+        MinecraftForge.EVENT_BUS.addListener(ColdSweatCompat::coolAfterDrinking);
     }
 
     public static double bodyTemperature(Player player)

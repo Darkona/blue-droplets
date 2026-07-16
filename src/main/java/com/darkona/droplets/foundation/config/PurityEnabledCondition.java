@@ -1,26 +1,47 @@
 package com.darkona.droplets.foundation.config;
 
-import com.mojang.serialization.MapCodec;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import org.jetbrains.annotations.NotNull;
+import com.darkona.droplets.BlueDroplets;
+import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 
 /**
  * {@code blue_droplets:purity_enabled}: true when {@code purity.enabled} is on; checked when datapacks load.
  */
-public record PurityEnabledCondition() implements ICondition
+public final class PurityEnabledCondition implements ICondition
 {
+    public static final ResourceLocation ID = BlueDroplets.asResource("purity_enabled");
     public static final PurityEnabledCondition INSTANCE = new PurityEnabledCondition();
-    public static final MapCodec<PurityEnabledCondition> CODEC = MapCodec.unit(INSTANCE).stable();
+    public static final IConditionSerializer<PurityEnabledCondition> SERIALIZER = new IConditionSerializer<>()
+    {
+        @Override
+        public void write(JsonObject json, PurityEnabledCondition value) {}
+
+        @Override
+        public PurityEnabledCondition read(JsonObject json)
+        {
+            return INSTANCE;
+        }
+
+        @Override
+        public ResourceLocation getID()
+        {
+            return ID;
+        }
+    };
+
+    private PurityEnabledCondition() {}
 
     @Override
-    public boolean test(ICondition.@NotNull IContext context)
+    public ResourceLocation getID()
     {
-        return PurityConfig.ENABLED.get();
+        return ID;
     }
 
     @Override
-    public @NotNull MapCodec<? extends ICondition> codec()
+    public boolean test(IContext context)
     {
-        return CODEC;
+        return PurityConfig.ENABLED.get();
     }
 }

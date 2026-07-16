@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "entries": [
+    "blue_droplets:add_loot_shipwreck_supply",
+    "blue_droplets:add_loot_shipwreck_supply_fr",
+    "blue_droplets:add_loot_shipwreck_supply_bc",
+    "blue_droplets:add_loot_abandoned_mineshaft",
+    "blue_droplets:add_loot_abandoned_mineshaft_fr",
+    "blue_droplets:add_loot_abandoned_mineshaft_bc",
+    "blue_droplets:add_loot_simple_dungeon",
+    "blue_droplets:add_loot_simple_dungeon_fr",
+    "blue_droplets:add_loot_simple_dungeon_bc",
+    "blue_droplets:add_loot_nether_bridge",
+    "blue_droplets:add_loot_nether_bridge_fr",
+    "blue_droplets:add_loot_nether_bridge_bc",
+    "blue_droplets:add_loot_bastion_other",
+    "blue_droplets:add_loot_bastion_other_fr",
+    "blue_droplets:add_loot_bastion_other_bc"
+  ]
+}

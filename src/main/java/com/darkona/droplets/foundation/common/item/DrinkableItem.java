@@ -44,7 +44,7 @@ public class DrinkableItem extends Item
         level.gameEvent(entity, GameEvent.ITEM_INTERACT_FINISH, entity.getEyePosition());
         if (!(entity instanceof Player player))
         {
-            item.consume(1, entity);
+            item.shrink(1);
             return item.isEmpty() ? new ItemStack(container) : item;
         }
         if (player instanceof ServerPlayer serverPlayer)
@@ -54,7 +54,7 @@ public class DrinkableItem extends Item
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity user) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 32;
     }
 

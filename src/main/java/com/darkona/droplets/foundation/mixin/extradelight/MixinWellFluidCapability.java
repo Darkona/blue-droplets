@@ -5,7 +5,7 @@ import com.darkona.droplets.compat.delight.WaterSourceTank;
 import com.lance5057.extradelight.capabilities.WellFluidCapability;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

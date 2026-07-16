@@ -8,11 +8,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +24,7 @@ public class ThirstTab
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, BlueDroplets.ID);
 
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> THIRST_TAB = TAB_REGISTER.register(BlueDroplets.ID,
+    public static final RegistryObject<CreativeModeTab> THIRST_TAB = TAB_REGISTER.register(BlueDroplets.ID,
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup." + BlueDroplets.ID))
                     .icon(ItemInit.TERRACOTTA_WATER_BOWL.get()::getDefaultInstance)
@@ -39,7 +39,7 @@ public class ThirstTab
         List<ItemStack> list = new ArrayList<>();
 
         addPurities(list, new ItemStack(Items.WATER_BUCKET));
-        addPurities(list, PotionContents.createItemStack(Items.POTION, Potions.WATER));
+        addPurities(list, PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER));
         list.add(ItemInit.CLAY_BOWL.get().getDefaultInstance());
         list.add(ItemInit.TERRACOTTA_BOWL.get().getDefaultInstance());
         addPurities(list, new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()));

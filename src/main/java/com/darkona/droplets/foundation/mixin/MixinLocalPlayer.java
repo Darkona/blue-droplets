@@ -16,7 +16,7 @@ public class MixinLocalPlayer{
      */
     @ModifyExpressionValue(method = "hasEnoughFoodToStartSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;getFoodLevel()I"))
     private int hasEnoughThirstToStartSprinting(int food){
-        PlayerThirst thirst = ((LocalPlayer) (Object) this).getData(ModAttachment.PLAYER_THIRST);
+        PlayerThirst thirst = ModAttachment.thirst((LocalPlayer) (Object) this);
         if(!thirst.isSprintBlocked() || thirst.getThirst() > thirst.sprintMinThirst())
             return food;
         return 0;

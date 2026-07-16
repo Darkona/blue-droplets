@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "minersdelight"
+    }
+  ],
+  "type": "create:emptying",
+  "ingredients": [
+    {
+      "item": "minersdelight:water_cup"
+    }
+  ],
+  "results": [
+    {
+      "item": "minersdelight:copper_cup"
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 1000
+    }
+  ]
+}

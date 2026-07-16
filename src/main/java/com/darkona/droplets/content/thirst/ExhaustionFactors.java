@@ -57,7 +57,7 @@ public final class ExhaustionFactors
         float altitude = (float) NumberRows.band(ALTITUDE.get(GameplayConfig.ALTITUDE_MULTIPLIERS.get()), player.getBlockY() - level.getSeaLevel(), 1.0);
         float water = player.isUnderWater() ? GameplayConfig.UNDERWATER_MULTIPLIER.get().floatValue() * underwaterBreathing(player)
                 : player.isInWater() ? GameplayConfig.IN_WATER_MULTIPLIER.get().floatValue() : 1.0F;
-        MobEffectInstance hydratedEffect = player.getEffect(EffectInit.HYDRATED);
+        MobEffectInstance hydratedEffect = player.getEffect(EffectInit.HYDRATED.get());
         float hydrated = hydratedEffect == null ? 1.0F : (float) Math.pow(GameplayConfig.HYDRATED_MULTIPLIER.get(), hydratedEffect.getAmplifier() + 1);
 
         if (breakdown != null)

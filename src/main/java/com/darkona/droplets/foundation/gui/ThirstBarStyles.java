@@ -3,12 +3,11 @@ package com.darkona.droplets.foundation.gui;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.foundation.config.ClientConfig;
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.IntSupplier;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Colours of the thirst bar while a status applies (the active style with the highest priority wins) and the effects
@@ -35,7 +35,7 @@ public final class ThirstBarStyles
 
     private static final Comparator<Style> ORDER = Comparator.comparingInt(Style::priority).reversed().thenComparing(Style::id);
     private static volatile Style[] styles = {};
-    private static final List<Holder<MobEffect>> waveEffects = new CopyOnWriteArrayList<>();
+    private static final List<Supplier<MobEffect>> waveEffects = new CopyOnWriteArrayList<>();
 
     private ThirstBarStyles() {}
 
@@ -59,7 +59,13 @@ public final class ThirstBarStyles
     }
 
     /** Effects that make the droplets bounce one at a time, like hearts under Regeneration. */
-    public static void registerWave(Holder<MobEffect> effect)
+    public static void registerWave(MobEffect effect)
+    {
+        waveEffects.add(() -> effect);
+    }
+
+    /** {@link #registerWave(MobEffect)} for effects not registered yet, like the mod's own ones at construction. */
+    public static void registerWave(Supplier<MobEffect> effect)
     {
         waveEffects.add(effect);
     }
@@ -67,23 +73,23 @@ public final class ThirstBarStyles
     public static boolean waves(Player player)
     {
         for (int i = 0; i < waveEffects.size(); i++)
-            if (player.hasEffect(waveEffects.get(i)))
+            if (player.hasEffect(waveEffects.get(i).get()))
                 return true;
         return false;
     }
 
     public static void registerBuiltIns()
     {
-        registerWave(EffectInit.QUENCHNESS);
-        registerWave(EffectInit.HYDRATED);
-        register(BlueDroplets.asResource("dehydration"), player -> player.hasEffect(EffectInit.DEHYDRATION), color(ClientConfig.DEHYDRATION_COLOR), DEHYDRATION_PRIORITY);
-        register(BlueDroplets.asResource("overhydrated"), player -> player.hasEffect(EffectInit.OVERHYDRATED), color(ClientConfig.OVERHYDRATED_COLOR), OVERHYDRATED_PRIORITY);
-        register(ResourceLocation.withDefaultNamespace("poison"), player -> player.hasEffect(MobEffects.POISON), color(ClientConfig.POISON_COLOR), POISON_PRIORITY);
-        register(BlueDroplets.asResource("quenchness"), player -> player.hasEffect(EffectInit.QUENCHNESS), color(ClientConfig.QUENCHNESS_COLOR), QUENCHNESS_PRIORITY);
-        register(BlueDroplets.asResource("hydrated"), player -> player.hasEffect(EffectInit.HYDRATED), color(ClientConfig.HYDRATED_COLOR), HYDRATED_PRIORITY);
+        registerWave(EffectInit.QUENCHNESS::get);
+        registerWave(EffectInit.HYDRATED::get);
+        register(BlueDroplets.asResource("dehydration"), player -> player.hasEffect(EffectInit.DEHYDRATION.get()), color(ClientConfig.DEHYDRATION_COLOR), DEHYDRATION_PRIORITY);
+        register(BlueDroplets.asResource("overhydrated"), player -> player.hasEffect(EffectInit.OVERHYDRATED.get()), color(ClientConfig.OVERHYDRATED_COLOR), OVERHYDRATED_PRIORITY);
+        register(new ResourceLocation("poison"), player -> player.hasEffect(MobEffects.POISON), color(ClientConfig.POISON_COLOR), POISON_PRIORITY);
+        register(BlueDroplets.asResource("quenchness"), player -> player.hasEffect(EffectInit.QUENCHNESS.get()), color(ClientConfig.QUENCHNESS_COLOR), QUENCHNESS_PRIORITY);
+        register(BlueDroplets.asResource("hydrated"), player -> player.hasEffect(EffectInit.HYDRATED.get()), color(ClientConfig.HYDRATED_COLOR), HYDRATED_PRIORITY);
     }
 
-    private static IntSupplier color(ModConfigSpec.ConfigValue<String> value)
+    private static IntSupplier color(ForgeConfigSpec.ConfigValue<String> value)
     {
         return new IntSupplier()
         {

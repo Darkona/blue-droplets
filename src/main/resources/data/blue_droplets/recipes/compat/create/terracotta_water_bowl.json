@@ -1,0 +1,23 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "blue_droplets:terracotta_bowl"
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 250
+    }
+  ],
+  "results": [
+    {
+      "item": "blue_droplets:terracotta_water_bowl"
+    }
+  ]
+}

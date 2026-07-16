@@ -21,7 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -40,7 +40,7 @@ public final class DropletsServiceImpl implements DropletsService
     private static @Nullable PlayerThirst server(Player player)
     {
         if (!player.level().isClientSide)
-            return player.getData(ModAttachment.PLAYER_THIRST);
+            return ModAttachment.thirst(player);
         if (!warnedClientChange)
         {
             warnedClientChange = true;
@@ -52,7 +52,7 @@ public final class DropletsServiceImpl implements DropletsService
     @Override
     public DropletsView view(Player player)
     {
-        return player.getData(ModAttachment.PLAYER_THIRST);
+        return ModAttachment.thirst(player);
     }
 
     @Override
@@ -165,7 +165,7 @@ public final class DropletsServiceImpl implements DropletsService
     @Override
     public void refreshExhaustionModifier(Player player)
     {
-        player.getData(ModAttachment.PLAYER_THIRST).invalidateModifier();
+        ModAttachment.thirst(player).invalidateModifier();
     }
 
     @Override
@@ -176,7 +176,7 @@ public final class DropletsServiceImpl implements DropletsService
     }
 
     @Override
-    public void registerWaveEffect(Holder<MobEffect> effect)
+    public void registerWaveEffect(MobEffect effect)
     {
         ThirstBarStyles.registerWave(effect);
     }

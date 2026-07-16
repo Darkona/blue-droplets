@@ -1,25 +1,49 @@
 package com.darkona.droplets.foundation.config;
 
-import com.mojang.serialization.MapCodec;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import org.jetbrains.annotations.NotNull;
+import com.darkona.droplets.BlueDroplets;
+import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 
 /**
- * {@code blue_droplets:loot_config}: data (the chest loot tables and the global loot modifier list) loads only with
- * {@code loot.enabled}. Like every NeoForge load condition it is checked when datapacks load, not per chest.
+ * {@code blue_droplets:loot_config}: true with {@code loot.enabled}. Forge 1.20.1 only reads load conditions in
+ * recipes and advancements, so the chest loot uses the loot condition of the same id instead
+ * ({@link LootConfigLootCondition}), checked on every roll.
  */
-public record LootConfigCondition() implements ICondition
+public final class LootConfigCondition implements ICondition
 {
+    public static final ResourceLocation ID = BlueDroplets.asResource("loot_config");
     public static final LootConfigCondition INSTANCE = new LootConfigCondition();
-    public static final MapCodec<LootConfigCondition> CODEC = MapCodec.unit(INSTANCE).stable();
+    public static final IConditionSerializer<LootConfigCondition> SERIALIZER = new IConditionSerializer<>()
+    {
+        @Override
+        public void write(JsonObject json, LootConfigCondition value) {}
+
+        @Override
+        public LootConfigCondition read(JsonObject json)
+        {
+            return INSTANCE;
+        }
+
+        @Override
+        public ResourceLocation getID()
+        {
+            return ID;
+        }
+    };
+
+    private LootConfigCondition() {}
 
     @Override
-    public boolean test(ICondition.@NotNull IContext context) {
-        return GameplayConfig.LOOT.get();
+    public ResourceLocation getID()
+    {
+        return ID;
     }
 
     @Override
-    public @NotNull MapCodec<? extends ICondition> codec() {
-        return CODEC;
+    public boolean test(IContext context)
+    {
+        return GameplayConfig.LOOT.get();
     }
 }

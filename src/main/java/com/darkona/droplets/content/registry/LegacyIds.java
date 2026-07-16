@@ -5,33 +5,27 @@ import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.MissingMappingsEvent;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Registry aliases from the Thirst Was Taken namespace ({@code thirst:*}) to {@code blue_droplets:*},
- * so items, blocks, block entities, effects and the player attachment saved by Thirst Was Taken load under the new
- * ids. Saving writes the new id, so each entry migrates once. The purity component is the exception: Thirst Was
- * Taken had four levels, so {@code thirst:purity} loads as {@link ThirstComponent#LEGACY_PURITY}, which stacks turn
- * into {@link ThirstComponent#PURITY} on the new scale as they load ({@link #purityFromLegacy}).
- * Never remove: unloaded chunks and offline players can keep old ids indefinitely.
+ * Remaps the ids of Thirst Was Taken ({@code thirst:*}) to {@code blue_droplets:*} in worlds it saved, so items,
+ * blocks and effects load under the new ids; saving writes the new id, so each entry migrates once. The player data
+ * ({@code ModAttachment}) and the purity on items and fluids ({@code ThirstComponent}) migrate on their own.
  */
 public final class LegacyIds
 {
     public static final String LEGACY_NAMESPACE = "thirst";
 
-    private static final Map<ResourceKey<? extends Registry<?>>, List<String>> ALIASES = Map.of(
+    private static final Map<ResourceKey<? extends Registry<?>>, List<String>> REMAPS = Map.of(
             Registries.ITEM, List.of("clay_bowl", "terracotta_bowl", "terracotta_water_bowl", "sand_filter"),
             Registries.BLOCK, List.of("sand_filter"),
             Registries.BLOCK_ENTITY_TYPE, List.of("sand_filter"),
-            Registries.MOB_EFFECT, List.of("quenchness"),
-            NeoForgeRegistries.Keys.ATTACHMENT_TYPES, List.of("player_thirst"),
-            NeoForgeRegistries.Keys.CONDITION_CODECS, List.of("loot_config")
+            Registries.MOB_EFFECT, List.of("quenchness")
     );
 
     /** Blue Droplets level of each Thirst Was Taken level: dirty, slightly dirty, acceptable, purified. */
@@ -47,21 +41,30 @@ public final class LegacyIds
         return purity >= 0 && purity < LEGACY_PURITY.length ? LEGACY_PURITY[purity] : purity;
     }
 
-    public static void register(IEventBus modBus)
+    public static void register()
     {
-        modBus.addListener(LegacyIds::addAliases);
+        MinecraftForge.EVENT_BUS.addListener(LegacyIds::onMissingMappings);
     }
 
-    private static void addAliases(RegisterEvent event)
+    private static void onMissingMappings(MissingMappingsEvent event)
     {
-        if (event.getRegistryKey().equals(Registries.DATA_COMPONENT_TYPE))
-            event.getRegistry().addAlias(ResourceLocation.fromNamespaceAndPath(LEGACY_NAMESPACE, "purity"), BlueDroplets.asResource("legacy_purity"));
-        List<String> paths = ALIASES.get(event.getRegistryKey());
-        if (paths == null)
-            return;
+        List<String> paths = REMAPS.get(event.getKey());
+        if (paths != null)
+            remap(event, event.getKey(), paths);
+    }
 
-        Registry<?> registry = event.getRegistry();
-        for (String path : paths)
-            registry.addAlias(ResourceLocation.fromNamespaceAndPath(LEGACY_NAMESPACE, path), BlueDroplets.asResource(path));
+    @SuppressWarnings("unchecked")
+    private static <T> void remap(MissingMappingsEvent event, ResourceKey<? extends Registry<?>> key, List<String> paths)
+    {
+        IForgeRegistry<T> registry = (IForgeRegistry<T>) event.getRegistry();
+        for (MissingMappingsEvent.Mapping<T> mapping : event.getMappings((ResourceKey<? extends Registry<T>>) key, LEGACY_NAMESPACE))
+        {
+            String path = mapping.getKey().getPath();
+            if (!paths.contains(path))
+                continue;
+            T target = registry.getValue(BlueDroplets.asResource(path));
+            if (target != null)
+                mapping.remap(target);
+        }
     }
 }

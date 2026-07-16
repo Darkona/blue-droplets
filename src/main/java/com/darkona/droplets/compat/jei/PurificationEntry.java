@@ -9,11 +9,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +81,7 @@ public record PurificationEntry(String method, List<ItemStack> inputs, List<Item
      */
     private static List<ItemStack> waterContainers()
     {
-        return List.of(PotionContents.createItemStack(Items.POTION, Potions.WATER), new ItemStack(Items.WATER_BUCKET), new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()));
+        return List.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), new ItemStack(Items.WATER_BUCKET), new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()));
     }
 
     /**

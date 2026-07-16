@@ -17,7 +17,6 @@ import com.google.gson.JsonParser;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -29,7 +28,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
@@ -44,13 +43,13 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.gametest.GameTestHolder;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -62,6 +61,8 @@ import java.util.Map;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
+
+import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 
 /**
  * {@code purity.enabled=false}: nothing stores, shows or rolls a purity. Each test turns it off and back on within
@@ -76,7 +77,7 @@ public class PurityOffTests
 
     static
     {
-        NeoForge.EVENT_BUS.addListener((DrinkEvent.Post event) -> lastDrinkPurity = event.getPurity());
+        MinecraftForge.EVENT_BUS.addListener((DrinkEvent.Post event) -> lastDrinkPurity = event.getPurity());
     }
 
     private static void withPurityOff(Runnable test)
@@ -84,12 +85,12 @@ public class PurityOffTests
         boolean enabled = PurityConfig.ENABLED.get();
         try
         {
-            PurityConfig.ENABLED.set(false);
+            TestSupport.set(PurityConfig.ENABLED, false);
             test.run();
         }
         finally
         {
-            PurityConfig.ENABLED.set(enabled);
+            TestSupport.set(PurityConfig.ENABLED, enabled);
         }
     }
 
@@ -117,9 +118,10 @@ public class PurityOffTests
             BlockPos dispenser = helper.absolutePos(new BlockPos(1, 2, 2));
             helper.getLevel().setBlockAndUpdate(dispenser, Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.EAST));
             helper.getLevel().setBlockAndUpdate(water, Blocks.WATER.defaultBlockState());
-            BlockSource source = new BlockSource(helper.getLevel(), dispenser, helper.getLevel().getBlockState(dispenser),
-                    (DispenserBlockEntity) helper.getLevel().getBlockEntity(dispenser));
-            ItemStack dispensed = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE).dispense(source, new ItemStack(Items.GLASS_BOTTLE));
+            DispenserBlockEntity entity = (DispenserBlockEntity) helper.getLevel().getBlockEntity(dispenser);
+            entity.setItem(0, new ItemStack(Items.GLASS_BOTTLE));
+            helper.getLevel().getBlockState(dispenser).tick(helper.getLevel(), dispenser, helper.getLevel().random);
+            ItemStack dispensed = entity.getItem(0);
             helper.assertTrue(dispensed.is(Items.POTION), "the dispenser did not fill the bottle");
             helper.assertFalse(WaterPurity.hasPurity(dispensed), "water bottle from a dispenser has a purity");
 
@@ -134,23 +136,18 @@ public class PurityOffTests
         withPurityOff(() -> {
             BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
             helper.getLevel().setBlockAndUpdate(pos.below(), Blocks.CAMPFIRE.defaultBlockState());
-            Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+            Player player = TestSupport.player(helper);
             for (Item empty : new Item[]{Items.BUCKET, ItemInit.TERRACOTTA_BOWL.get()})
             {
                 helper.getLevel().setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3));
                 ItemStack stack = new ItemStack(empty);
                 player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-                helper.getLevel().getBlockState(pos).useItemOn(stack, helper.getLevel(), player, InteractionHand.MAIN_HAND,
+                helper.getLevel().getBlockState(pos).use(helper.getLevel(), player, InteractionHand.MAIN_HAND,
                         new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
                 ItemStack filled = player.getItemInHand(InteractionHand.MAIN_HAND);
                 helper.assertTrue(WaterPurity.isWaterFilledContainer(filled), empty + " was not filled from the cauldron");
                 helper.assertFalse(WaterPurity.hasPurity(filled), empty + " filled from a cauldron has a purity");
             }
-
-            helper.getLevel().setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3));
-            IFluidHandler handler = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
-            helper.assertFalse(WaterPurity.hasPurity(handler.getFluidInTank(0)), "cauldron tank contents have a purity");
-            helper.assertFalse(WaterPurity.hasPurity(handler.drain(1000, IFluidHandler.FluidAction.EXECUTE)), "water drained from a cauldron has a purity");
         });
         helper.succeed();
     }
@@ -162,18 +159,18 @@ public class PurityOffTests
             ServerPlayer player = player(helper);
             PlayerThirst thirst = thirst(player);
             thirst.setThirst(4);
-            ItemStack dirty = PotionContents.createItemStack(Items.POTION, Potions.WATER);
-            dirty.set(ThirstComponent.PURITY, 0);
+            ItemStack dirty = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+            dirty.getOrCreateTag().putInt(ThirstComponent.PURITY, 0);
             PlayerThirst.consume(dirty, player);
             helper.assertTrue(player.getActiveEffects().isEmpty(), "dirty water gave effects with purity off: " + player.getActiveEffects());
             helper.assertTrue(thirst.getThirst() > 4, "dirty water did not restore thirst with purity off");
-            helper.assertValueEqual(lastDrinkPurity, DropletsAPI.NO_PURITY, "purity of a drink with purity off");
+            assertValueEqual(helper, lastDrinkPurity, DropletsAPI.NO_PURITY, "purity of a drink with purity off");
 
             PlayerThirst.drink(player, ItemStack.EMPTY, 1, 0, 0);
             helper.assertTrue(player.getActiveEffects().isEmpty(), "drinking dirty water by hand gave effects with purity off");
-            helper.assertValueEqual(lastDrinkPurity, DropletsAPI.NO_PURITY, "purity of hand drinking with purity off");
+            assertValueEqual(helper, lastDrinkPurity, DropletsAPI.NO_PURITY, "purity of hand drinking with purity off");
             helper.assertTrue(WaterPurity.givePurityEffects(player, 0), "dirty water blocks hydration with purity off");
-            helper.assertValueEqual(WaterPurity.waterThirstBonus(PurityLevel.PURE.level()) + WaterPurity.waterQuenchedBonus(PurityLevel.PURE.level()), 0, "pure water bonus with purity off");
+            assertValueEqual(helper, WaterPurity.waterThirstBonus(PurityLevel.PURE.level()) + WaterPurity.waterQuenchedBonus(PurityLevel.PURE.level()), 0, "pure water bonus with purity off");
         });
         helper.succeed();
     }
@@ -181,8 +178,7 @@ public class PurityOffTests
     @GameTest(template = "empty")
     public static void chestLootHasNoPurity(GameTestHelper helper)
     {
-        LootTable table = helper.getLevel().getServer().reloadableRegistries()
-                .getLootTable(ResourceKey.create(Registries.LOOT_TABLE, BlueDroplets.asResource("chests/simple_dungeon")));
+        LootTable table = helper.getLevel().getServer().getLootData().getLootTable(BlueDroplets.asResource("chests/simple_dungeon"));
         LootParams params = new LootParams.Builder(helper.getLevel()).withParameter(LootContextParams.ORIGIN, helper.absoluteVec(Vec3.ZERO)).create(LootContextParamSets.CHEST);
         helper.assertTrue(waterBottles(table, params).stream().anyMatch(WaterPurity::hasPurity), "chest loot water bottles have no purity with purity on");
         withPurityOff(() -> {
@@ -206,10 +202,10 @@ public class PurityOffTests
     @GameTest(template = "empty")
     public static void creativeTabHasOneOfEachWater(GameTestHelper helper)
     {
-        helper.assertValueEqual(waterStacks(ThirstTab.DisplayItems()), 3 * PurityLevel.values().length, "water stacks in the tab with purity on (three containers, six purities)");
+        assertValueEqual(helper, waterStacks(ThirstTab.DisplayItems()), 3 * PurityLevel.values().length, "water stacks in the tab with purity on (three containers, six purities)");
         withPurityOff(() -> {
             Collection<ItemStack> items = ThirstTab.DisplayItems();
-            helper.assertValueEqual(waterStacks(items), 3, "water stacks in the tab with purity off");
+            assertValueEqual(helper, waterStacks(items), 3, "water stacks in the tab with purity off");
             for (ItemStack stack : items)
                 helper.assertFalse(WaterPurity.hasPurity(stack), stack + " in the tab has a purity with purity off");
         });
@@ -233,7 +229,7 @@ public class PurityOffTests
     public static void purityRecipesCarryThePurityCondition(GameTestHelper helper)
     {
         Map<ResourceLocation, Resource> recipes = helper.getLevel().getServer().getResourceManager()
-                .listResources("recipe", id -> id.getNamespace().equals(BlueDroplets.ID) && id.getPath().endsWith(".json"));
+                .listResources("recipes", id -> id.getNamespace().equals(BlueDroplets.ID) && id.getPath().endsWith(".json"));
         helper.assertTrue(recipes.size() > 10, "only " + recipes.size() + " recipes found");
         for (Map.Entry<ResourceLocation, Resource> recipe : recipes.entrySet())
         {
@@ -249,8 +245,8 @@ public class PurityOffTests
             if (!json.toString().contains("\"blue_droplets:purity\":"))
                 continue;
             boolean conditioned = false;
-            if (json.has("neoforge:conditions"))
-                for (JsonElement condition : json.getAsJsonArray("neoforge:conditions"))
+            if (json.has("conditions"))
+                for (JsonElement condition : json.getAsJsonArray("conditions"))
                     conditioned |= condition.getAsJsonObject().get("type").getAsString().equals("blue_droplets:purity_enabled");
             helper.assertTrue(conditioned, recipe.getKey() + " uses a purity without the blue_droplets:purity_enabled condition");
         }
@@ -274,7 +270,7 @@ public class PurityOffTests
             try
             {
                 int result = helper.getLevel().getServer().getCommands().getDispatcher().execute("blue_droplets debug purity", source);
-                helper.assertValueEqual(result, 0, "result of debug purity with purity off");
+                assertValueEqual(helper, result, 0, "result of debug purity with purity off");
             }
             catch (Exception e)
             {

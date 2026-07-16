@@ -1,0 +1,29 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "blue_droplets:purity_enabled"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "forge:partial_nbt",
+      "item": "blue_droplets:terracotta_water_bowl",
+      "nbt": {
+        "blue_droplets:purity": 2
+      }
+    }
+  ],
+  "results": [
+    {
+      "item": "blue_droplets:terracotta_water_bowl",
+      "nbt": {
+        "blue_droplets:purity": 3
+      }
+    }
+  ]
+}

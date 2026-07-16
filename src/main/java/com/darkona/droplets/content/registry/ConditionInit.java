@@ -1,25 +1,29 @@
 package com.darkona.droplets.content.registry;
 
-import com.mojang.serialization.MapCodec;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.config.LootConfigCondition;
+import com.darkona.droplets.foundation.config.LootConfigLootCondition;
 import com.darkona.droplets.foundation.config.PurityEnabledCondition;
 import com.darkona.droplets.foundation.config.PurityEnabledLootCondition;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-
-import java.util.function.Supplier;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ConditionInit {
-    public static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS = DeferredRegister.create(NeoForgeRegistries.Keys.CONDITION_CODECS, BlueDroplets.ID);
-
-    public static final Supplier<MapCodec<LootConfigCondition>> LOOT_CONFIG_CONDITION = CONDITION_CODECS.register("loot_config", () -> LootConfigCondition.CODEC);
-    public static final Supplier<MapCodec<PurityEnabledCondition>> PURITY_ENABLED_CONDITION = CONDITION_CODECS.register("purity_enabled", () -> PurityEnabledCondition.CODEC);
-
     public static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, BlueDroplets.ID);
 
-    public static final Supplier<LootItemConditionType> PURITY_ENABLED_LOOT_CONDITION = LOOT_CONDITIONS.register("purity_enabled", () -> new LootItemConditionType(PurityEnabledLootCondition.CODEC));
+    public static final RegistryObject<LootItemConditionType> PURITY_ENABLED_LOOT_CONDITION = LOOT_CONDITIONS.register("purity_enabled", () -> new LootItemConditionType(PurityEnabledLootCondition.SERIALIZER));
+    public static final RegistryObject<LootItemConditionType> LOOT_CONFIG_LOOT_CONDITION = LOOT_CONDITIONS.register("loot_config", () -> new LootItemConditionType(LootConfigLootCondition.SERIALIZER));
+
+    /**
+     * Recipe conditions go to Forge's own table (not a registry in 1.20.1); loot conditions to the vanilla registry.
+     */
+    public static void register(IEventBus modBus) {
+        CraftingHelper.register(LootConfigCondition.SERIALIZER);
+        CraftingHelper.register(PurityEnabledCondition.SERIALIZER);
+        LOOT_CONDITIONS.register(modBus);
+    }
 }

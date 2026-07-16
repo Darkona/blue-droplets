@@ -1,11 +1,11 @@
 package com.darkona.droplets.api.event;
 
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.ICancellableEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 /**
- * Thirst or quenched is about to change, or changed. Posted on {@code NeoForge.EVENT_BUS}, on the server, only when a
+ * Thirst or quenched is about to change, or changed. Posted on {@code MinecraftForge.EVENT_BUS}, on the server, only when a
  * value actually changes: never once per tick. Values are already clamped (0..20, quenched at most thirst).
  */
 public abstract class ThirstChangeEvent extends PlayerEvent
@@ -59,7 +59,8 @@ public abstract class ThirstChangeEvent extends PlayerEvent
      * Before the change. Cancel it, or change the new values (clamped again afterwards; setting them back to the old
      * values also cancels it).
      */
-    public static final class Pre extends ThirstChangeEvent implements ICancellableEvent
+    @Cancelable
+    public static final class Pre extends ThirstChangeEvent
     {
         private int newThirst;
         private int newQuenched;

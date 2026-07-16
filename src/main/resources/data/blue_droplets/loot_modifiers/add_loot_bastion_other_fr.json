@@ -1,14 +1,11 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "farmersrespite"
-    }
-  ],
-  "type": "neoforge:add_table",
+  "type": "blue_droplets:add_table",
   "conditions": [
     {
-      "condition": "neoforge:loot_table_id",
+      "condition": "blue_droplets:loot_config"
+    },
+    {
+      "condition": "forge:loot_table_id",
       "loot_table_id": "minecraft:chests/bastion_other"
     }
   ],

@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "blue_droplets:purity_enabled"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "type": "forge:partial_nbt",
+      "item": "minecraft:water_bucket",
+      "nbt": {
+        "blue_droplets:purity": 0
+      }
+    }
+  ],
+  "result": {
+    "item": "minecraft:water_bucket",
+    "count": 1,
+    "nbt": {
+      "blue_droplets:purity": 1
+    }
+  },
+  "cookingtime": 200,
+  "experience": 0.35,
+  "recipe_book_tab": "drinks"
+}

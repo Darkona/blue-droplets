@@ -19,7 +19,7 @@ public abstract class MixinFilledWaterskinItem
     private ItemStack blue_droplets$dropPurity(ItemStack empty)
     {
         if (!(empty.getItem() instanceof FilledWaterskinItem))
-            empty.remove(ThirstComponent.PURITY);
+            ThirstComponent.remove(empty);
         return empty;
     }
 }

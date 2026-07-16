@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "item": "blue_droplets:clay_bowl"
+  },
+  "result": {
+    "item": "blue_droplets:terracotta_bowl",
+    "count": 1
+  },
+  "experience": 0.35,
+  "cookingtime": 300
+}

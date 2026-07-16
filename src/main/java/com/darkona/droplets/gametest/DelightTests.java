@@ -15,24 +15,26 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.satisfy.farm_and_charm.core.block.TimberWellBlock;
 import net.satisfy.herbalbrews.core.blocks.entity.TeaKettleBlockEntity;
 
 import java.util.Arrays;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
+
+import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 
 /**
  * Farmer's Delight addons and Let's Do mods ({@code -PwithDelight}): kettles refuse dirty water, the infinite water
@@ -46,12 +48,12 @@ public class DelightTests
 
     private static ItemStack waterBottle(int purity)
     {
-        return WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), purity);
+        return WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), purity);
     }
 
     private static Block block(String id)
     {
-        return BuiltInRegistries.BLOCK.get(ResourceLocation.parse(id));
+        return BuiltInRegistries.BLOCK.get(new ResourceLocation(id));
     }
 
     private static BlockHitResult hit(GameTestHelper helper, BlockPos relative)
@@ -65,13 +67,13 @@ public class DelightTests
     {
         FluidStack fromDirty = BottleFluidRegistry.getFluidFromBottle(waterBottle(0));
         helper.assertTrue(fromDirty.is(Fluids.WATER) && fromDirty.getAmount() == 250, "a water bottle is not 250 mB of water");
-        helper.assertValueEqual(WaterPurity.hasPurity(fromDirty) ? WaterPurity.getPurity(fromDirty) : -1, 0, "purity of the water from a dirty bottle");
-        helper.assertFalse(WaterPurity.hasPurity(BottleFluidRegistry.getFluidFromBottle(PotionContents.createItemStack(Items.POTION, Potions.WATER))),
+        assertValueEqual(helper, WaterPurity.hasPurity(fromDirty) ? WaterPurity.getPurity(fromDirty) : -1, 0, "purity of the water from a dirty bottle");
+        helper.assertFalse(WaterPurity.hasPurity(BottleFluidRegistry.getFluidFromBottle(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER))),
                 "the registry's own water stack took the purity of an earlier bottle");
 
         ItemStack pure = BottleFluidRegistry.getBottleFromFluid(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), WaterPurity.MAX_PURITY));
         helper.assertTrue(WaterPurity.isWaterFilledContainer(pure), "250 mB of water is not a water bottle");
-        helper.assertValueEqual(WaterPurity.hasPurity(pure) ? WaterPurity.getPurity(pure) : -1, WaterPurity.MAX_PURITY, "purity of a bottle of pure water");
+        assertValueEqual(helper, WaterPurity.hasPurity(pure) ? WaterPurity.getPurity(pure) : -1, WaterPurity.MAX_PURITY, "purity of a bottle of pure water");
         helper.succeed();
     }
 
@@ -85,15 +87,15 @@ public class DelightTests
         IFluidHandler tank = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, helper.absolutePos(tap), null);
         helper.assertTrue(tank != null, "the tap has no fluid handler");
         FluidStack drained = tank.drain(1000, IFluidHandler.FluidAction.EXECUTE);
-        helper.assertValueEqual(WaterPurity.hasPurity(drained) ? WaterPurity.getPurity(drained) : -1, expected, "purity of water drained from a tap");
-        helper.assertValueEqual(WaterPurity.hasPurity(tank.getFluidInTank(0)) ? WaterPurity.getPurity(tank.getFluidInTank(0)) : -1, expected, "purity of the water a tap shows");
+        assertValueEqual(helper, WaterPurity.hasPurity(drained) ? WaterPurity.getPurity(drained) : -1, expected, "purity of water drained from a tap");
+        assertValueEqual(helper, WaterPurity.hasPurity(tank.getFluidInTank(0)) ? WaterPurity.getPurity(tank.getFluidInTank(0)) : -1, expected, "purity of the water a tap shows");
 
         ServerPlayer player = player(helper);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.GLASS_BOTTLE));
         helper.getBlockState(tap).useItemOn(player.getMainHandItem(), helper.getLevel(), player, InteractionHand.MAIN_HAND, hit(helper, tap));
         ItemStack bottle = player.getInventory().items.stream().filter(WaterPurity::isWaterFilledContainer).findFirst().orElse(ItemStack.EMPTY);
         helper.assertFalse(bottle.isEmpty(), "no water bottle from the tap");
-        helper.assertValueEqual(WaterPurity.hasPurity(bottle) ? WaterPurity.getPurity(bottle) : -1, expected, "purity of a bottle filled at a tap");
+        assertValueEqual(helper, WaterPurity.hasPurity(bottle) ? WaterPurity.getPurity(bottle) : -1, expected, "purity of a bottle filled at a tap");
         helper.succeed();
     }
 
@@ -109,7 +111,7 @@ public class DelightTests
         helper.getBlockState(well).useItemOn(player.getMainHandItem(), helper.getLevel(), player, InteractionHand.MAIN_HAND, hit(helper, well));
         ItemStack bucket = player.getMainHandItem();
         helper.assertTrue(bucket.is(Items.WATER_BUCKET), "no water bucket from the well: " + bucket);
-        helper.assertValueEqual(WaterPurity.hasPurity(bucket) ? WaterPurity.getPurity(bucket) : -1, expected, "purity of a bucket filled at the well");
+        assertValueEqual(helper, WaterPurity.hasPurity(bucket) ? WaterPurity.getPurity(bucket) : -1, expected, "purity of a bucket filled at the well");
         helper.succeed();
     }
 
@@ -137,12 +139,12 @@ public class DelightTests
         helper.setBlock(pos, block("herbalbrews:tea_kettle"));
         TeaKettleBlockEntity kettle = helper.getBlockEntity(pos);
         int min = CompatConfig.KETTLE_MIN_PURITY.get();
-        helper.assertValueEqual(min, PurityLevel.MURKY.level(), "default kettleMinPurity");
+        assertValueEqual(helper, min, PurityLevel.MURKY.level(), "default kettleMinPurity");
         for (int purity = WaterPurity.MIN_PURITY; purity < min; purity++)
         {
             kettle.setItem(KETTLE_WATER_SLOT, waterBottle(purity));
             kettle.tick(helper.getLevel(), helper.absolutePos(pos), helper.getBlockState(pos));
-            helper.assertValueEqual(kettle.getWaterLevel(), 0, "water level after water of purity " + purity);
+            assertValueEqual(helper, kettle.getWaterLevel(), 0, "water level after water of purity " + purity);
             helper.assertTrue(WaterPurity.isWaterFilledContainer(kettle.getItem(KETTLE_WATER_SLOT)), "water of purity " + purity + " left the slot");
         }
 
@@ -151,7 +153,7 @@ public class DelightTests
             int before = kettle.getWaterLevel();
             kettle.setItem(KETTLE_WATER_SLOT, waterBottle(purity));
             kettle.tick(helper.getLevel(), helper.absolutePos(pos), helper.getBlockState(pos));
-            helper.assertValueEqual(kettle.getWaterLevel(), before + 25, "water level after water of purity " + purity);
+            assertValueEqual(helper, kettle.getWaterLevel(), before + 25, "water level after water of purity " + purity);
         }
         helper.succeed();
     }
@@ -165,11 +167,11 @@ public class DelightTests
         for (int purity = WaterPurity.MIN_PURITY; purity <= WaterPurity.MAX_PURITY; purity++)
         {
             player.setItemInHand(InteractionHand.MAIN_HAND, WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), purity));
-            PlayerInteractEvent.RightClickBlock event = NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(pos), hit(helper, pos)));
-            helper.assertValueEqual(event.isCanceled(), purity < CompatConfig.KETTLE_MIN_PURITY.get(), "brewing station refuses water of purity " + purity);
+            PlayerInteractEvent.RightClickBlock event = MinecraftForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(pos), hit(helper, pos)));
+            assertValueEqual(helper, event.isCanceled(), purity < CompatConfig.KETTLE_MIN_PURITY.get(), "brewing station refuses water of purity " + purity);
         }
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WATER_BUCKET));
-        helper.assertFalse(NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(pos), hit(helper, pos))).isCanceled(),
+        helper.assertFalse(MinecraftForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(pos), hit(helper, pos))).isCanceled(),
                 "brewing station refuses water without a purity");
         helper.succeed();
     }

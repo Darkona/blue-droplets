@@ -2,7 +2,7 @@ package com.darkona.droplets.foundation.config;
 
 import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,35 +12,35 @@ import java.util.List;
  */
 public final class PurityConfig
 {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    public static final ModConfigSpec.BooleanValue ENABLED;
-    public static final ModConfigSpec.IntValue DEFAULT_PURITY;
-    public static final ModConfigSpec.BooleanValue QUENCH_WHEN_DEBUFFED;
-    public static final ModConfigSpec.IntValue PURE_THIRST_BONUS;
-    public static final ModConfigSpec.IntValue PURE_QUENCHED_BONUS;
+    public static final ForgeConfigSpec.BooleanValue ENABLED;
+    public static final ForgeConfigSpec.IntValue DEFAULT_PURITY;
+    public static final ForgeConfigSpec.BooleanValue QUENCH_WHEN_DEBUFFED;
+    public static final ForgeConfigSpec.IntValue PURE_THIRST_BONUS;
+    public static final ForgeConfigSpec.IntValue PURE_QUENCHED_BONUS;
 
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> ALTITUDE_BANDS;
-    public static final ModConfigSpec.BooleanValue ALTITUDE_RELATIVE_TO_SEA_LEVEL;
-    public static final ModConfigSpec.IntValue WORLD_WATER_BASE_PURITY;
-    public static final ModConfigSpec.IntValue SALT_WATER_PURITY;
-    public static final ModConfigSpec.IntValue RUNNING_WATER_PURIFICATION_AMOUNT;
-    public static final ModConfigSpec.IntValue STILL_WATER_PURIFICATION_AMOUNT;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ALTITUDE_BANDS;
+    public static final ForgeConfigSpec.BooleanValue ALTITUDE_RELATIVE_TO_SEA_LEVEL;
+    public static final ForgeConfigSpec.IntValue WORLD_WATER_BASE_PURITY;
+    public static final ForgeConfigSpec.IntValue SALT_WATER_PURITY;
+    public static final ForgeConfigSpec.IntValue RUNNING_WATER_PURIFICATION_AMOUNT;
+    public static final ForgeConfigSpec.IntValue STILL_WATER_PURIFICATION_AMOUNT;
 
     /** Keys of the effect lists in {@code [effects]}, by purity: the {@link PurityLevel} ids. */
     public static final String[] EFFECT_LEVELS = Arrays.stream(PurityLevel.values()).map(PurityLevel::id).toArray(String[]::new);
     /** Effect lists by purity. */
-    public static final List<ModConfigSpec.ConfigValue<List<? extends String>>> EFFECTS;
+    public static final List<ForgeConfigSpec.ConfigValue<List<? extends String>>> EFFECTS;
 
-    public static final ModConfigSpec.BooleanValue HOT_DIRTY_WATER;
-    public static final ModConfigSpec.IntValue HOT_DIRTY_WATER_MAX_PURITY;
-    public static final ModConfigSpec.IntValue HOT_DIRTY_WATER_DURATION;
-    public static final ModConfigSpec.IntValue HOT_DIRTY_WATER_AMPLIFIER;
-    public static final ModConfigSpec.DoubleValue HOT_DIRTY_WATER_MIN_BIOME_TEMPERATURE;
-    public static final ModConfigSpec.BooleanValue HOT_DIRTY_WATER_COLD_SWEAT;
-    public static final ModConfigSpec.DoubleValue HOT_DIRTY_WATER_COLD_SWEAT_MIN_BODY_TEMP;
+    public static final ForgeConfigSpec.BooleanValue HOT_DIRTY_WATER;
+    public static final ForgeConfigSpec.IntValue HOT_DIRTY_WATER_MAX_PURITY;
+    public static final ForgeConfigSpec.IntValue HOT_DIRTY_WATER_DURATION;
+    public static final ForgeConfigSpec.IntValue HOT_DIRTY_WATER_AMPLIFIER;
+    public static final ForgeConfigSpec.DoubleValue HOT_DIRTY_WATER_MIN_BIOME_TEMPERATURE;
+    public static final ForgeConfigSpec.BooleanValue HOT_DIRTY_WATER_COLD_SWEAT;
+    public static final ForgeConfigSpec.DoubleValue HOT_DIRTY_WATER_COLD_SWEAT_MIN_BODY_TEMP;
 
-    public static final ModConfigSpec SPEC;
+    public static final ForgeConfigSpec SPEC;
 
     /** "0 contaminated, 1 dirty, ..." for config comments. */
     private static final String LEVELS = String.join(", ", Arrays.stream(PurityLevel.values()).map(level -> level.level() + " " + level.id()).toList());
@@ -65,7 +65,7 @@ public final class PurityConfig
         ALTITUDE_BANDS = BUILDER.comment("Purity added to water by height: [\"minY,maxY,delta\", ...], both ends included; the first band that matches is used.",
                         "Default, from sea level: +1 from 30 blocks above it, +2 from 60, +3 from 100 (mountains); +1 from 16 blocks below it, +2 from 48, +3 from 80 (caves)")
                 .<String>defineListAllowEmpty("altitudeBands", List.of("30,59,1", "60,99,2", "100,4096,3", "-47,-16,1", "-79,-48,2", "-4096,-80,3"),
-                        () -> "0,0,0", PurityConfig::isValidAltitudeBand);
+                        PurityConfig::isValidAltitudeBand);
         ALTITUDE_RELATIVE_TO_SEA_LEVEL = BUILDER.comment("Whether altitudeBands are measured from the dimension's sea level (true) or are absolute Y levels (false)").define("altitudeRelativeToSeaLevel", true);
         WORLD_WATER_BASE_PURITY = BUILDER.comment("Base purity of water in the world when neither its biome (blue_droplets:water_purity/N tags, blue_droplets:biome_water data map)",
                 "nor its dimension type (blue_droplets:dimension_water data map) sets one").defineInRange("worldWaterBasePurity", PurityLevel.DIRTY.level(), PurityLevel.MIN, PurityLevel.MAX);
@@ -107,9 +107,9 @@ public final class PurityConfig
 
     private PurityConfig() {}
 
-    private static ModConfigSpec.ConfigValue<List<? extends String>> effects(PurityLevel level, List<String> defaults)
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> effects(PurityLevel level, List<String> defaults)
     {
-        return BUILDER.<String>defineListAllowEmpty(level.id(), defaults, () -> "minecraft:nausea,100,0,100", PurityConfig::isValidEffect);
+        return BUILDER.<String>defineListAllowEmpty(level.id(), defaults, PurityConfig::isValidEffect);
     }
 
     /**

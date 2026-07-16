@@ -5,9 +5,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 
 /**
  * Reliquary, without linking to it (items are matched by id). The Emperor's Chalice hydrates through the same path
@@ -18,14 +18,14 @@ import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 public final class ReliquaryCompat
 {
     public static final boolean LOADED = ModList.get().isLoaded("reliquary");
-    public static final ResourceLocation EMPEROR_CHALICE = ResourceLocation.fromNamespaceAndPath("reliquary", "emperor_chalice");
+    public static final ResourceLocation EMPEROR_CHALICE = new ResourceLocation("reliquary", "emperor_chalice");
 
     private ReliquaryCompat() {}
 
     public static void init()
     {
         if (LOADED)
-            NeoForge.EVENT_BUS.addListener(ReliquaryCompat::cooldownAfterDrinking);
+            MinecraftForge.EVENT_BUS.addListener(ReliquaryCompat::cooldownAfterDrinking);
     }
 
     private static void cooldownAfterDrinking(LivingEntityUseItemEvent.Finish event)

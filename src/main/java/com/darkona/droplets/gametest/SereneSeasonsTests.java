@@ -14,11 +14,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import sereneseasons.api.season.Season;
 import sereneseasons.season.SeasonHandler;
 import sereneseasons.season.SeasonSavedData;
 import sereneseasons.season.SeasonTime;
+
+import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 
 /**
  * Serene Seasons: the biome climate formula with the season's temperature and the tropical dry season. The runs with
@@ -74,8 +76,8 @@ public class SereneSeasonsTests
         Holder<Biome> desert = biome(helper.getLevel(), Biomes.DESERT);
         float none = withoutSeasons(helper, desert);
         // Mid summer is the early dry season in the tropics, mid spring the late wet one.
-        helper.assertValueEqual(inSeason(helper, desert, Season.SubSeason.MID_SUMMER), CompatConfig.SERENE_SEASONS_TROPICAL_DRY.get().floatValue() * none, "desert, dry season");
-        helper.assertValueEqual(inSeason(helper, desert, Season.SubSeason.MID_SPRING), CompatConfig.SERENE_SEASONS_TROPICAL_WET.get().floatValue() * none, "desert, wet season");
+        assertValueEqual(helper, inSeason(helper, desert, Season.SubSeason.MID_SUMMER), CompatConfig.SERENE_SEASONS_TROPICAL_DRY.get().floatValue() * none, "desert, dry season");
+        assertValueEqual(helper, inSeason(helper, desert, Season.SubSeason.MID_SPRING), CompatConfig.SERENE_SEASONS_TROPICAL_WET.get().floatValue() * none, "desert, wet season");
         helper.succeed();
     }
 
@@ -86,12 +88,12 @@ public class SereneSeasonsTests
         float plain = inSeason(helper, plains, Season.SubSeason.MID_SUMMER);
         try
         {
-            CompatConfig.SERENE_SEASONS_SUMMER.set(1.5);
-            helper.assertValueEqual(inSeason(helper, plains, Season.SubSeason.MID_SUMMER), 1.5F * plain, "plains in summer with summerMultiplier 1.5");
+            TestSupport.set(CompatConfig.SERENE_SEASONS_SUMMER, 1.5);
+            assertValueEqual(helper, inSeason(helper, plains, Season.SubSeason.MID_SUMMER), 1.5F * plain, "plains in summer with summerMultiplier 1.5");
         }
         finally
         {
-            CompatConfig.SERENE_SEASONS_SUMMER.set(1.0);
+            TestSupport.set(CompatConfig.SERENE_SEASONS_SUMMER, 1.0);
         }
         helper.succeed();
     }
@@ -101,8 +103,8 @@ public class SereneSeasonsTests
     {
         Holder<Biome> river = biome(helper.getLevel(), Biomes.RIVER);
         float none = withoutSeasons(helper, river);
-        helper.assertValueEqual(inSeason(helper, river, Season.SubSeason.MID_SUMMER), none, "river in summer");
-        helper.assertValueEqual(inSeason(helper, river, Season.SubSeason.MID_WINTER), none, "river in winter");
+        assertValueEqual(helper, inSeason(helper, river, Season.SubSeason.MID_SUMMER), none, "river in summer");
+        assertValueEqual(helper, inSeason(helper, river, Season.SubSeason.MID_WINTER), none, "river in winter");
         helper.succeed();
     }
 
@@ -113,13 +115,13 @@ public class SereneSeasonsTests
         Holder<Biome> desert = biome(helper.getLevel(), Biomes.DESERT);
         try
         {
-            CompatConfig.SERENE_SEASONS_ENABLED.set(false);
-            helper.assertValueEqual(inSeason(helper, plains, Season.SubSeason.MID_WINTER), withoutSeasons(helper, plains), "plains in winter, switched off");
-            helper.assertValueEqual(inSeason(helper, desert, Season.SubSeason.MID_SUMMER), withoutSeasons(helper, desert), "desert in the dry season, switched off");
+            TestSupport.set(CompatConfig.SERENE_SEASONS_ENABLED, false);
+            assertValueEqual(helper, inSeason(helper, plains, Season.SubSeason.MID_WINTER), withoutSeasons(helper, plains), "plains in winter, switched off");
+            assertValueEqual(helper, inSeason(helper, desert, Season.SubSeason.MID_SUMMER), withoutSeasons(helper, desert), "desert in the dry season, switched off");
         }
         finally
         {
-            CompatConfig.SERENE_SEASONS_ENABLED.set(true);
+            TestSupport.set(CompatConfig.SERENE_SEASONS_ENABLED, true);
         }
         helper.succeed();
     }
@@ -127,7 +129,7 @@ public class SereneSeasonsTests
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void coldSweatTakesOver(GameTestHelper helper)
     {
-        helper.assertValueEqual(SereneSeasonsCompat.ACTIVE, !ColdSweatCompat.LOADED, "seasons used only without Cold Sweat");
+        assertValueEqual(helper, SereneSeasonsCompat.ACTIVE, !ColdSweatCompat.LOADED, "seasons used only without Cold Sweat");
         helper.succeed();
     }
 }

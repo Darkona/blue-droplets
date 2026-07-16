@@ -3,7 +3,7 @@ package com.darkona.droplets.compat.coldsweat;
 import com.momosoftworks.coldsweat.api.temperature.modifier.FoodTempModifier;
 import com.momosoftworks.coldsweat.api.util.Temperature;
 import com.momosoftworks.coldsweat.api.util.placement.Matcher;
-import com.momosoftworks.coldsweat.core.init.ModItems;
+import com.momosoftworks.coldsweat.util.registries.ModItems;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 

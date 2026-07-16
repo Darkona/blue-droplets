@@ -37,10 +37,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.event.RegisterCommandsEvent;
 
 
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class CommandInit {
                 .then(Commands.literal("query").then(Commands.argument("Player", EntityArgument.player())
                         .executes(context -> {
                                     ServerPlayer player = EntityArgument.getPlayer(context,"Player");
-                                    IThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+                                    IThirst thirst = ModAttachment.thirst(player);
                                     int value = thirst.getThirst();
                                     int quenched = thirst.getQuenched();
                                     context.getSource().sendSuccess(() -> Component.translatable("command.blue_droplets.query", value, quenched, player.getDisplayName()), false);
@@ -74,7 +74,7 @@ public class CommandInit {
                                 .then(Commands.argument("quenched", IntegerArgumentType.integer(0, ThirstConstants.MAX_THIRST))
                                         .executes(context -> {
                                             ServerPlayer player = EntityArgument.getPlayer(context,"Player");
-                                            PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+                                            PlayerThirst thirst = ModAttachment.thirst(player);
                                             thirst.change(player, IntegerArgumentType.getInteger(context,"thirst"), IntegerArgumentType.getInteger(context,"quenched"), ThirstChangeEvent.Cause.COMMAND);
                                             // Quenched never exceeds thirst and listeners may cancel or change it: report what was set.
                                             int value = thirst.getThirst();
@@ -89,7 +89,7 @@ public class CommandInit {
                                     Collection<ServerPlayer> players = EntityArgument.getPlayers(context,"Player");
                                     boolean shouldTick = BoolArgumentType.getBool(context,"bool");
                                     for(ServerPlayer player:players){
-                                        IThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
+                                        IThirst thirstData = ModAttachment.thirst(player);
                                         thirstData.setShouldTickThirst(shouldTick);
                                         thirstData.updateThirstData(player);
                                     }
@@ -140,10 +140,10 @@ public class CommandInit {
 
     private static int debugExhaustion(CommandSourceStack source, ServerPlayer player)
     {
-        PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+        PlayerThirst thirst = ModAttachment.thirst(player);
         float[] factors = new float[ExhaustionFactors.FACTORS.length];
         float cached = ExhaustionFactors.compute(player, factors);
-        double drain = player.getAttributeValue(AttributeInit.THIRST_DRAIN);
+        double drain = player.getAttributeValue(AttributeInit.THIRST_DRAIN.get());
         StringBuilder text = new StringBuilder("Thirst loss of ").append(player.getScoreboardName())
                 .append(" (mode ").append(GameplayConfig.MODE.get()).append(")");
         for (int i = 0; i < factors.length; i++)
@@ -160,7 +160,7 @@ public class CommandInit {
 
     private static String climateSource(ServerPlayer player)
     {
-        DimensionWater dimension = player.level().dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
+        DimensionWater dimension = DropletsDataMaps.DIMENSION_WATER.get(player.level().dimensionTypeRegistration());
         if (dimension != null && dimension.thirstMultiplier().isPresent())
             return "dimension_water thirst_multiplier";
         if (player.level().dimensionType().ultraWarm())

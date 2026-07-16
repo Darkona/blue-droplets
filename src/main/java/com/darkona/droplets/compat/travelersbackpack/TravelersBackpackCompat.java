@@ -1,8 +1,8 @@
 package com.darkona.droplets.compat.travelersbackpack;
 
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 /**
  * Traveler's Backpack: drinking water with the hose hydrates through its fluid effect API

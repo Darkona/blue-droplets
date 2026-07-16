@@ -1,56 +1,33 @@
 package com.darkona.droplets.foundation.network.message;
 
-import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.content.thirst.PlayerThirst;
-import com.darkona.droplets.foundation.common.capability.ModAttachment;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.jetbrains.annotations.NotNull;
+import com.darkona.droplets.foundation.network.ClientPayloadHandlers;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Thirst data of the receiving player plus the server rules the client applies itself ({@code PlayerThirst.SYNC_*} bits).
  */
-public record PlayerThirstSyncMessage(int thirst, int quenched, float exhaustion, int flags) implements CustomPacketPayload
+public record PlayerThirstSyncMessage(int thirst, int quenched, float exhaustion, int flags)
 {
-
-    public static final CustomPacketPayload.Type<PlayerThirstSyncMessage> TYPE = new Type<>(BlueDroplets.asResource("thirstsync"));
-
-    public static final StreamCodec<ByteBuf, PlayerThirstSyncMessage> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT,
-            PlayerThirstSyncMessage::thirst,
-            ByteBufCodecs.INT,
-            PlayerThirstSyncMessage::quenched,
-            ByteBufCodecs.FLOAT,
-            PlayerThirstSyncMessage::exhaustion,
-            ByteBufCodecs.VAR_INT,
-            PlayerThirstSyncMessage::flags,
-            PlayerThirstSyncMessage::new
-    );
-
-
-    public static void serverHandle(final PlayerThirstSyncMessage message,final IPayloadContext context)
+    public void encode(FriendlyByteBuf buffer)
     {
-
+        buffer.writeInt(thirst);
+        buffer.writeInt(quenched);
+        buffer.writeFloat(exhaustion);
+        buffer.writeVarInt(flags);
     }
 
-    public static void clientHandle(final PlayerThirstSyncMessage message,final IPayloadContext context)
+    public static PlayerThirstSyncMessage decode(FriendlyByteBuf buffer)
     {
-        context.enqueueWork(() -> {
-            Player player = context.player();
-            PlayerThirst cap = player.getData(ModAttachment.PLAYER_THIRST);
-            cap.setThirst(message.thirst);
-            cap.setQuenched(message.quenched);
-            cap.setExhaustion(message.exhaustion);
-            cap.setSyncedRules(message.flags);
-        });
+        return new PlayerThirstSyncMessage(buffer.readInt(), buffer.readInt(), buffer.readFloat(), buffer.readVarInt());
     }
 
-    @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public static void clientHandle(final PlayerThirstSyncMessage message, final Supplier<NetworkEvent.Context> context)
+    {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPayloadHandlers.thirst(message));
     }
 }

@@ -1,27 +1,26 @@
 package com.darkona.droplets.content.purity;
 
-import com.darkona.droplets.foundation.common.capability.ModAttachment;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.Nullable;
-
-import java.nio.ByteBuffer;
-import java.util.stream.LongStream;
 
 /**
  * Water sources poured into the world (buckets, dispensers, {@code FluidUtil.tryPlaceFluid}, Create open pipe ends),
  * with the purity of the water poured, so pouring sea water into a meadow does not give clean water back. One map
- * per chunk ({@code BlockPos.asLong} to purity), saved with the chunk and never synced: only the server decides a
- * purity. Nothing runs per tick: the map is read when water is taken from the world and written when it is poured.
+ * per dimension ({@code BlockPos.asLong} to purity), saved with the world's data ({@code data/blue_droplets_poured_water.dat})
+ * and never synced: only the server decides a purity. Minecraft 1.20.1 has no chunk attachments; a chunk capability
+ * would save an entry in every chunk, poured water or not. Nothing runs per tick: the map is read when water is taken
+ * from the world and written when it is poured.
  * <ul>
  * <li>A registered position that still holds a water source has the stored purity.</li>
  * <li>An unregistered water source next to registered ones (the infinite source between two poured buckets) has the
@@ -31,15 +30,11 @@ import java.util.stream.LongStream;
  * <li>An entry whose position no longer holds a water source is ignored, and removed when read.</li>
  * </ul>
  */
-public final class PouredWater
+public final class PouredWater extends SavedData
 {
+    private static final String NAME = "blue_droplets_poured_water";
     private static final byte NONE = -1;
     private static final Direction[] HORIZONTAL = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
-
-    public static final Codec<PouredWater> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.LONG_STREAM.fieldOf("positions").forGetter(water -> LongStream.of(water.sources.keySet().toLongArray())),
-            Codec.BYTE_BUFFER.fieldOf("purities").forGetter(water -> ByteBuffer.wrap(water.sources.values().toByteArray()))
-    ).apply(instance, PouredWater::new));
 
     private final Long2ByteOpenHashMap sources = new Long2ByteOpenHashMap();
 
@@ -48,13 +43,33 @@ public final class PouredWater
         sources.defaultReturnValue(NONE);
     }
 
-    private PouredWater(LongStream positions, ByteBuffer purities)
+    /**
+     * Reads a saved map ({@link #save}).
+     */
+    public static PouredWater load(CompoundTag tag)
     {
-        this();
-        long[] keys = positions.toArray();
-        int start = purities.position();
-        for (int i = 0; i < keys.length && i < purities.remaining(); i++)
-            sources.put(keys[i], purities.get(start + i));
+        PouredWater water = new PouredWater();
+        long[] keys = tag.getLongArray("positions");
+        byte[] purities = tag.getByteArray("purities");
+        for (int i = 0; i < keys.length && i < purities.length; i++)
+            water.sources.put(keys[i], purities[i]);
+        return water;
+    }
+
+    @Override
+    public CompoundTag save(CompoundTag tag)
+    {
+        tag.putLongArray("positions", sources.keySet().toLongArray());
+        tag.putByteArray("purities", sources.values().toByteArray());
+        return tag;
+    }
+
+    /**
+     * The map of a dimension; created the first time water is poured there.
+     */
+    public static PouredWater of(ServerLevel level)
+    {
+        return level.getDataStorage().computeIfAbsent(PouredWater::load, PouredWater::new, NAME);
     }
 
     public boolean isEmpty()
@@ -62,7 +77,7 @@ public final class PouredWater
         return sources.isEmpty();
     }
 
-    /** Entries of this chunk, for tests and debugging. */
+    /** Entries of this dimension, for tests and debugging. */
     public Long2ByteMap entries()
     {
         return sources;
@@ -74,13 +89,11 @@ public final class PouredWater
      */
     public static void poured(Level level, BlockPos pos, int purity)
     {
-        if (level.isClientSide() || !WaterPurity.enabled() || !isWaterSource(level.getFluidState(pos)))
+        if (!(level instanceof ServerLevel server) || !WaterPurity.enabled() || !isWaterSource(level.getFluidState(pos)))
             return;
-        LevelChunk chunk = level.getChunkSource().getChunkNow(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
-        if (chunk == null)
-            return;
-        chunk.getData(ModAttachment.POURED_WATER.get()).sources.put(pos.asLong(), (byte) WaterPurity.sanitizePurity(purity));
-        chunk.setUnsaved(true);
+        PouredWater water = of(server);
+        water.sources.put(pos.asLong(), (byte) WaterPurity.sanitizePurity(purity));
+        water.setDirty();
     }
 
     /**
@@ -90,7 +103,7 @@ public final class PouredWater
      */
     public static int purityAt(Level level, BlockPos pos)
     {
-        if (level.isClientSide())
+        if (existing(level) == null)
             return -1;
         int own = stored(level, pos, true);
         if (own >= 0 || !isWaterSource(level.getFluidState(pos)))
@@ -105,14 +118,13 @@ public final class PouredWater
      */
     public static int pickedUp(Level level, BlockPos pos)
     {
-        if (level.isClientSide())
+        PouredWater water = existing(level);
+        if (water == null)
             return -1;
-        LevelChunk chunk = chunk(level, pos);
-        PouredWater water = chunk == null ? null : chunk.getExistingDataOrNull(ModAttachment.POURED_WATER.get());
-        if (water == null || !water.sources.containsKey(pos.asLong()))
+        if (!water.sources.containsKey(pos.asLong()))
             return worstNeighbour(level, pos);
         int purity = water.sources.remove(pos.asLong());
-        chunk.setUnsaved(true);
+        water.setDirty();
         BlockPos.MutableBlockPos next = new BlockPos.MutableBlockPos();
         for (Direction direction : HORIZONTAL)
         {
@@ -143,9 +155,9 @@ public final class PouredWater
      */
     private static int stored(Level level, BlockPos pos, boolean clean)
     {
-        LevelChunk chunk = chunk(level, pos);
-        PouredWater water = chunk == null ? null : chunk.getExistingDataOrNull(ModAttachment.POURED_WATER.get());
-        if (water == null)
+        PouredWater water = existing(level);
+        LevelChunk chunk = water == null ? null : chunk(level, pos);
+        if (chunk == null)
             return -1;
         long key = pos.asLong();
         byte purity = water.sources.get(key);
@@ -156,9 +168,17 @@ public final class PouredWater
         if (clean)
         {
             water.sources.remove(key);
-            chunk.setUnsaved(true);
+            water.setDirty();
         }
         return -1;
+    }
+
+    /**
+     * The map of the dimension if water was ever poured there; null on the client and in dimensions without any.
+     */
+    private static @Nullable PouredWater existing(Level level)
+    {
+        return level instanceof ServerLevel server ? server.getDataStorage().get(PouredWater::load, NAME) : null;
     }
 
     private static @Nullable LevelChunk chunk(Level level, BlockPos pos)

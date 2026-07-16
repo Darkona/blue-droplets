@@ -13,17 +13,15 @@ public class DehydrationEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide && entity instanceof Player player) {
             float amount = (float) (0.005F * (amplifier + 1) * GameplayConfig.DEHYDRATION_MULTIPLIER.get());
-            player.getData(ModAttachment.PLAYER_THIRST).addExhaustion(player, amount);
+            ModAttachment.thirst(player).addExhaustion(player, amount);
         }
-
-        return true;
     }
 
     @Override
-    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         return true;
     }
 }

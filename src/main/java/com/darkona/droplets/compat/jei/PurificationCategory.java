@@ -13,7 +13,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * Water in, the block doing it (with what goes under it), water out, and one line saying how.
@@ -51,8 +51,8 @@ final class PurificationCategory extends AbstractRecipeCategory<PurificationEntr
         {
             int purity = WaterPurity.getPurity(fluid);
             slot.setFluidRenderer(fluid.getAmount(), false, 16, 16)
-                    .addFluidStack(fluid.getFluid(), fluid.getAmount(), fluid.getComponentsPatch())
-                    .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.literal(WaterPurity.getPurityText(purity)).withColor(WaterPurity.getPurityColor(purity))));
+                    .addFluidStack(fluid.getFluid(), fluid.getAmount(), fluid.getTag())
+                    .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.literal(WaterPurity.getPurityText(purity)).withStyle(style -> style.withColor(WaterPurity.getPurityColor(purity)))));
         }
         return slot;
     }

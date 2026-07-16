@@ -11,9 +11,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -53,8 +53,8 @@ public class JadePlugin implements IWailaPlugin
         @Override
         public void appendServerData(CompoundTag data, BlockAccessor accessor)
         {
-            IFluidHandler handler = Capabilities.FluidHandler.BLOCK.getCapability(accessor.getLevel(), accessor.getPosition(),
-                    accessor.getBlockState(), accessor.getBlockEntity(), null);
+            BlockEntity blockEntity = accessor.getBlockEntity();
+            IFluidHandler handler = blockEntity == null ? null : blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
             if (handler == null || !WaterPurity.enabled())
                 return;
 
@@ -62,7 +62,7 @@ public class JadePlugin implements IWailaPlugin
             for (int tank = 0; tank < handler.getTanks(); tank++)
             {
                 FluidStack fluid = handler.getFluidInTank(tank);
-                if (!fluid.isEmpty() && (WaterPurity.hasPurity(fluid) || fluid.is(FluidTags.WATER)))
+                if (!fluid.isEmpty() && (WaterPurity.hasPurity(fluid) || fluid.getFluid().is(FluidTags.WATER)))
                     purities.add(WaterPurity.getPurity(fluid));
             }
             if (!purities.isEmpty())
@@ -84,7 +84,7 @@ public class JadePlugin implements IWailaPlugin
 
         private static void add(ITooltip tooltip, int purity)
         {
-            tooltip.add(Component.literal(WaterPurity.getPurityText(purity)).withColor(WaterPurity.getPurityColor(purity)));
+            tooltip.add(Component.literal(WaterPurity.getPurityText(purity)).withStyle(style -> style.withColor(WaterPurity.getPurityColor(purity))));
         }
 
         @Override
