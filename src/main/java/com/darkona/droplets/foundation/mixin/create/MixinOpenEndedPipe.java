@@ -51,7 +51,7 @@ public abstract class MixinOpenEndedPipe
     @ModifyReturnValue(method = "removeFluidFromSpace", at = @At("RETURN"), remap = false)
     private FluidStack blue_droplets$addPurity(FluidStack drained, boolean simulate, @Share("purity") LocalIntRef purity)
     {
-        if (purity.get() >= 0 && !drained.isEmpty() && drained.is(FluidTags.WATER))
+        if (purity.get() >= 0 && !drained.isEmpty() && drained.getFluid().is(FluidTags.WATER))
         {
             if (!WaterPurity.hasPurity(drained))
                 WaterPurity.addPurity(drained, purity.get());
@@ -66,7 +66,7 @@ public abstract class MixinOpenEndedPipe
     private boolean blue_droplets$registerPouredWater(boolean placed, FluidStack fluid, boolean simulate)
     {
         OpenEndedPipe pipe = (OpenEndedPipe) (Object) this;
-        if (placed && !simulate && pipe.getWorld() != null && fluid.is(FluidTags.WATER))
+        if (placed && !simulate && pipe.getWorld() != null && fluid.getFluid().is(FluidTags.WATER))
             PouredWater.poured(pipe.getWorld(), pipe.getOutputPos(), WaterPurity.getPurity(fluid));
         return placed;
     }

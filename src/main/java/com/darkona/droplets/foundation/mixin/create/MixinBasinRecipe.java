@@ -38,7 +38,7 @@ public class MixinBasinRecipe {
                 for (int i = 0; i < fluids.size(); i++)
                 {
                     FluidStack fluid = fluids.get(i);
-                    if (fluid.is(DropletsTags.CARRIES_PURITY) && !WaterPurity.hasPurity(fluid))
+                    if (fluid.getFluid().is(DropletsTags.CARRIES_PURITY) && !WaterPurity.hasPurity(fluid))
                         fluids.set(i, WaterPurity.addPurity(fluid.copy(), purity));
                 }
         }
@@ -48,7 +48,9 @@ public class MixinBasinRecipe {
     @Unique
     private static int blue_droplets$inputPurity(BasinBlockEntity basin)
     {
-        IFluidHandler input = basin.inputTank.getCapability();
+        IFluidHandler input = basin.inputTank.getCapability().orElse(null);
+        if (input == null)
+            return -1;
         for (int tank = 0; tank < input.getTanks(); tank++)
         {
             FluidStack fluid = input.getFluidInTank(tank);

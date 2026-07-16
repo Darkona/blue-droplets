@@ -13,8 +13,8 @@ public final class DropletsGameTests
 
     public static void register(RegisterGameTestsEvent event)
     {
-        // PORT-TODO if (ModList.get().isLoaded("create"))
-        //    event.register(CreateTests.class);
+        if (ModList.get().isLoaded("create"))
+            event.register(CreateTests.class);
         if (ModList.get().isLoaded("travelersbackpack"))
             event.register(TravelersBackpackTests.class);
         if (ModList.get().isLoaded("cold_sweat"))

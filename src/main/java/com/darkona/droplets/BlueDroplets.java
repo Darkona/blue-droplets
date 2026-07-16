@@ -2,6 +2,8 @@ package com.darkona.droplets;
 
 import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
+import com.darkona.droplets.compat.create.CreateRegistry;
+import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
 import com.darkona.droplets.compat.reliquary.ReliquaryCompat;
 import com.darkona.droplets.compat.delight.DelightCompat;
 import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
@@ -27,6 +29,7 @@ import com.darkona.droplets.foundation.network.ThirstModPacketHandler;
 import com.darkona.droplets.foundation.tab.ThirstTab;
 import com.darkona.droplets.gametest.DropletsGameTests;
 import com.darkona.droplets.compat.travelersbackpack.TravelersBackpackCompat;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -90,8 +93,8 @@ public class BlueDroplets
         LootInit.register(modBus);
         LegacyIds.register();
 
-        // PORT-TODO if(ModList.get().isLoaded("create"))
-        //    CreateRegistry.register();
+        if(ModList.get().isLoaded("create"))
+            CreateRegistry.register();
 
         ThirstTab.register(modBus);
         LegacyConfigMigration.run();
@@ -112,7 +115,14 @@ public class BlueDroplets
 
     private void clientSetup(final FMLClientSetupEvent event)
     {
-        // PORT-TODO ponder
+        if(ModList.get().isLoaded("create")){
+            event.enqueueWork(()-> new Object()
+            {
+                public void registerPonderPlugin(){
+                    PonderIndex.addPlugin(new ThirstPonderPlugin());
+                }
+            }.registerPonderPlugin());
+        }
     }
 
     /**

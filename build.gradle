@@ -27,17 +27,12 @@ sourceSets {
 }
 // PORT-TODO: parts not ported yet
 sourceSets.main.java {
-    exclude 'com/darkona/droplets/gametest/*Create*'
     exclude 'com/darkona/droplets/gametest/*Delight*'
     exclude 'com/darkona/droplets/gametest/KubeJSTests.java'
     exclude 'com/darkona/droplets/foundation/mixin/extradelight/**'
     exclude 'com/darkona/droplets/foundation/mixin/farm_and_charm/**'
     exclude 'com/darkona/droplets/foundation/mixin/herbalbrews/**'
     exclude 'com/darkona/droplets/foundation/mixin/minersdelight/**'
-    exclude 'com/darkona/droplets/foundation/mixin/create/**'
-    exclude 'com/darkona/droplets/compat/create/ponder/**'
-    exclude 'com/darkona/droplets/compat/create/CreateRegistry.java'
-    exclude 'com/darkona/droplets/compat/create/SandFilter*'
 }
 
 repositories {
@@ -66,8 +61,12 @@ repositories {
     }
 }
 
+// The jar is built against forge_version (the NeoForge 47.1 fork point). Some compat mods need a newer Forge
+// (Serene Seasons and GlitchCore ask for 47.3), so -PwithCompat runs and builds on forge_compat_version instead.
+var forgeVersion = project.hasProperty('withCompat') ? forge_compat_version : forge_version
+
 legacyForge {
-    version = "${minecraft_version}-${forge_version}"
+    version = "${minecraft_version}-${forgeVersion}"
     addModdingDependenciesTo(sourceSets.api)
 
     parchment {
@@ -159,6 +158,25 @@ dependencies {
     modCompileOnly "maven.modrinth:vampirism:${vampirism_version}"
     modCompileOnly "maven.modrinth:supernatural:${supernatural_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+
+    // ./gradlew runGameTestServer -PwithCompat: the optional mods Blue Droplets has code for, on the dev runtime.
+    // Create's slim jar does not bundle Flywheel, Ponder and Registrate: they go in by hand.
+    if (project.hasProperty('withCompat')) {
+        modLocalRuntime("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+        modLocalRuntime("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}") { transitive = false }
+        modLocalRuntime "dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}"
+        modLocalRuntime "com.tterrag.registrate:Registrate:${registrate_version}"
+        modLocalRuntime "maven.modrinth:jade:${jade_version}"
+        modLocalRuntime "maven.modrinth:appleskin:${appleskin_version}"
+        modLocalRuntime "maven.modrinth:cold-sweat:${cold_sweat_version}"
+        modLocalRuntime "maven.modrinth:serene-seasons:${serene_seasons_version}"
+        modLocalRuntime "maven.modrinth:glitchcore:${glitchcore_version}"
+        modLocalRuntime "maven.modrinth:travelersbackpack:${travelers_backpack_version}"
+        modLocalRuntime "maven.modrinth:reliquary-reincarnations:${reliquary_version}"
+        modLocalRuntime "maven.modrinth:farmers-delight:${farmers_delight_version}"
+    }
+    // JEI on every dev client, as on 1.21.1.
+    modLocalRuntime "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
 }
 
 var cleanGameTestWorld = tasks.register('cleanGameTestWorld', Delete) {

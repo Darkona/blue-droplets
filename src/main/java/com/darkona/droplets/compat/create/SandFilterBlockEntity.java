@@ -18,7 +18,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -51,19 +54,23 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
         return super.createRenderBoundingBox().expandTowards(0, -2, 0);
     }
 
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(
-                Capabilities.FluidHandler.BLOCK,
-                CreateRegistry.SAND_FILTER_BE.get(),
-                (be, side) -> {
-                    if (side == null)
-                        return null;
-                    Direction facing = be.getBlockState().getValue(SandFilterBlock.FACING);
-                    if (side == facing)
-                        return be.purifiedTank.getCapability();
-                    return side == facing.getOpposite() ? be.dirtyTank.getCapability() : null;
-                }
-        );
+    /**
+     * Pipes connect only to the two ends: purified water leaves from the {@code FACING} side, dirty water enters
+     * from the opposite one.
+     */
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
+    {
+        if (cap == ForgeCapabilities.FLUID_HANDLER && side != null)
+        {
+            Direction facing = getBlockState().getValue(SandFilterBlock.FACING);
+            if (side == facing)
+                return purifiedTank.getCapability().cast();
+            if (side == facing.getOpposite())
+                return dirtyTank.getCapability().cast();
+            return LazyOptional.empty();
+        }
+        return super.getCapability(cap, side);
     }
 
     /**
@@ -94,7 +101,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
         if(water.getAmount() < rate)
             return;
 
-        if(water.is(FluidTags.WATER))
+        if(water.getFluid().is(FluidTags.WATER))
             WaterPurity.addPurity(water, filteredPurity(WaterPurity.getPurity(water)));
 
         int accepted = purified.fill(water, IFluidHandler.FluidAction.SIMULATE);
@@ -102,7 +109,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
             return;
 
         int drained = dirty.drain(accepted, IFluidHandler.FluidAction.EXECUTE).getAmount();
-        purified.fill(water.copyWithAmount(drained), IFluidHandler.FluidAction.EXECUTE);
+        purified.fill(new FluidStack(water, drained), IFluidHandler.FluidAction.EXECUTE);
     }
 
     /**

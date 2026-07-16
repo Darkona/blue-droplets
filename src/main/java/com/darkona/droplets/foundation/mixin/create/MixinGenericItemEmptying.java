@@ -39,7 +39,7 @@ public class MixinGenericItemEmptying
      * Emptying recipes (terracotta water bowl): the recipe hands out its own fluid stack, so the purity goes on a copy.
      * Create's callers use the fluid of the simulated pass, where the stack is still whole.
      */
-    @WrapOperation(method = "emptyItem", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/transfer/EmptyingRecipe;getResultingFluid()Lnet/neoforged/neoforge/fluids/FluidStack;"))
+    @WrapOperation(method = "emptyItem", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/transfer/EmptyingRecipe;getResultingFluid()Lnet/minecraftforge/fluids/FluidStack;"))
     private static FluidStack blue_droplets$recipePurity(EmptyingRecipe recipe, Operation<FluidStack> original,
                                                         @Local(argsOnly = true) Level level, @Local(argsOnly = true) ItemStack stack)
     {

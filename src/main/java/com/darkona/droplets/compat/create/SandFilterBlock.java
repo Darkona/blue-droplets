@@ -60,12 +60,14 @@ public class SandFilterBlock extends Block implements IWrenchable, IBE<SandFilte
     }
 
     @Override
-    protected @NotNull BlockState rotate(@NotNull BlockState state, Rotation rotation) {
+    @SuppressWarnings("deprecation")
+    public @NotNull BlockState rotate(@NotNull BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    protected @NotNull BlockState mirror(@NotNull BlockState state, Mirror mirror) {
+    @SuppressWarnings("deprecation")
+    public @NotNull BlockState mirror(@NotNull BlockState state, Mirror mirror) {
         return rotate(state, mirror.getRotation(state.getValue(FACING)));
     }
 
@@ -87,7 +89,7 @@ public class SandFilterBlock extends Block implements IWrenchable, IBE<SandFilte
         if (params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof SandFilterBlockEntity filter && filter.hasFluid())
             for (ItemStack drop : drops)
                 if (drop.is(asItem()))
-                    filter.saveToItem(drop, params.getLevel().registryAccess());
+                    filter.saveToItem(drop);
         return drops;
     }
 

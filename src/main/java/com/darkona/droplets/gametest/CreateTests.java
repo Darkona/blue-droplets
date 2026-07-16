@@ -83,8 +83,8 @@ public class CreateTests
         int contaminated = PurityLevel.CONTAMINATED.level();
         helper.assertTrue(WaterPurity.getWaterPurity(helper.getLevel(), helper.getLevel().getBiome(water), water, true, null) > contaminated, "world water at the test position is already contaminated");
         OpenEndedPipe pipe = new OpenEndedPipe(new BlockFace(water.above(), Direction.DOWN));
-        pipe.manageSource(helper.getLevel(), null);
-        IFluidHandler handler = pipe.provideHandler().getCapability();
+        pipe.manageSource(helper.getLevel());
+        IFluidHandler handler = pipe.provideHandler().orElseThrow(IllegalStateException::new);
         // The pipe pours once its internal tank is full, like a pump filling it tick after tick.
         for (int i = 0; i < 10 && !helper.getLevel().getFluidState(water).isSource(); i++)
             handler.fill(water(contaminated, 250), IFluidHandler.FluidAction.EXECUTE);
@@ -100,10 +100,10 @@ public class CreateTests
     {
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
         helper.getLevel().setBlockAndUpdate(pos, CreateRegistry.SAND_FILTER_BLOCK.get().defaultBlockState().setValue(SandFilterBlock.FACING, Direction.EAST));
-        IFluidHandler out = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.EAST);
-        IFluidHandler in = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.WEST);
+        IFluidHandler out = TestSupport.fluidHandler(helper, pos, Direction.EAST);
+        IFluidHandler in = TestSupport.fluidHandler(helper, pos, Direction.WEST);
         helper.assertTrue(out != null && in != null && out != in, "an east-facing filter has its tanks east and west");
-        helper.assertTrue(helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.UP) == null, "an east-facing filter has no tank on top");
+        helper.assertTrue(TestSupport.fluidHandler(helper, pos, Direction.UP) == null, "an east-facing filter has no tank on top");
         assertValueEqual(helper, in.fill(water(0, 1000), IFluidHandler.FluidAction.EXECUTE), 1000, "water accepted on the input side");
         assertValueEqual(helper, out.fill(water(0, 1000), IFluidHandler.FluidAction.SIMULATE), 0, "water accepted on the output side");
         helper.succeed();
@@ -117,11 +117,11 @@ public class CreateTests
         BlockState filter = CreateRegistry.SAND_FILTER_BLOCK.get().defaultBlockState();
         helper.getLevel().setBlockAndUpdate(top, filter);
         helper.getLevel().setBlockAndUpdate(bottom, filter);
-        IFluidHandler in = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, top, Direction.UP);
+        IFluidHandler in = TestSupport.fluidHandler(helper, top, Direction.UP);
         in.fill(water(0, 1000), IFluidHandler.FluidAction.EXECUTE);
         int expected = SandFilterBlockEntity.filteredPurity(SandFilterBlockEntity.filteredPurity(0));
         helper.succeedWhen(() -> {
-            FluidStack out = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, bottom, Direction.DOWN).getFluidInTank(0);
+            FluidStack out = TestSupport.fluidHandler(helper, bottom, Direction.DOWN).getFluidInTank(0);
             assertValueEqual(helper, out.getAmount(), 1000, "water out of the second filter");
             assertValueEqual(helper, WaterPurity.getPurity(out), expected, "purity after two filters");
         });
@@ -170,10 +170,10 @@ public class CreateTests
         try
         {
             TestSupport.set(PurityConfig.ENABLED, false);
-            helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.UP).fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
-            for (int tick = 0; tick < 1000 && filter.hasFluid() && helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.DOWN).getFluidInTank(0).getAmount() < 1000; tick++)
+            TestSupport.fluidHandler(helper, pos, Direction.UP).fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+            for (int tick = 0; tick < 1000 && filter.hasFluid() && TestSupport.fluidHandler(helper, pos, Direction.DOWN).getFluidInTank(0).getAmount() < 1000; tick++)
                 filter.tick();
-            FluidStack out = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.DOWN).getFluidInTank(0);
+            FluidStack out = TestSupport.fluidHandler(helper, pos, Direction.DOWN).getFluidInTank(0);
             assertValueEqual(helper, out.getAmount(), 1000, "water through a filter with purity off");
             helper.assertFalse(WaterPurity.hasPurity(out), "water through a filter has a purity with purity off");
         }
@@ -217,6 +217,14 @@ public class CreateTests
     public static void smokingFanPurifiesWithTheSmokerRecipes(GameTestHelper helper)
     {
         ItemStack bottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+        // The smoker pack is off by default, and Forge 1.20.1's game test server only enables the packs that are on
+        // by default (NeoForge's enables them all): without it, a smoking fan leaves water alone.
+        if (!helper.getLevel().getServer().getPackRepository().getSelectedIds().contains("mod/" + BlueDroplets.ID + ":datapacks/purify_smoking"))
+        {
+            helper.assertFalse(AllFanProcessingTypes.SMOKING.canProcess(WaterPurity.addPurity(bottle.copy(), 0), helper.getLevel()), "a smoking fan purifies water without the smoker pack");
+            helper.succeed();
+            return;
+        }
         // Smoker recipes add two levels, and stop at clean with Create.
         int clean = PurityLevel.CLEAN.level();
         for (int purity = PurityLevel.MIN; purity < clean; purity++)
@@ -245,8 +253,8 @@ public class CreateTests
         helper.getLevel().setBlockAndUpdate(pos.below(), AllBlocks.BLAZE_BURNER.getDefaultState().setValue(BlazeBurnerBlock.HEAT_LEVEL, BlazeBurnerBlock.HeatLevel.KINDLED));
         helper.getLevel().setBlockAndUpdate(pos, AllBlocks.BASIN.getDefaultState());
         BasinBlockEntity basin = (BasinBlockEntity) helper.getLevel().getBlockEntity(pos);
-        Recipe<?> recipe = helper.getLevel().getRecipeManager().byKey(BlueDroplets.asResource("compat/create/water_from_heated_mixing_to_dirty")).orElseThrow().value();
-        helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, null).fill(water(0, 250), IFluidHandler.FluidAction.EXECUTE);
+        Recipe<?> recipe = helper.getLevel().getRecipeManager().byKey(BlueDroplets.asResource("compat/create/water_from_heated_mixing_to_dirty")).orElseThrow();
+        TestSupport.fluidHandler(helper, pos, null).fill(water(0, 250), IFluidHandler.FluidAction.EXECUTE);
         helper.assertTrue(BasinRecipe.match(basin, recipe), "dirty water does not match the heated mixing recipe");
         helper.assertTrue(BasinRecipe.apply(basin, recipe), "the heated mixing recipe did not run");
         FluidStack out = basin.getTanks().getSecond().getPrimaryHandler().getFluidInTank(0);
@@ -257,7 +265,7 @@ public class CreateTests
         helper.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         helper.getLevel().setBlockAndUpdate(pos, AllBlocks.BASIN.getDefaultState());
         BasinBlockEntity cold = (BasinBlockEntity) helper.getLevel().getBlockEntity(pos);
-        helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, null).fill(water(0, 250), IFluidHandler.FluidAction.EXECUTE);
+        TestSupport.fluidHandler(helper, pos, null).fill(water(0, 250), IFluidHandler.FluidAction.EXECUTE);
         helper.assertFalse(BasinRecipe.match(cold, recipe), "an unheated basin purifies water");
         helper.succeed();
     }
@@ -302,8 +310,8 @@ public class CreateTests
     private static FluidStack drainThroughPipe(GameTestHelper helper, BlockPos pipePos)
     {
         OpenEndedPipe pipe = new OpenEndedPipe(new BlockFace(pipePos, Direction.DOWN));
-        pipe.manageSource(helper.getLevel(), null);
-        IFluidHandler handler = pipe.provideHandler().getCapability();
+        pipe.manageSource(helper.getLevel());
+        IFluidHandler handler = pipe.provideHandler().orElseThrow(IllegalStateException::new);
         return handler.drain(1000, IFluidHandler.FluidAction.EXECUTE);
     }
 }

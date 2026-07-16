@@ -16,7 +16,7 @@ public class ThirstPonders {
     public static final ResourceLocation PURIFICATION = BlueDroplets.asResource("purification");
 
     public static void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
-        PonderTagRegistrationHelper<RegistryEntry<?,?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+        PonderTagRegistrationHelper<RegistryEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
         HELPER.registerTag(PURIFICATION)
                 .addToIndex()
@@ -27,7 +27,7 @@ public class ThirstPonders {
     }
 
     public static void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        PonderSceneRegistrationHelper<ItemProviderEntry<?,?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+        PonderSceneRegistrationHelper<ItemProviderEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
         HELPER.addStoryBoard(
                 CreateRegistry.SAND_FILTER_BLOCK,

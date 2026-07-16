@@ -12,7 +12,7 @@
     "create.MixinFluidDrainingBehaviour",
     "create.MixinGenericItemEmptying",
     "create.MixinGenericItemFilling",
-    "create.MixinIHaveGoggleInformation",
+    "create.MixinCreateLang",
     "create.MixinOpenEndedPipe",
     "extradelight.MixinBottleFluidRegistry",
     "extradelight.MixinWaterSourceBlockEntities",

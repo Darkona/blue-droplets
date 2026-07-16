@@ -7,7 +7,13 @@ import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.lang.reflect.Field;
@@ -62,6 +68,15 @@ final class TestSupport
     }
 
     private static Field CACHED_VALUE;
+
+    /**
+     * The fluid handler of the block entity at {@code pos} on {@code side}, or null.
+     */
+    static @Nullable IFluidHandler fluidHandler(GameTestHelper helper, BlockPos pos, @Nullable Direction side)
+    {
+        BlockEntity entity = helper.getLevel().getBlockEntity(pos);
+        return entity == null ? null : entity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).orElse(null);
+    }
 
     static PlayerThirst thirst(ServerPlayer player)
     {
