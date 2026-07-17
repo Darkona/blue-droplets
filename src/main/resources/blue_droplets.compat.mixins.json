@@ -14,14 +14,9 @@
     "create.MixinGenericItemFilling",
     "create.MixinCreateLang",
     "create.MixinOpenEndedPipe",
-    "extradelight.MixinBottleFluidRegistry",
-    "extradelight.MixinWaterSourceBlockEntities",
-    "extradelight.MixinWaterSourceBlocks",
-    "extradelight.MixinWellFluidCapability",
     "farm_and_charm.MixinSinkBlock",
-    "farm_and_charm.MixinTimberWellBlock",
     "herbalbrews.MixinTeaKettleBlockEntity",
-    "minersdelight.MixinCopperCupItem",
+    "miners_delight.MixinCopperCupItem",
     "travelersbackpack.MixinHoseItem"
   ],
   "injectors": {

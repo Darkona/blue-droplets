@@ -3,7 +3,6 @@ package com.darkona.droplets.gametest;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.content.purity.WaterPurity;
-import com.sammy.minersdelight.content.item.CopperCupItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.cauldron.CauldronInteraction;
@@ -36,7 +35,7 @@ public class MinersDelightTests
 
     static Item item(String id)
     {
-        return BuiltInRegistries.ITEM.get(new ResourceLocation("minersdelight:" + id));
+        return BuiltInRegistries.ITEM.get(new ResourceLocation("miners_delight:" + id));
     }
 
     private static ItemStack useFromAbove(ServerPlayer player, BlockPos water, ItemStack stack)
@@ -74,9 +73,11 @@ public class MinersDelightTests
     public static void cupEmptiedIntoTheWorldKeepsItsPurity(GameTestHelper helper)
     {
         BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
-        ServerPlayer player = player(helper);
+        // Poured the way a player does: looking down at the block under the empty spot.
+        helper.getLevel().setBlockAndUpdate(pos.below(), Blocks.STONE.defaultBlockState());
         ItemStack cup = WaterPurity.addPurity(new ItemStack(item("water_cup")), CONTAMINATED);
-        helper.assertTrue(((CopperCupItem) cup.getItem()).emptyContents(player, helper.getLevel(), pos, null, cup), "the cup was not emptied at " + pos);
+        ItemStack left = useFromAbove(player(helper), pos, cup);
+        helper.assertTrue(left.is(item("copper_cup")), "the cup was not emptied at " + pos + ": " + left);
         helper.assertTrue(helper.getLevel().getFluidState(pos).isSource(), "no water source where the cup was emptied");
         assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of the source a dirty cup left");
         helper.succeed();
@@ -90,13 +91,13 @@ public class MinersDelightTests
         BlockPos pos = helper.absolutePos(rel);
         ServerPlayer player = player(helper);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item("copper_cup")));
-        helper.getBlockState(rel).useItemOn(player.getMainHandItem(), helper.getLevel(), player, InteractionHand.MAIN_HAND,
+        helper.getBlockState(rel).use(helper.getLevel(), player, InteractionHand.MAIN_HAND,
                 new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         ItemStack cup = player.getMainHandItem();
         helper.assertTrue(cup.is(item("water_cup")), "the copper cup was not filled at the cauldron: " + cup);
         helper.assertTrue(WaterPurity.hasPurity(cup), "a cup filled from a cauldron has no purity");
         assertValueEqual(helper, WaterPurity.getPurity(cup), WaterPurity.cauldronPurity(helper.getLevel(), pos), "purity of a cup filled from a cauldron");
-        helper.assertTrue(CauldronInteraction.WATER.map().containsKey(item("copper_cup")), "no cauldron interaction for the copper cup");
+        helper.assertTrue(CauldronInteraction.WATER.containsKey(item("copper_cup")), "no cauldron interaction for the copper cup");
         helper.succeed();
     }
 }

@@ -4,6 +4,6 @@
     { "id": "collectorsreap:lime_green_tea", "required": false },
     { "id": "create:builders_tea", "required": false },
     { "id": "cold_sweat:filled_waterskin", "required": false },
-    { "id": "minersdelight:water_cup", "required": false }
+    { "id": "miners_delight:water_cup", "required": false }
   ]
 }

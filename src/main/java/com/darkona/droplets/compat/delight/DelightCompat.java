@@ -8,18 +8,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Farmer's Delight addons and Let's Do mods: kettles refuse dirty water, and the infinite water sources (taps, sinks,
  * wells) give the purity of the world's water where they stand. Recipes and drink values are data; what is code runs
- * from small mixins in {@code foundation.mixin.<mod id>} (HerbalBrews, Extra Delight, Farm & Charm) and from the click
- * event below (Brewery and any block in {@code blue_droplets:rejects_dirty_water}).
+ * from small mixins in {@code foundation.mixin.<mod id>} (HerbalBrews, Farm & Charm, Miner's Delight) and from the
+ * click event below (Brewery and any block in {@code blue_droplets:rejects_dirty_water}).
  */
 public final class DelightCompat
 {
@@ -75,27 +72,5 @@ public final class DelightCompat
                 WaterPurity.addPurity(filled, purity);
         }
         return filled;
-    }
-
-    /**
-     * {@code water} with the purity of the source at {@code pos} when it is water without one; changes the stack.
-     */
-    public static FluidStack withSourcePurity(FluidStack water, Level level, BlockPos pos)
-    {
-        if (!water.isEmpty() && water.getFluid().isSame(Fluids.WATER) && !WaterPurity.hasPurity(water))
-        {
-            int purity = sourcePurity(level, pos);
-            if (purity >= WaterPurity.MIN_PURITY)
-                WaterPurity.addPurity(water, purity);
-        }
-        return water;
-    }
-
-    /**
-     * Same, for the water of a block entity's own tank (Extra Delight taps and sinks); nothing before it is in a level.
-     */
-    public static FluidStack withSourcePurity(FluidStack water, @Nullable BlockEntity source)
-    {
-        return source == null || source.getLevel() == null ? water : withSourcePurity(water, source.getLevel(), source.getBlockPos());
     }
 }

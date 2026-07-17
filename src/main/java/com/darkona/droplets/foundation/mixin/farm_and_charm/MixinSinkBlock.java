@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
  * of the world's water where it stands. Only water containers change; the empty bucket or bottle it gives back when
  * filled is left alone.
  */
-@Mixin(value = SinkBlock.class, remap = false)
+@Mixin(SinkBlock.class)
 public abstract class MixinSinkBlock
 {
-    @ModifyArg(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;addItem(Lnet/minecraft/world/item/ItemStack;)Z"))
+    @ModifyArg(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;addItem(Lnet/minecraft/world/item/ItemStack;)Z"))
     private ItemStack blue_droplets$worldPurity(ItemStack given, @Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos pos)
     {
         return DelightCompat.withSourcePurity(given, level, pos);

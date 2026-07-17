@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.At;
  * The HerbalBrews tea kettle takes water from its water slot by item tag, one check per tick. Water below
  * {@code delight.kettleMinPurity} does not count as water, so it stays in the slot and the kettle is not filled.
  */
-@Mixin(value = TeaKettleBlockEntity.class, remap = false)
+@Mixin(TeaKettleBlockEntity.class)
 public abstract class MixinTeaKettleBlockEntity
 {
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/tags/TagKey;)Z"))
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/tags/TagKey;)Z", remap = true), remap = false)
     private boolean blue_droplets$rejectDirtyWater(ItemStack stack, TagKey<Item> tag, Operation<Boolean> original)
     {
         return original.call(stack, tag) && !((tag == TagsRegistry.SMALL_WATER_FILL || tag == TagsRegistry.LARGE_WATER_FILL) && DelightCompat.tooDirtyForKettle(stack));

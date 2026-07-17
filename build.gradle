@@ -25,15 +25,6 @@ java.withSourcesJar()
 sourceSets {
     api
 }
-// PORT-TODO: parts not ported yet
-sourceSets.main.java {
-    exclude 'com/darkona/droplets/gametest/*Delight*'
-    exclude 'com/darkona/droplets/gametest/KubeJSTests.java'
-    exclude 'com/darkona/droplets/foundation/mixin/extradelight/**'
-    exclude 'com/darkona/droplets/foundation/mixin/farm_and_charm/**'
-    exclude 'com/darkona/droplets/foundation/mixin/herbalbrews/**'
-    exclude 'com/darkona/droplets/foundation/mixin/minersdelight/**'
-}
 
 repositories {
     maven {
@@ -157,6 +148,10 @@ dependencies {
     modCompileOnly "maven.modrinth:farmers-delight:${farmers_delight_version}"
     modCompileOnly "maven.modrinth:vampirism:${vampirism_version}"
     modCompileOnly "maven.modrinth:supernatural:${supernatural_version}"
+    modCompileOnly "maven.modrinth:miners-delight:${miners_delight_version}"
+    modCompileOnly "maven.modrinth:lets-do-farm-charm:${farm_and_charm_version}"
+    modCompileOnly "maven.modrinth:lets-do-herbalbrews:${herbalbrews_version}"
+    modCompileOnly "maven.modrinth:architectury-api:${architectury_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
 
     // ./gradlew runGameTestServer -PwithCompat: the optional mods Blue Droplets has code for, on the dev runtime.
@@ -174,6 +169,19 @@ dependencies {
         modLocalRuntime "maven.modrinth:travelersbackpack:${travelers_backpack_version}"
         modLocalRuntime "maven.modrinth:reliquary-reincarnations:${reliquary_version}"
         modLocalRuntime "maven.modrinth:farmers-delight:${farmers_delight_version}"
+    }
+    // ./gradlew runGameTestServer -PwithDelight: the Farmer's Delight addons that exist for 1.20.1, kept apart from
+    // -PwithCompat so that one stays fast; both flags combine.
+    if (project.hasProperty('withDelight')) {
+        modLocalRuntime "maven.modrinth:farmers-delight:${farmers_delight_version}"
+        modLocalRuntime "maven.modrinth:brewin-and-chewin:${brewin_and_chewin_version}"
+        modLocalRuntime "maven.modrinth:oceans-delight:${oceans_delight_version}"
+        modLocalRuntime "maven.modrinth:enders-delight:${enders_delight_version}"
+        modLocalRuntime "maven.modrinth:miners-delight:${miners_delight_version}"
+        modLocalRuntime "maven.modrinth:lets-do-farm-charm:${farm_and_charm_version}"
+        modLocalRuntime "maven.modrinth:lets-do-herbalbrews:${herbalbrews_version}"
+        modLocalRuntime "maven.modrinth:lets-do-brewery-farmcharm-compat:${brewery_version}"
+        modLocalRuntime "maven.modrinth:architectury-api:${architectury_version}"
     }
     // JEI on every dev client, as on 1.21.1.
     modLocalRuntime "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
