@@ -54,10 +54,14 @@ repositories {
 
 // The jar is built against forge_version (the NeoForge 47.1 fork point). Some compat mods need a newer Forge
 // (Serene Seasons and GlitchCore ask for 47.3), so -PwithCompat runs and builds on forge_compat_version instead.
+// -PonNeoForge=1.20.1-47.1.106 builds and runs on NeoForge 47.1 instead, to check the same code there.
 var forgeVersion = project.hasProperty('withCompat') ? forge_compat_version : forge_version
 
 legacyForge {
-    version = "${minecraft_version}-${forgeVersion}"
+    if (project.hasProperty('onNeoForge'))
+        enable { neoForgeVersion = project.property('onNeoForge') }
+    else
+        version = "${minecraft_version}-${forgeVersion}"
     addModdingDependenciesTo(sourceSets.api)
 
     parchment {

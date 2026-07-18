@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Boots the real client headless (Xvfb + Mesa software GL) straight into a copy of a superflat test world and reports
-# whether it joined without errors. Leaves a screenshot of the HUD (thirst bar above the hunger bar) in
-# build/client-boot-check.png. Adapted from Green Feathers' scripts/client-boot-check.sh.
+# whether it joined, ran the commands and left the log without errors. No screenshot: the 1.20.1 check is the log.
+# Adapted from Green Feathers' scripts/client-boot-check.sh.
 #
 # Usage: [GRADLE_ARGS="-PwithCompat"] [COMMANDS='blue_droplets set @s 7 2;effect give @s blue_droplets:quenchness 30']
-#        [PRE_SHOT='F5'] [SHOT=path.png] scripts/client-boot-check.sh [TIMEOUT_SECONDS]
+#        scripts/client-boot-check.sh [TIMEOUT_SECONDS]
 #   GRADLE_ARGS  extra Gradle flags (see build.gradle); COMMANDS typed into chat after joining, ';'-separated.
 # Generates its own superflat world (run/bootworld) the first time, with a dedicated server run. Every run: noon, clear
 # weather, no mob spawns, survival. Log lines listed in scripts/boot-check-known.txt are not counted as errors.
@@ -59,14 +59,11 @@ for cat in master music record weather block hostile neutral player ambient voic
 done
 # A fresh game dir opens the first-launch accessibility screen, which waits for a click.
 sed -i "/^onboardAccessibility:/d" "$OPTS"; echo "onboardAccessibility:false" >> "$OPTS"
-# Interface scale 2 (not auto): screenshots meant for people to look at.
-sed -i "/^guiScale:/d" "$OPTS"; echo "guiScale:${GUI_SCALE:-2}" >> "$OPTS"
-# No tutorial toast ("Move with W, A, S and D") over the screenshot.
+# No tutorial toast waiting for input.
 sed -i "/^tutorialStep:/d" "$OPTS"; echo "tutorialStep:none" >> "$OPTS"
 
 LOG="build/client-boot-check.log"; mkdir -p build; : > "$LOG"
 GAME_LOG="$RUN/logs/latest.log"; rm -f "$GAME_LOG"
-SHOT="${SHOT:-build/client-boot-check.png}"; rm -f "$SHOT"
 
 # A free X display number, so parallel checks (this or other projects) never share a screen.
 DISPLAY_NUM=""
@@ -95,26 +92,8 @@ for _ in $(seq 1 "$TIMEOUT"); do
             [ -z "$cmd" ] && continue
             $X key t; sleep 1; $X type --delay 20 "/$cmd"; $X key Return; sleep 1
         done
-        # Chat messages fade after 10 s; wait them out (and a margin) so no chat shows in the screenshot.
-        sleep 13
-        # PRE_SHOT: what to do right before the screenshot, in order: a key to press ("F5" for the third-person view),
-        # "down:KEY" / "up:KEY" to hold and release one, "sleep:S" to wait S seconds, "cmd:COMMAND" to run a command
-        # then (underscores for spaces; no chat feedback).
-        for step in ${PRE_SHOT:-}; do
-            case "$step" in
-                down:*) $X keydown "${step#down:}" ;;
-                up:*) $X keyup "${step#up:}" ;;
-                sleep:*) sleep "${step#sleep:}" ;;
-                cmd:*) cmd="${step#cmd:}"; $X key t; sleep 0.5; $X type --delay 10 "/${cmd//_/ }"; $X key Return; sleep 0.5 ;;
-                *) $X key "$step"; sleep 1 ;;
-            esac
-        done
-        # F2: the game takes its own screenshot (no image tools needed).
-        rm -rf "$RUN/screenshots"
-        $X search --name "Minecraft" windowactivate --sync key F2 2>/dev/null || $X key F2 2>/dev/null
-        sleep 3
-        latest=$(ls -t "$RUN"/screenshots/*.png 2>/dev/null | head -1)
-        [ -n "$latest" ] && cp "$latest" "$SHOT"
+        # Let the HUD render for a while with the commands applied before judging the log.
+        sleep 15
         logs | grep -qE "$FAIL_RE" && verdict="FAIL" || verdict="PASS"
         break
     fi
@@ -133,5 +112,4 @@ problems=$(logs | grep -E '/ERROR\]|^[A-Za-z_$][A-Za-z0-9_$.]*(Exception|Error)(
 echo "BOOTCHECK: $verdict"
 [ -n "$problems" ] && echo "$problems" | head -20
 logs | grep -E "$OK_RE" | head -2
-[ -f "$SHOT" ] && echo "screenshot: $SHOT"
 exit $([ "$verdict" = PASS ] && echo 0 || echo 1)
