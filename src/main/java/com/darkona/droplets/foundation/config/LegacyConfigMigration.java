@@ -122,7 +122,7 @@ public final class LegacyConfigMigration
     }
 
     /**
-     * For each new file that does not exist yet, copies the values of its keys from the old files; NeoForge adds the
+     * For each new file that does not exist yet, copies the values of its keys from the old files; Forge adds the
      * missing keys and comments when it loads it. Old files that were read are renamed to {@code *.toml.old}.
      */
     private static void splitOldFiles(Path dir)

@@ -37,7 +37,7 @@ public final class DelightCompat
 
     /**
      * Blocks in {@code blue_droplets:rejects_dirty_water} are not used with water they refuse. Cancelled on both sides
-     * (the purity is a synced component), so the client does not predict a fill that the server refuses.
+     * (the purity is item NBT, synced to the client), so the client does not predict a fill that the server refuses.
      */
     private static void rejectDirtyWater(PlayerInteractEvent.RightClickBlock event)
     {
