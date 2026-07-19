@@ -1,23 +1,46 @@
 {
-  "_comment": "Como se reconoce el agua como ingrediente de una receta. Se editan aqui las ids y tags; el codigo no las conoce.",
+  "_comment": "Como se reconoce el agua como ingrediente de una receta (formatos de Forge 1.20.1). Se editan aqui las ids y tags; el codigo no las conoce.",
   "item_ids": {
     "minecraft:water_bucket": "bucket",
-    "minersdelight:water_cup": "bucket"
+    "miners_delight:water_cup": "bucket"
   },
   "tags": {
-    "c:buckets/water": {
+    "forge:buckets/water": {
       "kind": "item",
-      "form": "bucket"
+      "form": "bucket",
+      "items": [
+        "minecraft:water_bucket"
+      ]
+    },
+    "forge:water_bottles": {
+      "kind": "item",
+      "form": "tag",
+      "items": [
+        "minecraft:water_bucket",
+        "minecraft:potion"
+      ]
     },
     "c:water_bottles": {
       "kind": "item",
-      "form": "tag"
+      "form": "tag",
+      "items": [
+        "minecraft:water_bucket",
+        "minecraft:potion"
+      ]
     },
     "farm_and_charm:water_bottles": {
       "kind": "item",
+      "form": "tag",
+      "items": [
+        "minecraft:water_bucket",
+        "minecraft:potion"
+      ]
+    },
+    "minecraft:water": {
+      "kind": "fluid",
       "form": "tag"
     },
-    "c:water": {
+    "forge:water": {
       "kind": "fluid",
       "form": "tag"
     }
@@ -25,7 +48,7 @@
   "fluid_ids": [
     "minecraft:water"
   ],
-  "_potion": "Ingrediente neoforge:components de una pocion cuyo potion_contents.potion es alguno de estos.",
+  "_potion": "Ingrediente de una pocion con NBT (item + nbt, o forge:nbt/forge:partial_nbt) cuyo Potion es alguno de estos.",
   "potion_items": [
     "minecraft:potion"
   ],
@@ -51,40 +74,32 @@
     "display_block",
     "loottable"
   ],
-  "_nested_fluid_paths": "Rutas (claves separadas por punto) donde el ingrediente de fluido va suelto y la cantidad esta en el objeto padre.",
-  "nested_fluid_paths": [
-    "base_fluid.ingredient"
-  ],
-  "_ignore_types": "Tipos de receta que se ignoran del todo (no consumen agua, solo la convierten).",
+  "_ignore_types": "Tipos de receta que se ignoran del todo: llenan o vacian contenedores (la pureza la pasan los mixins de Create), no consumen agua.",
   "ignore_types": [
-    "extradelight:bottle_fluid"
+    "create:emptying",
+    "create:filling"
   ],
-  "_supported_types": "Tipos de receta que aceptan los ingredientes neoforge:difference / neoforge:components (verificado en el codigo de cada mod). El resto se lista con enabled=0.",
+  "_supported_types": "Tipos de receta que leen sus ingredientes con Ingredient.fromJson de Forge, que conoce forge:difference y forge:partial_nbt (verificado en el codigo 1.20.1 de cada mod). El resto se lista con enabled=0.",
   "supported_types": [
     "minecraft:crafting_shaped",
     "minecraft:crafting_shapeless",
     "farmersdelight:cooking",
-    "extradelight:vat",
-    "extradelight:mixing_bowl",
-    "extradelight:evaporator",
-    "brewinandchewin:fermenting",
-    "create:mixing",
     "farm_and_charm:pot_cooking",
     "farm_and_charm:stove",
-    "farm_and_charm:crafting_bowl",
-    "culturaldelights:aging"
+    "farm_and_charm:crafting_bowl"
   ],
   "_manual_rows": "Recetas que usan agua pero no se detectan solas ni se pueden sobrescribir con datos simples: van al CSV con enabled=0 y la nota.",
   "manual_rows": {
     "brewinandchewin:pouring/water_bucket": {
       "water_form": "fluid",
       "water_amount": 1000,
-      "note": "Vertido del keg: el tanque pierde la pureza al llenarse. Hace falta una receta estricta por pureza (ver estudio 3.2), no un difference."
+      "note": "Brewin' and Chewin' 1.20.1: el keg crea el agua sin NBT al verter, la pureza no llega al tanque; no hay receta de datos que la mantenga."
     },
     "brewinandchewin:pouring/potion": {
       "water_form": "bottle",
       "water_amount": 250,
-      "note": "Vertido del keg con botella: igual que pouring/water_bucket."
+      "note": "Brewin' and Chewin' 1.20.1: igual que pouring/water_bucket."
     }
-  }
+  },
+  "_tags_items": "items: los que pueden llevar pureza dentro del tag; son los que se restan con forge:partial_nbt."
 }

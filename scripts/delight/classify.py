@@ -71,7 +71,9 @@ class Item:
         self.id = row["id"]
         self.mod = row["mod"]
         self.tokens = c._tokens(self.id.split(":", 1)[1])
-        self.tags = set(filter(None, row["tags"].split(";")))
+        # 1.20.1: los tags comunes son forge:*; las reglas se escriben con c:*, asi que cuentan como c:* tambien
+        tags = set(filter(None, row["tags"].split(";")))
+        self.tags = tags | {"c:" + t[len("forge:"):] for t in tags if t.startswith("forge:")}
         self.effects = {e.split(",")[0] for e in filter(None, row["effects"].split(";"))}
         self.is_drink = row["is_drink"] == "true"
         self.has_food = row["nutrition"] != ""

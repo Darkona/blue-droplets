@@ -93,11 +93,11 @@ def modrinth_jar(cfg, mod):
     d = os.path.join(cache, "jars")
     os.makedirs(d, exist_ok=True)
     slug, version = mod["modrinth"], mod["version"]
-    marker = os.path.join(d, "%s-%s.jar" % (mod["id"], re.sub(r"[^A-Za-z0-9._-]", "_", version)))
+    marker = os.path.join(d, "1.20.1-%s-%s.jar" % (mod["id"], re.sub(r"[^A-Za-z0-9._-]", "_", version)))
     if os.path.exists(marker):
         return marker
     url = "https://api.modrinth.com/v2/project/%s/version?%s" % (
-        slug, urllib.parse.urlencode({"loaders": '["neoforge"]', "game_versions": '["1.21.1"]'}))
+        slug, urllib.parse.urlencode({"loaders": '["forge"]', "game_versions": '["1.20.1"]'}))
     req = urllib.request.Request(url, headers={"User-Agent": "blue-droplets-delight-tooling"})
     versions = json.load(urllib.request.urlopen(req, timeout=60))
     hit = next((v for v in versions if v["version_number"] == version), None)
@@ -117,7 +117,7 @@ def modrinth_jar(cfg, mod):
     return marker
 
 
-RECIPE_RE = re.compile(r"^data/([^/]+)/recipe/(.+)\.json$")
+RECIPE_RE = re.compile(r"^data/([^/]+)/recipes/(.+)\.json$")
 
 
 def load_recipes(cfg, mod, source):
@@ -134,7 +134,7 @@ def load_recipes(cfg, mod, source):
         for root in mod["data_roots"]:
             base = os.path.join(repo, root)
             for ns in sorted(os.listdir(base)) if os.path.isdir(base) else []:
-                rdir = os.path.join(base, ns, "recipe")
+                rdir = os.path.join(base, ns, "recipes")
                 for dp, _, files in os.walk(rdir):
                     for fn in sorted(files):
                         if fn.endswith(".json"):
@@ -157,49 +157,39 @@ def _strip(tag):
 
 
 def _potion_of(node):
-    comps = node.get("components")
-    if not isinstance(comps, dict):
-        return None
-    pc = comps.get("minecraft:potion_contents", comps.get("potion_contents"))
-    return pc.get("potion") if isinstance(pc, dict) else None
+    """Pocion de un ingrediente 1.20.1 con NBT: {"item": ..., "nbt": {"Potion": ...}} (tambien como texto SNBT)."""
+    nbt = node.get("nbt")
+    if isinstance(nbt, dict):
+        return nbt.get("Potion")
+    if isinstance(nbt, str):
+        m = re.search(r'Potion:\s*"?([a-z0-9_:./-]+)"?', nbt)
+        return m.group(1) if m else None
+    return None
+
+
+ITEM_TYPES = (None, "forge:nbt", "forge:partial_nbt")
 
 
 def _classify(node, path, parent, wr):
-    """Si el dict `node` es un ingrediente de agua devuelve un Hit, si no None."""
-    dpath = ".".join(str(p) for p in path if isinstance(p, str))
-    nested = any(dpath.endswith(n) for n in wr["nested_fluid_paths"])
-    if nested and isinstance(node.get("tag"), str) and _strip(node["tag"]) in wr["tags"]:
-        t = wr["tags"][_strip(node["tag"])]
-        amt = parent.get("amount", wr["default_amounts"].get("fluid", 1000)) if isinstance(parent, dict) else 1000
-        return Hit(path, "fluid_nested", t["form"], amt, node, "#" + _strip(node["tag"]))
-    if nested and node.get("fluid") in wr["fluid_ids"]:
-        amt = parent.get("amount", 1000) if isinstance(parent, dict) else 1000
-        return Hit(path, "fluid_nested", "fluid", amt, node, node["fluid"])
+    """Si el dict `node` es un ingrediente de agua devuelve un Hit, si no None (formatos de Forge 1.20.1)."""
     t = node.get("type")
     # items
-    if t is None or t == "neoforge:components":
-        if t is None and node.get("item") in wr["item_ids"]:
-            form = wr["item_ids"][node["item"]]
-            return Hit(path, "item", form, wr["default_amounts"][form], node, node["item"])
-        if t is None and isinstance(node.get("tag"), str):
-            info = wr["tags"].get(_strip(node["tag"]))
-            if info and info["kind"] == "item":
-                return Hit(path, "item", info["form"], wr["default_amounts"][info["form"]], node, "#" + _strip(node["tag"]))
-            if info and info["kind"] == "fluid":
-                return Hit(path, "fluid_flat", info["form"], node.get("amount", 1000), node, "#" + _strip(node["tag"]))
-        if t == "neoforge:components" and isinstance(node.get("items"), str):
-            if node["items"] in wr["potion_items"] and _potion_of(node) in wr["water_potions"]:
-                return Hit(path, "item", "bottle", wr["default_amounts"]["bottle"], node, node["items"])
-            if node["items"] in wr["item_ids"]:
-                form = wr["item_ids"][node["items"]]
-                return Hit(path, "item", form, wr["default_amounts"][form], node, node["items"])
-    # fluidos planos (SizedFluidIngredient.FLAT_CODEC, fluid_stack de Create)
-    if t in (None, "fluid_stack") and node.get("fluid") in wr["fluid_ids"]:
-        return Hit(path, "fluid_flat", "fluid", node.get("amount", 1000), node, node["fluid"])
-    if t == "fluid_tag" or "fluid_tag" in node:
-        tag = _strip(str(node.get("fluid_tag", "")))
-        if tag in wr["tags"]:
-            return Hit(path, "fluid_flat", "tag", node.get("amount", 1000), node, "#" + tag)
+    if t in ITEM_TYPES and isinstance(node.get("item"), str):
+        item = node["item"]
+        if item in wr["potion_items"] and _potion_of(node) in wr["water_potions"]:
+            return Hit(path, "item", "bottle", wr["default_amounts"]["bottle"], node, item)
+        if t is None and item in wr["item_ids"]:
+            form = wr["item_ids"][item]
+            return Hit(path, "item", form, wr["default_amounts"][form], node, item)
+    if t is None and isinstance(node.get("tag"), str):
+        info = wr["tags"].get(_strip(node["tag"]))
+        if info and info["kind"] == "item":
+            return Hit(path, "item", info["form"], wr["default_amounts"][info["form"]], node, "#" + _strip(node["tag"]))
+    # fluidos: {"fluid", "amount"} (Create y otros) o {"fluidTag"}
+    if t is None and node.get("fluid") in wr["fluid_ids"] and "item" not in node:
+        return Hit(path, "fluid_flat", "fluid", node.get("amount", node.get("count", 1000)), node, node["fluid"])
+    if t is None and isinstance(node.get("fluidTag"), str) and _strip(node["fluidTag"]) in wr["tags"]:
+        return Hit(path, "fluid_flat", "tag", node.get("amount", 1000), node, "#" + _strip(node["fluidTag"]))
     return None
 
 
@@ -261,47 +251,29 @@ def heat_for(recipe_id, rtype, result_id, hr):
 # ---------------------------------------------------------------- ingredientes de agua limpia
 
 def purity_levels_below(min_purity):
-    """Purezas a restar: todas las menores que el minimo (el agua sin componente cuenta como DEFAULT_PURITY)."""
+    """Purezas a restar: todas las menores que el minimo (el agua sin pureza cuenta como DEFAULT_PURITY)."""
     return list(range(0, min_purity))
 
 
-def _comp_item(items, purity, extra):
-    comps = {PURITY: purity}
-    comps.update(extra or {})
-    return {"type": "neoforge:components", "items": items, "components": comps}
-
-
-def _comp_fluid(fluids, purity):
-    return {"type": "neoforge:components", "fluids": fluids, "components": {PURITY: purity}}
-
-
-def _compound(children):
-    return {"type": "neoforge:compound", "children": children}
-
-
-def clean_replacement(hit, min_purity):
-    """JSON que sustituye al nodo de agua: acepta el agua del nodo original con pureza >= min_purity."""
-    levels = purity_levels_below(min_purity)
-    node = hit.node
-    if hit.kind == "item":
-        extra = None
-        if node.get("type") == "neoforge:components":
-            extra = {k: v for k, v in node["components"].items() if k != PURITY}
-        subs = [_comp_item(hit.ref, p, extra) for p in levels]
-        return {"type": "neoforge:difference", "base": node, "subtracted": _compound(subs)}
-    fluids = [hit.ref] if not hit.ref.startswith("#") else hit.ref
+def subtract_items(hit, wr):
+    """Items que llevan la pureza para un nodo de agua: el propio item, o los que lista water.json para un tag."""
     if hit.ref.startswith("#"):
-        base = {"tag": hit.ref[1:]}
-    else:
-        base = {"fluid": hit.ref}
-    subs = [_comp_fluid(fluids, p) for p in levels]
-    out = {"type": "neoforge:difference", "base": base, "subtracted": _compound(subs)}
-    if hit.kind == "fluid_flat":
-        out["amount"] = hit.amount
-    return out
+        return list(wr["tags"][hit.ref[1:]]["items"])
+    return [hit.ref]
 
 
-def apply_hits(recipe, hits, min_purity):
+def clean_replacement(hit, min_purity, wr):
+    """JSON que sustituye al nodo de agua: acepta el agua del nodo original sin pureza o con pureza >= min_purity.
+    forge:difference del nodo original menos un forge:partial_nbt por pureza baja; solo items (los ingredientes de
+    fluido de 1.20.1 no tienen resta)."""
+    if hit.kind != "item":
+        return None
+    items = subtract_items(hit, wr)
+    subs = [{"type": "forge:partial_nbt", "items": items, "nbt": {PURITY: p}} for p in purity_levels_below(min_purity)]
+    return {"type": "forge:difference", "base": hit.node, "subtracted": subs}
+
+
+def apply_hits(recipe, hits, min_purity, wr):
     """Copia de la receta con cada nodo de agua sustituido. Devuelve (receta, error|None)."""
     import copy
     new = copy.deepcopy(recipe)
@@ -310,7 +282,9 @@ def apply_hits(recipe, hits, min_purity):
             extra = set(h.node) - {"fluid", "amount", "type", "tag", "fluid_tag"}
             if extra:
                 return None, "el nodo de fluido lleva claves que no se conservan: %s" % sorted(extra)
-        repl = clean_replacement(h, min_purity)
+        repl = clean_replacement(h, min_purity, wr)
+        if repl is None:
+            return None, "agua como fluido: los ingredientes de fluido de 1.20.1 no aceptan la resta de purezas"
         cur = new
         for p in h.path[:-1]:
             cur = cur[p]
@@ -323,41 +297,37 @@ def apply_hits(recipe, hits, min_purity):
 
 # ---------------------------------------------------------------- verificacion (modelo de aceptacion)
 
-def _holder_match(spec, ident, tags):
-    """`items`/`fluids` de un ingrediente: id, '#tag' o lista de ids."""
-    if isinstance(spec, list):
-        return any(_holder_match(s, ident, tags) for s in spec)
-    if spec.startswith("#"):
-        return spec[1:] in tags
-    return spec == ident
-
-
 def accepts(ing, stack):
-    """Evalua un ingrediente generado contra un ejemplar: stack = {'id', 'tags': set, 'components': dict}."""
+    """Evalua un ingrediente generado contra un ejemplar: stack = {'id', 'tags': set, 'nbt': dict}."""
     if isinstance(ing, list):
         return any(accepts(i, stack) for i in ing)
     t = ing.get("type")
-    if t == "neoforge:difference":
+    if t == "forge:difference":
         return accepts(ing["base"], stack) and not accepts(ing["subtracted"], stack)
-    if t == "neoforge:compound":
+    if t == "forge:compound":
         return any(accepts(c, stack) for c in ing["children"])
-    if t == "neoforge:components":
-        spec = ing.get("items", ing.get("fluids"))
-        if not _holder_match(spec, stack["id"], stack["tags"]):
+    if t in ("forge:partial_nbt", "forge:nbt"):
+        items = ing.get("items") or [ing["item"]]
+        if stack["id"] not in items:
             return False
-        return all(stack["components"].get(k) == v for k, v in ing["components"].items())
-    if "item" in ing or "fluid" in ing:
-        return (ing.get("item") or ing.get("fluid")) == stack["id"]
+        want = ing.get("nbt", {})
+        if isinstance(want, str):
+            want = {"Potion": _potion_of(ing)} if _potion_of(ing) else {}
+        if t == "forge:nbt":
+            return stack["nbt"] == want
+        return all(stack["nbt"].get(k) == v for k, v in want.items())
+    if "item" in ing:
+        return ing["item"] == stack["id"]
     if "tag" in ing:
         return _strip(ing["tag"]) in stack["tags"]
     raise ValueError("ingrediente que el verificador no conoce: %r" % ing)
 
 
 def find_differences(node, out=None):
-    """Todos los nodos neoforge:difference de una receta generada."""
+    """Todos los nodos forge:difference de una receta generada."""
     out = [] if out is None else out
     if isinstance(node, dict):
-        if node.get("type") == "neoforge:difference":
+        if node.get("type") == "forge:difference":
             out.append(node)
         for v in node.values():
             find_differences(v, out)
@@ -368,29 +338,17 @@ def find_differences(node, out=None):
 
 
 def _samples_for(diff, wr):
-    """Ejemplares de agua que el ingrediente debe distinguir: sin pureza y purezas 0..MAX_PURITY."""
+    """Ejemplar de agua que el ingrediente debe distinguir: id, tags y el NBT que no es pureza."""
     base = diff["base"]
-    subs = diff["subtracted"]["children"]
-    first = subs[0] if subs else None
-    if base.get("type") == "neoforge:components":
-        ident = base["items"] if isinstance(base["items"], str) else base["items"][0]
-        tags = set()
-        extra = {k: v for k, v in base["components"].items() if k != PURITY}
-    elif "item" in base:
-        ident, tags, extra = base["item"], set(), {}
-    elif "fluid" in base:
-        ident, tags, extra = base["fluid"], set(), {}
-    else:
+    extra = {}
+    if "tag" in base:
         tag = _strip(base["tag"])
-        ident, tags, extra = "x:water_stand_in", {tag}, {}
-    if first is not None:
-        spec = first.get("items", first.get("fluids"))
-        if isinstance(spec, str) and spec.startswith("#"):
-            tags = tags | {spec[1:]}
-        elif isinstance(spec, str):
-            ident = spec
-        elif isinstance(spec, list) and spec:
-            ident = spec[0]
+        ident, tags = wr["tags"][tag]["items"][0], {tag}
+    else:
+        ident, tags = base["item"], set()
+        pot = _potion_of(base)
+        if pot:
+            extra = {"Potion": pot}
     return ident, tags, extra
 
 
@@ -400,10 +358,10 @@ def verify_diff(diff, expected_min, wr):
     errs = []
     ident, tags, extra = _samples_for(diff, wr)
     for purity in [None] + list(range(0, MAX_PURITY + 1)):
-        comps = dict(extra)
+        nbt = dict(extra)
         if purity is not None:
-            comps[PURITY] = purity
-        stack = {"id": ident, "tags": set(tags), "components": comps}
+            nbt[PURITY] = purity
+        stack = {"id": ident, "tags": set(tags), "nbt": nbt}
         got = accepts(diff, stack)
         want = True if purity is None else purity >= expected_min
         if got != want:

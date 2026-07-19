@@ -60,11 +60,11 @@ def collect(cfg, mods, rules, source):
             print("aviso: no existe %s (las recetas de vanilla no cuentan)" % j, file=sys.stderr)
     for it in sources:
         for name, loader in it:
-            m = re.match(r"^data/([^/]+)/recipe/(.+)\.json$", name)
+            m = re.match(r"^data/([^/]+)/recipes/(.+)\.json$", name)
             if m:
                 recipes["%s:%s" % (m.group(1), m.group(2))] = loader()
                 continue
-            m = re.match(r"^data/([^/]+)/tags/item/(.+)\.json$", name)
+            m = re.match(r"^data/([^/]+)/tags/items/(.+)\.json$", name)
             if m:
                 tags.setdefault("%s:%s" % (m.group(1), m.group(2)), []).extend(loader().get("values", []))
     return recipes, tags
@@ -94,9 +94,9 @@ def _leaf_options(n):
     if not isinstance(n, dict):
         return None
     t = n.get("type")
-    if t == "neoforge:difference":
+    if t == "forge:difference":
         return _leaf_options(n.get("base"))
-    if t == "neoforge:compound":
+    if t == "forge:compound":
         opts = set()
         for ch in n.get("children", []):
             o = _leaf_options(ch)

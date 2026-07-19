@@ -2,11 +2,13 @@
 
 Scripts en Python 3 estándar. Se corren desde cualquier carpeta; los CSV de `data/` son los que se editan, los scripts los vuelven a aplicar cuantas veces haga falta.
 
+Esta es la versión de la rama 1.20.1 (Forge 47): lee las recetas de `data/<ns>/recipes/` de los jars de Forge 1.20.1 y escribe los formatos de 1.20.1 (`conditions`, `forge:difference`, `forge:partial_nbt`, `forge:conditions` en `drinks.json`, carpetas `recipes/` y `tags/items/`).
+
 ## Flujo
 
-- `python3 scripts/delight/extract_recipes.py` lee las recetas de los jars fijados en `mods.json` (se bajan de Modrinth a `~/.cache/blue-droplets-delight`, fuera del repo) y escribe `data/recipes.csv` con las que usan agua. Con `--source repo` lee los repos clonados en su lugar.
+- `python3 scripts/delight/extract_recipes.py` lee las recetas de los jars fijados en `mods.json` (se bajan de Modrinth, versiones Forge 1.20.1, a `~/.cache/blue-droplets-delight`, fuera del repo) y escribe `data/recipes.csv` con las que usan agua. Con `--source repo` lee los repos clonados en su lugar (la rama de 1.20.1 de cada mod).
 - `python3 scripts/delight/classify.py` pone una categoría a cada ítem de `data/items_raw.csv` con las reglas ordenadas de `rules/categories.toml` (primera que coincide gana: tags, efectos, palabras del id) y escribe `data/categories.csv` (`item_id,category,reason`, con la regla que decidió). `data/categories_manual.csv` (`item_id,category`) gana siempre. `--sample N` muestra ejemplos por categoría y `--show CAT` lista una categoría entera.
-- `python3 scripts/delight/prepare_items.py` toma `data/items_raw.csv` (lo genera el comando de desarrollo del mod) y escribe `data/items.csv` con comida y bebidas, sus pasos de crafteo y los valores iniciales de `rules/items.json`.
+- `python3 scripts/delight/prepare_items.py` toma `data/items_raw.csv` (lo genera el comando de desarrollo del mod `/blue_droplets dev dump_items *` con los mods de `-PwithDelight -PwithCompat`) y escribe `data/items.csv` con comida y bebidas, sus pasos de crafteo y los valores iniciales de `rules/items.json`.
 - `python3 scripts/delight/apply.py` genera el datapack `clean_water_cooking`, las entradas de `drinks.json` y los tags `salty` y `no_thirst`. Con `--check` solo compara y sale con 1 si algo difiere.
 - `python3 scripts/delight/report.py` escribe `data/REPORT.md`, `data/REPORT_recipes.csv` y `data/REPORT_items.csv` para revisar.
 
@@ -22,7 +24,8 @@ Scripts en Python 3 estándar. Se corren desde cualquier carpeta; los CSV de `da
 
 ## Reglas de apply.py
 
-- Cada fila activa produce la receta original con el agua cambiada por `neoforge:difference` (agua del original menos las purezas por debajo del mínimo). Con la pureza apagada el agua no guarda componente y se acepta igual. Cada receta lleva `neoforge:mod_loaded` de su mod además de sus condiciones.
+- Cada fila activa produce la receta original con el agua cambiada por `forge:difference` (el ingrediente de agua del original menos un `forge:partial_nbt` por cada pureza por debajo del mínimo, sobre los ítems que `rules/water.json` da para ese ítem o tag). Con la pureza apagada el agua no guarda NBT y se acepta igual. Cada receta lleva `forge:mod_loaded` de su mod además de sus condiciones.
+- Solo se sobrescriben ingredientes de ítem: los ingredientes de fluido de 1.20.1 no tienen resta, así que una receta con agua como fluido queda con `enabled=0`. Es el caso del keg de Brewin' and Chewin' 1.20.1, que compara el agua con un `FluidStack` sin NBT y la crea sin NBT al verter: la regla del agua limpia no se puede exigir con datos.
 - Un tipo de receta fuera de `supported_types` no se escribe y se avisa. Antes de escribir, y en `--check` sobre lo que hay en disco, se verifica que cada ingrediente acepte agua sin componente y purezas mayores o iguales al mínimo, y rechace las menores.
 - Si la receta cambió en el mod desde la última extracción, `apply.py` lo avisa y no la escribe hasta volver a correr `extract_recipes.py`.
 - `drinks.json` solo se toca en las claves que están en `items.csv`; el resto queda igual. Las filas con thirst y quenched en 0 no llevan entrada.
@@ -31,8 +34,8 @@ Scripts en Python 3 estándar. Se corren desde cualquier carpeta; los CSV de `da
 
 ## Cobertura y fuentes de verdad
 
-- `items_raw.csv` puede traer cualquier namespace (`minecraft`, `blue_droplets`, mods con compat, la tanda Delight). `apply.py` escribe todas las entradas de `drinks.json` desde `items.csv`: sin condición para `minecraft` y `blue_droplets`, con `neoforge:mod_loaded` para el resto.
-- En `drinks.json` solo se tocan las claves que están en `items.csv`; los tags (`#c:drinks/juice`), los mods no volcados y los campos que el CSV no maneja (por ejemplo `purity`) se conservan.
+- `items_raw.csv` puede traer cualquier namespace (`minecraft`, `blue_droplets`, mods con compat, la tanda Delight). `apply.py` escribe todas las entradas de `drinks.json` desde `items.csv`: sin condición para `minecraft` y `blue_droplets`, con `forge:mod_loaded` para el resto.
+- En `drinks.json` solo se tocan las claves que están en `items.csv`; los tags (`#forge:drinks/juice`), los mods no volcados y los campos que el CSV no maneja (por ejemplo `purity`) se conservan.
 - Es la única fuente de valores de bebida y comida del repo (`hydrating_blocks.json` es de bloques y va aparte). Todo sale como datos de datapack, así que un modpack lo cambia con su propio `drinks.json`, los tags `salty` y `no_thirst` o recetas con el mismo id, sin tocar el jar.
 - Filas congeladas: `manual_ids` en `rules/items.json` (la botella y el cubo de agua, el cuenco, la cantimplora) se toman de `drinks.json` y llevan `auto = manual`. Para congelar otra fila escribe `manual` en su columna `auto`. Una fila cuyos valores ya no coinciden con `auto` (la editaste) tampoco se pisa.
 - `data/categories.csv` lo escribe `classify.py`. Con una categoría conocida (`categories` en `rules/items.json`) los valores salen de la categoría; si no, de las palabras. Una categoría nueva sin regla sale como aviso.
@@ -46,4 +49,10 @@ Scripts en Python 3 estándar. Se corren desde cualquier carpeta; los CSV de `da
 
 ## Archivos fijos
 
-Lo que haya en `static/clean_water_cooking/` se copia tal cual al pack `clean_water_cooking` cada vez que corre `apply.py` (por ejemplo, los arreglos de recetas rotas de otros mods, como el zumo de melón de Expanded Delight). Todo lo demás del pack que no genere el script se borra.
+Lo que haya en `static/clean_water_cooking/` se copia tal cual al pack `clean_water_cooking` cada vez que corre `apply.py` (por ejemplo, arreglos de recetas rotas de otros mods; en 1.20.1 no hace falta ninguno y la carpeta no existe). Todo lo demás del pack que no genere el script se borra.
+
+## Rama 1.20.1
+
+- Mods: Farmer's Delight, Brewin' and Chewin', Ocean's Delight, Ender's Delight, Farm & Charm, HerbalBrews y Miner's Delight (mod id `miners_delight` en 1.20.1), en sus versiones Forge 1.20.1 de `mods.json`. Extra Delight no tiene versión para 1.20.1. La segunda tanda de 1.21.1 (Fruits, Cultural, Expanded, Corn, Rustic, Crabber's, End's, My Nether's Delight) no está en esta rama. Brewery (Farm & Charm compat) no trae recetas con agua: su agua es de código.
+- `classify.py` cuenta cada tag `forge:*` también como `c:*`, así las reglas de `categories.toml` sirven igual.
+- Los ítems que existen en las dos versiones conservan las categorías y los valores de 1.21.1 (`data/categories_manual.csv` y las filas editadas de `data/items.csv`), porque las recetas de 1.20.1 dan otros pasos de crafteo.

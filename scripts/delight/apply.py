@@ -6,7 +6,10 @@
   data/blue_droplets/data_maps/item/drinks.json   entradas de data/items.csv de TODOS los mods, vanilla y
                     blue_droplets incluidos (sin condicion los dos ultimos, con mod_loaded el resto). Las claves
                     que no estan en el CSV (tags, mods no volcados) se dejan como estan
-  data/blue_droplets/tags/item/salty.json y no_thirst.json   desde data/items.csv
+  data/blue_droplets/tags/items/salty.json y no_thirst.json   desde data/items.csv
+
+Formatos de Minecraft 1.20.1 (Forge 47): "conditions" en recetas, "forge:conditions" en drinks.json, forge:difference y
+forge:partial_nbt en los ingredientes, carpetas recipes/ y tags/items/.
 
   --check          no escribe: compara y sale con 1 si algo difiere
   --source jar|repo  de donde salen las recetas originales (por defecto jar en cache)
@@ -17,21 +20,20 @@ import os
 import sys
 
 import common as c
-import generate_keg_pouring as keg
 
 PACK_CLEAN = os.path.join(c.PACKS, "clean_water_cooking")
 MAIN_DATA = os.path.join(c.REPO, "src", "main", "resources", "data", "blue_droplets")
 DRINKS = os.path.join(MAIN_DATA, "data_maps", "item", "drinks.json")
-TAG_SALTY = os.path.join(MAIN_DATA, "tags", "item", "salty.json")
-TAG_NO_THIRST = os.path.join(MAIN_DATA, "tags", "item", "no_thirst.json")
+TAG_SALTY = os.path.join(MAIN_DATA, "tags", "items", "salty.json")
+TAG_NO_THIRST = os.path.join(MAIN_DATA, "tags", "items", "no_thirst.json")
 
 
 def mcmeta(desc):
-    return c.dump_json({"pack": {"description": desc, "pack_format": 48}})
+    return c.dump_json({"pack": {"description": desc, "pack_format": 15}})
 
 
 def mod_loaded(mod):
-    return {"type": "neoforge:mod_loaded", "modid": mod}
+    return {"type": "forge:mod_loaded", "modid": mod}
 
 
 # ------------------------------------------------------------------ clean_water_cooking
@@ -76,7 +78,7 @@ def build_clean(source, problems, info):
         if not hits:
             problems.append("%s: no se encontro agua en la receta" % tag)
             continue
-        new, err = c.apply_hits(orig, hits, mp)
+        new, err = c.apply_hits(orig, hits, mp, wr)
         if err:
             info.append("%s: %s, no se escribe" % (tag, err))
             continue
@@ -86,18 +88,16 @@ def build_clean(source, problems, info):
         if errs:
             problems.append("%s: verificacion fallida: %s" % (tag, "; ".join(errs)))
             continue
-        conds = [x for x in orig.get("neoforge:conditions", [])]
+        conds = [x for x in orig.get("conditions", [])]
         if mod_loaded(mod) not in conds:
             conds.append(mod_loaded(mod))
-        out = {"neoforge:conditions": conds}
+        out = {"conditions": conds}
         for k, v in new.items():
-            if k in ("neoforge:conditions", "fabric:load_conditions"):
+            if k in ("conditions", "fabric:load_conditions"):
                 continue
             out[k] = v
         ns, path = rid.split(":", 1)
-        files["data/%s/recipe/%s.json" % (ns, path)] = c.dump_json(out)
-    # Keg de Brewin' and Chewin': recetas de vertido estrictas por pureza (generate_keg_pouring.py)
-    files.update(keg.build_keg_pouring(False, problems, info))
+        files["data/%s/recipes/%s.json" % (ns, path)] = c.dump_json(out)
     # Archivos fijos escritos a mano (por ejemplo, arreglos de recetas rotas de otros mods): static/clean_water_cooking
     static = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "clean_water_cooking")
     for dp, _, fns in os.walk(static):
@@ -140,10 +140,10 @@ def build_drinks(rows, problems):
             continue
         entry = {}
         if r["mod"] not in ("minecraft", "blue_droplets"):
-            entry["neoforge:conditions"] = [mod_loaded(r["mod"])]
+            entry["forge:conditions"] = [mod_loaded(r["mod"])]
         entry["thirst"], entry["quenched"] = th, qu
         for k, v in cur.get(r["item_id"], {}).items():  # campos que el CSV no maneja (por ejemplo purity)
-            if k not in ("thirst", "quenched", "neoforge:conditions"):
+            if k not in ("thirst", "quenched", "forge:conditions", "neoforge:conditions"):
                 entry[k] = v
         gen.append((r["item_id"], entry))
     for k, v in gen:
@@ -213,9 +213,9 @@ def verify_disk(root, rows, wr, problems):
     want = {(r["recipe_id"]): int(r["min_purity"]) for r in rows
             if c.yes(r["enabled"]) and r["min_purity"] in ("1", "2", "3")}
     for rel, p in walk_files(root).items():
-        if not rel.startswith("data/") or "/recipe/" not in rel:
+        if not rel.startswith("data/") or "/recipes/" not in rel:
             continue
-        ns, path = rel[5:].split("/recipe/", 1)
+        ns, path = rel[5:].split("/recipes/", 1)
         rid = "%s:%s" % (ns, path[:-5])
         mp = want.get(rid)
         if mp is None:

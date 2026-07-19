@@ -2,8 +2,8 @@
   "_comment": "Formula inicial de thirst/quenched (puntos: 2 puntos = 1 gotita; el agua de 250 mB = 4). Es un punto de partida: Javier la ajusta aqui y vuelve a correr prepare_items.py. Las palabras se comparan con las palabras completas de la ruta del id (separadas por no-letras) y las tags con las tags del item.",
   "exclude_mods": [],
   "recipe_extra_jars": [
-    "build/moddev/artifacts/neoforge-21.1.252-client-extra-aka-minecraft-resources.jar",
-    "build/moddev/artifacts/neoforge-21.1.252.jar"
+    "build/moddev/artifacts/client-extra-1.20.1-47.1.3.jar",
+    "build/moddev/artifacts/forge-1.20.1-47.1.3.jar"
   ],
   "water": {
     "thirst": 4,
