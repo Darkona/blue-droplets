@@ -1,7 +1,7 @@
 {
-  "neoforge:conditions": [
+  "conditions": [
     {
-      "type": "neoforge:mod_loaded",
+      "type": "forge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
@@ -12,42 +12,45 @@
       "item": "minecraft:wooden_shovel"
     },
     "W": {
-      "type": "neoforge:difference",
+      "type": "forge:difference",
       "base": {
-        "tag": "c:buckets/water"
+        "tag": "forge:buckets/water"
       },
-      "subtracted": {
-        "type": "neoforge:compound",
-        "children": [
-          {
-            "type": "neoforge:components",
-            "items": "#c:buckets/water",
-            "components": {
-              "blue_droplets:purity": 0
-            }
-          },
-          {
-            "type": "neoforge:components",
-            "items": "#c:buckets/water",
-            "components": {
-              "blue_droplets:purity": 1
-            }
-          },
-          {
-            "type": "neoforge:components",
-            "items": "#c:buckets/water",
-            "components": {
-              "blue_droplets:purity": 2
-            }
+      "subtracted": [
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 0
           }
-        ]
-      }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 1
+          }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 2
+          }
+        }
+      ]
     },
     "b": {
       "item": "minecraft:brick"
     },
     "i": {
-      "tag": "c:ingots/iron"
+      "tag": "forge:ingots/iron"
     }
   },
   "pattern": [
@@ -56,7 +59,7 @@
     "iii"
   ],
   "result": {
-    "count": 1,
-    "id": "farmersdelight:cooking_pot"
-  }
+    "item": "farmersdelight:cooking_pot"
+  },
+  "show_notification": true
 }

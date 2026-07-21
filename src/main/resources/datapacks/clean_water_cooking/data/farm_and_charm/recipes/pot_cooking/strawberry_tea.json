@@ -1,36 +1,39 @@
 {
-  "neoforge:conditions": [
+  "conditions": [
     {
-      "type": "neoforge:mod_loaded",
+      "type": "forge:mod_loaded",
       "modid": "farm_and_charm"
     }
   ],
   "type": "farm_and_charm:pot_cooking",
   "ingredients": [
     {
-      "type": "neoforge:difference",
+      "type": "forge:difference",
       "base": {
         "tag": "farm_and_charm:water_bottles"
       },
-      "subtracted": {
-        "type": "neoforge:compound",
-        "children": [
-          {
-            "type": "neoforge:components",
-            "items": "#farm_and_charm:water_bottles",
-            "components": {
-              "blue_droplets:purity": 0
-            }
-          },
-          {
-            "type": "neoforge:components",
-            "items": "#farm_and_charm:water_bottles",
-            "components": {
-              "blue_droplets:purity": 1
-            }
+      "subtracted": [
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket",
+            "minecraft:potion"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 0
           }
-        ]
-      }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket",
+            "minecraft:potion"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 1
+          }
+        }
+      ]
     },
     {
       "tag": "farm_and_charm:strawberry"
@@ -39,13 +42,14 @@
       "tag": "farm_and_charm:strawberry"
     }
   ],
-  "requireContainer": true,
   "container": {
-    "id": "minecraft:glass_bottle",
-    "count": 1
+    "required": true,
+    "item": {
+      "item": "minecraft:glass_bottle"
+    }
   },
   "result": {
-    "id": "farm_and_charm:strawberry_tea",
+    "item": "farm_and_charm:strawberry_tea",
     "count": 1
   },
   "requiresLearning": false

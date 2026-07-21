@@ -1,7 +1,7 @@
 {
-  "neoforge:conditions": [
+  "conditions": [
     {
-      "type": "neoforge:mod_loaded",
+      "type": "forge:mod_loaded",
       "modid": "farm_and_charm"
     }
   ],
@@ -16,43 +16,49 @@
       "tag": "minecraft:planks"
     },
     "B": {
-      "type": "neoforge:difference",
+      "type": "forge:difference",
       "base": {
         "tag": "farm_and_charm:water_bottles"
       },
-      "subtracted": {
-        "type": "neoforge:compound",
-        "children": [
-          {
-            "type": "neoforge:components",
-            "items": "#farm_and_charm:water_bottles",
-            "components": {
-              "blue_droplets:purity": 0
-            }
-          },
-          {
-            "type": "neoforge:components",
-            "items": "#farm_and_charm:water_bottles",
-            "components": {
-              "blue_droplets:purity": 1
-            }
-          },
-          {
-            "type": "neoforge:components",
-            "items": "#farm_and_charm:water_bottles",
-            "components": {
-              "blue_droplets:purity": 2
-            }
+      "subtracted": [
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket",
+            "minecraft:potion"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 0
           }
-        ]
-      }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket",
+            "minecraft:potion"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 1
+          }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket",
+            "minecraft:potion"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 2
+          }
+        }
+      ]
     },
     "I": {
       "item": "minecraft:iron_ingot"
     }
   },
   "result": {
-    "id": "farm_and_charm:water_sprinkler",
+    "item": "farm_and_charm:water_sprinkler",
     "count": 1
   }
 }

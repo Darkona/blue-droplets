@@ -1,7 +1,7 @@
 {
-  "neoforge:conditions": [
+  "conditions": [
     {
-      "type": "neoforge:mod_loaded",
+      "type": "forge:mod_loaded",
       "modid": "farm_and_charm"
     }
   ],
@@ -11,41 +11,45 @@
       "item": "minecraft:sugar"
     },
     {
-      "type": "neoforge:difference",
+      "type": "forge:difference",
       "base": {
         "tag": "farm_and_charm:water_bottles"
       },
-      "subtracted": {
-        "type": "neoforge:compound",
-        "children": [
-          {
-            "type": "neoforge:components",
-            "items": "#farm_and_charm:water_bottles",
-            "components": {
-              "blue_droplets:purity": 0
-            }
-          },
-          {
-            "type": "neoforge:components",
-            "items": "#farm_and_charm:water_bottles",
-            "components": {
-              "blue_droplets:purity": 1
-            }
+      "subtracted": [
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket",
+            "minecraft:potion"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 0
           }
-        ]
-      }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket",
+            "minecraft:potion"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 1
+          }
+        }
+      ]
     },
     {
       "item": "minecraft:wheat"
     }
   ],
-  "requireContainer": true,
   "container": {
-    "id": "minecraft:bowl",
-    "count": 1
+    "required": true,
+    "item": {
+      "item": "minecraft:bowl"
+    }
   },
   "result": {
-    "id": "farm_and_charm:yeast",
+    "item": "farm_and_charm:yeast",
     "count": 12
   },
   "requiresLearning": false
