@@ -21,3 +21,6 @@ The following entities have not registered to the RegisterSpawnPlacementsEvent
 # Dev environment: no Mojang account, so no chat signing keys or profile lookups.
 Failed to fetch user properties
 Failed to retrieve profile key pair
+
+# -PwithCompat on 1.20.1: Traveler's Backpack logs this while it creates its config on the first start of a fresh run folder.
+^java\.nio\.file\.NoSuchFileException: .*/config/travelersbackpack-common\.toml$
