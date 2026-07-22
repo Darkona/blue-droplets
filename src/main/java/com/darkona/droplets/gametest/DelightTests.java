@@ -16,12 +16,15 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.satisfy.herbalbrews.core.blocks.entity.TeaKettleBlockEntity;
 
@@ -116,5 +119,33 @@ public class DelightTests
         helper.assertFalse(Events.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, helper.absolutePos(pos), hit(helper, pos))).isCanceled(),
                 "brewing station refuses water without a purity");
         helper.succeed();
+    }
+
+    /**
+     * The clean_water_cooking pack: hot recipes of Farm & Charm take water of purity 2 or better, cold ones and
+     * Farmer's Delight's cooking pot purity 3 or better; water without a purity counts as acceptable.
+     */
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void cookingRecipesNeedCleanWater(GameTestHelper helper)
+    {
+        waterRule(helper, "farm_and_charm:pot_cooking/nettle_tea", PurityLevel.MURKY.level());
+        waterRule(helper, "farm_and_charm:crafting_bowl/dough", PurityLevel.ACCEPTABLE.level());
+        if (ModList.get().isLoaded("farmersdelight"))
+            waterRule(helper, "farmersdelight:cooking_pot", PurityLevel.ACCEPTABLE.level());
+        helper.succeed();
+    }
+
+    /**
+     * The water ingredient of {@code id} (the one that takes a water bucket) accepts buckets without a purity and of
+     * {@code min} or better, and refuses dirtier ones.
+     */
+    private static void waterRule(GameTestHelper helper, String id, int min)
+    {
+        Recipe<?> recipe = helper.getLevel().getRecipeManager().byKey(new ResourceLocation(id)).orElse(null);
+        helper.assertTrue(recipe != null, "no recipe " + id);
+        Ingredient water = recipe.getIngredients().stream().filter(ingredient -> ingredient.test(new ItemStack(Items.WATER_BUCKET))).findFirst().orElse(null);
+        helper.assertTrue(water != null, id + " takes no water bucket");
+        for (int purity = WaterPurity.MIN_PURITY; purity <= WaterPurity.MAX_PURITY; purity++)
+            assertValueEqual(helper, water.test(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), purity)), purity >= min, id + " takes water of purity " + purity);
     }
 }

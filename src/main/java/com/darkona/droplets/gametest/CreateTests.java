@@ -79,6 +79,21 @@ public class CreateTests
     @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
     public static void openPipePouredWaterKeepsItsPurity(GameTestHelper helper)
     {
+        // The game test world of 1.20.1 can put the test in an ocean, whose water is always contaminated.
+        int salt = PurityConfig.SALT_WATER_PURITY.get();
+        try
+        {
+            TestSupport.set(PurityConfig.SALT_WATER_PURITY, -1);
+            openPipePouredWater(helper);
+        }
+        finally
+        {
+            TestSupport.set(PurityConfig.SALT_WATER_PURITY, salt);
+        }
+    }
+
+    private static void openPipePouredWater(GameTestHelper helper)
+    {
         BlockPos water = helper.absolutePos(new BlockPos(2, 1, 2));
         int contaminated = PurityLevel.CONTAMINATED.level();
         helper.assertTrue(WaterPurity.getWaterPurity(helper.getLevel(), helper.getLevel().getBiome(water), water, true, null) > contaminated, "world water at the test position is already contaminated");
