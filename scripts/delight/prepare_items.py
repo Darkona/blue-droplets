@@ -24,11 +24,19 @@ INF = 10 ** 6
 
 # ------------------------------------------------------------------ datos del juego (recetas y tags)
 
+def _load(z, name):
+    """JSON de un jar; un archivo vacio o roto (Cultural Delights pisa recetas de vanilla con archivos vacios) es {}."""
+    try:
+        return __import__("json").loads(z.read(name).decode("utf-8"))
+    except ValueError:
+        return {}
+
+
 def _zip_iter(path):
     with zipfile.ZipFile(path) as z:
         for name in sorted(z.namelist()):
             if name.endswith(".json") and name.startswith("data/"):
-                yield name, lambda n=name, zz=z: __import__("json").loads(zz.read(n).decode("utf-8"))
+                yield name, lambda n=name, zz=z: _load(zz, n)
 
 
 def _repo_iter(mod):

@@ -61,11 +61,117 @@ brewinandchewin:vodka,brewinandchewin,drink,3,-1,-1,si,no,alcohol,antes: 10/14,c
 brewinandchewin:withering_dross,brewinandchewin,drink,3,-1,-2,no,no,alcohol,valores de 1.21.1 (en 1.20.1 la receta da otros pasos de crafteo),cat:alcohol>alcohol_light steps3:+1 efecto:wither,0/-1/no/no
 cold_sweat:filled_waterskin,cold_sweat,drink,0,6,3,no,no,water,,manual (fijo por el codigo o por Javier),manual
 cold_sweat:soul_sprout,cold_sweat,food,0,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+corn_delight:boiled_corn,corn_delight,food,1,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+corn_delight:caramel_popcorn,corn_delight,food,2,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+corn_delight:classic_corn_dog,corn_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+corn_delight:corn,corn_delight,food,2,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+corn_delight:corn_dog,corn_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+corn_delight:corn_popsicle,corn_delight,food,2,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+corn_delight:corn_seeds,corn_delight,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+corn_delight:corn_soup,corn_delight,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
+corn_delight:cornbread,corn_delight,food,2,0,0,no,no,dry,,cat:dry,0/0/no/no
+corn_delight:cornbread_batter,corn_delight,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+corn_delight:cornbread_stuffing,corn_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+corn_delight:creamed_corn,corn_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+corn_delight:creamy_corn_drink,corn_delight,drink,1,2,3,no,no,drink_crafted,,cat:drink_crafted,2/3/no/no
+corn_delight:grilled_corn,corn_delight,food,3,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+corn_delight:nachos_bowl,corn_delight,food,0,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+corn_delight:popcorn,corn_delight,food,2,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+corn_delight:taco,corn_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+corn_delight:tortilla,corn_delight,food,2,0,0,no,no,dry,,cat:dry,0/0/no/no
+corn_delight:tortilla_chip,corn_delight,food,3,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+corn_delight:tortilla_raw,corn_delight,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+crabbersdelight:bisque,crabbersdelight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
+crabbersdelight:clam_bake,crabbersdelight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:clam_chowder,crabbersdelight,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
+crabbersdelight:clawster,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:coconut_halve,crabbersdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+crabbersdelight:coconut_milk,crabbersdelight,drink,1,3,3,no,no,drink_simple,,cat:drink_simple>milk,3/3/no/no
+crabbersdelight:coconut_pudding,crabbersdelight,food,1,1,1,no,no,sweet,,cat:sweet>moist_dessert,1/1/no/no
+crabbersdelight:cooked_clam_meat,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:cooked_clawster,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:cooked_crab,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:cooked_frog_leg,crabbersdelight,food,0,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+crabbersdelight:cooked_glow_squid_tentacles,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:cooked_pufferfish_slice,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:cooked_shrimp,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:cooked_squid_tentacles,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:cooked_tropical_fish,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:cooked_tropical_fish_slice,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:coral_crunch,crabbersdelight,food,4,0,0,no,no,meal,,cat:meal,0/0/no/no
+crabbersdelight:crab,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:crab_cakes,crabbersdelight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:crab_legs,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:fish_stick,crabbersdelight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:frog_leg_kebob,crabbersdelight,food,1,0,0,no,no,unclassified,,cat:unclassified,0/0/no/no
+crabbersdelight:jar_of_pickles,crabbersdelight,food,0,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+crabbersdelight:kelp_shake,crabbersdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>thick,2/2/no/no
+crabbersdelight:pufferfish_slice,crabbersdelight,food,0,-1,-1,si,no,rotten_or_poison,,cat:rotten_or_poison,-1/-1/si/no
+crabbersdelight:raw_clam_meat,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:raw_frog_leg,crabbersdelight,food,0,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+crabbersdelight:raw_glow_squid_tentacles,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:raw_squid_tentacles,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:sea_pickle_juice,crabbersdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>juice,3/4/no/no
+crabbersdelight:seafood_gumbo,crabbersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+crabbersdelight:shrimp,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood efecto:hunger:crudo,0/0/no/no
+crabbersdelight:shrimp_fried_rice,crabbersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+crabbersdelight:shrimp_skewer,crabbersdelight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:squid_kebob,crabbersdelight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+crabbersdelight:stuffed_nautilus_shell,crabbersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+crabbersdelight:surf_and_turf,crabbersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+crabbersdelight:tropical_fish_slice,crabbersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 create:bar_of_chocolate,create,food,0,0,0,no,no,sweet,,cat:sweet,0/0/no/no
 create:builders_tea,create,drink,0,3,4,no,no,drink_simple,antes: 12/22,cat:drink_simple>tea,3/4/no/no
 create:chocolate_glazed_berries,create,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
 create:honeyed_apple,create,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
 create:sweet_roll,create,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+culturaldelights:avocado,culturaldelights,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+culturaldelights:avocado_toast,culturaldelights,food,1,0,0,no,no,dry,,cat:dry,0/0/no/no
+culturaldelights:beef_burrito,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:calamari_roll,culturaldelights,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:chicken_roll,culturaldelights,food,3,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:chicken_roll_slice,culturaldelights,food,4,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:chicken_taco,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:cooked_calamari,culturaldelights,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:cooked_squid,culturaldelights,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+culturaldelights:corn_cob,culturaldelights,food,2,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+culturaldelights:corn_dough,culturaldelights,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+culturaldelights:creamed_corn,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:cucumber,culturaldelights,food,1,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+culturaldelights:cut_avocado,culturaldelights,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+culturaldelights:cut_cucumber,culturaldelights,food,2,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+culturaldelights:cut_eggplant,culturaldelights,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+culturaldelights:cut_pickle,culturaldelights,food,3,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:egg_roll,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:eggplant,culturaldelights,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+culturaldelights:eggplant_burger,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:eggplant_parmesan,culturaldelights,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:elote,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:empanada,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:fish_taco,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:glow_squid,culturaldelights,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+culturaldelights:hearty_salad,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:midori_roll,culturaldelights,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:midori_roll_slice,culturaldelights,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:mutton_sandwich,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:pickle,culturaldelights,food,2,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:poached_eggplants,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:popcorn,culturaldelights,food,2,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:pork_wrap,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:pufferfish_roll,culturaldelights,food,1,0,0,no,no,meal,,cat:meal efecto:hunger:crudo,0/0/no/no
+culturaldelights:raw_calamari,culturaldelights,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+culturaldelights:rice_ball,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:smoked_corn,culturaldelights,food,0,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:smoked_cut_eggplant,culturaldelights,food,0,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:smoked_eggplant,culturaldelights,food,0,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:smoked_tomato,culturaldelights,food,2,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:smoked_white_eggplant,culturaldelights,food,2,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:spicy_curry,culturaldelights,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
+culturaldelights:squid,culturaldelights,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+culturaldelights:tortilla,culturaldelights,food,2,0,0,no,no,dry,,cat:dry,0/0/no/no
+culturaldelights:tortilla_chips,culturaldelights,food,3,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+culturaldelights:tropical_roll,culturaldelights,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+culturaldelights:white_eggplant,culturaldelights,food,1,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
 endersdelight:amberveil_stew,endersdelight,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
 endersdelight:amberveiled_curry,endersdelight,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
 endersdelight:chicken_curry,endersdelight,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
@@ -86,20 +192,67 @@ endersdelight:stuffed_shulker_bowl,endersdelight,food,0,0,0,no,no,meal,,cat:meal
 endersdelight:twisted_cereal,endersdelight,food,1,0,0,no,no,dry,,cat:dry,0/0/no/no
 endersdelight:uncanny_cookies,endersdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
 endersdelight:veil_of_flames_risotto,endersdelight,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
+ends_delight:assorted_salad,ends_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+ends_delight:bubble_tea,ends_delight,drink,0,2,2,no,no,drink_simple,,cat:drink_simple>thick,2/2/no/no
+ends_delight:chorus_cookie,ends_delight,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+ends_delight:chorus_flower_pie,ends_delight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+ends_delight:chorus_flower_tea,ends_delight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
+ends_delight:chorus_fruit_grain,ends_delight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+ends_delight:chorus_fruit_milk_tea,ends_delight,drink,0,3,3,no,no,drink_simple,,cat:drink_simple>milk,3/3/no/no
+ends_delight:chorus_fruit_pie_slice,ends_delight,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+ends_delight:chorus_fruit_popsicle,ends_delight,food,0,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+ends_delight:chorus_fruit_wine,ends_delight,drink,0,1,0,no,no,alcohol,,cat:alcohol>alcohol_light,1/0/no/no
+ends_delight:chorus_sauce,ends_delight,food,0,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+ends_delight:chorus_succulent,ends_delight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+ends_delight:dragon_breath_and_chorus_soup,ends_delight,drink,1,3,3,no,no,soup,,cat:soup,3/3/no/no
+ends_delight:dragon_breath_soda,ends_delight,drink,1,2,3,no,no,drink_crafted,,cat:drink_crafted,2/3/no/no
+ends_delight:dragon_leg,ends_delight,food,0,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+ends_delight:dragon_leg_with_sauce,ends_delight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+ends_delight:dragon_meat_stew,ends_delight,food,0,2,2,no,no,stew,,cat:stew,2/2/no/no
+ends_delight:dried_endermite_meat,ends_delight,food,1,-1,-1,si,no,salty,,cat:salty salty:light,-1/-1/si/no
+ends_delight:end_barbecue_stick,ends_delight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+ends_delight:end_mixed_salad,ends_delight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+ends_delight:ender_bamboo_rice,ends_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+ends_delight:ender_congee,ends_delight,food,2,2,2,no,no,stew,,cat:stew,2/2/no/no
+ends_delight:ender_noodle,ends_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+ends_delight:ender_sausage,ends_delight,food,2,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+ends_delight:enderman_gristle,ends_delight,food,0,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+ends_delight:enderman_gristle_stew,ends_delight,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
+ends_delight:fried_dragon_egg,ends_delight,food,5,0,0,no,no,meal,,cat:meal,0/0/no/no
+ends_delight:grilled_shulker,ends_delight,food,0,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+ends_delight:liquid_dragon_egg,ends_delight,food,4,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+ends_delight:raw_dragon_meat,ends_delight,food,1,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+ends_delight:raw_dragon_meat_cuts,ends_delight,food,2,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+ends_delight:raw_ender_mite_meat,ends_delight,food,0,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+ends_delight:raw_ender_sausage,ends_delight,food,1,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+ends_delight:roasted_dragon_meat,ends_delight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+ends_delight:roasted_dragon_meat_cuts,ends_delight,food,3,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+ends_delight:roasted_dragon_steak,ends_delight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+ends_delight:roasted_shulker_meat,ends_delight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+ends_delight:roasted_shulker_meat_slice,ends_delight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+ends_delight:shulker_meat,ends_delight,food,0,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+ends_delight:shulker_meat_slice,ends_delight,food,1,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+ends_delight:shulker_omelette,ends_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+ends_delight:shulker_omelette_mixture,ends_delight,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+ends_delight:shulker_soup,ends_delight,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
+ends_delight:smoked_dragon_leg,ends_delight,food,1,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+ends_delight:steamed_dragon_egg,ends_delight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+ends_delight:stir_fried_shulker_meat,ends_delight,food,0,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+ends_delight:stuffed_rice_cake,ends_delight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
 farm_and_charm:bacon,farm_and_charm,food,2,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
 farm_and_charm:bacon_with_eggs,farm_and_charm,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 farm_and_charm:baked_lamb_ham,farm_and_charm,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 farm_and_charm:barley_patties_with_potatoes,farm_and_charm,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farm_and_charm:barley_soup,farm_and_charm,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
 farm_and_charm:beef_patty_with_vegetables,farm_and_charm,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
-farm_and_charm:butter,farm_and_charm,food,4,0,0,no,no,ingredient,,cat:ingredient efecto:hunger:crudo,0/0/no/no
+farm_and_charm:butter,farm_and_charm,food,2,0,0,no,no,ingredient,,cat:ingredient efecto:hunger:crudo,0/0/no/no
 farm_and_charm:chicken_feed,farm_and_charm,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
 farm_and_charm:chicken_parts,farm_and_charm,food,1,0,0,no,no,meat_raw,,cat:meat_raw efecto:hunger:crudo,0/0/no/no
-farm_and_charm:chicken_wrapped_in_bacon,farm_and_charm,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+farm_and_charm:chicken_wrapped_in_bacon,farm_and_charm,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 farm_and_charm:cooked_cod,farm_and_charm,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 farm_and_charm:cooked_salmon,farm_and_charm,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 farm_and_charm:corn,farm_and_charm,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
-farm_and_charm:corn_grits,farm_and_charm,food,0,0,0,no,no,dry,,cat:dry,0/0/no/no
+farm_and_charm:corn_grits,farm_and_charm,food,1,0,0,no,no,dry,,cat:dry,0/0/no/no
 farm_and_charm:dough,farm_and_charm,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
 farm_and_charm:farmer_salad,farm_and_charm,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farm_and_charm:farmers_bread,farm_and_charm,food,2,0,0,no,no,dry,,cat:dry,0/0/no/no
@@ -122,7 +275,7 @@ farm_and_charm:potato_with_roast_meat,farm_and_charm,food,1,0,0,no,no,meat_cooke
 farm_and_charm:raw_pasta,farm_and_charm,food,2,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
 farm_and_charm:ribwort_tea,farm_and_charm,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
 farm_and_charm:ribwort_tea_cup,farm_and_charm,drink,0,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
-farm_and_charm:roasted_chicken,farm_and_charm,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+farm_and_charm:roasted_chicken,farm_and_charm,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 farm_and_charm:roasted_corn,farm_and_charm,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farm_and_charm:rotten_tomato,farm_and_charm,food,0,-3,-3,si,no,rotten_or_poison,,cat:rotten_or_poison efecto:poison,-3/-3/si/no
 farm_and_charm:sausage_with_oat_patty,farm_and_charm,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
@@ -136,10 +289,10 @@ farm_and_charm:tomato,farm_and_charm,food,0,2,2,no,no,fresh_produce,,cat:fresh_p
 farmersdelight:apple_cider,farmersdelight,drink,1,3,4,no,no,drink_simple,antes: 8/13,cat:drink_simple>juice,3/4/no/no
 farmersdelight:apple_pie_slice,farmersdelight,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
 farmersdelight:bacon,farmersdelight,food,2,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
-farmersdelight:bacon_and_eggs,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+farmersdelight:bacon_and_eggs,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:bacon_sandwich,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:baked_cod_stew,farmersdelight,food,1,2,2,no,no,stew,antes: 4/5,cat:stew,2/2/no/no
-farmersdelight:barbecue_stick,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+farmersdelight:barbecue_stick,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:beef_patty,farmersdelight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 farmersdelight:beef_stew,farmersdelight,food,1,2,2,no,no,stew,antes: 4/5,cat:stew,2/2/no/no
 farmersdelight:bone_broth,farmersdelight,drink,2,3,3,no,no,soup,valores de 1.21.1 (en 1.20.1 la receta da otros pasos de crafteo),cat:soup steps2:+1,4/4/no/no
@@ -151,20 +304,20 @@ farmersdelight:chicken_cuts,farmersdelight,food,1,0,0,no,no,meat_raw,,cat:meat_r
 farmersdelight:chicken_sandwich,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:chicken_soup,farmersdelight,food,1,3,3,no,no,soup,antes: 4/5,cat:soup,3/3/no/no
 farmersdelight:chocolate_pie_slice,farmersdelight,food,3,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
-farmersdelight:cod_roll,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
-farmersdelight:cod_slice,farmersdelight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+farmersdelight:cod_roll,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+farmersdelight:cod_slice,farmersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 farmersdelight:cooked_bacon,farmersdelight,food,3,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 farmersdelight:cooked_chicken_cuts,farmersdelight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
-farmersdelight:cooked_cod_slice,farmersdelight,food,2,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+farmersdelight:cooked_cod_slice,farmersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 farmersdelight:cooked_mutton_chops,farmersdelight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 farmersdelight:cooked_rice,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
-farmersdelight:cooked_salmon_slice,farmersdelight,food,2,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+farmersdelight:cooked_salmon_slice,farmersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 farmersdelight:dog_food,farmersdelight,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
 farmersdelight:dumplings,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
-farmersdelight:egg_sandwich,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+farmersdelight:egg_sandwich,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:fish_stew,farmersdelight,food,1,2,2,no,no,stew,antes: 4/5,cat:stew,2/2/no/no
 farmersdelight:fried_egg,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
-farmersdelight:fried_rice,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+farmersdelight:fried_rice,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:fruit_salad,farmersdelight,food,1,0,0,no,no,sweet,antes: 6/8,cat:sweet,0/0/no/no
 farmersdelight:gleaming_salad,farmersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:glow_berry_custard,farmersdelight,food,1,1,1,no,no,sweet,,cat:sweet>moist_dessert,1/1/no/no
@@ -184,35 +337,142 @@ farmersdelight:mixed_salad,farmersdelight,food,1,0,0,no,no,meal,antes: 4/5,cat:m
 farmersdelight:mushroom_rice,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:mutton_chops,farmersdelight,food,1,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
 farmersdelight:mutton_wrap,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
-farmersdelight:nether_salad,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+farmersdelight:nether_salad,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:noodle_soup,farmersdelight,food,1,3,3,no,no,soup,antes: 4/5,cat:soup,3/3/no/no
 farmersdelight:onion,farmersdelight,food,1,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
 farmersdelight:onion_soup,farmersdelight,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
-farmersdelight:pasta_with_meatballs,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+farmersdelight:pasta_with_meatballs,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:pasta_with_mutton_chop,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:pie_crust,farmersdelight,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
 farmersdelight:pumpkin_pie_slice,farmersdelight,food,2,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
-farmersdelight:pumpkin_slice,farmersdelight,food,0,1,1,no,no,fresh_produce,antes: 2/1,cat:fresh_produce>crisp_veg,1/1/no/no
+farmersdelight:pumpkin_slice,farmersdelight,food,1,1,1,no,no,fresh_produce,antes: 2/1,cat:fresh_produce>crisp_veg,1/1/no/no
 farmersdelight:pumpkin_soup,farmersdelight,food,1,3,3,no,no,soup,antes: 4/5,cat:soup,3/3/no/no
 farmersdelight:ratatouille,farmersdelight,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
-farmersdelight:raw_pasta,farmersdelight,food,2,0,0,no,no,ingredient,,cat:ingredient efecto:hunger:crudo,0/0/no/no
+farmersdelight:raw_pasta,farmersdelight,food,1,0,0,no,no,ingredient,,cat:ingredient efecto:hunger:crudo,0/0/no/no
 farmersdelight:roast_chicken,farmersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:roasted_mutton_chops,farmersdelight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
-farmersdelight:salmon_roll,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
-farmersdelight:salmon_slice,farmersdelight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+farmersdelight:salmon_roll,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+farmersdelight:salmon_slice,farmersdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 farmersdelight:shepherds_pie,farmersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:smoked_ham,farmersdelight,food,1,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
 farmersdelight:squid_ink_pasta,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:steak_and_potatoes,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:stuffed_potato,farmersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:stuffed_pumpkin,farmersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
-farmersdelight:sweet_berry_cheesecake_slice,farmersdelight,food,5,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+farmersdelight:sweet_berry_cheesecake_slice,farmersdelight,food,3,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
 farmersdelight:sweet_berry_cookie,farmersdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
 farmersdelight:tomato,farmersdelight,food,1,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
 farmersdelight:tomato_sauce,farmersdelight,food,1,0,0,no,no,ingredient,antes: 4/5,cat:ingredient,0/0/no/no
 farmersdelight:vegetable_noodles,farmersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 farmersdelight:vegetable_soup,farmersdelight,food,2,3,3,no,no,soup,antes: 4/5,cat:soup,3/3/no/no
 farmersdelight:wheat_dough,farmersdelight,food,1,0,0,no,no,ingredient,,cat:ingredient efecto:hunger:crudo,0/0/no/no
+fruitsdelight:apple_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:apple_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:baked_durian,fruitsdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:baked_pear,fruitsdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:bayberry,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:bayberry_cookie,fruitsdelight,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:bayberry_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:bayberry_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:bayberry_soup,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple,3/4/no/no
+fruitsdelight:bellini_cocktail,fruitsdelight,drink,1,1,0,no,no,alcohol,,cat:alcohol,1/0/no/no
+fruitsdelight:blueberry,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:blueberry_custard,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:blueberry_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:blueberry_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:blueberry_muffin,fruitsdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:bowl_of_pineapple_fried_rice,fruitsdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:chorus_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:chorus_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:cranberry,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:cranberry_cookie,fruitsdelight,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:cranberry_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:cranberry_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:cranberry_muffin,fruitsdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:dried_persimmon,fruitsdelight,food,0,0,0,no,no,dry,,cat:dry,0/0/no/no
+fruitsdelight:durian_flesh,fruitsdelight,food,1,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:durian_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:durian_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:durian_pie,fruitsdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:fig,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:fig_chicken_stew,fruitsdelight,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
+fruitsdelight:fig_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:fig_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:fig_pudding_slice,fruitsdelight,food,0,1,1,no,no,sweet,,cat:sweet>moist_dessert,1/1/no/no
+fruitsdelight:fig_tart,fruitsdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:glowberry_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:glowberry_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:hamimelon_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:hamimelon_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:hamimelon_juice,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>juice,3/4/no/no
+fruitsdelight:hamimelon_popsicle,fruitsdelight,food,0,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:hamimelon_shaved_ice,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:hamimelon_slice,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:hawberry,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:hawberry_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:hawberry_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:hawberry_roll,fruitsdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:hawberry_sheet,fruitsdelight,food,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:hawberry_stick,fruitsdelight,food,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:hawberry_tea,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
+fruitsdelight:jelly_bread,fruitsdelight,food,2,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:kiwi,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:kiwi_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:kiwi_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:kiwi_juice,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>juice,3/4/no/no
+fruitsdelight:kiwi_popsicle,fruitsdelight,food,0,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:lemon,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+fruitsdelight:lemon_cookie,fruitsdelight,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:lemon_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:lemon_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:lemon_juice,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>juice,3/4/no/no
+fruitsdelight:lemon_slice,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+fruitsdelight:lemon_tart,fruitsdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:lychee,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:lychee_cherry_tea,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
+fruitsdelight:lychee_chicken,fruitsdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:lychee_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:lychee_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:mango,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+fruitsdelight:mango_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:mango_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:mango_milkshake,fruitsdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>thick,2/2/no/no
+fruitsdelight:mango_salad,fruitsdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:mango_tea,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
+fruitsdelight:mangosteen,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:mangosteen_cake,fruitsdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:mangosteen_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:mangosteen_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:mangosteen_tea,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
+fruitsdelight:melon_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:melon_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:orange,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+fruitsdelight:orange_chicken,fruitsdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:orange_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:orange_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:orange_juice,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>juice,3/4/no/no
+fruitsdelight:orange_marinated_pork,fruitsdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:orange_slice,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+fruitsdelight:peach,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+fruitsdelight:peach_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:peach_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:peach_tea,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
+fruitsdelight:pear,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+fruitsdelight:pear_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:pear_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:pear_juice,fruitsdelight,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>juice,3/4/no/no
+fruitsdelight:pear_with_rock_sugar,fruitsdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:persimmon,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+fruitsdelight:persimmon_cookie,fruitsdelight,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:persimmon_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:persimmon_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:pineapple_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:pineapple_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+fruitsdelight:pineapple_marinated_pork,fruitsdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+fruitsdelight:pineapple_pie,fruitsdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+fruitsdelight:pineapple_slice,fruitsdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+fruitsdelight:sweetberry_jello,fruitsdelight,food,3,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+fruitsdelight:sweetberry_jelly,fruitsdelight,drink,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
 herbalbrews:black_tea,herbalbrews,drink,1,3,4,no,no,drink_simple,,cat:drink_simple>tea,3/4/no/no
 herbalbrews:coffee,herbalbrews,drink,2,3,3,no,no,drink_crafted,,cat:drink_crafted>coffee steps2:+1,3/3/no/no
 herbalbrews:coffee_beans,herbalbrews,food,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
@@ -242,16 +502,16 @@ minecraft:chorus_fruit,minecraft,food,0,2,2,no,no,fresh_produce,,cat:fresh_produ
 minecraft:cod,minecraft,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 minecraft:cooked_beef,minecraft,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 minecraft:cooked_chicken,minecraft,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
-minecraft:cooked_cod,minecraft,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+minecraft:cooked_cod,minecraft,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 minecraft:cooked_mutton,minecraft,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 minecraft:cooked_porkchop,minecraft,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 minecraft:cooked_rabbit,minecraft,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
-minecraft:cooked_salmon,minecraft,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+minecraft:cooked_salmon,minecraft,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 minecraft:cookie,minecraft,food,0,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
 minecraft:dried_kelp,minecraft,food,1,0,0,no,no,dry,,cat:dry,0/0/no/no
 minecraft:enchanted_golden_apple,minecraft,food,0,2,2,no,no,fresh_produce,antes: 2/3,cat:fresh_produce>fruit,2/2/no/no
 minecraft:glow_berries,minecraft,food,0,2,2,no,no,fresh_produce,antes: 1/2,cat:fresh_produce>fruit,2/2/no/no
-minecraft:golden_apple,minecraft,food,2,2,2,no,no,fresh_produce,antes: 2/3,cat:fresh_produce>fruit,2/2/no/no
+minecraft:golden_apple,minecraft,food,0,2,2,no,no,fresh_produce,antes: 2/3,cat:fresh_produce>fruit,2/2/no/no
 minecraft:golden_carrot,minecraft,food,2,1,1,no,no,fresh_produce,antes: 1/2,cat:fresh_produce>crisp_veg,1/1/no/no
 minecraft:honey_bottle,minecraft,drink,3,3,4,no,no,drink_crafted,,cat:drink_crafted steps3:+1,3/4/no/no
 minecraft:lingering_potion,minecraft,drink,0,0,0,no,no,non_food,,cat:non_food,0/0/no/no
@@ -298,6 +558,7 @@ miners_delight:chicken_soup_cup,miners_delight,food,0,3,3,no,no,soup,,cat:soup,3
 miners_delight:cooked_arthropod,miners_delight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
 miners_delight:copper_carrot,miners_delight,food,4,-3,-3,si,no,rotten_or_poison,,cat:rotten_or_poison efecto:poison,-3/-3/si/no
 miners_delight:crunchy_bar,miners_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+miners_delight:egg_soup_cup,miners_delight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
 miners_delight:fish_stew_cup,miners_delight,food,0,2,2,no,no,stew,,cat:stew,2/2/no/no
 miners_delight:glow_ink_pasta,miners_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:glow_squid,miners_delight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
@@ -313,17 +574,21 @@ miners_delight:mushroom_stew_cup,miners_delight,food,0,2,2,no,no,stew,,cat:stew,
 miners_delight:noodle_soup_cup,miners_delight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
 miners_delight:nutritional_bar,miners_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:onion_soup_cup,miners_delight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
-miners_delight:pasta_with_veggieballs,miners_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+miners_delight:pasta_with_veggieballs,miners_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:plate_of_fake_meatloaf,miners_delight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:plate_of_glazed_arachnid_limbs,miners_delight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:pumpkin_soup_cup,miners_delight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
 miners_delight:rabbit_stew_cup,miners_delight,food,0,2,2,no,no,stew,,cat:stew,2/2/no/no
+miners_delight:rock_soup_cup,miners_delight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
 miners_delight:seasoned_arthropods,miners_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:silverfish_eggs,miners_delight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:smoked_bat_wing,miners_delight,food,1,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+miners_delight:spicy_hoglin_stew_cup,miners_delight,food,0,2,2,no,no,stew,,cat:stew,2/2/no/no
+miners_delight:spicy_noodle_soup_cup,miners_delight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
 miners_delight:spider_leg,miners_delight,food,0,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
 miners_delight:squid,miners_delight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 miners_delight:squid_sandwich,miners_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+miners_delight:strider_stew_cup,miners_delight,food,0,2,2,no,no,stew,,cat:stew,2/2/no/no
 miners_delight:takoyaki,miners_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:tentacles,miners_delight,food,1,0,0,no,no,seafood,,cat:seafood,0/0/no/no
 miners_delight:tentacles_on_a_stick,miners_delight,food,2,0,0,no,no,seafood,,cat:seafood,0/0/no/no
@@ -334,6 +599,67 @@ miners_delight:vegan_wrap,miners_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/
 miners_delight:vegetable_soup_cup,miners_delight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
 miners_delight:water_cup,miners_delight,drink,3,0,0,no,no,non_food,,cat:non_food,0/0/no/no
 miners_delight:weird_caviar,miners_delight,food,1,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+mynethersdelight:bacon-wrapped_sausage_on_a_stick,mynethersdelight,food,2,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+mynethersdelight:bleeding_tartar,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:blue_tenderloin_steak,mynethersdelight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:boiled_egg,mynethersdelight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:breakfast_sampler,mynethersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:bullet_pepper,mynethersdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+mynethersdelight:burnt_roll,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:chilidog,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:cooked_loin,mynethersdelight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:crimson_stroganoff,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:deviled_egg,mynethersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:dried_ghast_with_milk,mynethersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:egg_soup,mynethersdelight,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
+mynethersdelight:enchanted_golden_egg,mynethersdelight,food,0,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:fried_hoglin_chop,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:fries_ghasta,mynethersdelight,food,1,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+mynethersdelight:ghast_dough,mynethersdelight,food,1,0,0,no,no,ingredient,,cat:ingredient efecto:hunger:crudo,0/0/no/no
+mynethersdelight:ghast_salad,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:ghast_sourdough,mynethersdelight,food,2,0,0,no,no,dry,,cat:dry efecto:hunger:crudo,0/0/no/no
+mynethersdelight:ghasta,mynethersdelight,food,0,0,0,no,no,seafood,,cat:seafood efecto:hunger:crudo,0/0/no/no
+mynethersdelight:giant_takoyaki,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:golden_egg,mynethersdelight,food,3,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:hoglin_loin,mynethersdelight,food,0,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+mynethersdelight:hoglin_sausage,mynethersdelight,food,1,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+mynethersdelight:hot_cream,mynethersdelight,drink,1,2,3,no,no,drink_crafted,,cat:drink_crafted,2/3/no/no
+mynethersdelight:hot_cream_cone,mynethersdelight,food,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+mynethersdelight:hot_wings,mynethersdelight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:hot_wings_bucket,mynethersdelight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:hotdog,mynethersdelight,food,2,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+mynethersdelight:hotdog_with_mixed_salad,mynethersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:hotdog_with_nether_salad,mynethersdelight,food,3,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:magma_cake_slice,mynethersdelight,food,3,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+mynethersdelight:minced_strider,mynethersdelight,food,1,0,0,no,no,meat_raw,,cat:meat_raw,0/0/no/no
+mynethersdelight:nether_burger,mynethersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:plate_of_cold_striderloaf,mynethersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:plate_of_ghasta_with_cream,mynethersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:plate_of_striderloaf,mynethersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:plate_of_stuffed_hoglin,mynethersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:plate_of_stuffed_hoglin_ham,mynethersdelight,food,0,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
+mynethersdelight:plate_of_stuffed_hoglin_snout,mynethersdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:red_loin_on_a_stick,mynethersdelight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:roast_ear,mynethersdelight,food,0,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:roasted_sausage,mynethersdelight,food,2,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:rock_soup,mynethersdelight,food,2,3,3,no,no,soup,,cat:soup,3/3/no/no
+mynethersdelight:sausage_and_potatoes,mynethersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:scotch_eggs,mynethersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:sizzling_pudding,mynethersdelight,food,1,1,1,no,no,sweet,,cat:sweet>moist_dessert,1/1/no/no
+mynethersdelight:slices_of_bread,mynethersdelight,food,4,0,0,no,no,dry,,cat:dry,0/0/no/no
+mynethersdelight:spicy_cotton,mynethersdelight,food,1,0,0,no,no,sweet,,cat:sweet,0/0/no/no
+mynethersdelight:spicy_curry,mynethersdelight,food,2,2,2,no,no,stew,,cat:stew,2/2/no/no
+mynethersdelight:spicy_hoglin_stew,mynethersdelight,food,1,2,2,no,no,stew,,cat:stew,2/2/no/no
+mynethersdelight:spicy_noodle_soup,mynethersdelight,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
+mynethersdelight:spicy_skewer,mynethersdelight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+mynethersdelight:strider_egg,mynethersdelight,drink,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:strider_slice,mynethersdelight,food,0,-1,-1,si,no,rotten_or_poison,,cat:rotten_or_poison,-1/-1/si/no
+mynethersdelight:strider_stew,mynethersdelight,food,2,2,2,no,no,stew,,cat:stew,2/2/no/no
+mynethersdelight:strider_with_grilled_fungus,mynethersdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:stuffed_pepper,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+mynethersdelight:tear_popsicle,mynethersdelight,food,2,3,3,no,no,sweet,,cat:sweet>frozen,3/3/no/no
+mynethersdelight:toasts,mynethersdelight,food,5,0,0,no,no,dry,,cat:dry,0/0/no/no
+mynethersdelight:twisted_ghasta,mynethersdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 oceansdelight:baked_tentacle_on_a_stick,oceansdelight,food,0,0,0,no,no,meal,,cat:meal,0/0/no/no
 oceansdelight:bowl_of_guardian_soup,oceansdelight,food,0,3,3,no,no,soup,,cat:soup,3/3/no/no
 oceansdelight:braised_sea_pickle,oceansdelight,food,0,-2,-2,si,no,salty,,cat:salty salty:medium,-2/-2/si/no
@@ -357,3 +683,106 @@ oceansdelight:tentacles,oceansdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/
 reliquary:emperor_chalice,reliquary,drink,0,4,5,no,no,drink_crafted,"Valor fijado a mano (Reliquary compat): agua pura, purity 5 en drinks.json",cat:drink_crafted,2/3/no/no
 reliquary:glowing_bread,reliquary,food,0,0,0,no,no,dry,,cat:dry,0/0/no/no
 reliquary:potion,reliquary,drink,0,2,3,no,no,drink_crafted,,cat:drink_crafted,2/3/no/no
+rusticdelight:baked_potato_slices,rusticdelight,food,3,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:batter,rusticdelight,food,1,0,0,no,no,ingredient,,cat:ingredient efecto:hunger:crudo,0/0/no/no
+rusticdelight:bell_pepper_black,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_blue,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_green,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_orange,rusticdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+rusticdelight:bell_pepper_pasta,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_pink,rusticdelight,food,1,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_purple,rusticdelight,food,1,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_red,rusticdelight,food,1,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_roll_black,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_roll_blue,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_roll_green,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_roll_orange,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_roll_pink,rusticdelight,food,3,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_roll_purple,rusticdelight,food,3,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_roll_red,rusticdelight,food,3,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_roll_white,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_roll_yellow,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:bell_pepper_slice_black,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_slice_blue,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_slice_green,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_slice_orange,rusticdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+rusticdelight:bell_pepper_slice_pink,rusticdelight,food,2,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_slice_purple,rusticdelight,food,2,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_slice_red,rusticdelight,food,2,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_slice_white,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_slice_yellow,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_soup,rusticdelight,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
+rusticdelight:bell_pepper_white,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:bell_pepper_yellow,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:calamari,rusticdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+rusticdelight:calamari_roll,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:calamari_slice,rusticdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+rusticdelight:calamari_soup,rusticdelight,food,1,3,3,no,no,soup,,cat:soup,3/3/no/no
+rusticdelight:cherry_blossom_cheesecake_slice,rusticdelight,food,3,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:cherry_blossom_coffee,rusticdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>coffee,2/2/no/no
+rusticdelight:cherry_blossom_cookie,rusticdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:cherry_blossom_pancake,rusticdelight,food,2,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:cherry_blossom_roll,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:chocolate_coffee,rusticdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>coffee,2/2/no/no
+rusticdelight:chocolate_pancake,rusticdelight,food,2,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:coffee,rusticdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>coffee,2/2/no/no
+rusticdelight:coffee_braised_beef,rusticdelight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+rusticdelight:coffee_cheesecake_slice,rusticdelight,food,3,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:coffee_cookie,rusticdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:coffee_pancake,rusticdelight,food,2,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:cooked_calamari,rusticdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+rusticdelight:cooked_calamari_slice,rusticdelight,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
+rusticdelight:cooking_oil,rusticdelight,drink,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+rusticdelight:dark_coffee,rusticdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>coffee,2/2/no/no
+rusticdelight:fried_calamari,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:fried_chicken,rusticdelight,food,1,0,0,no,no,meat_cooked,,cat:meat_cooked,0/0/no/no
+rusticdelight:fried_dough,rusticdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:fried_dumplings,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:fried_fish,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:fried_mushrooms,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:fruit_beignet,rusticdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:golden_coffee_beans,rusticdelight,food,2,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+rusticdelight:honey_coffee,rusticdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>coffee,2/2/no/no
+rusticdelight:honey_pancake,rusticdelight,food,2,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:milk_coffee,rusticdelight,drink,1,3,3,no,no,drink_crafted,,cat:drink_crafted>milk,3/3/no/no
+rusticdelight:pancake,rusticdelight,food,2,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:potato_salad,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:potato_slices,rusticdelight,food,2,2,2,no,no,fresh_produce,,cat:fresh_produce,2/2/no/no
+rusticdelight:pumpkin_coffee,rusticdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>coffee,2/2/no/no
+rusticdelight:pumpkin_pancake,rusticdelight,food,2,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:roasted_bell_pepper_black,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_blue,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_green,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_orange,rusticdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+rusticdelight:roasted_bell_pepper_pink,rusticdelight,food,2,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_purple,rusticdelight,food,2,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_red,rusticdelight,food,2,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_slice_black,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_slice_blue,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_slice_green,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_slice_orange,rusticdelight,food,0,2,2,no,no,fresh_produce,,cat:fresh_produce>fruit,2/2/no/no
+rusticdelight:roasted_bell_pepper_slice_pink,rusticdelight,food,3,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_slice_purple,rusticdelight,food,3,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_slice_red,rusticdelight,food,3,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_slice_white,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_slice_yellow,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_white,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_bell_pepper_yellow,rusticdelight,food,0,1,1,no,no,fresh_produce,,cat:fresh_produce>crisp_veg,1/1/no/no
+rusticdelight:roasted_coffee_beans,rusticdelight,food,2,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+rusticdelight:spring_rolls,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_black,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_blue,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_green,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_orange,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_pink,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_purple,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_red,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_white,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:stuffed_bell_pepper_yellow,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:sweet_salad,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:syrup,rusticdelight,drink,1,0,0,no,no,ingredient,,cat:ingredient,0/0/no/no
+rusticdelight:syrup_cheesecake_slice,rusticdelight,food,3,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:syrup_coffee,rusticdelight,drink,1,2,2,no,no,drink_crafted,,cat:drink_crafted>coffee,2/2/no/no
+rusticdelight:syrup_cookie,rusticdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
+rusticdelight:syrup_sandwich,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
+rusticdelight:vegetable_pancake,rusticdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no

@@ -186,6 +186,14 @@ dependencies {
         modLocalRuntime "maven.modrinth:lets-do-herbalbrews:${herbalbrews_version}"
         modLocalRuntime "maven.modrinth:lets-do-brewery-farmcharm-compat:${brewery_version}"
         modLocalRuntime "maven.modrinth:architectury-api:${architectury_version}"
+        modLocalRuntime "maven.modrinth:fruits-delight:${fruits_delight_version}"
+        modLocalRuntime "maven.modrinth:cultural-delights:${cultural_delights_version}"
+        modLocalRuntime "maven.modrinth:corn-delight:${corn_delight_version}"
+        modLocalRuntime "maven.modrinth:mmlib:${mmlib_version}"
+        modLocalRuntime "maven.modrinth:rustic-delight:${rustic_delight_version}"
+        modLocalRuntime "maven.modrinth:crabbers-delight:${crabbers_delight_version}"
+        modLocalRuntime "maven.modrinth:ends-delight:${ends_delight_version}"
+        modLocalRuntime "maven.modrinth:my-nethers-delight:${my_nethers_delight_version}"
     }
     // JEI on every dev client, as on 1.21.1.
     modLocalRuntime "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"

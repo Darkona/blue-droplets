@@ -128,7 +128,10 @@ def load_recipes(cfg, mod, source):
             for name in sorted(z.namelist()):
                 m = RECIPE_RE.match(name)
                 if m:
-                    out["%s:%s" % (m.group(1), m.group(2))] = json.loads(z.read(name).decode("utf-8"))
+                    try:
+                        out["%s:%s" % (m.group(1), m.group(2))] = json.loads(z.read(name).decode("utf-8"))
+                    except ValueError:
+                        print("  aviso: %s de %s no es JSON valido (vacio o roto), se omite" % (name, mod["id"]))
     else:
         repo = expand(mod["repo"])
         for root in mod["data_roots"]:

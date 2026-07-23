@@ -1,0 +1,59 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "culturaldelights"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "type": "forge:difference",
+      "base": {
+        "item": "minecraft:water_bucket"
+      },
+      "subtracted": [
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 0
+          }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 1
+          }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 2
+          }
+        }
+      ]
+    },
+    {
+      "tag": "forge:crops/corn"
+    },
+    {
+      "tag": "forge:crops/corn"
+    },
+    {
+      "tag": "forge:crops/corn"
+    }
+  ],
+  "result": {
+    "item": "culturaldelights:corn_dough",
+    "count": 3
+  }
+}

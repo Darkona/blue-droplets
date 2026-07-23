@@ -1,0 +1,57 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "corn_delight"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "www",
+    " b "
+  ],
+  "key": {
+    "w": {
+      "tag": "forge:crops/corn"
+    },
+    "b": {
+      "type": "forge:difference",
+      "base": {
+        "item": "minecraft:water_bucket"
+      },
+      "subtracted": [
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 0
+          }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 1
+          }
+        },
+        {
+          "type": "forge:partial_nbt",
+          "items": [
+            "minecraft:water_bucket"
+          ],
+          "nbt": {
+            "blue_droplets:purity": 2
+          }
+        }
+      ]
+    }
+  },
+  "result": {
+    "item": "corn_delight:tortilla_raw",
+    "count": 3
+  }
+}

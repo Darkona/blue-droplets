@@ -5,6 +5,8 @@ brewinandchewin,brewinandchewin:fermenting/rice_wine_from_water,brewinandchewin:
 brewinandchewin,brewinandchewin:fermenting/vodka_from_water,brewinandchewin:fermenting,fluid,1000,,1000,cold,3,0,Brewin' and Chewin' 1.20.1: el fluido base se compara con isFluidEqual contra un FluidStack sin NBT y el keg no guarda la pureza del agua: no se puede exigir con datos,1ed754ee6af7
 brewinandchewin,brewinandchewin:pouring/potion,brewinandchewin:keg_pouring,bottle,250,minecraft:potion,1,cold,3,0,"Brewin' and Chewin' 1.20.1: el keg crea el agua sin NBT al verter, la pureza no llega al tanque; no hay receta de datos que la mantenga",686905c5b7cd
 brewinandchewin,brewinandchewin:pouring/water_bucket,brewinandchewin:keg_pouring,fluid,1000,minecraft:water_bucket,1,cold,3,0,"Brewin' and Chewin' 1.20.1: el keg crea el agua sin NBT al verter, la pureza no llega al tanque; no hay receta de datos que la mantenga",3e54064aec8f
+corn_delight,corn_delight:tortilla_raw,minecraft:crafting_shaped,bucket,1000,corn_delight:tortilla_raw,3,cold,3,1,,2ac293b393eb
+culturaldelights,culturaldelights:corn_dough,minecraft:crafting_shapeless,bucket,1000,culturaldelights:corn_dough,3,cold,3,1,,b36e2f8ddd72
 farm_and_charm,farm_and_charm:crafting_bowl/dough,farm_and_charm:crafting_bowl,tag,1000,farm_and_charm:dough,5,cold,3,1,,934bea9334ef
 farm_and_charm,farm_and_charm:pot_cooking/barley_soup,farm_and_charm:pot_cooking,tag,1000,farm_and_charm:barley_soup,1,hot,2,1,,c64747ed26fd
 farm_and_charm,farm_and_charm:pot_cooking/nettle_tea,farm_and_charm:pot_cooking,tag,1000,farm_and_charm:nettle_tea,1,hot,2,1,,a2212363ce36
@@ -14,4 +16,36 @@ farm_and_charm,farm_and_charm:pot_cooking/yeast,farm_and_charm:pot_cooking,tag,1
 farm_and_charm,farm_and_charm:stove/farmers_bread,farm_and_charm:stove,tag,1000,farm_and_charm:farmers_bread,3,hot,2,1,,17cd74761c88
 farm_and_charm,farm_and_charm:water_sprinkler,minecraft:crafting_shaped,tag,1000,farm_and_charm:water_sprinkler,1,cold,3,1,,132906c57d90
 farmersdelight,farmersdelight:cooking_pot,minecraft:crafting_shaped,bucket,1000,farmersdelight:cooking_pot,1,cold,3,1,,de2c5a902a04
-miners_delight,miners_delight:copper_pot,minecraft:crafting_shaped,bucket,1000,miners_delight:copper_pot,1,cold,3,1,,a9b85d698a48
+fruitsdelight,fruitsdelight:mixing/flowing_apple_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,2c4029d3be31
+fruitsdelight,fruitsdelight:mixing/flowing_bayberry_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,5fafa4a59f3d
+fruitsdelight,fruitsdelight:mixing/flowing_bayberry_soup,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,44d4b7af619f
+fruitsdelight,fruitsdelight:mixing/flowing_blueberry_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,e85f3ef4d3e4
+fruitsdelight,fruitsdelight:mixing/flowing_chorus_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,95bde3376c03
+fruitsdelight,fruitsdelight:mixing/flowing_cranberry_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,371db277a7c1
+fruitsdelight,fruitsdelight:mixing/flowing_durian_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,2c1089ff5a06
+fruitsdelight,fruitsdelight:mixing/flowing_fig_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,a49b9170837b
+fruitsdelight,fruitsdelight:mixing/flowing_glowberry_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,48503630a4b1
+fruitsdelight,fruitsdelight:mixing/flowing_hamimelon_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,9a1a959350e4
+fruitsdelight,fruitsdelight:mixing/flowing_hawberry_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,4775839d377b
+fruitsdelight,fruitsdelight:mixing/flowing_hawberry_tea,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,9048332a55c7
+fruitsdelight,fruitsdelight:mixing/flowing_kiwi_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,5cc1e3361a05
+fruitsdelight,fruitsdelight:mixing/flowing_lemon_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,faf8a87018f1
+fruitsdelight,fruitsdelight:mixing/flowing_lemon_juice,create:mixing,fluid,250,,250,cold,3,0,tipo de receta sin verificar: no se sobrescribe,fa1468030e0c
+fruitsdelight,fruitsdelight:mixing/flowing_lychee_cherry_tea,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,fdd011e18ae4
+fruitsdelight,fruitsdelight:mixing/flowing_lychee_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,ca4e08afe78f
+fruitsdelight,fruitsdelight:mixing/flowing_mango_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,ed029ccaffbd
+fruitsdelight,fruitsdelight:mixing/flowing_mango_tea,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,d55cf591dd59
+fruitsdelight,fruitsdelight:mixing/flowing_mangosteen_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,798d7fcbabc6
+fruitsdelight,fruitsdelight:mixing/flowing_mangosteen_tea,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,d8da6d2b7636
+fruitsdelight,fruitsdelight:mixing/flowing_melon_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,944a787b80de
+fruitsdelight,fruitsdelight:mixing/flowing_orange_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,4abc074f596e
+fruitsdelight,fruitsdelight:mixing/flowing_orange_juice,create:mixing,fluid,250,,250,cold,3,0,tipo de receta sin verificar: no se sobrescribe,51dd42a250e0
+fruitsdelight,fruitsdelight:mixing/flowing_peach_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,40061e44df44
+fruitsdelight,fruitsdelight:mixing/flowing_peach_tea,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,bfa894a15c45
+fruitsdelight,fruitsdelight:mixing/flowing_pear_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,8b8ddfb2696a
+fruitsdelight,fruitsdelight:mixing/flowing_pear_juice,create:mixing,fluid,250,,250,cold,3,0,tipo de receta sin verificar: no se sobrescribe,39a45526c595
+fruitsdelight,fruitsdelight:mixing/flowing_persimmon_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,f3a10b4eaf45
+fruitsdelight,fruitsdelight:mixing/flowing_pineapple_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,11ab44d63123
+fruitsdelight,fruitsdelight:mixing/flowing_sweetberry_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,e6b9e8ce18ed
+miners_delight,miners_delight:copper_pot,minecraft:crafting_shaped,bucket,2000,miners_delight:copper_pot,1,cold,3,1,,a9b85d698a48
+rusticdelight,rusticdelight:brewing/coffee,forge:conditional,fluid,1000,,,cold,3,0,tipo de receta sin verificar: no se sobrescribe,a5f0462bb6e5
