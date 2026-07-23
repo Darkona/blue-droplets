@@ -1,38 +1,40 @@
 package com.darkona.droplets.foundation.tab;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.compat.create.CreateCompat;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ThirstTab
+/**
+ * The mod's creative tab. Minecraft 1.19.2 has no tab registry: the tab is a {@link CreativeModeTab} subclass, built
+ * when this class loads, and lists {@link #DisplayItems()} each time it fills.
+ */
+public class ThirstTab extends CreativeModeTab
 {
-    private static final DeferredRegister<CreativeModeTab> TAB_REGISTER =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, BlueDroplets.ID);
+    public static final ThirstTab THIRST_TAB = new ThirstTab();
 
+    private ThirstTab() {
+        super(BlueDroplets.ID);
+    }
 
-    public static final RegistryObject<CreativeModeTab> THIRST_TAB = TAB_REGISTER.register(BlueDroplets.ID,
-            () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup." + BlueDroplets.ID))
-                    .icon(ItemInit.TERRACOTTA_WATER_BOWL.get()::getDefaultInstance)
-                    .displayItems((displayParameters, output) -> output.acceptAll(DisplayItems()))
-                    .build());
+    @Override
+    public ItemStack makeIcon() {
+        return ItemInit.TERRACOTTA_WATER_BOWL.get().getDefaultInstance();
+    }
 
-    public static void register(IEventBus modEventBus) {
-        TAB_REGISTER.register(modEventBus);
+    @Override
+    public void fillItemList(NonNullList<ItemStack> items) {
+        items.addAll(DisplayItems());
     }
 
     public static Collection<ItemStack> DisplayItems() {
@@ -43,6 +45,8 @@ public class ThirstTab
         list.add(ItemInit.CLAY_BOWL.get().getDefaultInstance());
         list.add(ItemInit.TERRACOTTA_BOWL.get().getDefaultInstance());
         addPurities(list, new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()));
+        if (CreateCompat.LOADED)
+            list.add(new ItemStack(CreateCompat.sandFilter()));
 
         return list;
     }

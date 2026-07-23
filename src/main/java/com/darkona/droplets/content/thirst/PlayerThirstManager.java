@@ -63,7 +63,7 @@ public class PlayerThirstManager {
         if (values == null)
             return;
         int food = player.getFoodData().getFoodLevel();
-        MinecraftServer server = player.serverLevel().getServer();
+        MinecraftServer server = player.getLevel().getServer();
         server.tell(new TickTask(server.getTickCount(), () -> {
             if (player.getFoodData().getFoodLevel() > food)
                 PlayerThirst.eat(player, ItemStack.EMPTY, values.thirst(), values.quenched());
@@ -72,13 +72,13 @@ public class PlayerThirstManager {
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide && ModAttachment.thirst(event.getEntity()).handDrinkingAllowed())
+        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level.isClientSide && ModAttachment.thirst(event.getEntity()).handDrinkingAllowed())
             DrinkByHandClient.drinkByHand();
     }
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickEmpty event) {
-        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level().isClientSide && ModAttachment.thirst(event.getEntity()).handDrinkingAllowed())
+        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level.isClientSide && ModAttachment.thirst(event.getEntity()).handDrinkingAllowed())
             DrinkByHandClient.drinkByHand();
     }
 

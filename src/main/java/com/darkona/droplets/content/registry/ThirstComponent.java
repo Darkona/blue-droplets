@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Water purity on items and fluids. Minecraft 1.20.1 has no data components: it is an int in the stack's NBT under
+ * Water purity on items and fluids. Minecraft 1.19.2 has no data components: it is an int in the stack's NBT under
  * {@link #PURITY}, named like the {@code blue_droplets:purity} component of later versions. Only
  * {@link WaterPurity} reads and writes it.
  */

@@ -12,7 +12,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -61,9 +61,9 @@ final class HydrationCategory extends AbstractRecipeCategory<HydrationEntry>
         }
 
         @Override
-        public void draw(GuiGraphics guiGraphics, int xOffset, int yOffset)
+        public void draw(PoseStack poseStack, int xOffset, int yOffset)
         {
-            row.renderImage(Minecraft.getInstance().font, xOffset, yOffset, guiGraphics);
+            row.renderImage(Minecraft.getInstance().font, xOffset, yOffset, poseStack, Minecraft.getInstance().getItemRenderer(), 0);
         }
     }
 }

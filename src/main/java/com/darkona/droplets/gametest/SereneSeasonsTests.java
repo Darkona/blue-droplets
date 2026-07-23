@@ -7,7 +7,7 @@ import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
@@ -16,11 +16,13 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import sereneseasons.api.season.Season;
-import sereneseasons.season.SeasonHandler;
+import sereneseasons.handler.season.SeasonHandler;
 import sereneseasons.season.SeasonSavedData;
 import sereneseasons.season.SeasonTime;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Serene Seasons: the biome climate formula with the season's temperature and the tropical dry season. The runs with
@@ -34,7 +36,7 @@ public class SereneSeasonsTests
 {
     private static Holder<Biome> biome(ServerLevel level, ResourceKey<Biome> key)
     {
-        return level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(key);
+        return level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getHolderOrThrow(key);
     }
 
     /** Climate multiplier of {@code biome} in the middle of {@code season}, with seasons; the level's season is restored. */
@@ -65,8 +67,8 @@ public class SereneSeasonsTests
         float summer = inSeason(helper, plains, Season.SubSeason.MID_SUMMER);
         float winter = inSeason(helper, plains, Season.SubSeason.MID_WINTER);
         float none = withoutSeasons(helper, plains);
-        helper.assertTrue(winter < summer, "plains: winter " + winter + " not below summer " + summer);
-        helper.assertTrue(winter < none, "plains: winter " + winter + " not below no seasons " + none);
+        assertTrue(helper, winter < summer, "plains: winter " + winter + " not below summer " + summer);
+        assertTrue(helper, winter < none, "plains: winter " + winter + " not below no seasons " + none);
         helper.succeed();
     }
 

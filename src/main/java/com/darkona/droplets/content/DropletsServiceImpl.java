@@ -39,7 +39,7 @@ public final class DropletsServiceImpl implements DropletsService
 
     private static @Nullable PlayerThirst server(Player player)
     {
-        if (!player.level().isClientSide)
+        if (!player.level.isClientSide)
             return ModAttachment.thirst(player);
         if (!warnedClientChange)
         {

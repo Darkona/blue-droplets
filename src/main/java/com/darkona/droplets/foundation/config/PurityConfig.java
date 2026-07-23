@@ -64,7 +64,7 @@ public final class PurityConfig
         BUILDER.push("world");
         ALTITUDE_BANDS = BUILDER.comment("Purity added to water by height: [\"minY,maxY,delta\", ...], both ends included; the first band that matches is used.",
                         "Default, from sea level: +1 from 30 blocks above it, +2 from 60, +3 from 100 (mountains); +1 from 16 blocks below it, +2 from 48, +3 from 80 (caves)")
-                .<String>defineListAllowEmpty("altitudeBands", List.of("30,59,1", "60,99,2", "100,4096,3", "-47,-16,1", "-79,-48,2", "-4096,-80,3"),
+                .<String>defineListAllowEmpty(List.of("altitudeBands"), () -> List.of("30,59,1", "60,99,2", "100,4096,3", "-47,-16,1", "-79,-48,2", "-4096,-80,3"),
                         PurityConfig::isValidAltitudeBand);
         ALTITUDE_RELATIVE_TO_SEA_LEVEL = BUILDER.comment("Whether altitudeBands are measured from the dimension's sea level (true) or are absolute Y levels (false)").define("altitudeRelativeToSeaLevel", true);
         WORLD_WATER_BASE_PURITY = BUILDER.comment("Base purity of water in the world when neither its biome (blue_droplets:water_purity/N tags, blue_droplets:biome_water data map)",
@@ -109,7 +109,7 @@ public final class PurityConfig
 
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> effects(PurityLevel level, List<String> defaults)
     {
-        return BUILDER.<String>defineListAllowEmpty(level.id(), defaults, PurityConfig::isValidEffect);
+        return BUILDER.<String>defineListAllowEmpty(List.of(level.id()), () -> defaults, PurityConfig::isValidEffect);
     }
 
     /**

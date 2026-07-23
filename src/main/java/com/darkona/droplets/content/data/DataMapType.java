@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * A data map as in later versions of NeoForge, for a registry of Minecraft 1.20.1: one value per registry entry, read
+ * A data map as in later versions of NeoForge, for a registry of Minecraft 1.19.2: one value per registry entry, read
  * from {@code data/<namespace of the id>/data_maps/<registry>/<path of the id>.json} in every datapack, with the same
  * JSON. A file has {@code values} (keys are ids or {@code #tags}; a value is the object itself or
  * {@code {"value": ..., "replace": true}}), an optional {@code replace} that drops what earlier packs gave, and an

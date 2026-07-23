@@ -17,6 +17,7 @@
     "MixinFoodData",
     "MixinItemStack",
     "MixinItemUtils",
+    "MixinMinecraftServer",
     "MixinPlayer",
     "MixinPotionItem"
   ],

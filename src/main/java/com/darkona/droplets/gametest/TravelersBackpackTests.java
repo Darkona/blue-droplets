@@ -18,6 +18,8 @@ import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Traveler's Backpack: the hose water effect. Registered by {@link DropletsGameTests} only when it is installed.
@@ -29,15 +31,15 @@ public class TravelersBackpackTests
     public static void hoseWaterHydratesWithTheTankPurity(GameTestHelper helper)
     {
         EffectFluid effect = EffectFluidRegistry.getRegisteredFluidEffects().get("blue_droplets:water");
-        helper.assertTrue(effect != null, "the hose water effect is not registered");
-        helper.assertTrue(effect.fluid == Fluids.WATER, "the hose water effect is not for water");
-        helper.assertTrue(EffectFluidRegistry.getEffectsForFluid(Fluids.WATER).size() == 1, "Traveler's Backpack's own water effect is still registered");
+        assertTrue(helper, effect != null, "the hose water effect is not registered");
+        assertTrue(helper, effect.fluid == Fluids.WATER, "the hose water effect is not for water");
+        assertTrue(helper, EffectFluidRegistry.getEffectsForFluid(Fluids.WATER).size() == 1, "Traveler's Backpack's own water effect is still registered");
         assertValueEqual(helper, EffectFluidRegistry.getHighestFluidEffectAmount(Fluids.WATER), 250, "mB drained per sip");
 
         FluidStack sip = WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), PurityLevel.PURE.level());
         ServerPlayer player = player(helper);
-        helper.assertTrue(effect.canExecuteEffect(sip, helper.getLevel(), player), "cannot drink 1000 mB");
-        helper.assertFalse(effect.canExecuteEffect(new FluidStack(sip, 100), helper.getLevel(), player), "can drink 100 mB");
+        assertTrue(helper, effect.canExecuteEffect(sip, helper.getLevel(), player), "cannot drink 1000 mB");
+        assertFalse(helper, effect.canExecuteEffect(new FluidStack(sip, 100), helper.getLevel(), player), "can drink 100 mB");
 
         PlayerThirst thirst = thirst(player);
         thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);

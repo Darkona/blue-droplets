@@ -4,7 +4,7 @@ import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -64,10 +64,10 @@ public final class ItemDump
         Set<String> wanted = namespaces.contains(ALL) ? consumableNamespaces() : Set.copyOf(namespaces);
         List<String> lines = new ArrayList<>();
         lines.add(HEADER);
-        BuiltInRegistries.ITEM.keySet().stream()
+        Registry.ITEM.keySet().stream()
                 .filter(id -> wanted.contains(id.getNamespace()))
                 .sorted()
-                .forEach(id -> lines.add(row(id, BuiltInRegistries.ITEM.get(id))));
+                .forEach(id -> lines.add(row(id, Registry.ITEM.get(id))));
         return lines;
     }
 
@@ -77,9 +77,9 @@ public final class ItemDump
     private static Set<String> consumableNamespaces()
     {
         Set<String> namespaces = new HashSet<>();
-        for (ResourceLocation id : BuiltInRegistries.ITEM.keySet())
+        for (ResourceLocation id : Registry.ITEM.keySet())
         {
-            ItemStack stack = BuiltInRegistries.ITEM.get(id).getDefaultInstance();
+            ItemStack stack = Registry.ITEM.get(id).getDefaultInstance();
             if (stack.getFoodProperties(null) != null || stack.getUseAnimation() == UseAnim.DRINK || WaterPurity.isWaterFilledContainer(stack) || ThirstHelper.valuesOf(stack) != null)
                 namespaces.add(id.getNamespace());
         }
@@ -113,7 +113,7 @@ public final class ItemDump
     private static String effect(Pair<MobEffectInstance, Float> possible)
     {
         MobEffectInstance effect = possible.getFirst();
-        ResourceLocation key = BuiltInRegistries.MOB_EFFECT.getKey(effect.getEffect());
+        ResourceLocation key = Registry.MOB_EFFECT.getKey(effect.getEffect());
         String id = key == null ? "?" : key.toString();
         return id + "," + effect.getDuration() + "," + effect.getAmplifier() + "," + String.format(Locale.ROOT, "%.2f", possible.getSecond());
     }

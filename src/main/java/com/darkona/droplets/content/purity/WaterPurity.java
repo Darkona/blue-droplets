@@ -17,13 +17,14 @@ import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Style;
@@ -190,8 +191,8 @@ public class WaterPurity
     public static BlockHitResult pickFluid(Player player, ClipContext.Fluid fluid)
     {
         Vec3 eye = player.getEyePosition();
-        Vec3 end = eye.add(player.getViewVector(1.0F).scale(player.getBlockReach()));
-        return player.level().clip(new ClipContext(eye, end, ClipContext.Block.OUTLINE, fluid, player));
+        Vec3 end = eye.add(player.getViewVector(1.0F).scale(player.getReachDistance()));
+        return player.level.clip(new ClipContext(eye, end, ClipContext.Block.OUTLINE, fluid, player));
     }
 
     /**
@@ -261,7 +262,8 @@ public class WaterPurity
     public static String getPurityText(int purity)
     {
         PurityLevel level = level(purity);
-        return Component.translatableWithFallback(level.translationKey(), level.id()).getString();
+        Language language = Language.getInstance();
+        return language.has(level.translationKey()) ? language.getOrDefault(level.translationKey()) : level.id();
     }
 
     /**
@@ -595,7 +597,7 @@ public class WaterPurity
             return null;
         String[] parts = entry.split(",");
         ResourceLocation id = ResourceLocation.tryParse(parts[0].trim());
-        MobEffect effect = id == null ? null : BuiltInRegistries.MOB_EFFECT.getOptional(id).orElse(null);
+        MobEffect effect = id == null ? null : Registry.MOB_EFFECT.getOptional(id).orElse(null);
         if (effect == null)
             return null;
         return new PurityEffect(effect, Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim()),

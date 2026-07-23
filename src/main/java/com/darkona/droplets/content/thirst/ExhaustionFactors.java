@@ -43,8 +43,8 @@ public final class ExhaustionFactors
      */
     public static float compute(Player player, @Nullable float[] breakdown)
     {
-        Level level = player.level();
-        BlockPos eyes = BlockPos.containing(player.getEyePosition());
+        Level level = player.level;
+        BlockPos eyes = new BlockPos(player.getEyePosition());
         boolean dayCycle = !level.dimensionType().hasFixedTime();
 
         float climate = ThirstHelper.getExhaustionBiomeModifier(player);

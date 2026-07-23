@@ -3,7 +3,7 @@ package com.darkona.droplets.foundation.config;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.core.NumberRows;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public final class ConfigCheck
             for (String entry : PurityConfig.EFFECTS.get(purity).get())
             {
                 ResourceLocation id = ResourceLocation.tryParse(entry.split(",")[0].trim());
-                if (id != null && !BuiltInRegistries.MOB_EFFECT.containsKey(id))
+                if (id != null && !Registry.MOB_EFFECT.containsKey(id))
                     problems.add("purity.toml effects." + PurityConfig.EFFECT_LEVELS[purity] + ": unknown effect " + id + " (skipped)");
             }
         if (ItemsConfig.KEYWORDS.get())

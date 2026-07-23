@@ -11,7 +11,7 @@ import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.momosoftworks.coldsweat.util.registries.ModItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
@@ -38,6 +38,8 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import static com.darkona.droplets.gametest.TestSupport.player;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Cold Sweat: its waterskin as a water drink with purity, drinking water cools, body temperature drives the climate
@@ -51,9 +53,9 @@ public class ColdSweatTests
     {
         ItemStack filled = WaterPurity.addPurity(new ItemStack(ModItems.FILLED_WATERSKIN), 0);
         ItemStack empty = filled.getCraftingRemainingItem();
-        helper.assertTrue(empty.is(ModItems.WATERSKIN), "the remainder is not an empty waterskin");
-        helper.assertFalse(WaterPurity.hasPurity(empty), "the emptied waterskin kept its purity");
-        helper.assertTrue(ItemStack.isSameItemSameTags(empty, new ItemStack(ModItems.WATERSKIN)), "the emptied waterskin does not stack with a new one");
+        assertTrue(helper, empty.is(ModItems.WATERSKIN), "the remainder is not an empty waterskin");
+        assertFalse(helper, WaterPurity.hasPurity(empty), "the emptied waterskin kept its purity");
+        assertTrue(helper, ItemStack.isSameItemSameTags(empty, new ItemStack(ModItems.WATERSKIN)), "the emptied waterskin does not stack with a new one");
         helper.succeed();
     }
 
@@ -62,12 +64,12 @@ public class ColdSweatTests
     {
         ItemStack waterskin = new ItemStack(ModItems.FILLED_WATERSKIN);
         ThirstValues values = ThirstHelper.valuesOf(waterskin);
-        helper.assertTrue(values != null && values.thirst() == 6 && values.quenched() == 3, "filled waterskin drink values " + values);
-        helper.assertTrue(WaterPurity.isWaterFilledContainer(waterskin), "the filled waterskin is not a water container");
+        assertTrue(helper, values != null && values.thirst() == 6 && values.quenched() == 3, "filled waterskin drink values " + values);
+        assertTrue(helper, WaterPurity.isWaterFilledContainer(waterskin), "the filled waterskin is not a water container");
         ItemStack dirty = WaterPurity.addPurity(waterskin.copy(), 0);
         ItemStack cooked = helper.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(dirty), helper.getLevel())
-                .map(recipe -> recipe.assemble(new SimpleContainer(dirty), helper.getLevel().registryAccess())).orElse(ItemStack.EMPTY);
-        helper.assertTrue(cooked.is(ModItems.FILLED_WATERSKIN), "a furnace does not purify a dirty waterskin");
+                .map(recipe -> recipe.assemble(new SimpleContainer(dirty))).orElse(ItemStack.EMPTY);
+        assertTrue(helper, cooked.is(ModItems.FILLED_WATERSKIN), "a furnace does not purify a dirty waterskin");
         assertValueEqual(helper, WaterPurity.getPurity(cooked), 2, "purity of a dirty waterskin out of a furnace");
         helper.succeed();
     }
@@ -83,9 +85,9 @@ public class ColdSweatTests
         player.setItemInHand(InteractionHand.MAIN_HAND, empties);
         player.gameMode.useItemOn(player, helper.getLevel(), empties, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(cauldron), Direction.UP, cauldron, false));
         ItemStack filled = filledWaterskin(player);
-        helper.assertTrue(!filled.isEmpty(), "no waterskin was filled from the cauldron");
+        assertTrue(helper, !filled.isEmpty(), "no waterskin was filled from the cauldron");
         assertValueEqual(helper, WaterPurity.getPurity(filled), WaterPurity.HEATED_CAULDRON_PURITY, "purity of a waterskin filled from a cauldron on a campfire");
-        helper.succeedWhen(() -> helper.assertFalse(WaterPurity.hasPurity(empties), "the empty waterskins kept a purity"));
+        helper.succeedWhen(() -> assertFalse(helper, WaterPurity.hasPurity(empties), "the empty waterskins kept a purity"));
     }
 
     @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
@@ -99,8 +101,8 @@ public class ColdSweatTests
         player.setItemInHand(InteractionHand.MAIN_HAND, empty);
         player.gameMode.useItem(player, helper.getLevel(), empty, InteractionHand.MAIN_HAND);
         ItemStack filled = player.getItemInHand(InteractionHand.MAIN_HAND);
-        helper.assertTrue(filled.is(ModItems.FILLED_WATERSKIN), "no waterskin was filled from the water source, got " + filled);
-        helper.assertTrue(WaterPurity.hasPurity(filled), "a waterskin filled from the world has no purity");
+        assertTrue(helper, filled.is(ModItems.FILLED_WATERSKIN), "no waterskin was filled from the water source, got " + filled);
+        assertTrue(helper, WaterPurity.hasPurity(filled), "a waterskin filled from the world has no purity");
         assertValueEqual(helper, WaterPurity.getPurity(filled), WaterPurity.getWaterPurity(helper.getLevel(), water, true), "purity of a waterskin filled from the world");
         helper.succeed();
     }
@@ -108,7 +110,7 @@ public class ColdSweatTests
     @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
     public static void waterskinTakesThePurityOfATank(GameTestHelper helper)
     {
-        Block tankBlock = BuiltInRegistries.BLOCK.get(new ResourceLocation("create", "fluid_tank"));
+        Block tankBlock = Registry.BLOCK.get(new ResourceLocation("create", "fluid_tank"));
         if (tankBlock == Blocks.AIR)
         {
             helper.succeed();
@@ -117,16 +119,16 @@ public class ColdSweatTests
         BlockPos tank = helper.absolutePos(new BlockPos(2, 2, 2));
         helper.getLevel().setBlockAndUpdate(tank, tankBlock.defaultBlockState());
         IFluidHandler handler = helper.getLevel().getBlockEntity(tank).getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
-        helper.assertTrue(handler != null, "the tank has no fluid handler");
+        assertTrue(helper, handler != null, "the tank has no fluid handler");
         handler.fill(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), 0), IFluidHandler.FluidAction.EXECUTE);
         ServerPlayer player = player(helper);
         ItemStack empties = new ItemStack(ModItems.WATERSKIN, 2);
         player.setItemInHand(InteractionHand.MAIN_HAND, empties);
         player.gameMode.useItemOn(player, helper.getLevel(), empties, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(tank), Direction.UP, tank, false));
         ItemStack filled = filledWaterskin(player);
-        helper.assertTrue(!filled.isEmpty(), "no waterskin was filled from the tank");
+        assertTrue(helper, !filled.isEmpty(), "no waterskin was filled from the tank");
         assertValueEqual(helper, WaterPurity.getPurity(filled), 0, "purity of a waterskin filled from a tank of dirty water");
-        helper.assertFalse(WaterPurity.hasPurity(empties), "the empty waterskins got a purity");
+        assertFalse(helper, WaterPurity.hasPurity(empties), "the empty waterskins got a purity");
         helper.succeed();
     }
 
@@ -151,13 +153,13 @@ public class ColdSweatTests
             double before = ColdSweatCompat.bodyTemperature(player);
             PlayerThirst.drink(player, PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), 6, 8, 2);
             double after = ColdSweatCompat.bodyTemperature(player);
-            helper.assertTrue(Math.abs(after - (before - 50)) < 0.001, "body temperature " + before + " -> " + after + " after a cooling drink of 50");
+            assertTrue(helper, Math.abs(after - (before - 50)) < 0.001, "body temperature " + before + " -> " + after + " after a cooling drink of 50");
 
             PlayerThirst.drink(player, new ItemStack(ModItems.FILLED_WATERSKIN), 6, 3, 2);
-            helper.assertTrue(Math.abs(ColdSweatCompat.bodyTemperature(player) - after) < 0.001, "the waterskin cooled as well as its own temperature");
+            assertTrue(helper, Math.abs(ColdSweatCompat.bodyTemperature(player) - after) < 0.001, "the waterskin cooled as well as its own temperature");
 
             double expected = GameplayConfig.DEPLETION_MULTIPLIER.get() * NumberRows.curve(NumberRows.parse(CompatConfig.COLD_SWEAT_BODY_TEMPERATURE_CURVE.get(), 2), after);
-            helper.assertTrue(Math.abs(ThirstHelper.getExhaustionBiomeModifier(player) - expected) < 0.001,
+            assertTrue(helper, Math.abs(ThirstHelper.getExhaustionBiomeModifier(player) - expected) < 0.001,
                     "climate multiplier " + ThirstHelper.getExhaustionBiomeModifier(player) + " at body temperature " + after + ", expected " + expected);
         }
         finally

@@ -24,7 +24,7 @@ public class DrinkByHandClient
                 || ModAttachment.thirst(player).needsBothHandsToDrink() && !player.getOffhandItem().isEmpty())
             return;
 
-        if (player.level().getFluidState(WaterPurity.pickFluid(player, ClipContext.Fluid.ANY).getBlockPos()).is(FluidTags.WATER))
+        if (player.level.getFluidState(WaterPurity.pickFluid(player, ClipContext.Fluid.ANY).getBlockPos()).is(FluidTags.WATER))
             ThirstModPacketHandler.sendToServer(DrinkByHandMessage.INSTANCE);
     }
 }

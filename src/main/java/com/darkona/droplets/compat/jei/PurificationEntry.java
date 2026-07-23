@@ -5,7 +5,7 @@ import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -90,7 +90,7 @@ public record PurificationEntry(String method, List<ItemStack> inputs, List<Item
     private static List<ItemStack> heatSources()
     {
         List<ItemStack> items = new ArrayList<>();
-        for (Holder<Block> block : BuiltInRegistries.BLOCK.getTagOrEmpty(DropletsTags.CAULDRON_HEAT_SOURCES))
+        for (Holder<Block> block : Registry.BLOCK.getTagOrEmpty(DropletsTags.CAULDRON_HEAT_SOURCES))
         {
             Item item = block.value().asItem();
             if (item != Items.AIR)

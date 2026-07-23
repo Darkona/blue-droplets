@@ -11,7 +11,8 @@ import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.config.ClientConfig;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -52,7 +53,7 @@ public final class ThirstBarRenderer
         event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), LAYER.getPath(), ThirstBarRenderer::render);
     }
 
-    private static void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight)
+    private static void render(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight)
     {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
@@ -71,8 +72,8 @@ public final class ThirstBarRenderer
         float blue = (tint & 255) / 255f;
         ResourceLocation fill = tint < 0 ? THIRST_ICONS : THIRST_MASK;
         ResourceLocation outline = tint < 0 ? QUENCHED_ICONS : QUENCHED_MASK;
-        int right = guiGraphics.guiWidth() / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
-        int top = guiGraphics.guiHeight() - gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
+        int right = screenWidth / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
+        int top = screenHeight - gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
         gui.rightHeight += 10;
 
         int ticks = gui.getGuiTicks();
@@ -98,8 +99,8 @@ public final class ThirstBarRenderer
         if (ClientConfig.SHOW_EXHAUSTION_UNDERLAY.get() && AppleSkinCompat.exhaustionUnderlay())
         {
             int width = (int) (Mth.clamp(thirst.getExhaustion() / GameplayConfig.EXHAUSTION_PER_POINT.get().floatValue(), 0f, 1f) * 81);
-            guiGraphics.setColor(1f, 1f, 1f, 0.75f);
-            guiGraphics.blit(QUENCHED_ICONS, right - width, top, 81 - width, 18, width, 9);
+            RenderSystem.setShaderColor(1f, 1f, 1f, 0.75f);
+            blit(poseStack, QUENCHED_ICONS, right - width, top, 81 - width, 18, width, 9);
         }
 
         for (int i = 0; i < 10; ++i)
@@ -110,42 +111,54 @@ public final class ThirstBarRenderer
             if (i == wave)
                 y -= 2;
 
-            guiGraphics.setColor(1f, 1f, 1f, 1f);
-            guiGraphics.blit(THIRST_ICONS, x, y, 0, 0, 9, 9, 25, 9);
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            blit(poseStack, THIRST_ICONS, x, y, 0, 0, 9, 9, 25, 9);
 
-            guiGraphics.setColor(red, green, blue, 1f);
+            RenderSystem.setShaderColor(red, green, blue, 1f);
             if (idx <= level)
-                guiGraphics.blit(fill, x, y, idx < level ? 16 : 8, 0, 9, 9, 25, 9);
+                blit(poseStack, fill, x, y, idx < level ? 16 : 8, 0, 9, 9, 25, 9);
             if (showQuenched && quenched > i * 2)
-                guiGraphics.blit(outline, x, y, outlineU(quenched, i), 0, 9, 9);
+                blit(poseStack, outline, x, y, outlineU(quenched, i), 0, 9, 9);
 
             if (gain == null)
                 continue;
-            guiGraphics.setColor(red, green, blue, flash);
+            RenderSystem.setShaderColor(red, green, blue, flash);
             if (newLevel > level && idx >= level && idx <= newLevel)
-                guiGraphics.blit(fill, x, y, idx < newLevel ? 16 : 8, 0, 9, 9, 25, 9);
+                blit(poseStack, fill, x, y, idx < newLevel ? 16 : 8, 0, 9, 9, 25, 9);
             if (newQuenched > quenched && newQuenched > i * 2 && i >= quenched / 2)
-                guiGraphics.blit(outline, x, y, outlineU(newQuenched, i), 0, 9, 9);
+                blit(poseStack, outline, x, y, outlineU(newQuenched, i), 0, 9, 9);
 
             if (newLevel < level && idx <= level && idx >= newLevel)
             {
-                guiGraphics.setColor(SALTY_RED, SALTY_GREEN, SALTY_BLUE, flash);
-                guiGraphics.blit(THIRST_MASK, x, y, idx < level ? 16 : 8, 0, 9, 9, 25, 9);
+                RenderSystem.setShaderColor(SALTY_RED, SALTY_GREEN, SALTY_BLUE, flash);
+                blit(poseStack, THIRST_MASK, x, y, idx < level ? 16 : 8, 0, 9, 9, 25, 9);
                 if (idx == newLevel)
                 {
-                    guiGraphics.setColor(red, green, blue, 1f);
-                    guiGraphics.blit(fill, x, y, 8, 0, 9, 9, 25, 9);
+                    RenderSystem.setShaderColor(red, green, blue, 1f);
+                    blit(poseStack, fill, x, y, 8, 0, 9, 9, 25, 9);
                 }
             }
             if (newQuenched < quenched && quenched > i * 2 && newQuenched < i * 2 + 2)
             {
-                guiGraphics.setColor(SALTY_RED, SALTY_GREEN, SALTY_BLUE, flash);
-                guiGraphics.blit(QUENCHED_MASK, x, y, outlineU(quenched, i), 0, 9, 9);
+                RenderSystem.setShaderColor(SALTY_RED, SALTY_GREEN, SALTY_BLUE, flash);
+                blit(poseStack, QUENCHED_MASK, x, y, outlineU(quenched, i), 0, 9, 9);
             }
         }
-        guiGraphics.setColor(1f, 1f, 1f, 1f);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
         minecraft.getProfiler().pop();
+    }
+
+    /** Draws part of a texture: 256x256 unless the texture size is given. */
+    private static void blit(PoseStack poseStack, ResourceLocation texture, int x, int y, int u, int v, int width, int height)
+    {
+        blit(poseStack, texture, x, y, u, v, width, height, 256, 256);
+    }
+
+    static void blit(PoseStack poseStack, ResourceLocation texture, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight)
+    {
+        RenderSystem.setShaderTexture(0, texture);
+        GuiComponent.blit(poseStack, x, y, u, v, width, height, textureWidth, textureHeight);
     }
 
     private static int outlineU(int quenched, int i)

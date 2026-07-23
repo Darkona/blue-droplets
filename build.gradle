@@ -16,7 +16,7 @@ base {
     archivesName = archives_name
 }
 
-// Minecraft 1.20.1 runs on Java 17: compile for it and run the game on it.
+// Minecraft 1.19.2 runs on Java 17: compile for it and run the game on it.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 java.withSourcesJar()
 
@@ -33,8 +33,6 @@ repositories {
             includeGroup 'curse.maven'
         }
     }
-    maven { url = 'https://mvn.devos.one/snapshots' }
-    maven { url = 'https://maven.ithundxr.dev/snapshots' }
     maven {
         name = "Jared's maven"
         url = 'https://maven.blamejared.com/'
@@ -43,7 +41,6 @@ repositories {
         name = 'ModMaven'
         url = 'https://modmaven.dev'
     }
-    maven { url = 'https://maven.createmod.net' }
     maven {
         url = 'https://api.modrinth.com/maven'
         content {
@@ -52,16 +49,8 @@ repositories {
     }
 }
 
-// The jar is built against forge_version (the NeoForge 47.1 fork point). Some compat mods need a newer Forge
-// (Serene Seasons and GlitchCore ask for 47.3), so -PwithCompat runs and builds on forge_compat_version instead.
-// -PonNeoForge=1.20.1-47.1.106 builds and runs on NeoForge 47.1 instead, to check the same code there.
-var forgeVersion = project.hasProperty('withCompat') ? forge_compat_version : forge_version
-
 legacyForge {
-    if (project.hasProperty('onNeoForge'))
-        enable { neoForgeVersion = project.property('onNeoForge') }
-    else
-        version = "${minecraft_version}-${forgeVersion}"
+    version = "${minecraft_version}-${forge_version}"
     addModdingDependenciesTo(sourceSets.api)
 
     parchment {
@@ -133,48 +122,40 @@ dependencies {
     implementation sourceSets.api.output
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    // Forge 47 does not ship MixinExtras: bundled in the jar.
+    // Forge 43 does not ship MixinExtras: bundled in the jar.
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
 
     // Optional compat: every use sits behind a Compat class that checks ModList, or a plugin the other mod discovers.
     modCompileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
-    modCompileOnly("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}") { transitive = false }
-    modCompileOnly "dev.engine-room.flywheel:flywheel-forge-api-${minecraft_version}:${flywheel_version}"
+    modCompileOnly "com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}"
     modCompileOnly "com.tterrag.registrate:Registrate:${registrate_version}"
     modCompileOnly "maven.modrinth:jade:${jade_version}"
     modCompileOnly "maven.modrinth:appleskin:${appleskin_version}"
     modCompileOnly "maven.modrinth:cold-sweat:${cold_sweat_version}"
     modCompileOnly "maven.modrinth:serene-seasons:${serene_seasons_version}"
-    modCompileOnly "maven.modrinth:glitchcore:${glitchcore_version}"
     modCompileOnly "maven.modrinth:travelersbackpack:${travelers_backpack_version}"
     modCompileOnly "maven.modrinth:reliquary-reincarnations:${reliquary_version}"
     modCompileOnly "maven.modrinth:farmers-delight:${farmers_delight_version}"
     modCompileOnly "maven.modrinth:vampirism:${vampirism_version}"
-    modCompileOnly "maven.modrinth:supernatural:${supernatural_version}"
     modCompileOnly "maven.modrinth:miners-delight:${miners_delight_version}"
-    modCompileOnly "maven.modrinth:lets-do-farm-charm:${farm_and_charm_version}"
-    modCompileOnly "maven.modrinth:lets-do-herbalbrews:${herbalbrews_version}"
-    modCompileOnly "maven.modrinth:architectury-api:${architectury_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
 
     // ./gradlew runGameTestServer -PwithCompat: the optional mods Blue Droplets has code for, on the dev runtime.
-    // Create's slim jar does not bundle Flywheel, Ponder and Registrate: they go in by hand.
+    // Create's slim jar does not bundle Flywheel and Registrate: they go in by hand.
     if (project.hasProperty('withCompat')) {
         modLocalRuntime("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
-        modLocalRuntime("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}") { transitive = false }
-        modLocalRuntime "dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}"
+        modLocalRuntime "com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}"
         modLocalRuntime "com.tterrag.registrate:Registrate:${registrate_version}"
         modLocalRuntime "maven.modrinth:jade:${jade_version}"
         modLocalRuntime "maven.modrinth:appleskin:${appleskin_version}"
         modLocalRuntime "maven.modrinth:cold-sweat:${cold_sweat_version}"
         modLocalRuntime "maven.modrinth:serene-seasons:${serene_seasons_version}"
-        modLocalRuntime "maven.modrinth:glitchcore:${glitchcore_version}"
         modLocalRuntime "maven.modrinth:travelersbackpack:${travelers_backpack_version}"
         modLocalRuntime "maven.modrinth:reliquary-reincarnations:${reliquary_version}"
         modLocalRuntime "maven.modrinth:farmers-delight:${farmers_delight_version}"
     }
-    // ./gradlew runGameTestServer -PwithDelight: the Farmer's Delight addons that exist for 1.20.1, kept apart from
+    // ./gradlew runGameTestServer -PwithDelight: the Farmer's Delight addons that exist for 1.19.2, kept apart from
     // -PwithCompat so that one stays fast; both flags combine.
     if (project.hasProperty('withDelight')) {
         modLocalRuntime "maven.modrinth:farmers-delight:${farmers_delight_version}"
@@ -182,16 +163,14 @@ dependencies {
         modLocalRuntime "maven.modrinth:oceans-delight:${oceans_delight_version}"
         modLocalRuntime "maven.modrinth:enders-delight:${enders_delight_version}"
         modLocalRuntime "maven.modrinth:miners-delight:${miners_delight_version}"
-        modLocalRuntime "maven.modrinth:lets-do-farm-charm:${farm_and_charm_version}"
-        modLocalRuntime "maven.modrinth:lets-do-herbalbrews:${herbalbrews_version}"
-        modLocalRuntime "maven.modrinth:lets-do-brewery-farmcharm-compat:${brewery_version}"
-        modLocalRuntime "maven.modrinth:architectury-api:${architectury_version}"
         modLocalRuntime "maven.modrinth:fruits-delight:${fruits_delight_version}"
         modLocalRuntime "maven.modrinth:cultural-delights:${cultural_delights_version}"
+        modLocalRuntime "maven.modrinth:cooks-collection:${cooks_collection_version}"
         modLocalRuntime "maven.modrinth:corn-delight:${corn_delight_version}"
         modLocalRuntime "maven.modrinth:mmlib:${mmlib_version}"
         modLocalRuntime "maven.modrinth:rustic-delight:${rustic_delight_version}"
         modLocalRuntime "maven.modrinth:crabbers-delight:${crabbers_delight_version}"
+        modLocalRuntime "maven.modrinth:geckolib:${geckolib_version}"
         modLocalRuntime "maven.modrinth:ends-delight:${ends_delight_version}"
         modLocalRuntime "maven.modrinth:my-nethers-delight:${my_nethers_delight_version}"
     }

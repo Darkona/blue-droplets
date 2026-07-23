@@ -1,39 +1,34 @@
 package com.darkona.droplets.compat.create.ponder;
 
 
-import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
-import com.tterrag.registrate.util.entry.ItemProviderEntry;
-import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.compat.create.CreateRegistry;
 import com.darkona.droplets.compat.create.ponder.scene.SandFilterScene;
-import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
-import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
-import net.minecraft.resources.ResourceLocation;
+import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
+import com.simibubi.create.foundation.ponder.PonderRegistry;
+import com.simibubi.create.foundation.ponder.PonderTag;
+import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 
 
+/**
+ * Create 0.5.1 keeps Ponder inside Create: tags and scenes go straight into its registry, on client setup, once the
+ * Sand Filter item exists.
+ */
 public class ThirstPonders {
-    public static final ResourceLocation PURIFICATION = BlueDroplets.asResource("purification");
+    public static PonderTag PURIFICATION;
 
-    public static void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
-        PonderTagRegistrationHelper<RegistryEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+    public static void register() {
+        PURIFICATION = new PonderTag(BlueDroplets.asResource("purification"))
+                .item(CreateRegistry.SAND_FILTER_BLOCK.get(), true, false)
+                .defaultLang("Purification", "Components which purify water")
+                .addToIndex();
+        PonderRegistry.TAGS.forTag(PURIFICATION).add(CreateRegistry.SAND_FILTER_BLOCK);
 
-        HELPER.registerTag(PURIFICATION)
-                .addToIndex()
-                .item(CreateRegistry.SAND_FILTER_BLOCK, true, false)
-                .title("Purification")
-                .description("Components which purifying water")
-                .register();
-    }
-
-    public static void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        PonderSceneRegistrationHelper<ItemProviderEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
-
-        HELPER.addStoryBoard(
+        new PonderRegistrationHelper(BlueDroplets.ID).addStoryBoard(
                 CreateRegistry.SAND_FILTER_BLOCK,
                 "sand_filter",
                 SandFilterScene::filtering,
-                AllCreatePonderTags.FLUIDS,
+                AllPonderTags.FLUIDS,
                 PURIFICATION
         );
     }

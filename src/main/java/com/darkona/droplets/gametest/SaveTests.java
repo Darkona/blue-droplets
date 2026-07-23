@@ -28,6 +28,8 @@ import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Saved data and codecs: the player capability, the purity on disk and on the wire, the drinks data map and
@@ -51,7 +53,7 @@ public class SaveTests
         assertValueEqual(helper, loaded.getThirst(), 13, "thirst after a save");
         assertValueEqual(helper, loaded.getQuenched(), 7, "quenched after a save");
         assertValueEqual(helper, loaded.getExhaustion(), 2.5F, "exhaustion after a save");
-        helper.assertFalse(loaded.getShouldTickThirst(), "disabled thirst came back enabled");
+        assertFalse(helper, loaded.getShouldTickThirst(), "disabled thirst came back enabled");
         helper.succeed();
     }
 
@@ -64,7 +66,7 @@ public class SaveTests
         PlayerThirst loaded = new PlayerThirst();
         loaded.deserializeNBT(tag);
         assertValueEqual(helper, loaded.getQuenched(), 10, "quenched above thirst in an old save");
-        helper.assertTrue(loaded.getShouldTickThirst(), "a save without the enable flag is disabled");
+        assertTrue(helper, loaded.getShouldTickThirst(), "a save without the enable flag is disabled");
         helper.succeed();
     }
 
@@ -83,7 +85,7 @@ public class SaveTests
         ItemStack bucket = new ItemStack(Items.WATER_BUCKET);
         bucket.getOrCreateTag().putInt(ThirstComponent.PURITY, 7);
         ItemStack loaded = ItemStack.of(bucket.save(new CompoundTag()));
-        helper.assertTrue(loaded.is(Items.WATER_BUCKET), "a bucket with purity 7 was lost on load");
+        assertTrue(helper, loaded.is(Items.WATER_BUCKET), "a bucket with purity 7 was lost on load");
         assertValueEqual(helper, ThirstComponent.get(loaded), WaterPurity.defaultPurity(), "purity 7 after a load");
         helper.succeed();
     }
@@ -97,7 +99,7 @@ public class SaveTests
         {
             ItemStack bucket = ItemStack.of(legacyItem("minecraft:water_bucket", old));
             assertValueEqual(helper, ThirstComponent.get(bucket), expected[old], "item purity from Thirst Was Taken " + old);
-            helper.assertFalse(bucket.getTag().contains(ThirstComponent.LEGACY_PURITY), "the old purity stayed on the item");
+            assertFalse(helper, bucket.getTag().contains(ThirstComponent.LEGACY_PURITY), "the old purity stayed on the item");
 
             CompoundTag fluid = new CompoundTag();
             fluid.putString("FluidName", "minecraft:water");
@@ -107,11 +109,11 @@ public class SaveTests
             fluid.put("Tag", fluidTag);
             FluidStack water = FluidStack.loadFluidStackFromNBT(fluid);
             assertValueEqual(helper, ThirstComponent.get(water), expected[old], "fluid purity from Thirst Was Taken " + old);
-            helper.assertFalse(water.getTag().contains(ThirstComponent.LEGACY_PURITY), "the old purity stayed on the fluid");
+            assertFalse(helper, water.getTag().contains(ThirstComponent.LEGACY_PURITY), "the old purity stayed on the fluid");
         }
         ItemStack stone = ItemStack.of(legacyItem("minecraft:stone", 2));
         assertValueEqual(helper, stone.getTag().getInt(ThirstComponent.LEGACY_PURITY), 2, "Purity of an item that is no water container");
-        helper.assertFalse(ThirstComponent.has(stone), "an item that is no water container got a purity");
+        assertFalse(helper, ThirstComponent.has(stone), "an item that is no water container got a purity");
         helper.succeed();
     }
 
@@ -166,11 +168,11 @@ public class SaveTests
     @GameTest(template = "empty")
     public static void drinksDataMapAcceptsSaltyAndRejectsOutOfRange(GameTestHelper helper)
     {
-        helper.assertTrue(parse("{\"thirst\": -2, \"quenched\": -2}"), "salty entry rejected");
-        helper.assertTrue(parse("{\"thirst\": 6, \"quenched\": 8, \"purity\": 5}"), "water entry of purity 5 rejected");
-        helper.assertFalse(parse("{\"thirst\": 21, \"quenched\": 0}"), "thirst 21 accepted");
-        helper.assertFalse(parse("{\"thirst\": 2, \"quenched\": -30}"), "quenched -30 accepted");
-        helper.assertFalse(parse("{\"thirst\": 2, \"quenched\": 2, \"purity\": 6}"), "purity 6 accepted");
+        assertTrue(helper, parse("{\"thirst\": -2, \"quenched\": -2}"), "salty entry rejected");
+        assertTrue(helper, parse("{\"thirst\": 6, \"quenched\": 8, \"purity\": 5}"), "water entry of purity 5 rejected");
+        assertFalse(helper, parse("{\"thirst\": 21, \"quenched\": 0}"), "thirst 21 accepted");
+        assertFalse(helper, parse("{\"thirst\": 2, \"quenched\": -30}"), "quenched -30 accepted");
+        assertFalse(helper, parse("{\"thirst\": 2, \"quenched\": 2, \"purity\": 6}"), "purity 6 accepted");
         helper.succeed();
     }
 
@@ -189,7 +191,7 @@ public class SaveTests
     {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         ThirstValuesSyncMessage sent = ThirstValuesSyncMessage.fromTables();
-        helper.assertTrue(sent.drinks().containsKey(Items.POTION), "the resolved drink table has no water bottle");
+        assertTrue(helper, sent.drinks().containsKey(Items.POTION), "the resolved drink table has no water bottle");
         sent.encode(buf);
         ThirstValuesSyncMessage received = ThirstValuesSyncMessage.decode(buf);
         assertValueEqual(helper, received.drinks().size(), sent.drinks().size(), "drinks sent");

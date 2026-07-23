@@ -135,9 +135,9 @@ public final class GameplayConfig
                 .defineEnum("formula", ClimateFormula.LEGACY);
         LEGACY_HARSHNESS = BUILDER.comment("LEGACY: how much of a multiplier below 1 is kept (0.5 = halfway to 1)").defineInRange("legacyHarshness", 0.5, 0.0, 1.0);
         TEMPERATURE_CURVE = BUILDER.comment("CURVE: [\"temperature,multiplier\", ...] in ascending temperature; straight lines between points, flat beyond the ends")
-                .<String>defineListAllowEmpty("temperatureCurve", List.of("-0.5,0.7", "0.8,1.0", "2.0,1.5"), GameplayConfig::isValidPair);
+                .<String>defineListAllowEmpty(List.of("temperatureCurve"), () -> List.of("-0.5,0.7", "0.8,1.0", "2.0,1.5"), GameplayConfig::isValidPair);
         HUMIDITY_CURVE = BUILDER.comment("CURVE: [\"downfall,multiplier\", ...] in ascending downfall (0 dry to 1 wet)")
-                .<String>defineListAllowEmpty("humidityCurve", List.of("0.0,1.2", "0.4,1.0", "1.0,0.8"), GameplayConfig::isValidPair);
+                .<String>defineListAllowEmpty(List.of("humidityCurve"), () -> List.of("0.0,1.2", "0.4,1.0", "1.0,0.8"), GameplayConfig::isValidPair);
         RAIN_MULTIPLIER = BUILDER.comment("When rain falls on the player").defineInRange("rain", 1.0, 0.0, 10.0);
         THUNDER_MULTIPLIER = BUILDER.comment("When rain falls on the player during a thunderstorm (replaces rain)").defineInRange("thunder", 1.0, 0.0, 10.0);
         DAY_MULTIPLIER = BUILDER.comment("During the day, in dimensions with a day cycle").defineInRange("day", 1.0, 0.0, 10.0);
@@ -146,7 +146,7 @@ public final class GameplayConfig
         IN_WATER_MULTIPLIER = BUILDER.comment("While in water with the head out").defineInRange("inWater", 1.0, 0.0, 10.0);
         UNDERWATER_MULTIPLIER = BUILDER.comment("While fully underwater").defineInRange("underwater", 1.0, 0.0, 10.0);
         ALTITUDE_MULTIPLIERS = BUILDER.comment("[\"minY,maxY,multiplier\", ...] measured from the dimension's sea level; the first band containing the player applies")
-                .<String>defineListAllowEmpty("altitude", List.of(), GameplayConfig::isValidAltitude);
+                .<String>defineListAllowEmpty(List.of("altitude"), () -> List.of(), GameplayConfig::isValidAltitude);
         BUILDER.pop();
 
         BUILDER.comment("Exhaustion per activity. In OWN mode these are the sources (defaults = vanilla hunger exhaustion);",

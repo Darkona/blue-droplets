@@ -14,7 +14,7 @@ public class DehydrationEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
-        if (!entity.level().isClientSide && entity instanceof Player player) {
+        if (!entity.level.isClientSide && entity instanceof Player player) {
             float amount = (float) (0.005F * (amplifier + 1) * GameplayConfig.DEHYDRATION_MULTIPLIER.get());
             ModAttachment.thirst(player).addExhaustion(player, amount);
         }

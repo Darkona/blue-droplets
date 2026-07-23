@@ -56,7 +56,7 @@ public final class ClientConfig
         BUILDER.pop();
 
         BUILDER.comment("Colours (#RRGGBB) of the thirst bar while a status applies; when several apply, the first in this list wins").push("Bar Colors");
-        VAMPIRE_COLOR = defineColor("vampire", "Vampires (Vampirism, Supernatural)", "#B3121B");
+        VAMPIRE_COLOR = defineColor("vampire", "Vampires (Vampirism)", "#B3121B");
         DEHYDRATION_COLOR = defineColor("dehydration", "Dehydration effect", "#8B5A2B");
         OVERHYDRATED_COLOR = defineColor("overhydrated", "Overhydrated effect", "#9DB0C0");
         POISON_COLOR = defineColor("poison", "Poison effect", "#7DAA3C");

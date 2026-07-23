@@ -56,16 +56,16 @@ public final class ItemsConfig
     {
         BUILDER.comment("These entries win over the blue_droplets:drinks data map (datapacks) and over values registered by other mods.",
                 "Format: [[\"namespace:item\" or \"#namespace:tag\", thirst, quenched], ...]; thirst -20 to 20 and quenched -20 or more (negative values remove them)").push("overrides");
-        DRINKS = BUILDER.comment("Items that restore thirst when drunk").<List<?>>defineListAllowEmpty("drinks", List.of(), ItemsConfig::checkEntry);
-        FOODS = BUILDER.comment("Items that restore thirst when eaten").<List<?>>defineListAllowEmpty("foods", List.of(), ItemsConfig::checkEntry);
+        DRINKS = BUILDER.comment("Items that restore thirst when drunk").<List<?>>defineListAllowEmpty(List.of("drinks"), () -> List.of(), ItemsConfig::checkEntry);
+        FOODS = BUILDER.comment("Items that restore thirst when eaten").<List<?>>defineListAllowEmpty(List.of("foods"), () -> List.of(), ItemsConfig::checkEntry);
         BLACKLIST = BUILDER.comment("Items that never restore thirst, whatever datapacks or other mods say: [\"namespace:item\", \"#namespace:tag\"]")
-                .<String>defineListAllowEmpty("blacklist", List.of(), it -> it instanceof String);
+                .<String>defineListAllowEmpty(List.of("blacklist"), () -> List.of(), it -> it instanceof String);
         BUILDER.pop();
 
         BUILDER.push("containers");
         CONTAINERS = BUILDER.comment("Drinks that carry a water purity (added to the item tag blue_droplets:purity_containers, where the defaults live)",
                         "Format: [\"examplemod:example_item_1\", \"#examplemod:example_tag\"]")
-                .<String>defineListAllowEmpty("containers", List.of(), it -> it instanceof String);
+                .<String>defineListAllowEmpty(List.of("containers"), () -> List.of(), it -> it instanceof String);
         BUILDER.pop();
 
         BUILDER.comment("Items in the item tag blue_droplets:salty (empty by default) with no values from overrides, datapacks or other mods get these").push("salty");
@@ -100,9 +100,9 @@ public final class ItemsConfig
         INFERENCE_MAX_QUENCHED = BUILDER.comment("Highest estimated quenched").defineInRange("maxQuenched", 10, 0, 40);
         INFERENCE_MIN_THIRST = BUILDER.comment("Estimates below this thirst are dropped").defineInRange("minThirst", 1, 1, 20);
         INFERENCE_BLACKLIST = BUILDER.comment("Items never estimated nor passed on: [\"namespace:item\", \"#namespace:tag\", \"@namespace\"]")
-                .<String>defineListAllowEmpty("blacklist", List.of(), it -> it instanceof String);
+                .<String>defineListAllowEmpty(List.of("blacklist"), () -> List.of(), it -> it instanceof String);
         INFERENCE_IGNORED_RECIPE_TYPES = BUILDER.comment("Recipe types that are not used: [\"namespace:type\"]")
-                .<String>defineListAllowEmpty("ignoredRecipeTypes", List.of("minecraft:stonecutting", "minecraft:smithing"), it -> it instanceof String);
+                .<String>defineListAllowEmpty(List.of("ignoredRecipeTypes"), () -> List.of("minecraft:stonecutting", "minecraft:smithing"), it -> it instanceof String);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

@@ -6,6 +6,8 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -43,7 +45,7 @@ public class JadePlugin implements IWailaPlugin
         registration.registerBlockComponent(PurityProvider.INSTANCE, Block.class);
     }
 
-    private enum PurityProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor>
+    private enum PurityProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity>
     {
         INSTANCE;
 
@@ -51,10 +53,9 @@ public class JadePlugin implements IWailaPlugin
         private static final String KEY = UID.toString();
 
         @Override
-        public void appendServerData(CompoundTag data, BlockAccessor accessor)
+        public void appendServerData(CompoundTag data, ServerPlayer player, Level level, BlockEntity blockEntity, boolean showDetails)
         {
-            BlockEntity blockEntity = accessor.getBlockEntity();
-            IFluidHandler handler = blockEntity == null ? null : blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
+            IFluidHandler handler = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
             if (handler == null || !WaterPurity.enabled())
                 return;
 

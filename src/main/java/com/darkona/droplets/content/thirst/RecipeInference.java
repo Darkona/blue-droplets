@@ -3,7 +3,7 @@ package com.darkona.droplets.content.thirst;
 import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -76,7 +76,7 @@ public final class RecipeInference
         for (String id : ItemsConfig.INFERENCE_IGNORED_RECIPE_TYPES.get())
         {
             ResourceLocation type = ResourceLocation.tryParse(id);
-            if (type != null && !BuiltInRegistries.RECIPE_TYPE.containsKey(type) && ModList.get().isLoaded(type.getNamespace()))
+            if (type != null && !Registry.RECIPE_TYPE.containsKey(type) && ModList.get().isLoaded(type.getNamespace()))
                 problems.add("items.toml inference.ignoredRecipeTypes: unknown recipe type " + id);
             ignoredTypes.add(type == null ? id : type.toString());
         }
@@ -85,12 +85,12 @@ public final class RecipeInference
         holders.sort(Comparator.comparing(Recipe::getId));
         for (Recipe<?> recipe : holders)
         {
-            ResourceLocation type = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType());
+            ResourceLocation type = Registry.RECIPE_TYPE.getKey(recipe.getType());
             if (type == null || ignoredTypes.contains(type.toString()) || recipe.isSpecial())
                 continue;
             try
             {
-                ItemStack result = recipe.getResultItem(registries);
+                ItemStack result = recipe.getResultItem();
                 if (result.isEmpty())
                     continue;
                 byResult.computeIfAbsent(result.getItem(), item -> new ArrayList<>())
@@ -112,7 +112,7 @@ public final class RecipeInference
         int minThirst = ItemsConfig.INFERENCE_MIN_THIRST.get();
         Map<Item, int[]> drinks = new HashMap<>();
         Map<Item, int[]> foods = new HashMap<>();
-        for (Item item : BuiltInRegistries.ITEM)
+        for (Item item : Registry.ITEM)
         {
             if (!inference.byResult.containsKey(item) || inputs.known().containsKey(item) || inference.skipped(item)
                     || (inference.onlyConsumables && !consumable(item)))
@@ -133,7 +133,7 @@ public final class RecipeInference
     {
         RecipeInference inference = new RecipeInference(inputs, recipeManager, registries);
         List<String> lines = new ArrayList<>();
-        String name = BuiltInRegistries.ITEM.getKey(item).toString();
+        String name = Registry.ITEM.getKey(item).toString();
         int[] known = inputs.known().get(item);
         List<Entry> entries = inference.byResult.get(item);
         if (known != null)
@@ -243,7 +243,7 @@ public final class RecipeInference
 
     private boolean skipped(Item item)
     {
-        return inputs.excluded().contains(item) || (!namespaces.isEmpty() && namespaces.contains(BuiltInRegistries.ITEM.getKey(item).getNamespace()));
+        return inputs.excluded().contains(item) || (!namespaces.isEmpty() && namespaces.contains(Registry.ITEM.getKey(item).getNamespace()));
     }
 
     private static boolean better(int[] a, int[] b)
@@ -275,7 +275,7 @@ public final class RecipeInference
     {
         if (stacks.length == 0)
             return "(matches nothing)";
-        String first = BuiltInRegistries.ITEM.getKey(stacks[0].getItem()).toString();
+        String first = Registry.ITEM.getKey(stacks[0].getItem()).toString();
         return stacks.length == 1 ? first : first + " or " + (stacks.length - 1) + " more";
     }
 

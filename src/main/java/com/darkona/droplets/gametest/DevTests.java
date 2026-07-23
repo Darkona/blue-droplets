@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Development tools: the item dump behind {@code /blue_droplets dev dump_items}, which only exists outside production.
@@ -30,17 +32,17 @@ public class DevTests
 
         List<String> rows = ItemDump.rows(Set.of("minecraft"));
         assertValueEqual(helper, rows.get(0), ItemDump.HEADER, "header");
-        helper.assertTrue(rows.stream().allMatch(row -> row.startsWith("minecraft:") || row == rows.get(0)), "only the asked namespace");
+        assertTrue(helper, rows.stream().allMatch(row -> row.startsWith("minecraft:") || row == rows.get(0)), "only the asked namespace");
         String potion = row(rows, "minecraft:potion");
-        helper.assertTrue(potion.startsWith("minecraft:potion,minecraft,true,,,,," + ThirstHelper.getThirst(Items.POTION.getDefaultInstance())
+        assertTrue(helper, potion.startsWith("minecraft:potion,minecraft,true,,,,," + ThirstHelper.getThirst(Items.POTION.getDefaultInstance())
                 + "," + ThirstHelper.getQuenched(Items.POTION.getDefaultInstance()) + ","), "water bottle row: " + potion);
-        helper.assertTrue(row(rows, "minecraft:golden_apple").startsWith("minecraft:golden_apple,minecraft,false,4,9.60,\"minecraft:regeneration,100,1,1.00;minecraft:absorption,2400,0,1.00\",true,"),
+        assertTrue(helper, row(rows, "minecraft:golden_apple").startsWith("minecraft:golden_apple,minecraft,false,4,9.60,\"minecraft:regeneration,100,1,1.00;minecraft:absorption,2400,0,1.00\",true,"),
                 "golden apple row: " + row(rows, "minecraft:golden_apple"));
-        helper.assertTrue(row(rows, "minecraft:oak_log").contains("minecraft:logs"), "tags of the oak log");
+        assertTrue(helper, row(rows, "minecraft:oak_log").contains("minecraft:logs"), "tags of the oak log");
 
         List<String> all = ItemDump.rows(Set.of(ItemDump.ALL));
-        helper.assertFalse(row(all, "minecraft:apple").isEmpty(), "* leaves out minecraft");
-        helper.assertFalse(row(all, "blue_droplets:terracotta_water_bowl").isEmpty(), "* leaves out blue_droplets");
+        assertFalse(helper, row(all, "minecraft:apple").isEmpty(), "* leaves out minecraft");
+        assertFalse(helper, row(all, "blue_droplets:terracotta_water_bowl").isEmpty(), "* leaves out blue_droplets");
         helper.succeed();
     }
 

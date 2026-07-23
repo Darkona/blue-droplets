@@ -3,7 +3,6 @@ package com.darkona.droplets.content.registry;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -22,10 +21,10 @@ public final class LegacyIds
     public static final String LEGACY_NAMESPACE = "thirst";
 
     private static final Map<ResourceKey<? extends Registry<?>>, List<String>> REMAPS = Map.of(
-            Registries.ITEM, List.of("clay_bowl", "terracotta_bowl", "terracotta_water_bowl", "sand_filter"),
-            Registries.BLOCK, List.of("sand_filter"),
-            Registries.BLOCK_ENTITY_TYPE, List.of("sand_filter"),
-            Registries.MOB_EFFECT, List.of("quenchness")
+            Registry.ITEM_REGISTRY, List.of("clay_bowl", "terracotta_bowl", "terracotta_water_bowl", "sand_filter"),
+            Registry.BLOCK_REGISTRY, List.of("sand_filter"),
+            Registry.BLOCK_ENTITY_TYPE_REGISTRY, List.of("sand_filter"),
+            Registry.MOB_EFFECT_REGISTRY, List.of("quenchness")
     );
 
     /** Blue Droplets level of each Thirst Was Taken level: dirty, slightly dirty, acceptable, purified. */

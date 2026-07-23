@@ -1,7 +1,7 @@
 package com.darkona.droplets.content.data;
 
 import com.darkona.droplets.BlueDroplets;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -19,16 +19,16 @@ public final class DropletsDataMaps
 {
     /** {@code data/<ns>/data_maps/item/drinks.json}. */
     public static final DataMapType<Item, DrinkValues> DRINKS = DataMapType
-            .create(BlueDroplets.asResource("drinks"), Registries.ITEM, DrinkValues.CODEC);
+            .create(BlueDroplets.asResource("drinks"), Registry.ITEM_REGISTRY, DrinkValues.CODEC);
     /** {@code data/<ns>/data_maps/block/hydrating_blocks.json}: block foods (cake); server only, {@code purity} unused. */
     public static final DataMapType<Block, DrinkValues> HYDRATING_BLOCKS = DataMapType
-            .create(BlueDroplets.asResource("hydrating_blocks"), Registries.BLOCK, DrinkValues.CODEC);
+            .create(BlueDroplets.asResource("hydrating_blocks"), Registry.BLOCK_REGISTRY, DrinkValues.CODEC);
     /** {@code data/<ns>/data_maps/worldgen/biome/biome_water.json}; server only. */
     public static final DataMapType<Biome, BiomeWater> BIOME_WATER = DataMapType
-            .create(BlueDroplets.asResource("biome_water"), Registries.BIOME, BiomeWater.CODEC);
+            .create(BlueDroplets.asResource("biome_water"), Registry.BIOME_REGISTRY, BiomeWater.CODEC);
     /** {@code data/<ns>/data_maps/dimension_type/dimension_water.json}; server only. */
     public static final DataMapType<DimensionType, DimensionWater> DIMENSION_WATER = DataMapType
-            .create(BlueDroplets.asResource("dimension_water"), Registries.DIMENSION_TYPE, DimensionWater.CODEC);
+            .create(BlueDroplets.asResource("dimension_water"), Registry.DIMENSION_TYPE_REGISTRY, DimensionWater.CODEC);
 
     private static final List<DataMapType<?, ?>> ALL = List.of(DRINKS, HYDRATING_BLOCKS, BIOME_WATER, DIMENSION_WATER);
 

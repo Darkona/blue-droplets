@@ -7,7 +7,7 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 
 /**
- * {@code blue_droplets:loot_config}: true with {@code loot.enabled}. Forge 1.20.1 only reads load conditions in
+ * {@code blue_droplets:loot_config}: true with {@code loot.enabled}. Forge 1.19.2 only reads load conditions in
  * recipes and advancements, so the chest loot uses the loot condition of the same id instead
  * ({@link LootConfigLootCondition}), checked on every roll.
  */

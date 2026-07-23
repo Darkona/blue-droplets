@@ -17,7 +17,7 @@ import com.google.gson.JsonParser;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -63,6 +63,8 @@ import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * {@code purity.enabled=false}: nothing stores, shows or rolls a purity. Each test turns it off and back on within
@@ -98,9 +100,9 @@ public class PurityOffTests
     public static void waterTakenFromTheWorldHasNoPurity(GameTestHelper helper)
     {
         withPurityOff(() -> {
-            helper.assertFalse(WaterPurity.hasPurity(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 0)), "addPurity stored a purity on an item");
-            helper.assertFalse(WaterPurity.hasPurity(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), 0)), "addPurity stored a purity on a fluid");
-            helper.assertFalse(WaterPurity.hasPurity(DropletsAPI.withPurity(new ItemStack(Items.WATER_BUCKET), 0)), "the API stored a purity");
+            assertFalse(helper, WaterPurity.hasPurity(WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 0)), "addPurity stored a purity on an item");
+            assertFalse(helper, WaterPurity.hasPurity(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), 0)), "addPurity stored a purity on a fluid");
+            assertFalse(helper, WaterPurity.hasPurity(DropletsAPI.withPurity(new ItemStack(Items.WATER_BUCKET), 0)), "the API stored a purity");
 
             BlockPos water = helper.absolutePos(new BlockPos(2, 2, 2));
             helper.getLevel().setBlockAndUpdate(water, Blocks.WATER.defaultBlockState());
@@ -110,9 +112,9 @@ public class PurityOffTests
             {
                 ItemStack stack = new ItemStack(empty);
                 player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-                ItemStack filled = stack.use(player.level(), player, InteractionHand.MAIN_HAND).getObject();
-                helper.assertTrue(WaterPurity.isWaterFilledContainer(filled), empty + " was not filled from the world");
-                helper.assertFalse(WaterPurity.hasPurity(filled), empty + " filled from the world has a purity");
+                ItemStack filled = stack.use(player.level, player, InteractionHand.MAIN_HAND).getObject();
+                assertTrue(helper, WaterPurity.isWaterFilledContainer(filled), empty + " was not filled from the world");
+                assertFalse(helper, WaterPurity.hasPurity(filled), empty + " filled from the world has a purity");
             }
 
             BlockPos dispenser = helper.absolutePos(new BlockPos(1, 2, 2));
@@ -122,10 +124,10 @@ public class PurityOffTests
             entity.setItem(0, new ItemStack(Items.GLASS_BOTTLE));
             helper.getLevel().getBlockState(dispenser).tick(helper.getLevel(), dispenser, helper.getLevel().random);
             ItemStack dispensed = entity.getItem(0);
-            helper.assertTrue(dispensed.is(Items.POTION), "the dispenser did not fill the bottle");
-            helper.assertFalse(WaterPurity.hasPurity(dispensed), "water bottle from a dispenser has a purity");
+            assertTrue(helper, dispensed.is(Items.POTION), "the dispenser did not fill the bottle");
+            assertFalse(helper, WaterPurity.hasPurity(dispensed), "water bottle from a dispenser has a purity");
 
-            helper.assertFalse(WaterPurity.hasPurity(FluidUtil.getFilledBucket(new FluidStack(Fluids.WATER, 1000))), "bucket filled from a tank has a purity");
+            assertFalse(helper, WaterPurity.hasPurity(FluidUtil.getFilledBucket(new FluidStack(Fluids.WATER, 1000))), "bucket filled from a tank has a purity");
         });
         helper.succeed();
     }
@@ -145,8 +147,8 @@ public class PurityOffTests
                 helper.getLevel().getBlockState(pos).use(helper.getLevel(), player, InteractionHand.MAIN_HAND,
                         new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
                 ItemStack filled = player.getItemInHand(InteractionHand.MAIN_HAND);
-                helper.assertTrue(WaterPurity.isWaterFilledContainer(filled), empty + " was not filled from the cauldron");
-                helper.assertFalse(WaterPurity.hasPurity(filled), empty + " filled from a cauldron has a purity");
+                assertTrue(helper, WaterPurity.isWaterFilledContainer(filled), empty + " was not filled from the cauldron");
+                assertFalse(helper, WaterPurity.hasPurity(filled), empty + " filled from a cauldron has a purity");
             }
         });
         helper.succeed();
@@ -162,14 +164,14 @@ public class PurityOffTests
             ItemStack dirty = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
             dirty.getOrCreateTag().putInt(ThirstComponent.PURITY, 0);
             PlayerThirst.consume(dirty, player);
-            helper.assertTrue(player.getActiveEffects().isEmpty(), "dirty water gave effects with purity off: " + player.getActiveEffects());
-            helper.assertTrue(thirst.getThirst() > 4, "dirty water did not restore thirst with purity off");
+            assertTrue(helper, player.getActiveEffects().isEmpty(), "dirty water gave effects with purity off: " + player.getActiveEffects());
+            assertTrue(helper, thirst.getThirst() > 4, "dirty water did not restore thirst with purity off");
             assertValueEqual(helper, lastDrinkPurity, DropletsAPI.NO_PURITY, "purity of a drink with purity off");
 
             PlayerThirst.drink(player, ItemStack.EMPTY, 1, 0, 0);
-            helper.assertTrue(player.getActiveEffects().isEmpty(), "drinking dirty water by hand gave effects with purity off");
+            assertTrue(helper, player.getActiveEffects().isEmpty(), "drinking dirty water by hand gave effects with purity off");
             assertValueEqual(helper, lastDrinkPurity, DropletsAPI.NO_PURITY, "purity of hand drinking with purity off");
-            helper.assertTrue(WaterPurity.givePurityEffects(player, 0), "dirty water blocks hydration with purity off");
+            assertTrue(helper, WaterPurity.givePurityEffects(player, 0), "dirty water blocks hydration with purity off");
             assertValueEqual(helper, WaterPurity.waterThirstBonus(PurityLevel.PURE.level()) + WaterPurity.waterQuenchedBonus(PurityLevel.PURE.level()), 0, "pure water bonus with purity off");
         });
         helper.succeed();
@@ -178,18 +180,18 @@ public class PurityOffTests
     @GameTest(template = "empty")
     public static void chestLootHasNoPurity(GameTestHelper helper)
     {
-        LootTable table = helper.getLevel().getServer().getLootData().getLootTable(BlueDroplets.asResource("chests/simple_dungeon"));
-        LootParams params = new LootParams.Builder(helper.getLevel()).withParameter(LootContextParams.ORIGIN, helper.absoluteVec(Vec3.ZERO)).create(LootContextParamSets.CHEST);
-        helper.assertTrue(waterBottles(table, params).stream().anyMatch(WaterPurity::hasPurity), "chest loot water bottles have no purity with purity on");
+        LootTable table = helper.getLevel().getServer().getLootTables().get(BlueDroplets.asResource("chests/simple_dungeon"));
+        LootContext params = new LootContext.Builder(helper.getLevel()).withParameter(LootContextParams.ORIGIN, helper.absoluteVec(Vec3.ZERO)).create(LootContextParamSets.CHEST);
+        assertTrue(helper, waterBottles(table, params).stream().anyMatch(WaterPurity::hasPurity), "chest loot water bottles have no purity with purity on");
         withPurityOff(() -> {
             List<ItemStack> bottles = waterBottles(table, params);
-            helper.assertFalse(bottles.isEmpty(), "no water bottles in 200 rolls of the chest loot");
-            helper.assertFalse(bottles.stream().anyMatch(WaterPurity::hasPurity), "chest loot water bottle has a purity with purity off");
+            assertFalse(helper, bottles.isEmpty(), "no water bottles in 200 rolls of the chest loot");
+            assertFalse(helper, bottles.stream().anyMatch(WaterPurity::hasPurity), "chest loot water bottle has a purity with purity off");
         });
         helper.succeed();
     }
 
-    private static List<ItemStack> waterBottles(LootTable table, LootParams params)
+    private static List<ItemStack> waterBottles(LootTable table, LootContext params)
     {
         List<ItemStack> bottles = new ArrayList<>();
         for (int roll = 0; roll < 200; roll++)
@@ -207,7 +209,7 @@ public class PurityOffTests
             Collection<ItemStack> items = ThirstTab.DisplayItems();
             assertValueEqual(helper, waterStacks(items), 3, "water stacks in the tab with purity off");
             for (ItemStack stack : items)
-                helper.assertFalse(WaterPurity.hasPurity(stack), stack + " in the tab has a purity with purity off");
+                assertFalse(helper, WaterPurity.hasPurity(stack), stack + " in the tab has a purity with purity off");
         });
         helper.succeed();
     }
@@ -230,7 +232,7 @@ public class PurityOffTests
     {
         Map<ResourceLocation, Resource> recipes = helper.getLevel().getServer().getResourceManager()
                 .listResources("recipes", id -> id.getNamespace().equals(BlueDroplets.ID) && id.getPath().endsWith(".json"));
-        helper.assertTrue(recipes.size() > 10, "only " + recipes.size() + " recipes found");
+        assertTrue(helper, recipes.size() > 10, "only " + recipes.size() + " recipes found");
         for (Map.Entry<ResourceLocation, Resource> recipe : recipes.entrySet())
         {
             JsonObject json;
@@ -248,7 +250,7 @@ public class PurityOffTests
             if (json.has("conditions"))
                 for (JsonElement condition : json.getAsJsonArray("conditions"))
                     conditioned |= condition.getAsJsonObject().get("type").getAsString().equals("blue_droplets:purity_enabled");
-            helper.assertTrue(conditioned, recipe.getKey() + " uses a purity without the blue_droplets:purity_enabled condition");
+            assertTrue(helper, conditioned, recipe.getKey() + " uses a purity without the blue_droplets:purity_enabled condition");
         }
         helper.succeed();
     }
@@ -256,8 +258,8 @@ public class PurityOffTests
     @GameTest(template = "empty")
     public static void purificationPageIsHiddenWithPurityOff(GameTestHelper helper)
     {
-        helper.assertFalse(PurificationEntry.all().isEmpty(), "purification page empty with purity on");
-        withPurityOff(() -> helper.assertTrue(PurificationEntry.all().isEmpty(), "purification page has entries with purity off"));
+        assertFalse(helper, PurificationEntry.all().isEmpty(), "purification page empty with purity on");
+        withPurityOff(() -> assertTrue(helper, PurificationEntry.all().isEmpty(), "purification page has entries with purity off"));
         helper.succeed();
     }
 

@@ -1,7 +1,7 @@
 package com.darkona.droplets.content.registry;
 
 import com.darkona.droplets.BlueDroplets;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public final class AttributeInit
 {
-    private static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, BlueDroplets.ID);
+    private static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registry.ATTRIBUTE_REGISTRY, BlueDroplets.ID);
 
     /**
      * Multiplies every player's thirst loss (base 1.0). Items, enchantments, effects, Curios and commands change it

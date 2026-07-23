@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Poured water: water sources poured into the world keep the purity of the water poured, the infinite source between
@@ -49,8 +51,8 @@ public class PouredWaterTests
     private static void pour(GameTestHelper helper, ServerPlayer player, BlockPos pos, int purity)
     {
         ItemStack bucket = waterBucket(purity);
-        helper.assertTrue(((BucketItem) Items.WATER_BUCKET).emptyContents(player, helper.getLevel(), pos, null, bucket), "the bucket was not emptied at " + pos);
-        helper.assertTrue(helper.getLevel().getFluidState(pos).isSource(), "no water source where the bucket was emptied");
+        assertTrue(helper, ((BucketItem) Items.WATER_BUCKET).emptyContents(player, helper.getLevel(), pos, null, bucket), "the bucket was not emptied at " + pos);
+        assertTrue(helper, helper.getLevel().getFluidState(pos).isSource(), "no water source where the bucket was emptied");
     }
 
     private static boolean registered(GameTestHelper helper, BlockPos pos)
@@ -63,12 +65,12 @@ public class PouredWaterTests
     {
         List<String> trace = new ArrayList<>();
         int purity = WaterPurity.getWaterPurity(helper.getLevel(), helper.getLevel().getBiome(pos), pos, true, trace);
-        helper.assertTrue(purity > CONTAMINATED, "world water at the test position is already contaminated: " + trace + " in " + helper.getLevel().getBiome(pos).unwrapKey());
+        assertTrue(helper, purity > CONTAMINATED, "world water at the test position is already contaminated: " + trace + " in " + helper.getLevel().getBiome(pos).unwrapKey());
         return purity;
     }
 
     /**
-     * The game test world of 1.20.1 is not a plains superflat: its biomes can be oceans, whose water is always
+     * The game test world of 1.19.2 is not a plains superflat: its biomes can be oceans, whose water is always
      * contaminated. The tests need world water above that, so the salt water rule is off while they run.
      */
     private static void withoutSaltWater(Runnable test)
@@ -89,7 +91,7 @@ public class PouredWaterTests
     {
         player.moveTo(water.getX() + 0.5, water.getY() + 1, water.getZ() + 0.5, 0.0F, 90.0F);
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        return stack.use(player.level(), player, InteractionHand.MAIN_HAND).getObject();
+        return stack.use(player.level, player, InteractionHand.MAIN_HAND).getObject();
     }
 
     @GameTest(template = "box")
@@ -104,18 +106,18 @@ public class PouredWaterTests
         worldPurity(helper, pos);
         ServerPlayer player = TestSupport.player(helper);
         pour(helper, player, pos, CONTAMINATED);
-        helper.assertTrue(registered(helper, pos), "the poured source is not registered");
+        assertTrue(helper, registered(helper, pos), "the poured source is not registered");
         assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of the poured source");
 
         ItemStack bottle = useFromAbove(player, pos, new ItemStack(Items.GLASS_BOTTLE));
-        helper.assertTrue(bottle.is(Items.POTION), "the glass bottle was not filled");
+        assertTrue(helper, bottle.is(Items.POTION), "the glass bottle was not filled");
         assertValueEqual(helper, WaterPurity.getPurity(bottle), CONTAMINATED, "purity of a bottle filled from poured water");
-        helper.assertTrue(registered(helper, pos), "filling a bottle removed the entry");
+        assertTrue(helper, registered(helper, pos), "filling a bottle removed the entry");
 
         ItemStack bucket = useFromAbove(player, pos, new ItemStack(Items.BUCKET));
-        helper.assertTrue(bucket.is(Items.WATER_BUCKET), "the bucket was not filled");
+        assertTrue(helper, bucket.is(Items.WATER_BUCKET), "the bucket was not filled");
         assertValueEqual(helper, WaterPurity.getPurity(bucket), CONTAMINATED, "purity of a bucket filled from poured water");
-        helper.assertFalse(registered(helper, pos), "picking up the source kept its entry");
+        assertFalse(helper, registered(helper, pos), "picking up the source kept its entry");
         helper.succeed();
     }
 
@@ -136,7 +138,7 @@ public class PouredWaterTests
         pour(helper, player, east, PurityLevel.MURKY.level());
         // The source two poured sources form between them, without waiting for the water to flow.
         helper.getLevel().setBlockAndUpdate(middle, Blocks.WATER.defaultBlockState());
-        helper.assertFalse(registered(helper, middle), "the formed source is registered");
+        assertFalse(helper, registered(helper, middle), "the formed source is registered");
         assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), middle), CONTAMINATED, "the formed source takes the worst purity beside it");
 
         BlockPos dispenser = west.west();
@@ -146,10 +148,10 @@ public class PouredWaterTests
         dispenserEntity.setItem(0, new ItemStack(Items.BUCKET));
         helper.getLevel().getBlockState(dispenser).tick(helper.getLevel(), dispenser, helper.getLevel().random);
         ItemStack picked = dispenserEntity.getItem(0);
-        helper.assertTrue(picked.is(Items.WATER_BUCKET), "the dispenser did not pick up the west source");
+        assertTrue(helper, picked.is(Items.WATER_BUCKET), "the dispenser did not pick up the west source");
         assertValueEqual(helper, WaterPurity.getPurity(picked), CONTAMINATED, "purity of the west source picked up");
-        helper.assertFalse(registered(helper, west), "the picked up source kept its entry");
-        helper.assertTrue(registered(helper, middle), "picking up a poured source did not hand its purity to the source beside it");
+        assertFalse(helper, registered(helper, west), "the picked up source kept its entry");
+        assertTrue(helper, registered(helper, middle), "picking up a poured source did not hand its purity to the source beside it");
 
         ItemStack last = useFromAbove(player, east, new ItemStack(Items.BUCKET));
         assertValueEqual(helper, WaterPurity.getPurity(last), PurityLevel.MURKY.level(), "purity of the east source picked up");
@@ -171,7 +173,7 @@ public class PouredWaterTests
         pour(helper, player, pos, CONTAMINATED);
         helper.getLevel().setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
         assertValueEqual(helper, WaterPurity.getWaterPurity(helper.getLevel(), pos, true), world, "a stone where water was poured");
-        helper.assertFalse(registered(helper, pos), "an entry without water was kept after a read");
+        assertFalse(helper, registered(helper, pos), "an entry without water was kept after a read");
         helper.getLevel().setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
         assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), pos), world, "water that replaced an old entry");
 
@@ -180,7 +182,7 @@ public class PouredWaterTests
         pour(helper, player, east, CONTAMINATED);
         helper.getLevel().setBlockAndUpdate(east, Blocks.STONE.defaultBlockState());
         assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), pos), world, "water beside an old entry");
-        helper.assertFalse(registered(helper, east), "an entry without water was kept after a neighbour read");
+        assertFalse(helper, registered(helper, east), "an entry without water was kept after a neighbour read");
         helper.succeed();
     }
 
@@ -199,8 +201,8 @@ public class PouredWaterTests
         DispenserBlockEntity entity = (DispenserBlockEntity) helper.getLevel().getBlockEntity(dispenser);
         entity.setItem(0, waterBucket(CONTAMINATED));
         helper.getLevel().getBlockState(dispenser).tick(helper.getLevel(), dispenser, helper.getLevel().random);
-        helper.assertTrue(helper.getLevel().getFluidState(front).isSource(), "the dispenser did not pour the bucket");
-        helper.assertTrue(registered(helper, front), "water poured by a dispenser is not registered");
+        assertTrue(helper, helper.getLevel().getFluidState(front).isSource(), "the dispenser did not pour the bucket");
+        assertTrue(helper, registered(helper, front), "water poured by a dispenser is not registered");
         assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), front), CONTAMINATED, "purity of water poured by a dispenser");
         helper.succeed();
     }
@@ -217,14 +219,14 @@ public class PouredWaterTests
         worldPurity(helper, pos);
         FluidTank tank = new FluidTank(1000);
         tank.fill(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), CONTAMINATED), FluidTank.FluidAction.EXECUTE);
-        helper.assertTrue(FluidUtil.tryPlaceFluid(null, helper.getLevel(), InteractionHand.MAIN_HAND, pos, tank, tank.getFluid().copy()), "FluidUtil did not place the water");
-        helper.assertTrue(registered(helper, pos), "water placed by FluidUtil is not registered");
+        assertTrue(helper, FluidUtil.tryPlaceFluid(null, helper.getLevel(), InteractionHand.MAIN_HAND, pos, tank, tank.getFluid().copy()), "FluidUtil did not place the water");
+        assertTrue(helper, registered(helper, pos), "water placed by FluidUtil is not registered");
         assertValueEqual(helper, WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of water placed by FluidUtil");
         helper.succeed();
     }
 
     /**
-     * 1.20.1 keeps the registry of a dimension in its saved data ({@code data/blue_droplets_poured_water.dat}) instead of
+     * 1.19.2 keeps the registry of a dimension in its saved data ({@code data/blue_droplets_poured_water.dat}) instead of
      * a chunk attachment: pouring marks it for saving, and what it saves loads back the same.
      */
     @GameTest(template = "box")
@@ -233,8 +235,8 @@ public class PouredWaterTests
         BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
         pour(helper, TestSupport.player(helper), pos, CONTAMINATED);
         PouredWater water = PouredWater.of(helper.getLevel());
-        helper.assertFalse(water.isEmpty(), "no poured water in the dimension");
-        helper.assertTrue(water.isDirty(), "pouring did not mark the registry for saving");
+        assertFalse(helper, water.isEmpty(), "no poured water in the dimension");
+        assertTrue(helper, water.isDirty(), "pouring did not mark the registry for saving");
 
         CompoundTag saved = water.save(new CompoundTag());
         PouredWater loaded = PouredWater.load(saved);

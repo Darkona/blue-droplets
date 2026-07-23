@@ -32,7 +32,7 @@ public abstract class MixinWaterskinItem
     @WrapOperation(method = "lambda$useOn$0", at = @At(value = "INVOKE", target = "Lcom/momosoftworks/coldsweat/common/item/WaterskinItem;handleFillWaterskin(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/core/BlockPos;)V"))
     private static void blue_droplets$fromTank(Player player, ItemStack empty, InteractionHand hand, BlockPos pos, Operation<Void> original, @Local(ordinal = 1) FluidStack drained)
     {
-        if (player.level().isClientSide())
+        if (player.level.isClientSide())
         {
             original.call(player, empty, hand, pos);
             return;

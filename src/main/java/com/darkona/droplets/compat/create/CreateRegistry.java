@@ -1,6 +1,5 @@
 package com.darkona.droplets.compat.create;
 
-import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -15,7 +14,7 @@ import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
 public class CreateRegistry
 {
-    public static final NonNullSupplier<Registrate> REGISTRATE = NonNullSupplier.lazy(() ->Registrate.create(BlueDroplets.ID).defaultCreativeTab(ThirstTab.THIRST_TAB.getKey()));
+    public static final NonNullSupplier<Registrate> REGISTRATE = NonNullSupplier.lazy(() ->Registrate.create(BlueDroplets.ID).creativeModeTab(() -> ThirstTab.THIRST_TAB));
 
     public static void register(){}
 
@@ -24,7 +23,6 @@ public class CreateRegistry
             .initialProperties(SharedProperties::copperMetal)
             .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
             .item(AssemblyOperatorBlockItem::new)
-            .tab(AllCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
             .transform(customItemModel())
             .register();
     public static final BlockEntityEntry<SandFilterBlockEntity> SAND_FILTER_BE = REGISTRATE.get()

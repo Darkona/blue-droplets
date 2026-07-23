@@ -18,6 +18,8 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import java.util.List;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * What the recipe viewer pages (JEI, EMI) show. The pages are built from plain data that the server can build too,
@@ -38,19 +40,19 @@ public class ViewerTests
             assertValueEqual(helper, WaterPurity.getPurity(output), WaterPurity.CAULDRON_PURITY, "purity out of a cauldron");
         for (ItemStack output : heated.outputs())
             assertValueEqual(helper, WaterPurity.getPurity(output), WaterPurity.HEATED_CAULDRON_PURITY, "purity out of a heated cauldron");
-        helper.assertTrue(heated.below().stream().anyMatch(stack -> stack.is(Items.CAMPFIRE)), "a campfire heats the cauldron");
+        assertTrue(helper, heated.below().stream().anyMatch(stack -> stack.is(Items.CAMPFIRE)), "a campfire heats the cauldron");
         long filters = entries.stream().filter(entry -> entry.method().equals("sand_filter")).count();
         assertValueEqual(helper, filters > 0, CreateCompat.LOADED, "Sand Filter entries with Create installed");
         for (PurificationEntry entry : entries)
             if (entry.method().equals("sand_filter"))
-                helper.assertTrue(WaterPurity.getPurity(entry.fluidOut()) > WaterPurity.getPurity(entry.fluidIn()), "a Sand Filter entry that does not purify");
+                assertTrue(helper, WaterPurity.getPurity(entry.fluidOut()) > WaterPurity.getPurity(entry.fluidIn()), "a Sand Filter entry that does not purify");
         helper.succeed();
     }
 
     private static PurificationEntry entry(GameTestHelper helper, List<PurificationEntry> entries, String method)
     {
         PurificationEntry found = entries.stream().filter(entry -> entry.method().equals(method)).findFirst().orElse(null);
-        helper.assertTrue(found != null, "no " + method + " entry on the purification page");
+        assertTrue(helper, found != null, "no " + method + " entry on the purification page");
         return found;
     }
 
@@ -59,13 +61,13 @@ public class ViewerTests
     {
         List<HydrationEntry> entries = HydrationEntry.all();
         HydrationEntry bottle = entries.stream().filter(entry -> entry.stack().is(Items.POTION)).findFirst().orElse(null);
-        helper.assertTrue(bottle != null, "no water bottle on the hydration page");
-        helper.assertTrue(PotionUtils.getPotion(bottle.stack()) == Potions.WATER, "the potion entry is not a water bottle");
+        assertTrue(helper, bottle != null, "no water bottle on the hydration page");
+        assertTrue(helper, PotionUtils.getPotion(bottle.stack()) == Potions.WATER, "the potion entry is not a water bottle");
         assertValueEqual(helper, bottle.values().thirst(), 4, "water bottle thirst on the hydration page");
         assertValueEqual(helper, bottle.values().quenched(), 5, "water bottle quenched on the hydration page");
-        helper.assertTrue(entries.stream().anyMatch(entry -> entry.stack().is(ItemInit.TERRACOTTA_WATER_BOWL.get())), "no terracotta water bowl on the hydration page");
+        assertTrue(helper, entries.stream().anyMatch(entry -> entry.stack().is(ItemInit.TERRACOTTA_WATER_BOWL.get())), "no terracotta water bowl on the hydration page");
         for (HydrationEntry entry : entries)
-            helper.assertTrue(entry.values().thirst() != 0 || entry.values().quenched() != 0, entry.stack() + " does nothing and is on the hydration page");
+            assertTrue(helper, entry.values().thirst() != 0 || entry.values().quenched() != 0, entry.stack() + " does nothing and is on the hydration page");
         helper.succeed();
     }
 }

@@ -3,14 +3,13 @@ package com.darkona.droplets.gametest;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.sereneseasons.SereneSeasonsCompat;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.thirst.ExhaustionFactors;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -28,6 +27,8 @@ import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Optional mods, with or without them on the runtime ({@code -PwithCompat}): what Blue Droplets registers and calls
@@ -41,13 +42,12 @@ public class CompatTests
     @GameTest(template = "empty")
     public static void contentFollowsInstalledMods(GameTestHelper helper)
     {
-        helper.assertTrue(FMLEnvironment.dist.isDedicatedServer(), "GameTests should run on a dedicated server");
+        assertTrue(helper, FMLEnvironment.dist.isDedicatedServer(), "GameTests should run on a dedicated server");
         boolean create = ModList.get().isLoaded("create");
-        assertValueEqual(helper, BuiltInRegistries.BLOCK.containsKey(BlueDroplets.asResource("sand_filter")), create, "Sand Filter registered with Create installed");
-        assertValueEqual(helper, ColdSweatCompat.LOADED, BuiltInRegistries.ITEM.containsKey(new ResourceLocation("cold_sweat", "waterskin")), "Cold Sweat detected");
-        assertValueEqual(helper, SereneSeasonsCompat.LOADED, BuiltInRegistries.ITEM.containsKey(new ResourceLocation("sereneseasons", "calendar")), "Serene Seasons detected");
+        assertValueEqual(helper, Registry.BLOCK.containsKey(BlueDroplets.asResource("sand_filter")), create, "Sand Filter registered with Create installed");
+        assertValueEqual(helper, ColdSweatCompat.LOADED, Registry.ITEM.containsKey(new ResourceLocation("cold_sweat", "waterskin")), "Cold Sweat detected");
+        assertValueEqual(helper, SereneSeasonsCompat.LOADED, Registry.ITEM.containsKey(new ResourceLocation("sereneseasons", "calendar")), "Serene Seasons detected");
         assertValueEqual(helper, VampirismCompat.LOADED, ModList.get().isLoaded("vampirism"), "Vampirism detected");
-        assertValueEqual(helper, SupernaturalCompat.LOADED, ModList.get().isLoaded("supernatural"), "Supernatural detected");
         helper.succeed();
     }
 
@@ -55,21 +55,19 @@ public class CompatTests
     public static void everyBridgeAnswers(GameTestHelper helper)
     {
         ServerPlayer player = player(helper);
-        helper.assertTrue(Double.isFinite(ColdSweatCompat.bodyTemperature(player)), "Cold Sweat body temperature");
-        helper.assertFalse(VampirismCompat.isVampire(player), "a new player is a Vampirism vampire");
-        helper.assertFalse(SupernaturalCompat.isVampire(player), "a new player is a Supernatural vampire");
-        helper.assertTrue(SupernaturalCompat.canDrinkItem(new ItemStack(Items.POTION), player), "a new player cannot drink a potion");
+        assertTrue(helper, Double.isFinite(ColdSweatCompat.bodyTemperature(player)), "Cold Sweat body temperature");
+        assertFalse(helper, VampirismCompat.isVampire(player), "a new player is a Vampirism vampire");
         float[] factors = new float[ExhaustionFactors.FACTORS.length];
         float total = ExhaustionFactors.compute(player, factors);
-        helper.assertTrue(Float.isFinite(total) && total >= 0, "thirst loss multiplier " + total);
+        assertTrue(helper, Float.isFinite(total) && total >= 0, "thirst loss multiplier " + total);
         helper.succeed();
     }
 
     @GameTest(template = "empty")
     public static void effectTagPausesThirst(GameTestHelper helper)
     {
-        MobEffect nourishment = BuiltInRegistries.MOB_EFFECT.getOptional(new ResourceLocation("farmersdelight", "nourishment")).orElse(null);
-        assertValueEqual(helper, nourishment != null && BuiltInRegistries.MOB_EFFECT.wrapAsHolder(nourishment).is(DropletsTags.PAUSES_THIRST), ModList.get().isLoaded("farmersdelight"), "Nourishment in blue_droplets:pauses_thirst");
+        MobEffect nourishment = Registry.MOB_EFFECT.getOptional(new ResourceLocation("farmersdelight", "nourishment")).orElse(null);
+        assertValueEqual(helper, nourishment != null && Registry.MOB_EFFECT.getHolder(Registry.MOB_EFFECT.getId(nourishment)).map(holder -> holder.is(DropletsTags.PAUSES_THIRST)).orElse(false), ModList.get().isLoaded("farmersdelight"), "Nourishment in blue_droplets:pauses_thirst");
         if (nourishment == null)
         {
             helper.succeed();
@@ -83,7 +81,7 @@ public class CompatTests
             PlayerThirst thirst = thirst(player);
             float before = thirst.getExhaustion();
             thirst.tick(player);
-            helper.assertTrue(thirst.getExhaustion() > before, "no thirst exhaustion without Nourishment");
+            assertTrue(helper, thirst.getExhaustion() > before, "no thirst exhaustion without Nourishment");
             player.addEffect(new MobEffectInstance(nourishment, 200));
             before = thirst.getExhaustion();
             thirst.tick(player);

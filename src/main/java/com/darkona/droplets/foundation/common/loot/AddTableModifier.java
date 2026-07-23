@@ -33,7 +33,7 @@ public class AddTableModifier extends LootModifier
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context)
     {
-        context.getResolver().getLootTable(table).getRandomItemsRaw(context, generatedLoot::add);
+        context.getLootTable(table).getRandomItemsRaw(context, generatedLoot::add);
         return generatedLoot;
     }
 

@@ -65,7 +65,7 @@ public class CommandInit {
                                     IThirst thirst = ModAttachment.thirst(player);
                                     int value = thirst.getThirst();
                                     int quenched = thirst.getQuenched();
-                                    context.getSource().sendSuccess(() -> Component.translatable("command.blue_droplets.query", value, quenched, player.getDisplayName()), false);
+                                    context.getSource().sendSuccess(Component.translatable("command.blue_droplets.query", value, quenched, player.getDisplayName()), false);
                                     return value;
                                 }
                         )))
@@ -79,7 +79,7 @@ public class CommandInit {
                                             // Quenched never exceeds thirst and listeners may cancel or change it: report what was set.
                                             int value = thirst.getThirst();
                                             int quenched = thirst.getQuenched();
-                                            context.getSource().sendSuccess(() -> Component.translatable("command.blue_droplets.set", value, quenched, player.getDisplayName()), true);
+                                            context.getSource().sendSuccess(Component.translatable("command.blue_droplets.set", value, quenched, player.getDisplayName()), true);
                                             return value;
                                         })))
                 ))
@@ -94,7 +94,7 @@ public class CommandInit {
                                         thirstData.updateThirstData(player);
                                     }
                                     Component names = ComponentUtils.formatList(players, ServerPlayer::getDisplayName);
-                                    context.getSource().sendSuccess(() -> Component.translatable(shouldTick ? "command.blue_droplets.enable" : "command.blue_droplets.disable", names), true);
+                                    context.getSource().sendSuccess(Component.translatable(shouldTick ? "command.blue_droplets.enable" : "command.blue_droplets.disable", names), true);
                                     return players.size();
                                 }))))
                 .then(Commands.literal("debug")
@@ -128,7 +128,7 @@ public class CommandInit {
         try
         {
             int rows = ItemDump.dump(Set.copyOf(Arrays.asList(namespaces.trim().split("\\s+"))));
-            source.sendSuccess(() -> Component.literal("Wrote " + rows + " items to " + ItemDump.file()), false);
+            source.sendSuccess(Component.literal("Wrote " + rows + " items to " + ItemDump.file()), false);
             return rows;
         }
         catch (IOException e)
@@ -154,16 +154,16 @@ public class CommandInit {
                 .append("\n  exhaustion ").append(format(thirst.getExhaustion())).append(" / ").append(format(GameplayConfig.EXHAUSTION_PER_POINT.get()))
                 .append(", thirst ").append(thirst.getThirst()).append(", quenched ").append(thirst.getQuenched())
                 .append(thirst.getShouldTickThirst() ? "" : " (thirst disabled for this player)");
-        source.sendSuccess(() -> Component.literal(text.toString()), false);
+        source.sendSuccess(Component.literal(text.toString()), false);
         return 1;
     }
 
     private static String climateSource(ServerPlayer player)
     {
-        DimensionWater dimension = DropletsDataMaps.DIMENSION_WATER.get(player.level().dimensionTypeRegistration());
+        DimensionWater dimension = DropletsDataMaps.DIMENSION_WATER.get(player.level.dimensionTypeRegistration());
         if (dimension != null && dimension.thirstMultiplier().isPresent())
             return "dimension_water thirst_multiplier";
-        if (player.level().dimensionType().ultraWarm())
+        if (player.level.dimensionType().ultraWarm())
             return "netherMultiplier";
         return GameplayConfig.CLIMATE_FORMULA.get() + " formula";
     }
@@ -175,10 +175,10 @@ public class CommandInit {
     {
         if (!WaterPurity.enabled())
         {
-            source.sendSuccess(() -> Component.literal("purity.enabled is false: water has no purity"), false);
+            source.sendSuccess(Component.literal("purity.enabled is false: water has no purity"), false);
             return 0;
         }
-        Level level = player.level();
+        Level level = player.level;
         BlockHitResult hit = WaterPurity.pickFluid(player, ClipContext.Fluid.ANY);
         BlockPos pos = hit.getType() == HitResult.Type.BLOCK ? hit.getBlockPos() : player.blockPosition();
         FluidState fluid = level.getFluidState(pos);
@@ -197,14 +197,14 @@ public class CommandInit {
                 .append(purity).append(" ").append(WaterPurity.getPurityText(purity));
         for (String step : trace)
             text.append("\n  ").append(step);
-        source.sendSuccess(() -> Component.literal(text.toString()), false);
+        source.sendSuccess(Component.literal(text.toString()), false);
         return purity;
     }
 
     private static int configCheck(CommandSourceStack source)
     {
         List<String> problems = ConfigCheck.problems();
-        source.sendSuccess(() -> Component.literal(problems.isEmpty() ? "Blue Droplets config: no problems found"
+        source.sendSuccess(Component.literal(problems.isEmpty() ? "Blue Droplets config: no problems found"
                 : "Blue Droplets config: " + problems.size() + " problem(s)\n  " + String.join("\n  ", problems)), false);
         return problems.size();
     }
@@ -216,7 +216,7 @@ public class CommandInit {
     {
         MinecraftServer server = source.getServer();
         List<String> lines = RecipeInference.explain(item, ThirstHelper.inferenceInputs(), server.getRecipeManager(), server.registryAccess());
-        source.sendSuccess(() -> Component.literal(String.join("\n", lines)), false);
+        source.sendSuccess(Component.literal(String.join("\n", lines)), false);
         return lines.size();
     }
 

@@ -18,7 +18,7 @@ import com.darkona.droplets.foundation.common.capability.IThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.common.damagesource.ModDamageSource;
 import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -87,7 +87,9 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         boolean stopped = false;
         for (MobEffectInstance effect : player.getActiveEffects())
         {
-            var holder = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect.getEffect());
+            var holder = Registry.MOB_EFFECT.getHolder(Registry.MOB_EFFECT.getId(effect.getEffect())).orElse(null);
+            if (holder == null)
+                continue;
             stopped |= holder.is(DropletsTags.STOPS_THIRST);
             paused |= holder.is(DropletsTags.PAUSES_THIRST);
         }
@@ -223,7 +225,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
      */
     public static boolean eat(Player player, ItemStack item, int thirst, int quenched)
     {
-        if (player.level().isClientSide)
+        if (player.level.isClientSide)
             return false;
         EatEvent.Pre pre = Events.post(new EatEvent.Pre(player, item, thirst, quenched));
         if (pre.isCanceled())
@@ -242,7 +244,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
      */
     public static boolean drink(Player player, ItemStack item, int thirst, int quenched, int purity)
     {
-        if (player.level().isClientSide)
+        if (player.level.isClientSide)
             return false;
         if (!WaterPurity.enabled())
             purity = DropletsAPI.NO_PURITY;
@@ -338,7 +340,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
                 overflow = Math.max(0.0F, overflow - GameplayConfig.OVERHYDRATION_DECAY.get().floatValue() * MODIFIER_INTERVAL_TICKS / 20.0F);
         }
 
-        Difficulty difficulty = player.level().getDifficulty();
+        Difficulty difficulty = player.level.getDifficulty();
         boolean paused = pausedByEffect;
 
         if(GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get() && player.hasEffect(MobEffects.CONFUSION))
@@ -387,7 +389,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             change(player, thirst + GameplayConfig.PEACEFUL_REGEN_AMOUNT.get(), quenched, ThirstChangeEvent.Cause.PEACEFUL);
 
         if(GameplayConfig.RAIN_DRINKING.get() && player.tickCount % GameplayConfig.RAIN_INTERVAL_TICKS.get() == 0
-                && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above()))
+                && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level.isRainingAt(player.blockPosition().above()))
         {
             int rainThirst = GameplayConfig.RAIN_THIRST.get();
             int rainQuenched = GameplayConfig.RAIN_QUENCHED.get();
@@ -405,7 +407,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
                 {
                     DehydrationDamageEvent event = Events.post(new DehydrationDamageEvent(player, damage));
                     if (!event.isCanceled() && event.getAmount() > 0)
-                        player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), event.getAmount());
+                        player.hurt(ModDamageSource.DIE_OF_THIRST, event.getAmount());
                 }
 
                 damageTimer = 0;
@@ -432,7 +434,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             return;
         }
         MobEffectInstance current = player.getEffect(EffectInit.HYDRATED.get());
-        if(current == null || current.endsWithin(MODIFIER_INTERVAL_TICKS))
+        if(current == null || current.getDuration() <= MODIFIER_INTERVAL_TICKS)
             player.addEffect(new MobEffectInstance(EffectInit.HYDRATED.get(), GameplayConfig.FULL_HYDRATION_DURATION_TICKS.get(), 0, true, true));
     }
 
@@ -482,7 +484,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             return (float) (Math.sqrt(total) * GameplayConfig.SWIM_PER_METER.get());
         if(player.isInWater())
             return (float) (Math.sqrt(horizontal) * GameplayConfig.SWIM_PER_METER.get());
-        if(player.onGround() && player.isSprinting())
+        if(player.isOnGround() && player.isSprinting())
             return (float) (Math.sqrt(horizontal) * GameplayConfig.SPRINT_PER_METER.get());
         return 0.0F;
     }

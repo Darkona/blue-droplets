@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * Other thirst mods: the game starts, with a warning on the loading screen and in the log that both thirst systems
- * will run. Forge 1.20.1 has no {@code discouraged} dependency type in {@code mods.toml}, so the warning is added here.
+ * will run. Forge 1.19.2 has no {@code discouraged} dependency type in {@code mods.toml}, so the warning is added here.
  */
 public final class DiscouragedMods
 {

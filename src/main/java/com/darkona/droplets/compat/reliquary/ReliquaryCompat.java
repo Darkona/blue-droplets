@@ -3,7 +3,7 @@ package com.darkona.droplets.compat.reliquary;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,7 +32,7 @@ public final class ReliquaryCompat
     {
         int cooldown = CompatConfig.RELIQUARY_EMPEROR_CHALICE_COOLDOWN.get();
         ItemStack item = event.getItem();
-        if (cooldown > 0 && event.getEntity() instanceof ServerPlayer player && BuiltInRegistries.ITEM.getKey(item.getItem()).equals(EMPEROR_CHALICE))
+        if (cooldown > 0 && event.getEntity() instanceof ServerPlayer player && Registry.ITEM.getKey(item.getItem()).equals(EMPEROR_CHALICE))
             player.getCooldowns().addCooldown(item.getItem(), cooldown);
     }
 }

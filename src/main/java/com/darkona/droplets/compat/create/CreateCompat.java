@@ -2,7 +2,7 @@ package com.darkona.droplets.compat.create;
 
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.config.CompatConfig;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.ModList;
@@ -31,6 +31,6 @@ public final class CreateCompat
      */
     public static Item sandFilter()
     {
-        return LOADED ? BuiltInRegistries.ITEM.get(BlueDroplets.asResource("sand_filter")) : Items.AIR;
+        return LOADED ? Registry.ITEM.get(BlueDroplets.asResource("sand_filter")) : Items.AIR;
     }
 }

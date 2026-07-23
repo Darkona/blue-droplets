@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-# FML 47: Forge 47 and NeoForge 47.1 for Minecraft 1.20.1.
+# FML 43: Forge 43 for Minecraft 1.19.2.
 loaderVersion="${loader_version_range}" #mandatory
 license="${mod_license}"
 
@@ -22,9 +22,8 @@ description='''${mod_description}'''
 
 # The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
 
-# One jar for Forge 47 and NeoForge 47.1: NeoForge 1.20.1 still presents itself as "forge" 47.1.x. Forge 47 has no
-# dependency types: "mandatory" only, mixin configs in the jar manifest, and the other thirst mods are warned about in
-# code (DiscouragedMods).
+# Forge 43 has no dependency types: "mandatory" only, mixin configs in the jar manifest, and the other thirst mods are
+# warned about in code (DiscouragedMods).
 [[dependencies.${mod_id}]]
 modId="forge"
 mandatory=true
@@ -42,14 +41,14 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="create"
 mandatory=false
-versionRange="[6.0.6,)"
+versionRange="[0.5.1,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="jade"
 mandatory=false
-versionRange="[11.0,)"
+versionRange="[8.0,)"
 ordering="NONE"
 side="BOTH"
 
@@ -63,21 +62,22 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="reliquary"
 mandatory=false
-versionRange="[2.0,)"
+versionRange="[1.19.2-2.0,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
+# Serene Seasons 8.1.0.24 for 1.19.2 reports its version as "0.0NONE".
 modId="sereneseasons"
 mandatory=false
-versionRange="[9.1,)"
+versionRange="[0,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="travelersbackpack"
 mandatory=false
-versionRange="[9.1,)"
+versionRange="[8.2,)"
 ordering="NONE"
 side="BOTH"
 
@@ -91,7 +91,7 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="jei"
 mandatory=false
-versionRange="[15.56,)"
+versionRange="[11.0,)"
 ordering="NONE"
 side="CLIENT"
 

@@ -3,6 +3,7 @@ package com.darkona.droplets.content.registry;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.common.item.DrinkableItem;
 import com.darkona.droplets.foundation.common.item.TerracottaBowlItem;
+import com.darkona.droplets.foundation.tab.ThirstTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -23,10 +24,10 @@ public class ItemInit {
     static {
         ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BlueDroplets.ID);
         CLAY_BOWL = ITEMS.register("clay_bowl", () -> new Item((new Item.Properties())
-                .stacksTo(64)
+                .stacksTo(64).tab(ThirstTab.THIRST_TAB)
         ));
         TERRACOTTA_BOWL = ITEMS.register("terracotta_bowl", () -> new TerracottaBowlItem((new Item.Properties())
-                .stacksTo(64)
+                .stacksTo(64).tab(ThirstTab.THIRST_TAB)
         ));
         TERRACOTTA_WATER_BOWL = ITEMS.register("terracotta_water_bowl", () -> (new DrinkableItem())
                 .setContainer(TERRACOTTA_BOWL.get())

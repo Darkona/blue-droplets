@@ -18,7 +18,7 @@ public class QuenchnessEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
-        if (!entity.level().isClientSide && entity instanceof Player player)
+        if (!entity.level.isClientSide && entity instanceof Player player)
             ModAttachment.thirst(player).hydrate(player, amplifier + 1, amplifier + 1, false, ThirstChangeEvent.Cause.DRINK);
     }
 

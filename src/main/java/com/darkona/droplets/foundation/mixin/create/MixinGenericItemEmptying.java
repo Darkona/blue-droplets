@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
-import net.createmod.catnip.data.Pair;
+import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,7 +24,7 @@ public class MixinGenericItemEmptying
      * Water bottles: the purity is read before Create shrinks the stack (the last bottle would read as empty), and set
      * on the fluid Create has just made.
      */
-    @WrapOperation(method = "emptyItem", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/potion/PotionFluidHandler;emptyPotion(Lnet/minecraft/world/item/ItemStack;Z)Lnet/createmod/catnip/data/Pair;"))
+    @WrapOperation(method = "emptyItem", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/potion/PotionFluidHandler;emptyPotion(Lnet/minecraft/world/item/ItemStack;Z)Lcom/simibubi/create/foundation/utility/Pair;"))
     private static Pair<FluidStack, ItemStack> blue_droplets$bottlePurity(ItemStack stack, boolean simulate, Operation<Pair<FluidStack, ItemStack>> original,
                                                                          @Local(argsOnly = true) Level level)
     {

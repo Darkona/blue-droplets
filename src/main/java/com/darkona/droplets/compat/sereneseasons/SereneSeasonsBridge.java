@@ -5,8 +5,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import sereneseasons.api.season.SeasonHelper;
-import sereneseasons.init.ModConfig;
-import sereneseasons.init.ModTags;
+import sereneseasons.config.BiomeConfig;
+import sereneseasons.config.ServerConfig;
 import sereneseasons.season.SeasonHooks;
 
 /**
@@ -36,7 +36,7 @@ final class SereneSeasonsBridge
     /** The season of {@code biome}: {@link #NONE}, 0-3 (spring to winter), or a tropical one. */
     static int season(Level level, Holder<Biome> biome)
     {
-        if (biome.is(ModTags.Biomes.BLACKLISTED_BIOMES) || !ModConfig.seasons.isDimensionWhitelisted(level.dimension()))
+        if (!BiomeConfig.enablesSeasonalEffects(biome) || !ServerConfig.isDimensionWhitelisted(level.dimension()))
             return NONE;
         if (SeasonHelper.usesTropicalSeasons(biome))
             return SeasonHelper.getSeasonState(level).getTropicalSeason().ordinal() < 3 ? TROPICAL_DRY : TROPICAL_WET;

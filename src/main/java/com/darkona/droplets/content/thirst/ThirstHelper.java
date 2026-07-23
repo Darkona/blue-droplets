@@ -10,7 +10,6 @@ import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.sereneseasons.SereneSeasonsCompat;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DrinkValues;
 import com.darkona.droplets.content.data.DropletsDataMaps;
@@ -25,8 +24,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -147,7 +145,7 @@ public class ThirstHelper
 
         for (String id : ItemsConfig.BLACKLIST.get())
             resolve(id, tables.blocked::add, unknown, absentMods);
-        for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(DropletsTags.NO_THIRST))
+        for (Holder<Item> item : Registry.ITEM.getTagOrEmpty(DropletsTags.NO_THIRST))
             tables.blocked.add(item.value());
 
         readValues(ItemsConfig.DRINKS.get(), tables, false, unknown, absentMods);
@@ -155,14 +153,14 @@ public class ThirstHelper
 
         for (Map.Entry<ResourceKey<Item>, DrinkValues> entry : DropletsDataMaps.DRINKS.getDataMap().entrySet())
         {
-            Item item = BuiltInRegistries.ITEM.get(entry.getKey());
+            Item item = Registry.ITEM.get(entry.getKey());
             DrinkValues value = entry.getValue();
             tables.claim(item, new int[]{value.thirst(), value.quenched(), value.purity().orElse(-1)}, isFoodItem(item));
         }
 
         for (String id : ItemsConfig.CONTAINERS.get())
             resolve(id, item -> containers.add(new ContainerWithPurity(item)), unknown, absentMods);
-        for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(DropletsTags.PURITY_CONTAINERS))
+        for (Holder<Item> item : Registry.ITEM.getTagOrEmpty(DropletsTags.PURITY_CONTAINERS))
             containers.add(new ContainerWithPurity(item.value()));
 
         Map<Item, int[]> codeDrinks = new LinkedHashMap<>();
@@ -185,7 +183,7 @@ public class ThirstHelper
                     : new ContainerWithPurity(container.empty().asItem(), container.filled().asItem()));
 
         int[] salty = {ItemsConfig.SALTY_THIRST.get(), ItemsConfig.SALTY_QUENCHED.get(), -1};
-        for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(DropletsTags.SALTY))
+        for (Holder<Item> item : Registry.ITEM.getTagOrEmpty(DropletsTags.SALTY))
             tables.claim(item.value(), salty, isFoodItem(item.value()));
 
         if (ItemsConfig.KEYWORDS.get())
@@ -349,7 +347,7 @@ public class ThirstHelper
         {
             if (isTag)
             {
-                Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, location));
+                Optional<HolderSet.Named<Item>> tag = Registry.ITEM.getTag(TagKey.create(Registry.ITEM_REGISTRY, location));
                 if (tag.isPresent())
                 {
                     for (Holder<Item> item : tag.get())
@@ -359,7 +357,7 @@ public class ThirstHelper
             }
             else
             {
-                Optional<Holder.Reference<Item>> item = BuiltInRegistries.ITEM.getHolder(ResourceKey.create(Registries.ITEM, location));
+                Optional<Holder<Item>> item = Registry.ITEM.getHolder(ResourceKey.create(Registry.ITEM_REGISTRY, location));
                 if (item.isPresent())
                 {
                     if (item.get().value() != Items.AIR)
@@ -390,7 +388,7 @@ public class ThirstHelper
         int[] soupValues = {ItemsConfig.KEYWORD_SOUP_THIRST.get(), ItemsConfig.KEYWORD_SOUP_QUENCHED.get(), -1};
         int[] fruitValues = {ItemsConfig.KEYWORD_FRUIT_THIRST.get(), ItemsConfig.KEYWORD_FRUIT_QUENCHED.get(), -1};
 
-        for (Item item : BuiltInRegistries.ITEM)
+        for (Item item : Registry.ITEM)
         {
             if (tables.has(item) || isFoodItem(item))
                 continue;
@@ -429,9 +427,13 @@ public class ThirstHelper
         return valuesOf(itemStack) != null;
     }
 
+    /**
+     * Whether this player may drink this item. Every player can on 1.19.2: Supernatural's vampires, the only ones
+     * that are limited to blood, are not supported on this version.
+     */
     public static boolean playerRestoresThirst(ItemStack itemStack, Player player)
     {
-        return SupernaturalCompat.canDrinkItem(itemStack, player);
+        return true;
     }
 
     public static boolean isDrink(ItemStack itemStack)
@@ -545,7 +547,7 @@ public class ThirstHelper
      */
     public static float getExhaustionBiomeModifier(Player player)
     {
-        Level level = player.level();
+        Level level = player.level;
         DimensionWater dimension = DropletsDataMaps.DIMENSION_WATER.get(level.dimensionTypeRegistration());
         if (dimension != null && dimension.thirstMultiplier().isPresent())
             return dimension.thirstMultiplier().get();
@@ -598,7 +600,7 @@ public class ThirstHelper
      */
     public static boolean isHotClimate(Player player)
     {
-        Level level = player.level();
+        Level level = player.level;
         if (level.dimensionType().ultraWarm())
             return true;
         if (level.getBiome(player.getOnPos()).value().getBaseTemperature() >= PurityConfig.HOT_DIRTY_WATER_MIN_BIOME_TEMPERATURE.get())

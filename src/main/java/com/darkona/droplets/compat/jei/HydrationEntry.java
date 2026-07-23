@@ -2,7 +2,7 @@ package com.darkona.droplets.compat.jei;
 
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.content.thirst.ThirstHelper;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public record HydrationEntry(ItemStack stack, ThirstValues values)
 {
-    private static final Comparator<HydrationEntry> BY_ID = Comparator.comparing(entry -> BuiltInRegistries.ITEM.getKey(entry.stack.getItem()));
+    private static final Comparator<HydrationEntry> BY_ID = Comparator.comparing(entry -> Registry.ITEM.getKey(entry.stack.getItem()));
 
     /**
      * Drinks, then foods, each sorted by item id, from the tables in use (the server's on a remote client). Items whose

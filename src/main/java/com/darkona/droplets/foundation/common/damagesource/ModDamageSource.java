@@ -1,19 +1,13 @@
 package com.darkona.droplets.foundation.common.damagesource;
 
-import com.darkona.droplets.BlueDroplets;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.level.Level;
 
 public class ModDamageSource
 {
-
-    public static final ResourceKey<DamageType> DIE_OF_THIRST_KEY = ResourceKey.create(Registries.DAMAGE_TYPE, BlueDroplets.asResource("dehydrate"));
-
-    public static DamageSource getDamageSource(Level level, ResourceKey<DamageType> type) {
-        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(type), null, null);
-    }
+    /**
+     * Dehydration: like starving, it goes through armor, enchantments and Resistance, and costs no exhaustion. Minecraft
+     * 1.19.2 has no damage types, so it is a plain damage source with the message id {@code dehydrate}.
+     */
+    public static final DamageSource DIE_OF_THIRST = new DamageSource("dehydrate").bypassArmor().bypassMagic();
 
 }

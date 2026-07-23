@@ -3,10 +3,9 @@ package com.darkona.droplets;
 import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.create.CreateRegistry;
-import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
+import com.darkona.droplets.compat.create.ponder.ThirstPonders;
 import com.darkona.droplets.compat.reliquary.ReliquaryCompat;
 import com.darkona.droplets.compat.delight.DelightCompat;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.DropletsServiceImpl;
 import com.darkona.droplets.content.data.DropletsDataMaps;
@@ -26,18 +25,15 @@ import com.darkona.droplets.foundation.gui.DrinkTooltip;
 import com.darkona.droplets.foundation.gui.ThirstBarRenderer;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.darkona.droplets.foundation.network.ThirstModPacketHandler;
-import com.darkona.droplets.foundation.tab.ThirstTab;
 import com.darkona.droplets.gametest.DropletsGameTests;
 import com.darkona.droplets.compat.travelersbackpack.TravelersBackpackCompat;
-import net.createmod.ponder.foundation.PonderIndex;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
+import net.minecraftforge.resource.PathPackResources;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -50,12 +46,15 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Mod(BlueDroplets.ID)
 public class BlueDroplets
 {
     public static final String ID = DropletsAPI.MOD_ID;
+    private static final Set<String> OPT_IN_PACKS = new HashSet<>();
 
     public BlueDroplets()
     {
@@ -81,7 +80,6 @@ public class BlueDroplets
             modBus.addListener(ThirstBarRenderer::registerLayer);
             ThirstBarStyles.registerBuiltIns();
             VampirismCompat.initClient();
-            SupernaturalCompat.initClient();
             modBus.addListener(DrinkTooltip::registerFactory);
             MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, DrinkTooltip::gather);
         }
@@ -96,7 +94,6 @@ public class BlueDroplets
         if(ModList.get().isLoaded("create"))
             CreateRegistry.register();
 
-        ThirstTab.register(modBus);
         LegacyConfigMigration.run();
         ModLoadingContext context = ModLoadingContext.get();
         context.registerConfig(ModConfig.Type.COMMON, GameplayConfig.SPEC, ID + "/gameplay.toml");
@@ -116,46 +113,52 @@ public class BlueDroplets
     private void clientSetup(final FMLClientSetupEvent event)
     {
         if(ModList.get().isLoaded("create")){
-            event.enqueueWork(()-> new Object()
-            {
-                public void registerPonderPlugin(){
-                    PonderIndex.addPlugin(new ThirstPonderPlugin());
-                }
-            }.registerPonderPlugin());
+            event.enqueueWork(ThirstPonders::register);
         }
     }
 
     /**
-     * Optional built-in datapacks under {@code datapacks/} in the jar. {@code BUILT_IN} packs are enabled by default,
-     * also in existing worlds; {@code FEATURE} packs must be enabled when creating the world or with {@code /datapack enable}.
+     * Optional built-in datapacks under {@code datapacks/} in the jar. Packs that are not opt-in are enabled by
+     * default, also in existing worlds; opt-in packs must be enabled when creating the world or with
+     * {@code /datapack enable}.
      */
     private static void addPacks(AddPackFindersEvent event)
     {
-        addPack(event, "purify_smelting", "Water purification: furnace", PackSource.BUILT_IN);
-        addPack(event, "purify_campfire", "Water purification: campfire", PackSource.BUILT_IN);
-        addPack(event, "purify_smoking", "Water purification: smoker", PackSource.FEATURE);
-        addPack(event, "purify_cooking_pot", "Water purification: cooking pot", PackSource.BUILT_IN);
-        addPack(event, "clean_water_cooking", "Clean water for cooking recipes", PackSource.BUILT_IN);
-        addPack(event, "preset_casual", "casual preset", PackSource.FEATURE);
-        addPack(event, "preset_hardcore", "hardcore preset", PackSource.FEATURE);
+        addPack(event, "purify_smelting", "Water purification: furnace", false);
+        addPack(event, "purify_campfire", "Water purification: campfire", false);
+        addPack(event, "purify_smoking", "Water purification: smoker", true);
+        addPack(event, "purify_cooking_pot", "Water purification: cooking pot", false);
+        addPack(event, "clean_water_cooking", "Clean water for cooking recipes", false);
+        addPack(event, "preset_casual", "casual preset", true);
+        addPack(event, "preset_hardcore", "hardcore preset", true);
     }
 
     /**
-     * Forge 1.20.1 has no helper for packs inside a mod jar: the pack is the jar's {@code datapacks/<name>} folder,
-     * with the id {@code mod/blue_droplets:datapacks/<name>} that later versions give it.
+     * Forge 1.19.2 has no helper for packs inside a mod jar: the pack is the jar's {@code datapacks/<name>} folder,
+     * with the id {@code mod/blue_droplets:datapacks/<name>} that later versions give it. Minecraft 1.19.2 enables
+     * every new pack it finds, so opt-in packs are kept out by {@code MixinMinecraftServer} until a player enables them.
      */
-    private static void addPack(AddPackFindersEvent event, String name, String title, PackSource source)
+    private static void addPack(AddPackFindersEvent event, String name, String title, boolean optIn)
     {
         if (event.getPackType() != PackType.SERVER_DATA)
             return;
         Path path = ModList.get().getModFileById(ID).getFile().findResource("datapacks/" + name);
         String id = "mod/" + ID + ":datapacks/" + name;
-        event.addRepositorySource(packs -> {
-            Pack pack = Pack.readMetaAndCreate(id, Component.literal("Blue Droplets: " + title), false,
-                    packId -> new PathPackResources(packId, path, false), PackType.SERVER_DATA, Pack.Position.TOP, source);
+        if (optIn)
+            OPT_IN_PACKS.add(id);
+        event.addRepositorySource((packs, constructor) -> {
+            Pack pack = Pack.create(id, false, () -> new PathPackResources("Blue Droplets: " + title, path), constructor, Pack.Position.TOP, PackSource.BUILT_IN);
             if (pack != null)
                 packs.accept(pack);
         });
+    }
+
+    /**
+     * Whether a pack is one of the mod's opt-in packs, which Minecraft must not enable on its own.
+     */
+    public static boolean isOptInPack(String id)
+    {
+        return OPT_IN_PACKS.contains(id);
     }
 
     public static ResourceLocation asResource(String path)

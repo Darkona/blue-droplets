@@ -36,6 +36,8 @@ import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Drinking, eating, limits, overhydration, purity effects and the commands, with the default config.
@@ -82,12 +84,12 @@ public class ThirstTests
         assertValueEqual(helper, thirst.getQuenched(), 5, "quenched after a clean water bottle (5)");
 
         ThirstValues values = ThirstHelper.drinkValuesOf(waterBottle(pure));
-        helper.assertTrue(values != null && values.thirst() == 6 && values.quenched() == 8, "values shown for a pure water bottle: " + values);
-        helper.assertTrue(ThirstHelper.drinkValuesOf(waterBottle(pure)) == values, "the pure values are built again for the same stack");
+        assertTrue(helper, values != null && values.thirst() == 6 && values.quenched() == 8, "values shown for a pure water bottle: " + values);
+        assertTrue(helper, ThirstHelper.drinkValuesOf(waterBottle(pure)) == values, "the pure values are built again for the same stack");
         for (int purity = PurityLevel.MIN; purity < pure; purity++)
         {
             ThirstValues other = ThirstHelper.drinkValuesOf(waterBottle(purity));
-            helper.assertTrue(other != null && other.thirst() == 4 && other.quenched() == 5, "values shown for a water bottle of purity " + purity + ": " + other);
+            assertTrue(helper, other != null && other.thirst() == 4 && other.quenched() == 5, "values shown for a water bottle of purity " + purity + ": " + other);
         }
 
         thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
@@ -103,10 +105,10 @@ public class ThirstTests
         ServerPlayer player = player(helper);
         ItemStack bowls = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get(), 2);
         ItemStack left = bowls.finishUsingItem(helper.getLevel(), player);
-        helper.assertTrue(left.is(ItemInit.TERRACOTTA_WATER_BOWL.get()) && left.getCount() == 1, "water bowls left after drinking one of two");
+        assertTrue(helper, left.is(ItemInit.TERRACOTTA_WATER_BOWL.get()) && left.getCount() == 1, "water bowls left after drinking one of two");
         assertValueEqual(helper, player.getInventory().countItem(ItemInit.TERRACOTTA_BOWL.get()), 1, "empty bowls in the inventory");
         ItemStack last = left.finishUsingItem(helper.getLevel(), player);
-        helper.assertTrue(last.is(ItemInit.TERRACOTTA_BOWL.get()) && last.getCount() == 1, "drinking the last water bowl leaves the empty bowl in hand");
+        assertTrue(helper, last.is(ItemInit.TERRACOTTA_BOWL.get()) && last.getCount() == 1, "drinking the last water bowl leaves the empty bowl in hand");
         helper.succeed();
     }
 
@@ -119,7 +121,7 @@ public class ThirstTests
         PlayerThirst.consume(new ItemStack(Items.APPLE), player);
         assertValueEqual(helper, thirst.getThirst(), 6, "thirst after an apple (2)");
         assertValueEqual(helper, lastCause, ThirstChangeEvent.Cause.EAT, "cause of eating an apple");
-        helper.assertFalse(player.hasEffect(MobEffects.CONFUSION), "food rolled purity effects");
+        assertFalse(helper, player.hasEffect(MobEffects.CONFUSION), "food rolled purity effects");
         helper.succeed();
     }
 
@@ -144,7 +146,7 @@ public class ThirstTests
         thirst.hydrate(player, -6, -6, true, ThirstChangeEvent.Cause.EAT);
         assertValueEqual(helper, thirst.getThirst(), 0, "thirst after salty food");
         assertValueEqual(helper, thirst.getQuenched(), 0, "quenched after salty food");
-        helper.assertFalse(player.hasEffect(EffectInit.OVERHYDRATED.get()), "salty food overhydrated");
+        assertFalse(helper, player.hasEffect(EffectInit.OVERHYDRATED.get()), "salty food overhydrated");
         helper.succeed();
     }
 
@@ -155,11 +157,11 @@ public class ThirstTests
         PlayerThirst thirst = thirst(player);
         thirst.change(player, 20, 20, ThirstChangeEvent.Cause.COMMAND);
         thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
-        helper.assertFalse(player.hasEffect(EffectInit.OVERHYDRATED.get()), "one bottle past full already overhydrated");
+        assertFalse(helper, player.hasEffect(EffectInit.OVERHYDRATED.get()), "one bottle past full already overhydrated");
         thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
         MobEffectInstance effect = player.getEffect(EffectInit.OVERHYDRATED.get());
-        helper.assertTrue(effect != null && effect.getAmplifier() == 0, "two bottles past full give Overhydrated I");
-        helper.assertTrue(player.hasEffect(MobEffects.CONFUSION), "Overhydrated comes with Nausea");
+        assertTrue(helper, effect != null && effect.getAmplifier() == 0, "two bottles past full give Overhydrated I");
+        assertTrue(helper, player.hasEffect(MobEffects.CONFUSION), "Overhydrated comes with Nausea");
         helper.succeed();
     }
 
@@ -172,7 +174,7 @@ public class ThirstTests
         thirst.change(player, 20, 20, ThirstChangeEvent.Cause.COMMAND);
         for (int i = 0; i < 4; i++)
             thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
-        helper.assertFalse(player.hasEffect(EffectInit.OVERHYDRATED.get()), "an invulnerable player overhydrated");
+        assertFalse(helper, player.hasEffect(EffectInit.OVERHYDRATED.get()), "an invulnerable player overhydrated");
         helper.succeed();
     }
 
@@ -181,8 +183,8 @@ public class ThirstTests
     {
         ServerPlayer player = player(helper);
         PlayerThirst.consume(waterBottle(0), player);
-        helper.assertTrue(player.hasEffect(MobEffects.CONFUSION), "dirty water gives Nausea (100% by default)");
-        helper.assertTrue(player.hasEffect(MobEffects.HUNGER), "dirty water gives Hunger (100% by default)");
+        assertTrue(helper, player.hasEffect(MobEffects.CONFUSION), "dirty water gives Nausea (100% by default)");
+        assertTrue(helper, player.hasEffect(MobEffects.HUNGER), "dirty water gives Hunger (100% by default)");
         helper.succeed();
     }
 
@@ -191,9 +193,9 @@ public class ThirstTests
     {
         ServerPlayer player = player(helper);
         PlayerThirst.consume(waterBottle(PurityLevel.CLEAN.level()), player);
-        helper.assertTrue(player.getActiveEffects().isEmpty(), "clean water gave " + player.getActiveEffects());
+        assertTrue(helper, player.getActiveEffects().isEmpty(), "clean water gave " + player.getActiveEffects());
         PlayerThirst.consume(waterBottle(PurityLevel.PURE.level()), player);
-        helper.assertTrue(player.getActiveEffects().isEmpty(), "pure water gave " + player.getActiveEffects());
+        assertTrue(helper, player.getActiveEffects().isEmpty(), "pure water gave " + player.getActiveEffects());
         helper.succeed();
     }
 
@@ -210,7 +212,7 @@ public class ThirstTests
             assertValueEqual(helper, table.length, expected.length, "effects of " + level.id());
             for (int i = 0; i < table.length; i++)
             {
-                helper.assertTrue(Math.abs(table[i].chance() * 100 - expected[i]) < 0.001, level.id() + " effect " + i + " chance " + table[i].chance());
+                assertTrue(helper, Math.abs(table[i].chance() * 100 - expected[i]) < 0.001, level.id() + " effect " + i + " chance " + table[i].chance());
                 assertValueEqual(helper, table[i].blocksHydration(), i == 2, level.id() + " effect " + i + " blocks hydration");
             }
         }
@@ -222,14 +224,14 @@ public class ThirstTests
     public static void theEndIsCold(GameTestHelper helper)
     {
         ServerLevel end = helper.getLevel().getServer().getLevel(Level.END);
-        helper.assertTrue(end != null, "no End");
+        assertTrue(helper, end != null, "no End");
         ServerPlayer player = FakePlayerFactory.get(end, new GameProfile(UUID.randomUUID(), "droplets-test"));
         player.moveTo(0.5, 64, 0.5);
         DimensionWater water = DropletsDataMaps.DIMENSION_WATER.get(end.dimensionTypeRegistration());
-        helper.assertTrue(water != null && water.thirstMultiplier().isPresent(), "the End has no thirst_multiplier");
+        assertTrue(helper, water != null && water.thirstMultiplier().isPresent(), "the End has no thirst_multiplier");
         float climate = ThirstHelper.getExhaustionBiomeModifier(player);
         assertValueEqual(helper, climate, water.thirstMultiplier().get(), "climate multiplier in the End");
-        helper.assertTrue(climate < 1.0F, "climate multiplier in the End " + climate + ", not below 1");
+        assertTrue(helper, climate < 1.0F, "climate multiplier in the End " + climate + ", not below 1");
         helper.succeed();
     }
 
@@ -244,7 +246,7 @@ public class ThirstTests
         assertValueEqual(helper, dispatcher.execute("blue_droplets query @s", source), 4, "result of query");
         assertValueEqual(helper, dispatcher.execute("thirst query @s", source), 4, "result of the /thirst alias");
         assertValueEqual(helper, dispatcher.execute("blue_droplets enable @s false", source), 1, "result of enable");
-        helper.assertFalse(thirst(player).getShouldTickThirst(), "thirst still enabled after enable false");
+        assertFalse(helper, thirst(player).getShouldTickThirst(), "thirst still enabled after enable false");
         helper.succeed();
     }
 }

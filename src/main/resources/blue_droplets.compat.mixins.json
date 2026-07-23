@@ -12,10 +12,8 @@
     "create.MixinFluidDrainingBehaviour",
     "create.MixinGenericItemEmptying",
     "create.MixinGenericItemFilling",
-    "create.MixinCreateLang",
+    "create.MixinLang",
     "create.MixinOpenEndedPipe",
-    "farm_and_charm.MixinSinkBlock",
-    "herbalbrews.MixinTeaKettleBlockEntity",
     "miners_delight.MixinCopperCupItem",
     "travelersbackpack.MixinHoseItem"
   ],

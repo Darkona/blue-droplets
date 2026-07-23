@@ -17,6 +17,8 @@ import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Reliquary: the Emperor's Chalice hydrates, the Infernal Chalice does not, and the optional cooldown. Registered by
@@ -57,11 +59,11 @@ public class ReliquaryTests
             ItemStack chalice = new ItemStack(ModItems.EMPEROR_CHALICE.get());
             assertValueEqual(helper, cooldown, 0, "cooldown default");
             drink(helper, player, chalice);
-            helper.assertFalse(player.getCooldowns().isOnCooldown(chalice.getItem()), "the chalice is on cooldown with the cooldown off");
+            assertFalse(helper, player.getCooldowns().isOnCooldown(chalice.getItem()), "the chalice is on cooldown with the cooldown off");
             TestSupport.set(CompatConfig.RELIQUARY_EMPEROR_CHALICE_COOLDOWN, 100);
             drink(helper, player, chalice);
-            helper.assertTrue(player.getCooldowns().isOnCooldown(chalice.getItem()), "the chalice is not on cooldown after a drink");
-            helper.assertFalse(player.getCooldowns().isOnCooldown(ModItems.INFERNAL_CHALICE.get()), "the Infernal Chalice shares the cooldown");
+            assertTrue(helper, player.getCooldowns().isOnCooldown(chalice.getItem()), "the chalice is not on cooldown after a drink");
+            assertFalse(helper, player.getCooldowns().isOnCooldown(ModItems.INFERNAL_CHALICE.get()), "the Infernal Chalice shares the cooldown");
         }
         finally
         {

@@ -4,7 +4,7 @@ import com.darkona.droplets.content.registry.LootInit;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 /**
  * {@code blue_droplets:optional_item}: a {@code minecraft:item} entry whose item may belong to a mod that is not
- * installed; then it gives nothing. Forge 1.20.1 has no load conditions for loot tables, and an unknown item fails the
+ * installed; then it gives nothing. Forge 1.19.2 has no load conditions for loot tables, and an unknown item fails the
  * whole table, so the tables with other mods' drinks use it.
  */
 public class OptionalItemEntry extends LootPoolSingletonContainer
@@ -32,7 +32,7 @@ public class OptionalItemEntry extends LootPoolSingletonContainer
     {
         super(weight, quality, conditions, functions);
         this.name = name;
-        this.item = BuiltInRegistries.ITEM.getOptional(name).orElse(Items.AIR);
+        this.item = Registry.ITEM.getOptional(name).orElse(Items.AIR);
     }
 
     @Override

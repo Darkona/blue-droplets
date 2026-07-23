@@ -2,7 +2,7 @@ package com.darkona.droplets.gametest;
 
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.PurityLevel;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -41,6 +41,8 @@ import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
+import static com.darkona.droplets.gametest.TestSupport.assertTrue;
+import static com.darkona.droplets.gametest.TestSupport.assertFalse;
 
 /**
  * Purity of water taken from cauldrons (murky, or clean on a heat source) and of water in the world.
@@ -78,17 +80,17 @@ public class PurityTests
         for (ItemStack item : player.getInventory().items)
             if (item.is(Items.POTION))
                 water = item;
-        helper.assertFalse(water.isEmpty(), "no water bottle in the inventory");
-        helper.assertTrue(WaterPurity.hasPurity(water), "water bottle from a cauldron has no purity stored");
+        assertFalse(helper, water.isEmpty(), "no water bottle in the inventory");
+        assertTrue(helper, WaterPurity.hasPurity(water), "water bottle from a cauldron has no purity stored");
         assertValueEqual(helper, WaterPurity.getPurity(water), WaterPurity.HEATED_CAULDRON_PURITY, "water bottle from a heated cauldron");
 
         helper.getLevel().setBlockAndUpdate(pos.below(), Blocks.STONE.defaultBlockState());
         ItemStack bucket = useOnFullCauldron(helper, player, pos, new ItemStack(Items.BUCKET));
-        helper.assertTrue(bucket.is(Items.WATER_BUCKET), "the bucket was not filled");
+        assertTrue(helper, bucket.is(Items.WATER_BUCKET), "the bucket was not filled");
         assertValueEqual(helper, WaterPurity.getPurity(bucket), WaterPurity.CAULDRON_PURITY, "water bucket from a cauldron");
 
         ItemStack bowl = useOnFullCauldron(helper, player, pos, new ItemStack(ItemInit.TERRACOTTA_BOWL.get()));
-        helper.assertTrue(bowl.is(ItemInit.TERRACOTTA_WATER_BOWL.get()), "the terracotta bowl was not filled");
+        assertTrue(helper, bowl.is(ItemInit.TERRACOTTA_WATER_BOWL.get()), "the terracotta bowl was not filled");
         assertValueEqual(helper, WaterPurity.getPurity(bowl), WaterPurity.CAULDRON_PURITY, "terracotta water bowl from a cauldron");
         helper.succeed();
     }
@@ -98,14 +100,14 @@ public class PurityTests
     {
         ItemStack bucket = WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 0);
         FluidStack inBucket = FluidUtil.getFluidContained(bucket).orElse(FluidStack.EMPTY);
-        helper.assertTrue(inBucket.getFluid() == Fluids.WATER, "no water in a water bucket");
-        helper.assertTrue(WaterPurity.hasPurity(inBucket), "water read from a bucket has no purity");
+        assertTrue(helper, inBucket.getFluid() == Fluids.WATER, "no water in a water bucket");
+        assertTrue(helper, WaterPurity.hasPurity(inBucket), "water read from a bucket has no purity");
         assertValueEqual(helper, WaterPurity.getPurity(inBucket), 0, "purity of water read from a bucket");
 
         ItemStack filled = FluidUtil.getFilledBucket(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), PurityLevel.PURE.level()));
-        helper.assertTrue(filled.is(Items.WATER_BUCKET), "no water bucket for water with a purity");
+        assertTrue(helper, filled.is(Items.WATER_BUCKET), "no water bucket for water with a purity");
         assertValueEqual(helper, WaterPurity.getPurity(filled), PurityLevel.PURE.level(), "purity of a bucket filled with water");
-        helper.assertFalse(WaterPurity.hasPurity(FluidUtil.getFilledBucket(new FluidStack(Fluids.WATER, 1000))), "a bucket of water without purity got one");
+        assertFalse(helper, WaterPurity.hasPurity(FluidUtil.getFilledBucket(new FluidStack(Fluids.WATER, 1000))), "a bucket of water without purity got one");
         helper.succeed();
     }
 
@@ -120,13 +122,13 @@ public class PurityTests
         DispenserBlockEntity entity = (DispenserBlockEntity) helper.getLevel().getBlockEntity(dispenser);
 
         ItemStack bottle = dispense(helper, dispenser, entity, new ItemStack(Items.GLASS_BOTTLE));
-        helper.assertTrue(bottle.is(Items.POTION), "the dispenser did not fill the bottle");
-        helper.assertTrue(WaterPurity.hasPurity(bottle), "water bottle from a dispenser has no purity");
+        assertTrue(helper, bottle.is(Items.POTION), "the dispenser did not fill the bottle");
+        assertTrue(helper, WaterPurity.hasPurity(bottle), "water bottle from a dispenser has no purity");
         assertValueEqual(helper, WaterPurity.getPurity(bottle), expected, "purity of a water bottle from a dispenser");
 
         ItemStack bucket = dispense(helper, dispenser, entity, new ItemStack(Items.BUCKET));
-        helper.assertTrue(bucket.is(Items.WATER_BUCKET), "the dispenser did not fill the bucket");
-        helper.assertTrue(helper.getLevel().getFluidState(water).isEmpty(), "the dispenser did not pick up the water");
+        assertTrue(helper, bucket.is(Items.WATER_BUCKET), "the dispenser did not fill the bucket");
+        assertTrue(helper, helper.getLevel().getFluidState(water).isEmpty(), "the dispenser did not pick up the water");
         assertValueEqual(helper, WaterPurity.getPurity(bucket), expected, "purity of a water bucket from a dispenser");
         helper.succeed();
     }
@@ -151,24 +153,24 @@ public class PurityTests
         player.moveTo(water.getX() + 0.5, water.getY() + 1, water.getZ() + 0.5, 0.0F, 90.0F);
 
         ItemStack bottle = useFromAbove(player, new ItemStack(Items.GLASS_BOTTLE));
-        helper.assertTrue(bottle.is(Items.POTION), "the glass bottle was not filled");
-        helper.assertTrue(WaterPurity.hasPurity(bottle), "water bottle from the world has no purity");
+        assertTrue(helper, bottle.is(Items.POTION), "the glass bottle was not filled");
+        assertTrue(helper, WaterPurity.hasPurity(bottle), "water bottle from the world has no purity");
         assertValueEqual(helper, WaterPurity.getPurity(bottle), still, "purity of a water bottle from still water");
 
         ItemStack bowl = useFromAbove(player, new ItemStack(ItemInit.TERRACOTTA_BOWL.get()));
-        helper.assertTrue(bowl.is(ItemInit.TERRACOTTA_WATER_BOWL.get()), "the terracotta bowl was not filled");
+        assertTrue(helper, bowl.is(ItemInit.TERRACOTTA_WATER_BOWL.get()), "the terracotta bowl was not filled");
         assertValueEqual(helper, WaterPurity.getPurity(bowl), still, "purity of a terracotta water bowl from still water");
-        helper.assertTrue(WaterPurity.hasPurity(bowl), "terracotta water bowl from the world has no purity");
+        assertTrue(helper, WaterPurity.hasPurity(bowl), "terracotta water bowl from the world has no purity");
 
         ItemStack bucket = useFromAbove(player, new ItemStack(Items.BUCKET));
-        helper.assertTrue(bucket.is(Items.WATER_BUCKET), "the bucket was not filled");
-        helper.assertTrue(WaterPurity.hasPurity(bucket), "water bucket from the world has no purity");
+        assertTrue(helper, bucket.is(Items.WATER_BUCKET), "the bucket was not filled");
+        assertTrue(helper, WaterPurity.hasPurity(bucket), "water bucket from the world has no purity");
         assertValueEqual(helper, WaterPurity.getPurity(bucket), still, "purity of a water bucket from the world");
 
         helper.getLevel().setBlockAndUpdate(water, Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 2));
         int running = WaterPurity.getWaterPurity(helper.getLevel(), water, false);
         ItemStack flowing = useFromAbove(player, new ItemStack(Items.GLASS_BOTTLE));
-        helper.assertTrue(flowing.is(Items.POTION), "the glass bottle was not filled from flowing water");
+        assertTrue(helper, flowing.is(Items.POTION), "the glass bottle was not filled from flowing water");
         assertValueEqual(helper, WaterPurity.getPurity(flowing), running, "purity of a water bottle from flowing water");
         helper.succeed();
     }
@@ -176,7 +178,7 @@ public class PurityTests
     private static ItemStack useFromAbove(Player player, ItemStack stack)
     {
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        return stack.use(player.level(), player, InteractionHand.MAIN_HAND).getObject();
+        return stack.use(player.level, player, InteractionHand.MAIN_HAND).getObject();
     }
 
     @GameTest(template = "empty")
@@ -187,7 +189,7 @@ public class PurityTests
             for (AbstractCookingRecipe recipe : helper.getLevel().getRecipeManager().getAllRecipesFor(type))
                 if (recipe.getId().getNamespace().equals(BlueDroplets.ID))
                 {
-                    Integer purity = ThirstComponent.get(recipe.getResultItem(helper.getLevel().registryAccess()));
+                    Integer purity = ThirstComponent.get(recipe.getResultItem());
                     if (purity != null)
                         max = Math.max(max, purity);
                 }
@@ -211,7 +213,7 @@ public class PurityTests
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
         helper.getLevel().setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
         int purity = WaterPurity.getBlockPurity(helper.getLevel(), pos);
-        helper.assertTrue(purity >= WaterPurity.MIN_PURITY && purity <= WaterPurity.MAX_PURITY, "world water purity " + purity);
+        assertTrue(helper, purity >= WaterPurity.MIN_PURITY && purity <= WaterPurity.MAX_PURITY, "world water purity " + purity);
         helper.succeed();
     }
 
@@ -220,7 +222,7 @@ public class PurityTests
         var level = helper.getLevel();
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
         level.setBlockAndUpdate(pos, source ? Blocks.WATER.defaultBlockState() : Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 1));
-        var holder = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(biome);
+        var holder = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getHolderOrThrow(biome);
         return WaterPurity.getWaterPurity(level, holder, pos, source, null);
     }
 
@@ -233,7 +235,7 @@ public class PurityTests
     {
         // Plains still water is worldWaterBasePurity (1) plus the altitude band of the test position.
         int alt = biomePurity(helper, Biomes.PLAINS, true) - 1;
-        helper.assertTrue(alt >= 0 && alt <= 3, "altitude delta " + alt);
+        assertTrue(helper, alt >= 0 && alt <= 3, "altitude delta " + alt);
         int max = PurityLevel.PURE.level();
         for (var biome : List.of(Biomes.PLAINS, Biomes.JUNGLE, Biomes.DARK_FOREST))
             base(helper, biome, 1, max, alt);
@@ -262,7 +264,7 @@ public class PurityTests
         var level = helper.getLevel();
         int sea = level.getSeaLevel();
         int[][] bands = {{0, 0}, {29, 0}, {30, 1}, {59, 1}, {60, 2}, {99, 2}, {100, 3}, {-15, 0}, {-16, 1}, {-47, 1}, {-48, 2}, {-79, 2}, {-80, 3}};
-        var plains = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS);
+        var plains = level.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getHolderOrThrow(Biomes.PLAINS);
         for (int[] band : bands)
         {
             BlockPos pos = new BlockPos(0, sea + band[0], 0);
@@ -294,8 +296,23 @@ public class PurityTests
         helper.succeed();
     }
 
+    /**
+     * Minecraft 1.19.2 turns on every new data pack: the opt-in packs (presets, smoker purification) must stay off
+     * until a player enables them, and the others must be on.
+     */
+    @GameTest(template = "empty")
+    public static void optInPacksStayOff(GameTestHelper helper)
+    {
+        var selected = helper.getLevel().getServer().getPackRepository().getSelectedIds();
+        for (String pack : List.of("preset_casual", "preset_hardcore", "purify_smoking"))
+            assertFalse(helper, selected.contains("mod/" + BlueDroplets.ID + ":datapacks/" + pack), pack + " is enabled by default");
+        for (String pack : List.of("purify_smelting", "purify_campfire", "purify_cooking_pot", "clean_water_cooking"))
+            assertTrue(helper, selected.contains("mod/" + BlueDroplets.ID + ":datapacks/" + pack), pack + " is not enabled by default");
+        helper.succeed();
+    }
+
     private static void check(GameTestHelper helper, String what, int actual, int expected)
     {
-        helper.assertTrue(actual == expected, what + ": purity " + actual + ", expected " + expected);
+        assertTrue(helper, actual == expected, what + ": purity " + actual + ", expected " + expected);
     }
 }
