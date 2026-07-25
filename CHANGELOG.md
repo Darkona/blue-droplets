@@ -2,6 +2,41 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
+## 1.0.0 beta (Minecraft 1.19.2, Forge 43), unreleased
+
+The 1.19.2 port has every feature of the 1.20.1 port (next section) and so of 1.0.0 for 1.21.1, with the differences below. The jar, `blue-droplets-beta-1.19.2-1.0.0.jar`, runs on Forge 43.5.2 or newer for Minecraft 1.19.2.
+
+### Minecraft 1.19.2
+
+- Everything the 1.20.1 section says about storage and data also holds here: purity in the item or fluid NBT under `blue_droplets:purity`, the `blue_droplets:player_thirst` capability, poured water in the world's saved data, the data maps read by the mod itself, recipes with `forge:partial_nbt`, the loot entries and conditions of Blue Droplets, the brewing recipe for the Quenchness potions and the warning for other thirst mods. The release jar starts and stops cleanly on a dedicated Forge 1.19.2-43.5.2 server, alone and with the optional mods. `[1.19.2]`
+- Worlds from Thirst Was Taken 1.19.2 (1.3.x) load like those of 1.20.1: the `thirst:thirst` capability, the `thirst:` ids and the `Purity` of water containers and tanks use the same formats in both versions. `[1.19.2]`
+- Dehydration damage is a damage source (`dehydrate`) with the same rules as starving: it goes through armor, enchantments and Resistance. Minecraft 1.19.2 has no damage types, so datapacks cannot change it. `[1.19.2]`
+- The creative tab lists the same stacks (the water containers once per purity, the Sand Filter with Create). The Sand Filter is only in the Blue Droplets tab: a 1.19.2 item has one tab, and Create's tab only lists Create's own items. `[1.19.2]`
+- Optional datapacks: Minecraft 1.19.2 turns on every datapack it has not seen before and has no "off by default" pack. The presets and the smoker purification pack stay off until a player turns them on, when creating the world or with `/datapack enable`, as in later versions; the others are on by default, also in existing worlds. `[1.19.2]`
+
+### Mod compatibility (1.19.2)
+
+- Built and tested with Create 0.5.1.i, Jade 8.9.2, JEI 11.39, AppleSkin 2.4.2, Cold Sweat 2.4.3, Serene Seasons 8.1.0.24, Traveler's Backpack 8.2.41, Reliquary 2.0.40 and Farmer's Delight 1.2.4 for 1.19.2, and built against Vampirism 1.9.5 (its red thirst bar is not covered by the tests). `[1.19.2]`
+- Create 0.5.1: the Sand Filter, its Ponder scene, fan and basin purification, spouts, drains, pipes and goggles work as with Create 6. The Ponder scene is registered in Create's own Ponder, which is inside Create in 0.5.1. `[1.19.2]`
+- Farmer's Delight addons, data only (drink values and, where a recipe uses water, the clean water rule): Brewin' and Chewin' 1.19-2.0, Ocean's Delight 1.0.2, Ender's Delight 1.2.2, Miner's Delight 1.1.1, Fruits Delight 0.5.9, Cultural Delights 0.16.0, Corn Delight 1.0.3, Rustic Delight 1.3.0, Crabber's Delight 1.1.4, End's Delight 2.1 and My Nether's Delight 1.7.6. The clean water rule: Farmer's Delight's cooking pot and wheat dough, Miner's Delight's copper pot, Cultural Delights' corn dough and Corn Delight's raw tortilla need acceptable water or better (3), and Cultural Delights' bean milk, which is cooked, murky water or better (2). Miner's Delight's water cup carries a purity like a bottle. `[1.19.2]`
+- Serene Seasons 8.1.0.24 for 1.19.2 reports its version as `0.0NONE`, so Blue Droplets accepts any version of it. `[1.19.2]`
+
+### Not in this version
+
+- Supernatural: its 1.19.2 version (2.6.5) is another mod inside, with no vampire state that Blue Droplets can read. Its vampires drink like other players and the thirst bar keeps its color. `[1.19.2]`
+- Farm & Charm, HerbalBrews and Brewery: they have no version for Minecraft 1.19.2 Forge, so there are no taps, sinks, wells or kettles to cover. The `delight.kettleMinPurity` option stays, for blocks that a modpack adds to `blue_droplets:rejects_dirty_water`. `[1.19.2]`
+- Extra Delight and Expanded Delight: no version for Minecraft 1.19.2 Forge. `[1.19.2]`
+- Miner's Delight with Create: Miner's Delight 1.1.1 ships no Create recipes for its cup, so spouts and item drains do not fill or empty it. `[1.19.2]`
+- Brewin' and Chewin' kegs, Cultural Delights' aging and Fruits Delight's Create mixing take water of any purity, for the same reasons as on 1.20.1: their recipes name water as a fluid, and a fluid ingredient cannot ask for a minimum purity through data. `[1.19.2]`
+- KubeJS: no examples or tests, as on 1.20.1. `[1.19.2]`
+- Pumps and pipes of other mods cannot drain a water cauldron, as on 1.20.1: Forge 1.19.2 gives cauldrons no fluid handler. `[1.19.2]`
+
+### For developers (1.19.2)
+
+- Built with ModDevGradle Legacy 2.0.141 on Gradle 9.7.1, Java 17, Forge 43.5.2 and Parchment 2022.11.27; MixinExtras 0.4.1 bundled with jarJar. `-PwithCompat` and `-PwithDelight` add the optional mods to the dev runs. `scripts/client-boot-check.sh` starts a dedicated server of its own (`run/bootserver`) and the headless client joins it with `--server`, since Minecraft 1.19.2 has no quick play; it passes when the client joins, runs the commands and leaves the log clean. `[1.19.2]`
+- API: the same as on 1.20.1. The thirst bar is the GUI overlay `blue_droplets:thirst_level`, drawn with a `PoseStack`. `[1.19.2]`
+- Game tests (`./gradlew runGameTestServer`): 54 without optional mods, 83 with `-PwithCompat`, 59 with `-PwithDelight` and 88 with both. Changes from 1.20.1: `assertTrue` and `assertFalse` are in `TestSupport`, since `GameTestHelper` of 1.19.2 has neither; a new test checks that the opt-in packs stay off; the Sand Filter tab test checks the Blue Droplets tab only; the Delight tests cover Farmer's Delight's recipes; the Miner's Delight tests with Create are gone. `[1.19.2]`
+
 ## 1.0.0 beta (Minecraft 1.20.1, Forge 47 and NeoForge 47.1), unreleased
 
 The 1.20.1 port has every feature of 1.0.0 for 1.21.1 (next section), with the differences below. One jar, `blue-droplets-beta-1.20.1-1.0.0.jar`, runs on Forge 47.1.3 or newer and on NeoForge 47.1 for Minecraft 1.20.1.
