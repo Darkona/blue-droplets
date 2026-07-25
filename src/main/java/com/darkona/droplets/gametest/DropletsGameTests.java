@@ -23,11 +23,9 @@ public final class DropletsGameTests
             event.register(ReliquaryTests.class);
         if (ModList.get().isLoaded("sereneseasons"))
             event.register(SereneSeasonsTests.class);
-        if (ModList.get().isLoaded("farm_and_charm") && ModList.get().isLoaded("herbalbrews") && ModList.get().isLoaded("brewery"))
+        if (ModList.get().isLoaded("farmersdelight") && ModList.get().isLoaded("brewinandchewin"))
             event.register(DelightTests.class);
         if (ModList.get().isLoaded("miners_delight"))
             event.register(MinersDelightTests.class);
-        if (ModList.get().isLoaded("miners_delight") && ModList.get().isLoaded("create"))
-            event.register(MinersDelightCreateTests.class);
     }
 }

@@ -6,7 +6,7 @@
       "id": "farmersdelight",
       "name": "Farmer's Delight",
       "modrinth": "farmers-delight",
-      "version": "1.20.1-1.3.4",
+      "version": "1.19.2-1.2.4",
       "repo": "~/development/java/FarmersDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -17,7 +17,7 @@
       "id": "brewinandchewin",
       "name": "Brewin' and Chewin'",
       "modrinth": "brewin-and-chewin",
-      "version": "1.20.1-3.2.1",
+      "version": "1.19-2.0",
       "repo": "~/development/java/BrewinAndChewin",
       "data_roots": [
         "common/src/main/resources/data",
@@ -29,7 +29,7 @@
       "id": "oceansdelight",
       "name": "Ocean's Delight",
       "modrinth": "oceans-delight",
-      "version": "1.0.2-1.20",
+      "version": "1.0.2-1.19.2",
       "repo": "~/development/java/OceansDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -40,7 +40,7 @@
       "id": "endersdelight",
       "name": "Ender's Delight",
       "modrinth": "enders-delight",
-      "version": "1.1.4",
+      "version": "1.19-1.2.2",
       "repo": "~/development/java/EndersDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -48,32 +48,10 @@
       ]
     },
     {
-      "id": "farm_and_charm",
-      "name": "Let's Do Farm & Charm",
-      "modrinth": "lets-do-farm-charm",
-      "version": "1.0.14",
-      "repo": "~/development/java/FarmAndCharm",
-      "data_roots": [
-        "common/src/main/resources/data",
-        "neoforge/src/main/resources/data"
-      ]
-    },
-    {
-      "id": "herbalbrews",
-      "name": "HerbalBrews",
-      "modrinth": "lets-do-herbalbrews",
-      "version": "1.0.12",
-      "repo": "~/development/java/HerbalBrews",
-      "data_roots": [
-        "common/src/main/resources/data",
-        "neoforge/src/main/resources/data"
-      ]
-    },
-    {
       "id": "miners_delight",
       "name": "Miner's Delight",
       "modrinth": "miners-delight",
-      "version": "1.20.1-1.4.5-backport",
+      "version": "1.19.2-1.1.1",
       "repo": "~/development/java/MinersDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -84,7 +62,7 @@
       "id": "fruitsdelight",
       "name": "Fruits Delight",
       "modrinth": "fruits-delight",
-      "version": "1.1.3",
+      "version": "0.5.9",
       "repo": "~/development/java/FruitsDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -95,7 +73,7 @@
       "id": "culturaldelights",
       "name": "Cultural Delights",
       "modrinth": "cultural-delights",
-      "version": "0.16.7",
+      "version": "0.16.0-1.19.2",
       "repo": "~/development/java/CulturalDelights",
       "data_roots": [
         "src/main/resources/data",
@@ -106,7 +84,7 @@
       "id": "corn_delight",
       "name": "Corn Delight",
       "modrinth": "corn-delight",
-      "version": "1.2.11-1.20.1",
+      "version": "1.0.3-1.19.2",
       "repo": "~/development/java/CornDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -117,7 +95,7 @@
       "id": "rusticdelight",
       "name": "Rustic Delight",
       "modrinth": "rustic-delight",
-      "version": "1.7.0",
+      "version": "1.3.0",
       "repo": "~/development/java/RusticDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -128,7 +106,7 @@
       "id": "crabbersdelight",
       "name": "Crabber's Delight",
       "modrinth": "crabbers-delight",
-      "version": "1.2.3",
+      "version": "1.1.4",
       "repo": "~/development/java/CrabbersDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -139,7 +117,7 @@
       "id": "ends_delight",
       "name": "End's Delight",
       "modrinth": "ends-delight",
-      "version": "2.6.1+forge.1.20.1",
+      "version": "1.19.2-2.1",
       "repo": "~/development/java/EndsDelight",
       "data_roots": [
         "src/main/resources/data",
@@ -150,7 +128,7 @@
       "id": "mynethersdelight",
       "name": "My Nether's Delight",
       "modrinth": "my-nethers-delight",
-      "version": "1.20.1-1.8",
+      "version": "1.19-1.7.6",
       "repo": "~/development/java/MyNethersDelight",
       "data_roots": [
         "src/main/resources/data",

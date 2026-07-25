@@ -2,28 +2,21 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "farm_and_charm"
+      "modid": "farmersdelight"
     }
   ],
-  "type": "farm_and_charm:crafting_bowl",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "tag": "farm_and_charm:flour"
-    },
-    {
-      "item": "farm_and_charm:yeast"
-    },
     {
       "type": "forge:difference",
       "base": {
-        "tag": "farm_and_charm:water_bottles"
+        "item": "minecraft:water_bucket"
       },
       "subtracted": [
         {
           "type": "forge:partial_nbt",
           "items": [
-            "minecraft:water_bucket",
-            "minecraft:potion"
+            "minecraft:water_bucket"
           ],
           "nbt": {
             "blue_droplets:purity": 0
@@ -32,8 +25,7 @@
         {
           "type": "forge:partial_nbt",
           "items": [
-            "minecraft:water_bucket",
-            "minecraft:potion"
+            "minecraft:water_bucket"
           ],
           "nbt": {
             "blue_droplets:purity": 1
@@ -42,18 +34,26 @@
         {
           "type": "forge:partial_nbt",
           "items": [
-            "minecraft:water_bucket",
-            "minecraft:potion"
+            "minecraft:water_bucket"
           ],
           "nbt": {
             "blue_droplets:purity": 2
           }
         }
       ]
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
     }
   ],
   "result": {
-    "item": "farm_and_charm:dough",
-    "count": 5
+    "count": 3,
+    "item": "farmersdelight:wheat_dough"
   }
 }

@@ -6,7 +6,6 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "S": {
       "item": "minecraft:wooden_shovel"
@@ -14,7 +13,7 @@
     "W": {
       "type": "forge:difference",
       "base": {
-        "tag": "forge:buckets/water"
+        "item": "minecraft:water_bucket"
       },
       "subtracted": [
         {
@@ -60,6 +59,5 @@
   ],
   "result": {
     "item": "farmersdelight:cooking_pot"
-  },
-  "show_notification": true
+  }
 }

@@ -13,10 +13,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Farmer's Delight addons and Let's Do mods: kettles refuse dirty water, and the infinite water sources (taps, sinks,
- * wells) give the purity of the world's water where they stand. Recipes and drink values are data; what is code runs
- * from small mixins in {@code foundation.mixin.<mod id>} (HerbalBrews, Farm & Charm, Miner's Delight) and from the
- * click event below (Brewery and any block in {@code blue_droplets:rejects_dirty_water}).
+ * Farmer's Delight addons: blocks in {@code blue_droplets:rejects_dirty_water} refuse dirty water, and infinite water
+ * sources give the purity of the world's water where they stand. Recipes and drink values are data; what is code runs
+ * from small mixins in {@code foundation.mixin.<mod id>} (Miner's Delight on 1.19.2) and from the click event below.
  */
 public final class DelightCompat
 {

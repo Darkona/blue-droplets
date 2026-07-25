@@ -2,25 +2,21 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "farm_and_charm"
+      "modid": "culturaldelights"
     }
   ],
-  "type": "farm_and_charm:stove",
+  "type": "farmersdelight:cooking",
   "ingredients": [
-    {
-      "tag": "farm_and_charm:dough"
-    },
     {
       "type": "forge:difference",
       "base": {
-        "tag": "farm_and_charm:water_bottles"
+        "item": "minecraft:water_bucket"
       },
       "subtracted": [
         {
           "type": "forge:partial_nbt",
           "items": [
-            "minecraft:water_bucket",
-            "minecraft:potion"
+            "minecraft:water_bucket"
           ],
           "nbt": {
             "blue_droplets:purity": 0
@@ -29,20 +25,31 @@
         {
           "type": "forge:partial_nbt",
           "items": [
-            "minecraft:water_bucket",
-            "minecraft:potion"
+            "minecraft:water_bucket"
           ],
           "nbt": {
             "blue_droplets:purity": 1
           }
         }
       ]
+    },
+    {
+      "item": "culturaldelights:beans"
+    },
+    {
+      "item": "culturaldelights:beans"
+    },
+    {
+      "item": "culturaldelights:beans"
     }
   ],
   "result": {
-    "item": "farm_and_charm:farmers_bread",
-    "count": 3
+    "item": "minecraft:milk_bucket",
+    "count": 1
   },
-  "experience": 0.3,
-  "requiresLearning": false
+  "container": {
+    "item": "minecraft:bucket"
+  },
+  "experience": 0.2,
+  "cookingtime": 200
 }

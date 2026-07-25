@@ -1,46 +1,6 @@
 {
   "values": [
     {
-      "id": "brewery:pretzel",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_ak",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_carrasconlabel",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_cristelwalker",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_highland_hearth",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_jamesons_malt",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_jojannik",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_lilitusinglemalt",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_maggoallan",
-      "required": false
-    },
-    {
-      "id": "brewery:whiskey_smokey_reverie",
-      "required": false
-    },
-    {
       "id": "brewinandchewin:bloody_mary",
       "required": false
     },
@@ -97,15 +57,39 @@
       "required": false
     },
     {
-      "id": "crabbersdelight:jar_of_pickles",
-      "required": false
-    },
-    {
       "id": "crabbersdelight:pufferfish_slice",
       "required": false
     },
     {
+      "id": "culturaldelights:acid",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:bloody_mary",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:brandy",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:cheese_wedge",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:cooked_sausage",
+      "required": false
+    },
+    {
       "id": "culturaldelights:cut_pickle",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:gin",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:lemon_liqueur",
       "required": false
     },
     {
@@ -117,7 +101,15 @@
       "required": false
     },
     {
-      "id": "culturaldelights:smoked_corn",
+      "id": "culturaldelights:popcorn_bucket",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:raw_sausage",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:rum",
       "required": false
     },
     {
@@ -137,11 +129,19 @@
       "required": false
     },
     {
+      "id": "culturaldelights:tequila",
+      "required": false
+    },
+    {
       "id": "culturaldelights:tortilla_chips",
       "required": false
     },
     {
-      "id": "endersdelight:steak_fries",
+      "id": "culturaldelights:vodka",
+      "required": false
+    },
+    {
+      "id": "culturaldelights:whiskey",
       "required": false
     },
     {
@@ -158,10 +158,6 @@
     },
     {
       "id": "ends_delight:smoked_dragon_leg",
-      "required": false
-    },
-    {
-      "id": "farm_and_charm:rotten_tomato",
       "required": false
     },
     {
@@ -193,23 +189,11 @@
       "required": false
     },
     {
-      "id": "miners_delight:copper_carrot",
-      "required": false
-    },
-    {
       "id": "miners_delight:smoked_bat_wing",
       "required": false
     },
     {
       "id": "miners_delight:weird_caviar",
-      "required": false
-    },
-    {
-      "id": "mynethersdelight:bacon-wrapped_sausage_on_a_stick",
-      "required": false
-    },
-    {
-      "id": "mynethersdelight:fries_ghasta",
       "required": false
     },
     {

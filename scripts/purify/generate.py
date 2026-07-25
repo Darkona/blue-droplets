@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regenerates the water purification recipes for the 6 purity levels (0-5).
 
-Minecraft 1.20.1 (Forge 47) formats: purity is the item or fluid NBT key "blue_droplets:purity"; "forge:partial_nbt"
+Minecraft 1.19.2 (Forge 43) formats, the same as 1.20.1: purity is the item or fluid NBT key "blue_droplets:purity"; "forge:partial_nbt"
 and "forge:nbt" ingredients stand for the component ingredients of later versions, "conditions" for "neoforge:conditions".
 
 Outputs (all rewritten from scratch, stale files are deleted):

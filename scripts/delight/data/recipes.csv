@@ -1,21 +1,29 @@
 mod,recipe_id,recipe_type,water_form,water_amount,result_id,result_count,heat,min_purity,enabled,notes,recipe_sha
-brewinandchewin,brewinandchewin:fermenting/beer_from_water,brewinandchewin:fermenting,fluid,1000,,1000,cold,3,0,Brewin' and Chewin' 1.20.1: el fluido base se compara con isFluidEqual contra un FluidStack sin NBT y el keg no guarda la pureza del agua: no se puede exigir con datos,2c1fc7dc4c27
-brewinandchewin,brewinandchewin:fermenting/glittering_grenadine_from_water,brewinandchewin:fermenting,fluid,1000,,1000,cold,3,0,Brewin' and Chewin' 1.20.1: el fluido base se compara con isFluidEqual contra un FluidStack sin NBT y el keg no guarda la pureza del agua: no se puede exigir con datos,a588077b89bd
-brewinandchewin,brewinandchewin:fermenting/rice_wine_from_water,brewinandchewin:fermenting,fluid,1000,,1000,cold,3,0,Brewin' and Chewin' 1.20.1: el fluido base se compara con isFluidEqual contra un FluidStack sin NBT y el keg no guarda la pureza del agua: no se puede exigir con datos,69c839123bd5
-brewinandchewin,brewinandchewin:fermenting/vodka_from_water,brewinandchewin:fermenting,fluid,1000,,1000,cold,3,0,Brewin' and Chewin' 1.20.1: el fluido base se compara con isFluidEqual contra un FluidStack sin NBT y el keg no guarda la pureza del agua: no se puede exigir con datos,1ed754ee6af7
-brewinandchewin,brewinandchewin:pouring/potion,brewinandchewin:keg_pouring,bottle,250,minecraft:potion,1,cold,3,0,"Brewin' and Chewin' 1.20.1: el keg crea el agua sin NBT al verter, la pureza no llega al tanque; no hay receta de datos que la mantenga",686905c5b7cd
-brewinandchewin,brewinandchewin:pouring/water_bucket,brewinandchewin:keg_pouring,fluid,1000,minecraft:water_bucket,1,cold,3,0,"Brewin' and Chewin' 1.20.1: el keg crea el agua sin NBT al verter, la pureza no llega al tanque; no hay receta de datos que la mantenga",3e54064aec8f
+brewinandchewin,brewinandchewin:fermenting/beer,brewinandchewin:fermenting,bucket,1000,brewinandchewin:beer,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,845c6338288d
+brewinandchewin,brewinandchewin:fermenting/glittering_grenadine,brewinandchewin:fermenting,bucket,1000,brewinandchewin:glittering_grenadine,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,40618e89744a
+brewinandchewin,brewinandchewin:fermenting/rice_wine,brewinandchewin:fermenting,bucket,1000,brewinandchewin:rice_wine,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,3dd5a738d286
+brewinandchewin,brewinandchewin:fermenting/vodka,brewinandchewin:fermenting,bucket,1000,brewinandchewin:vodka,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,5b5c34fdfc90
 corn_delight,corn_delight:tortilla_raw,minecraft:crafting_shaped,bucket,1000,corn_delight:tortilla_raw,3,cold,3,1,,2ac293b393eb
+culturaldelights,culturaldelights:aging/chilling/cola,culturaldelights:aging,bucket,1000,culturaldelights:cola,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,dfa30d29770a
+culturaldelights,culturaldelights:aging/distilling/brandy,culturaldelights:aging,bucket,1000,culturaldelights:brandy,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,e29dbcecbbb3
+culturaldelights,culturaldelights:aging/distilling/rum,culturaldelights:aging,bucket,1000,culturaldelights:rum,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,21ce82469ac0
+culturaldelights,culturaldelights:aging/distilling/tequila,culturaldelights:aging,bucket,1000,culturaldelights:tequila,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,a88a9cf8a3c1
+culturaldelights,culturaldelights:aging/distilling/vodka,culturaldelights:aging,bucket,1000,culturaldelights:vodka,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,5a200e25fb1c
+culturaldelights,culturaldelights:aging/distilling/whiskey,culturaldelights:aging,bucket,1000,culturaldelights:whiskey,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,b8490628ac07
+culturaldelights,culturaldelights:aging/fermenting/acid,culturaldelights:aging,bucket,1000,culturaldelights:acid,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,1362ebce68b1
+culturaldelights,culturaldelights:aging/fermenting/apple_cider,culturaldelights:aging,bucket,1000,culturaldelights:apple_cider,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,a5f5561e9abf
+culturaldelights,culturaldelights:aging/fermenting/beer,culturaldelights:aging,bucket,1000,culturaldelights:beer,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,3a19ae82b32f
+culturaldelights,culturaldelights:aging/fermenting/gin,culturaldelights:aging,bucket,1000,culturaldelights:gin,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,966853aa01e7
+culturaldelights,culturaldelights:aging/fermenting/glow_wine,culturaldelights:aging,bucket,1000,culturaldelights:glow_wine,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,49682695d668
+culturaldelights,culturaldelights:aging/fermenting/lemon_liqueur,culturaldelights:aging,bucket,1000,culturaldelights:lemon_liqueur,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,64a3dad3d4c7
+culturaldelights,culturaldelights:aging/fermenting/mead,culturaldelights:aging,bucket,1000,culturaldelights:mead,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,d85ce4390593
+culturaldelights,culturaldelights:aging/fermenting/tofu,culturaldelights:aging,bucket,1000,culturaldelights:tofu,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,a15bf19fe5ad
+culturaldelights,culturaldelights:aging/fermenting/vinegar,culturaldelights:aging,bucket,1000,culturaldelights:vinegar,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,47d080e5527b
+culturaldelights,culturaldelights:aging/fermenting/wine,culturaldelights:aging,bucket,1000,culturaldelights:wine,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,3f218e5c01a1
+culturaldelights,culturaldelights:cooking/milk_from_beans,farmersdelight:cooking,bucket,1000,minecraft:milk_bucket,1,hot,2,1,,2c7c48f613ff
 culturaldelights,culturaldelights:corn_dough,minecraft:crafting_shapeless,bucket,1000,culturaldelights:corn_dough,3,cold,3,1,,b36e2f8ddd72
-farm_and_charm,farm_and_charm:crafting_bowl/dough,farm_and_charm:crafting_bowl,tag,1000,farm_and_charm:dough,5,cold,3,1,,934bea9334ef
-farm_and_charm,farm_and_charm:pot_cooking/barley_soup,farm_and_charm:pot_cooking,tag,1000,farm_and_charm:barley_soup,1,hot,2,1,,c64747ed26fd
-farm_and_charm,farm_and_charm:pot_cooking/nettle_tea,farm_and_charm:pot_cooking,tag,1000,farm_and_charm:nettle_tea,1,hot,2,1,,a2212363ce36
-farm_and_charm,farm_and_charm:pot_cooking/ribwort_tea,farm_and_charm:pot_cooking,tag,1000,farm_and_charm:ribwort_tea,1,hot,2,1,,7b6fd4d2a2fc
-farm_and_charm,farm_and_charm:pot_cooking/strawberry_tea,farm_and_charm:pot_cooking,tag,1000,farm_and_charm:strawberry_tea,1,hot,2,1,,018b6609fe45
-farm_and_charm,farm_and_charm:pot_cooking/yeast,farm_and_charm:pot_cooking,tag,1000,farm_and_charm:yeast,12,hot,2,1,,54705b10ff70
-farm_and_charm,farm_and_charm:stove/farmers_bread,farm_and_charm:stove,tag,1000,farm_and_charm:farmers_bread,3,hot,2,1,,17cd74761c88
-farm_and_charm,farm_and_charm:water_sprinkler,minecraft:crafting_shaped,tag,1000,farm_and_charm:water_sprinkler,1,cold,3,1,,132906c57d90
-farmersdelight,farmersdelight:cooking_pot,minecraft:crafting_shaped,bucket,1000,farmersdelight:cooking_pot,1,cold,3,1,,de2c5a902a04
+farmersdelight,farmersdelight:cooking_pot,minecraft:crafting_shaped,bucket,1000,farmersdelight:cooking_pot,1,cold,3,1,,42324a2dcda8
+farmersdelight,farmersdelight:wheat_dough_from_water,minecraft:crafting_shapeless,bucket,1000,farmersdelight:wheat_dough,3,cold,3,1,,d57a213e7774
 fruitsdelight,fruitsdelight:mixing/flowing_apple_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,2c4029d3be31
 fruitsdelight,fruitsdelight:mixing/flowing_bayberry_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,5fafa4a59f3d
 fruitsdelight,fruitsdelight:mixing/flowing_bayberry_soup,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,44d4b7af619f
@@ -31,7 +39,7 @@ fruitsdelight,fruitsdelight:mixing/flowing_hawberry_tea,create:mixing,fluid,250,
 fruitsdelight,fruitsdelight:mixing/flowing_kiwi_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,5cc1e3361a05
 fruitsdelight,fruitsdelight:mixing/flowing_lemon_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,faf8a87018f1
 fruitsdelight,fruitsdelight:mixing/flowing_lemon_juice,create:mixing,fluid,250,,250,cold,3,0,tipo de receta sin verificar: no se sobrescribe,fa1468030e0c
-fruitsdelight,fruitsdelight:mixing/flowing_lychee_cherry_tea,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,fdd011e18ae4
+fruitsdelight,fruitsdelight:mixing/flowing_lychee_cherry_tea,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,ee72ecd30219
 fruitsdelight,fruitsdelight:mixing/flowing_lychee_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,ca4e08afe78f
 fruitsdelight,fruitsdelight:mixing/flowing_mango_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,ed029ccaffbd
 fruitsdelight,fruitsdelight:mixing/flowing_mango_tea,create:mixing,fluid,250,,250,hot,2,0,tipo de receta sin verificar: no se sobrescribe,d55cf591dd59
@@ -47,5 +55,4 @@ fruitsdelight,fruitsdelight:mixing/flowing_pear_juice,create:mixing,fluid,250,,2
 fruitsdelight,fruitsdelight:mixing/flowing_persimmon_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,f3a10b4eaf45
 fruitsdelight,fruitsdelight:mixing/flowing_pineapple_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,11ab44d63123
 fruitsdelight,fruitsdelight:mixing/flowing_sweetberry_jam,create:mixing,fluid,100,,125,cold,3,0,tipo de receta sin verificar: no se sobrescribe,e6b9e8ce18ed
-miners_delight,miners_delight:copper_pot,minecraft:crafting_shaped,bucket,2000,miners_delight:copper_pot,1,cold,3,1,,a9b85d698a48
-rusticdelight,rusticdelight:brewing/coffee,forge:conditional,fluid,1000,,,cold,3,0,tipo de receta sin verificar: no se sobrescribe,a5f0462bb6e5
+miners_delight,miners_delight:copper_pot,minecraft:crafting_shaped,bucket,2000,miners_delight:copper_pot,1,cold,3,1,,dccf7e51a9b6

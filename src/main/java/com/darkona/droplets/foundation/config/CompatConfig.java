@@ -51,7 +51,7 @@ public final class CompatConfig
         COLD_SWEAT_BODY_TEMPERATURE = BUILDER.comment("Whether the climate multiplier of thirst comes from Cold Sweat's body temperature (bodyTemperatureCurve) instead of the biome's temperature and downfall").define("useBodyTemperature", true);
         COLD_SWEAT_BODY_TEMPERATURE_CURVE = BUILDER.comment("With useBodyTemperature: [\"bodyTemperature,multiplier\", ...] in ascending body temperature; straight lines between points, flat beyond the ends.",
                         "Times gameplay.toml depletion.multiplier; the dimension's thirst multiplier and netherMultiplier still come first")
-                .<String>defineListAllowEmpty("bodyTemperatureCurve", List.of("-100,0.8", "0,1.0", "50,1.3", "100,2.0", "150,3.0"), GameplayConfig::isValidPair);
+                .<String>defineListAllowEmpty(List.of("bodyTemperatureCurve"), () -> List.of("-100,0.8", "0,1.0", "50,1.3", "100,2.0", "150,3.0"), GameplayConfig::isValidPair);
         COLD_SWEAT_DRINK_COOLING = BUILDER.comment("How much drinking water (water containers, drinking by hand, the Traveler's Backpack hose) cools the body; 0 = off.",
                         "Cold Sweat's own filled waterskin is left alone: it already changes the temperature by the water it holds").defineInRange("drinkCooling", 0.0, 0.0, 100.0);
         COLD_SWEAT_DRINK_COOLING_TICKS = BUILDER.comment("0: drinkCooling lowers the body temperature once, which then drifts back with the surroundings;",
@@ -73,11 +73,11 @@ public final class CompatConfig
         BUILDER.pop();
 
         BUILDER.comment("Farmer's Delight addons and Let's Do mods").push("delight");
-        KETTLE_MIN_PURITY = BUILDER.comment("Lowest water purity that kettles take (they boil it): the HerbalBrews tea kettle, the Brewery brewing stations",
-                        "and any block in the block tag blue_droplets:rejects_dirty_water. Dirtier water stays in the slot or in the hand. 0 = any water")
+        KETTLE_MIN_PURITY = BUILDER.comment("Lowest water purity that kettles take (they boil it): any block in the block tag blue_droplets:rejects_dirty_water",
+                        "(on 1.19.2 the tag is empty: the HerbalBrews and Brewery kettles have no 1.19.2 version). Dirtier water stays in the hand. 0 = any water")
                 .defineInRange("kettleMinPurity", PurityLevel.MURKY.level(), PurityLevel.MIN, PurityLevel.MAX);
-        WORLD_PURITY_WATER_SOURCES = BUILDER.comment("Whether taps and sinks (Extra Delight, Farm & Charm) and the Farm & Charm timber well give water with the purity of the world's water",
-                        "at their position, like water taken from a source block there; false = water without a purity, which reads as defaultPurity").define("worldPurityWaterSources", true);
+        WORLD_PURITY_WATER_SOURCES = BUILDER.comment("Whether taps, sinks and wells of other mods give water with the purity of the world's water at their position, like water",
+                        "taken from a source block there; false = water without a purity, which reads as defaultPurity. On 1.19.2 no supported mod has one (Extra Delight and Farm & Charm have no 1.19.2 version)").define("worldPurityWaterSources", true);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

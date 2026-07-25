@@ -2,11 +2,11 @@
 
 Scripts en Python 3 estándar. Se corren desde cualquier carpeta; los CSV de `data/` son los que se editan, los scripts los vuelven a aplicar cuantas veces haga falta.
 
-Esta es la versión de la rama 1.20.1 (Forge 47): lee las recetas de `data/<ns>/recipes/` de los jars de Forge 1.20.1 y escribe los formatos de 1.20.1 (`conditions`, `forge:difference`, `forge:partial_nbt`, `forge:conditions` en `drinks.json`, carpetas `recipes/` y `tags/items/`).
+Esta es la versión de la rama 1.19.2 (Forge 43): lee las recetas de `data/<ns>/recipes/` de los jars de Forge 1.19.2 y escribe los formatos de 1.19.2, que son los de 1.20.1 (`conditions`, `forge:difference`, `forge:partial_nbt`, `forge:conditions` en `drinks.json`, carpetas `recipes/` y `tags/items/`).
 
 ## Flujo
 
-- `python3 scripts/delight/extract_recipes.py` lee las recetas de los jars fijados en `mods.json` (se bajan de Modrinth, versiones Forge 1.20.1, a `~/.cache/blue-droplets-delight`, fuera del repo) y escribe `data/recipes.csv` con las que usan agua. Con `--source repo` lee los repos clonados en su lugar (la rama de 1.20.1 de cada mod).
+- `python3 scripts/delight/extract_recipes.py` lee las recetas de los jars fijados en `mods.json` (se bajan de Modrinth, versiones Forge 1.19.2, a `~/.cache/blue-droplets-delight`, fuera del repo) y escribe `data/recipes.csv` con las que usan agua. Con `--source repo` lee los repos clonados en su lugar (la rama de 1.19.2 de cada mod).
 - `python3 scripts/delight/classify.py` pone una categoría a cada ítem de `data/items_raw.csv` con las reglas ordenadas de `rules/categories.toml` (primera que coincide gana: tags, efectos, palabras del id) y escribe `data/categories.csv` (`item_id,category,reason`, con la regla que decidió). `data/categories_manual.csv` (`item_id,category`) gana siempre. `--sample N` muestra ejemplos por categoría y `--show CAT` lista una categoría entera.
 - `python3 scripts/delight/prepare_items.py` toma `data/items_raw.csv` (lo genera el comando de desarrollo del mod `/blue_droplets dev dump_items *` con los mods de `-PwithDelight -PwithCompat`) y escribe `data/items.csv` con comida y bebidas, sus pasos de crafteo y los valores iniciales de `rules/items.json`.
 - `python3 scripts/delight/apply.py` genera el datapack `clean_water_cooking`, las entradas de `drinks.json` y los tags `salty` y `no_thirst`. Con `--check` solo compara y sale con 1 si algo difiere.
@@ -50,6 +50,13 @@ Esta es la versión de la rama 1.20.1 (Forge 47): lee las recetas de `data/<ns>/
 ## Archivos fijos
 
 Lo que haya en `static/clean_water_cooking/` se copia tal cual al pack `clean_water_cooking` cada vez que corre `apply.py` (por ejemplo, arreglos de recetas rotas de otros mods; en 1.20.1 no hace falta ninguno y la carpeta no existe). Todo lo demás del pack que no genere el script se borra.
+
+## Rama 1.19.2
+
+- Mods: Farmer's Delight 1.2.4, Brewin' and Chewin' 1.19-2.0, Ocean's Delight 1.0.2, Ender's Delight 1.2.2, Miner's Delight 1.1.1 (`miners_delight`), Fruits Delight 0.5.9, Cultural Delights 0.16.0, Corn Delight 1.0.3, Rustic Delight 1.3.0, Crabber's Delight 1.1.4, End's Delight 2.1 (mod id `ends_delight`) y My Nether's Delight 1.7.6, en sus versiones Forge 1.19.2 de `mods.json`. Farm & Charm, HerbalBrews, Brewery, Extra Delight y Expanded Delight no tienen versión Forge 1.19.2.
+- `data/items_raw.csv` sale de un volcado con `-PwithCompat -PwithDelight` en 1.19.2. Los ítems que existen en 1.20.1 conservan sus valores y categorías; los siete cuyos valores cambiaban con los pasos de crafteo de 1.19.2 llevan `auto = manual`.
+- `drinks.json` no tiene las claves de ítems que no existen en 1.19.2 ni las de Farm & Charm, HerbalBrews y Brewery.
+- Las recetas de fermentar de Brewin' and Chewin', las de añejar de Cultural Delights y las mezclas de Create de Fruits Delight son tipos sin verificar o con agua como fluido: quedan con `enabled=0`, como en 1.20.1.
 
 ## Rama 1.20.1
 
