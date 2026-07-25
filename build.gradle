@@ -63,11 +63,18 @@ legacyForge {
             client()
             systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         }
-        // Headless client straight into a copy of a test world: scripts/client-boot-check.sh.
+        // Boot check (scripts/client-boot-check.sh): 1.19.2 can't open a singleplayer world from the command line, so a
+        // dedicated server of its own (run/bootserver) hosts a copy of the test world and the headless client joins it.
+        bootCheckServer {
+            server()
+            gameDirectory = project.file('run/bootserver')
+            programArguments.addAll '--nogui', '--port', project.findProperty('bootCheckPort') ?: '25699'
+        }
         bootCheck {
             client()
             gameDirectory = project.file('run')
-            programArguments.addAll '--width', '1920', '--height', '1080', '--quickPlaySingleplayer', 'bdboot'
+            programArguments.addAll '--width', '1920', '--height', '1080', '--username', 'BDBoot',
+                    '--server', 'localhost', '--port', project.findProperty('bootCheckPort') ?: '25699'
         }
         server {
             server()

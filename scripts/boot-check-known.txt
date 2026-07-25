@@ -24,3 +24,10 @@ Failed to retrieve profile key pair
 
 # -PwithCompat on 1.20.1: Traveler's Backpack logs this while it creates its config on the first start of a fresh run folder.
 ^java\.nio\.file\.NoSuchFileException: .*/config/travelersbackpack-common\.toml$
+
+# -PwithCompat on 1.19.2: Cold Sweat 2.4.3 ships a default config with minecraft:cherry_grove, a 1.20 biome.
+Error parsing (config: worldgen/biome "minecraft:cherry_grove" does not exist|minecraft:worldgen/biome config "\[minecraft:cherry_grove)
+
+# -PwithCompat on 1.19.2: Cold Sweat 2.4.3's own JEI pages call a JEI class that no JEI for 1.19.2 has (Textures.getSlotDrawable).
+Found a broken recipe, failed to setRecipe with RecipeLayoutBuilder: (FuelRecipe|SewingRecipe)\[
+^java\.lang\.NoSuchMethodError: 'mezz\.jei\.api\.gui\.drawable\.IDrawableStatic mezz\.jei\.common\.gui\.textures\.Textures\.getSlotDrawable\(\)'$

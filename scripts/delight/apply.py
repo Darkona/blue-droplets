@@ -126,6 +126,7 @@ def _int(v, default=0):
 def build_drinks(rows, problems):
     """Texto nuevo de drinks.json: las claves presentes en items.csv se reescriben, el resto queda igual."""
     cur = c.load_json(DRINKS)["values"]
+    extra_mods = c.load_json(os.path.join(c.RULES, "items.json")).get("extra_mods", {})
     managed = {r["item_id"] for r in rows}
     values = {k: v for k, v in cur.items() if k not in managed}
     gen = []
@@ -140,7 +141,7 @@ def build_drinks(rows, problems):
             continue
         entry = {}
         if r["mod"] not in ("minecraft", "blue_droplets"):
-            entry["forge:conditions"] = [mod_loaded(r["mod"])]
+            entry["forge:conditions"] = [mod_loaded(m) for m in [r["mod"]] + extra_mods.get(r["item_id"], [])]
         entry["thirst"], entry["quenched"] = th, qu
         for k, v in cur.get(r["item_id"], {}).items():  # campos que el CSV no maneja (por ejemplo purity)
             if k not in ("thirst", "quenched", "forge:conditions", "neoforge:conditions"):

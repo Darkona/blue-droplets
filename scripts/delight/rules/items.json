@@ -571,5 +571,12 @@
     "minecraft:water_bucket",
     "blue_droplets:terracotta_water_bowl",
     "cold_sweat:filled_waterskin"
-  ]
+  ],
+  "_extra_mods": "Items de un mod que solo existen si otro mod esta instalado: su entrada de drinks.json lleva tambien el mod_loaded de ese otro mod. En 1.19.2 My Nether's Delight registra estas tazas de Miner's Delight.",
+  "extra_mods": {
+    "miners_delight:rock_soup_cup": ["mynethersdelight"],
+    "miners_delight:spicy_hoglin_stew_cup": ["mynethersdelight"],
+    "miners_delight:spicy_noodle_soup_cup": ["mynethersdelight"],
+    "miners_delight:strider_stew_cup": ["mynethersdelight"]
+  }
 }
