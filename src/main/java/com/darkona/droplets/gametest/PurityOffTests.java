@@ -23,6 +23,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -43,7 +44,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -52,7 +53,9 @@ import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -230,13 +233,14 @@ public class PurityOffTests
     @GameTest(template = "empty")
     public static void purityRecipesCarryThePurityCondition(GameTestHelper helper)
     {
-        Map<ResourceLocation, Resource> recipes = helper.getLevel().getServer().getResourceManager()
-                .listResources("recipes", id -> id.getNamespace().equals(BlueDroplets.ID) && id.getPath().endsWith(".json"));
+        ResourceManager manager = helper.getLevel().getServer().getResourceManager();
+        List<ResourceLocation> recipes = manager.listResources("recipes", path -> path.endsWith(".json")).stream()
+                .filter(id -> id.getNamespace().equals(BlueDroplets.ID)).toList();
         assertTrue(helper, recipes.size() > 10, "only " + recipes.size() + " recipes found");
-        for (Map.Entry<ResourceLocation, Resource> recipe : recipes.entrySet())
+        for (ResourceLocation recipe : recipes)
         {
             JsonObject json;
-            try (Reader reader = recipe.getValue().openAsReader())
+            try (Resource resource = manager.getResource(recipe); Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))
             {
                 json = JsonParser.parseReader(reader).getAsJsonObject();
             }
@@ -250,7 +254,7 @@ public class PurityOffTests
             if (json.has("conditions"))
                 for (JsonElement condition : json.getAsJsonArray("conditions"))
                     conditioned |= condition.getAsJsonObject().get("type").getAsString().equals("blue_droplets:purity_enabled");
-            assertTrue(helper, conditioned, recipe.getKey() + " uses a purity without the blue_droplets:purity_enabled condition");
+            assertTrue(helper, conditioned, recipe + " uses a purity without the blue_droplets:purity_enabled condition");
         }
         helper.succeed();
     }

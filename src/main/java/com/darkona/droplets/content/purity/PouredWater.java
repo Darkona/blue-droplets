@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * Water sources poured into the world (buckets, dispensers, {@code FluidUtil.tryPlaceFluid}, Create open pipe ends),
  * with the purity of the water poured, so pouring sea water into a meadow does not give clean water back. One map
  * per dimension ({@code BlockPos.asLong} to purity), saved with the world's data ({@code data/blue_droplets_poured_water.dat})
- * and never synced: only the server decides a purity. Minecraft 1.19.2 has no chunk attachments; a chunk capability
+ * and never synced: only the server decides a purity. Minecraft 1.18.2 has no chunk attachments; a chunk capability
  * would save an entry in every chunk, poured water or not. Nothing runs per tick: the map is read when water is taken
  * from the world and written when it is poured.
  * <ul>

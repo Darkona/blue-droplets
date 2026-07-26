@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -36,7 +36,7 @@ final class TestSupport
     }
 
     /**
-     * {@code GameTestHelper#assertValueEqual} of later versions, which 1.19.2 does not have.
+     * {@code GameTestHelper#assertValueEqual} of later versions, which 1.18.2 does not have.
      */
     static <T> void assertValueEqual(GameTestHelper helper, T actual, T expected, String name)
     {
@@ -45,7 +45,7 @@ final class TestSupport
     }
 
     /**
-     * {@code GameTestHelper#assertTrue} of later versions, which 1.19.2 does not have.
+     * {@code GameTestHelper#assertTrue} of later versions, which 1.18.2 does not have.
      */
     static void assertTrue(GameTestHelper helper, boolean condition, String message)
     {
@@ -54,7 +54,7 @@ final class TestSupport
     }
 
     /**
-     * {@code GameTestHelper#assertFalse} of later versions, which 1.19.2 does not have.
+     * {@code GameTestHelper#assertFalse} of later versions, which 1.18.2 does not have.
      */
     static void assertFalse(GameTestHelper helper, boolean condition, String message)
     {
@@ -63,7 +63,7 @@ final class TestSupport
     }
 
     /**
-     * Changes a config value for the running test without writing the file. {@code ConfigValue#set} of Forge 1.19.2
+     * Changes a config value for the running test without writing the file. {@code ConfigValue#set} of Forge 1.18.2
      * saves the file, and its file watcher then reloads it on another thread while later tests run, so the value a
      * test set can come back while another test reads it. Tests restore the old value the same way.
      */
@@ -93,7 +93,7 @@ final class TestSupport
     static @Nullable IFluidHandler fluidHandler(GameTestHelper helper, BlockPos pos, @Nullable Direction side)
     {
         BlockEntity entity = helper.getLevel().getBlockEntity(pos);
-        return entity == null ? null : entity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).orElse(null);
+        return entity == null ? null : entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null);
     }
 
     static PlayerThirst thirst(ServerPlayer player)

@@ -15,7 +15,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraft.core.Direction;
@@ -52,7 +52,7 @@ public class ColdSweatTests
     public static void emptiedWaterskinLosesItsPurity(GameTestHelper helper)
     {
         ItemStack filled = WaterPurity.addPurity(new ItemStack(ModItems.FILLED_WATERSKIN), 0);
-        ItemStack empty = filled.getCraftingRemainingItem();
+        ItemStack empty = filled.getContainerItem();
         assertTrue(helper, empty.is(ModItems.WATERSKIN), "the remainder is not an empty waterskin");
         assertFalse(helper, WaterPurity.hasPurity(empty), "the emptied waterskin kept its purity");
         assertTrue(helper, ItemStack.isSameItemSameTags(empty, new ItemStack(ModItems.WATERSKIN)), "the emptied waterskin does not stack with a new one");
@@ -118,7 +118,7 @@ public class ColdSweatTests
         }
         BlockPos tank = helper.absolutePos(new BlockPos(2, 2, 2));
         helper.getLevel().setBlockAndUpdate(tank, tankBlock.defaultBlockState());
-        IFluidHandler handler = helper.getLevel().getBlockEntity(tank).getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
+        IFluidHandler handler = helper.getLevel().getBlockEntity(tank).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
         assertTrue(helper, handler != null, "the tank has no fluid handler");
         handler.fill(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), 0), IFluidHandler.FluidAction.EXECUTE);
         ServerPlayer player = player(helper);

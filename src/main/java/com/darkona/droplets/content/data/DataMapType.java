@@ -26,6 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * A data map as in later versions of NeoForge, for a registry of Minecraft 1.19.2: one value per registry entry, read
+ * A data map as in later versions of NeoForge, for a registry of Minecraft 1.18.2: one value per registry entry, read
  * from {@code data/<namespace of the id>/data_maps/<registry>/<path of the id>.json} in every datapack, with the same
  * JSON. A file has {@code values} (keys are ids or {@code #tags}; a value is the object itself or
  * {@code {"value": ..., "replace": true}}), an optional {@code replace} that drops what earlier packs gave, and an
@@ -191,23 +194,32 @@ public final class DataMapType<T, V>
     private List<RawEntry<V>> read(ResourceManager manager, ICondition.IContext conditions)
     {
         List<RawEntry<V>> entries = new ArrayList<>();
-        for (Resource resource : manager.getResourceStack(file))
+        List<Resource> stack;
+        try
         {
-            try (Reader reader = resource.openAsReader())
+            stack = manager.getResources(file);
+        }
+        catch (IOException e)
+        {
+            return entries; // no pack has the file
+        }
+        for (Resource resource : stack)
+        {
+            try (resource; Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))
             {
                 JsonObject json = GsonHelper.convertToJsonObject(JsonParser.parseReader(reader), "data map");
                 if (GsonHelper.getAsBoolean(json, "replace", false))
                     entries.add(RawEntry.clearAll());
                 JsonObject valuesJson = GsonHelper.getAsJsonObject(json, "values", new JsonObject());
                 for (Map.Entry<String, JsonElement> value : valuesJson.entrySet())
-                    readValue(entries, value.getKey(), value.getValue(), conditions, resource.sourcePackId());
+                    readValue(entries, value.getKey(), value.getValue(), conditions, resource.getSourceName());
                 if (json.has("remove"))
                     for (JsonElement removed : GsonHelper.getAsJsonArray(json, "remove"))
                         entries.add(target(removed.getAsString(), null));
             }
             catch (Exception e)
             {
-                LOGGER.error("Couldn't read data map {} from pack {}", file, resource.sourcePackId(), e);
+                LOGGER.error("Couldn't read data map {} from pack {}", file, resource.getSourceName(), e);
             }
         }
         return entries;

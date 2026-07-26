@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.purity;
 
+import net.minecraft.network.chat.TextComponent;
 import com.darkona.droplets.foundation.config.ClientConfig;
 import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
@@ -213,7 +214,7 @@ public class WaterPurity
 
                 assert purityText != null;
                 event.getToolTip()
-                        .add(Component.literal(purityText).setStyle(Style.EMPTY.withColor(purityColor)));
+                        .add(new TextComponent(purityText).setStyle(Style.EMPTY.withColor(purityColor)));
             }
         }
     }

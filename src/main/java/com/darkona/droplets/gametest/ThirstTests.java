@@ -13,6 +13,7 @@ import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.mojang.authlib.GameProfile;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -216,7 +217,7 @@ public class ThirstTests
                 assertValueEqual(helper, table[i].blocksHydration(), i == 2, level.id() + " effect " + i + " blocks hydration");
             }
         }
-        assertValueEqual(helper, PurityConfig.HOT_DIRTY_WATER_MAX_PURITY.getDefault(), PurityLevel.MURKY.level(), "hotDirtyWater.maxPurity default");
+        assertValueEqual(helper, ((ForgeConfigSpec.ValueSpec) PurityConfig.SPEC.getSpec().get(PurityConfig.HOT_DIRTY_WATER_MAX_PURITY.getPath())).getDefault(), PurityLevel.MURKY.level(), "hotDirtyWater.maxPurity default");
         helper.succeed();
     }
 

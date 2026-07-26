@@ -12,7 +12,7 @@ public class MixinLocalPlayer{
 
     /**
      * Prevents sprinting when thirsty, using the server's rule from the last sync: the food level reads as 0 when
-     * thirst is too low to sprint. Flying still allows it, as vanilla checks it too. In 1.19.2 the food check is
+     * thirst is too low to sprint. Flying still allows it, as vanilla checks it too. In 1.18.2 the food check is
      * inline in {@code aiStep}, the only place that reads the food level.
      */
     @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;getFoodLevel()I"))

@@ -34,7 +34,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
@@ -79,7 +79,7 @@ public class CreateTests
     @GameTest(template = "box", templateNamespace = BlueDroplets.ID)
     public static void openPipePouredWaterKeepsItsPurity(GameTestHelper helper)
     {
-        // The game test world of 1.19.2 can put the test in an ocean, whose water is always contaminated.
+        // The game test world of 1.18.2 can put the test in an ocean, whose water is always contaminated.
         int salt = PurityConfig.SALT_WATER_PURITY.get();
         try
         {

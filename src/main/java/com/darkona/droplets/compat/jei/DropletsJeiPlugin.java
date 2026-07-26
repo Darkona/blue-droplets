@@ -10,6 +10,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
@@ -57,9 +58,9 @@ public final class DropletsJeiPlugin implements IModPlugin
     {
         if (purification.isEmpty())
             return;
-        registration.addRecipeCatalyst(Items.CAULDRON, PURIFICATION);
+        registration.addRecipeCatalyst(new ItemStack(Items.CAULDRON), PURIFICATION);
         Item filter = CreateCompat.sandFilter();
         if (filter != Items.AIR)
-            registration.addRecipeCatalyst(filter, PURIFICATION);
+            registration.addRecipeCatalyst(new ItemStack(filter), PURIFICATION);
     }
 }

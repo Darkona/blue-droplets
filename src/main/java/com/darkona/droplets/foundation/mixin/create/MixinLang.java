@@ -1,5 +1,6 @@
 package com.darkona.droplets.foundation.mixin.create;
 
+import net.minecraft.network.chat.TextComponent;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.simibubi.create.foundation.utility.Lang;
@@ -24,8 +25,8 @@ public abstract class MixinLang
         if (!WaterPurity.enabled() || !WaterPurity.hasPurity(fluid) && !fluid.getFluid().is(FluidTags.WATER))
             return name;
         int purity = WaterPurity.getPurity(fluid);
-        return Lang.builder().add(Component.empty()
-                .append(Component.literal(WaterPurity.getPurityText(purity) + " ").withStyle(style -> style.withColor(WaterPurity.getPurityColor(purity))))
+        return Lang.builder().add(TextComponent.EMPTY.copy()
+                .append(new TextComponent(WaterPurity.getPurityText(purity) + " ").withStyle(style -> style.withColor(WaterPurity.getPurityColor(purity))))
                 .append(name.component()));
     }
 }

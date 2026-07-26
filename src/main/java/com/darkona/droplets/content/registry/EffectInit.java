@@ -41,7 +41,7 @@ public class EffectInit {
     }
 
     /**
-     * Forge 1.19.2 has no brewing event: one recipe for the three mixes, which reads {@code effects.quenchnessPotion}
+     * Forge 1.18.2 has no brewing event: one recipe for the three mixes, which reads {@code effects.quenchnessPotion}
      * each time a brewing stand checks it, so turning it off needs no restart. Called once from common setup.
      */
     public static void registerBrewing() {

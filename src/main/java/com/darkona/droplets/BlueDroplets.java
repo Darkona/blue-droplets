@@ -33,7 +33,7 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
-import net.minecraftforge.resource.PathPackResources;
+import net.minecraftforge.resource.PathResourcePack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -134,8 +134,8 @@ public class BlueDroplets
     }
 
     /**
-     * Forge 1.19.2 has no helper for packs inside a mod jar: the pack is the jar's {@code datapacks/<name>} folder,
-     * with the id {@code mod/blue_droplets:datapacks/<name>} that later versions give it. Minecraft 1.19.2 enables
+     * Forge 1.18.2 has no helper for packs inside a mod jar: the pack is the jar's {@code datapacks/<name>} folder,
+     * with the id {@code mod/blue_droplets:datapacks/<name>} that later versions give it. Minecraft 1.18.2 enables
      * every new pack it finds, so opt-in packs are kept out by {@code MixinMinecraftServer} until a player enables them.
      */
     private static void addPack(AddPackFindersEvent event, String name, String title, boolean optIn)
@@ -147,7 +147,7 @@ public class BlueDroplets
         if (optIn)
             OPT_IN_PACKS.add(id);
         event.addRepositorySource((packs, constructor) -> {
-            Pack pack = Pack.create(id, false, () -> new PathPackResources("Blue Droplets: " + title, path), constructor, Pack.Position.TOP, PackSource.BUILT_IN);
+            Pack pack = Pack.create(id, false, () -> new PathResourcePack("Blue Droplets: " + title, path), constructor, Pack.Position.TOP, PackSource.BUILT_IN);
             if (pack != null)
                 packs.accept(pack);
         });

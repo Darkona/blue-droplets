@@ -42,7 +42,7 @@ public class DrinkableItem extends Item
      */
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack item, @NotNull Level level, @NotNull LivingEntity entity)
     {
-        level.gameEvent(entity, GameEvent.ITEM_INTERACT_FINISH, entity.getEyePosition());
+        level.gameEvent(entity, GameEvent.DRINKING_FINISH, entity.eyeBlockPosition());
         if (!(entity instanceof Player player))
         {
             item.shrink(1);

@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 /**
  * Miner's Delight's copper cup is not a {@code BucketItem}: {@code CopperCupItem.use} picks up water itself and pours
  * it with its own {@code emptyContents}, so it needs the same pair of hooks as buckets ({@code MixinBucketItem}). The
- * cauldron is covered by the tag {@code purity_containers}. In 1.19.2 its {@code emptyContents} does not get the cup,
+ * cauldron is covered by the tag {@code purity_containers}. In 1.18.2 its {@code emptyContents} does not get the cup,
  * so pouring is caught where {@code use} calls it.
  */
 @Mixin(CopperCupItem.class)

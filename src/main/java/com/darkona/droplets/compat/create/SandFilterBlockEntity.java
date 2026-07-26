@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +61,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
     {
-        if (cap == ForgeCapabilities.FLUID_HANDLER && side != null)
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != null)
         {
             Direction facing = getBlockState().getValue(SandFilterBlock.FACING);
             if (side == facing)

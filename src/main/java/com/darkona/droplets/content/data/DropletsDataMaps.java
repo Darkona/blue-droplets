@@ -49,6 +49,6 @@ public final class DropletsDataMaps
         if (event.getUpdateCause() != TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD)
             return;
         for (DataMapType<?, ?> type : ALL)
-            type.bind(event.getRegistryAccess());
+            type.bind(event.getTagManager());
     }
 }

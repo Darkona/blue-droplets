@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * The mod's creative tab. Minecraft 1.19.2 has no tab registry: the tab is a {@link CreativeModeTab} subclass, built
+ * The mod's creative tab. Minecraft 1.18.2 has no tab registry: the tab is a {@link CreativeModeTab} subclass, built
  * when this class loads, and lists {@link #DisplayItems()} each time it fills.
  */
 public class ThirstTab extends CreativeModeTab

@@ -6,7 +6,7 @@ public class ModDamageSource
 {
     /**
      * Dehydration: like starving, it goes through armor, enchantments and Resistance, and costs no exhaustion. Minecraft
-     * 1.19.2 has no damage types, so it is a plain damage source with the message id {@code dehydrate}.
+     * 1.18.2 has no damage types, so it is a plain damage source with the message id {@code dehydrate}.
      */
     public static final DamageSource DIE_OF_THIRST = new DamageSource("dehydrate").bypassArmor().bypassMagic();
 

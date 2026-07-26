@@ -15,14 +15,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
+import java.util.Random;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -30,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class ThirstBarRenderer
 {
-    public static final ResourceLocation LAYER = BlueDroplets.asResource("thirst_level");
     public static final ResourceLocation THIRST_ICONS = BlueDroplets.asResource("textures/gui/thirst_icons.png");
     /** Grayscale fill of {@link #THIRST_ICONS} (same UVs, no outline or background), tinted by {@link ThirstBarStyles}. */
     public static final ResourceLocation THIRST_MASK = BlueDroplets.asResource("textures/gui/thirst_icons_mask.png");
@@ -39,21 +39,24 @@ public final class ThirstBarRenderer
     private static final ResourceLocation QUENCHED_MASK = BlueDroplets.asResource("textures/gui/quenched_icons_mask.png");
     /** Tint of what a salty item would take away (preview) or takes away (tooltip). */
     public static final float SALTY_RED = 0.9f, SALTY_GREEN = 0.2f, SALTY_BLUE = 0.2f;
-    private static final RandomSource random = RandomSource.create();
+    private static final Random random = new Random();
     private static int lastNotFullTick;
 
     private ThirstBarRenderer() {}
 
+    /** The thirst bar overlay, set in client setup. */
+    public static IIngameOverlay OVERLAY;
+
     /**
-     * The overlay {@code blue_droplets:thirst_level}, right above the hunger bar: the air bar and other mods' bars
-     * stack above it, and other mods can cancel it with {@code RenderGuiOverlayEvent.Pre}.
+     * The overlay "Blue Droplets Thirst", right above the hunger bar: the air bar and other mods' bars stack above it,
+     * and other mods can cancel it with {@code RenderGameOverlayEvent.PreLayer} ({@code getOverlay() == OVERLAY}).
      */
-    public static void registerLayer(RegisterGuiOverlaysEvent event)
+    public static void registerLayer(FMLClientSetupEvent event)
     {
-        event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), LAYER.getPath(), ThirstBarRenderer::render);
+        OVERLAY = OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Blue Droplets Thirst", ThirstBarRenderer::render);
     }
 
-    private static void render(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight)
+    private static void render(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight)
     {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
@@ -73,8 +76,8 @@ public final class ThirstBarRenderer
         ResourceLocation fill = tint < 0 ? THIRST_ICONS : THIRST_MASK;
         ResourceLocation outline = tint < 0 ? QUENCHED_ICONS : QUENCHED_MASK;
         int right = screenWidth / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
-        int top = screenHeight - gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
-        gui.rightHeight += 10;
+        int top = screenHeight - gui.right_height + ClientConfig.THIRST_BAR_Y_OFFSET.get();
+        gui.right_height += 10;
 
         int ticks = gui.getGuiTicks();
         int level = thirst.getThirst();

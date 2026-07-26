@@ -1,5 +1,6 @@
 package com.darkona.droplets.compat.jade;
 
+import net.minecraft.network.chat.TextComponent;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.purity.WaterPurity;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -13,22 +14,23 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import snownee.jade.api.BlockAccessor;
-import snownee.jade.api.IBlockComponentProvider;
-import snownee.jade.api.IServerDataProvider;
-import snownee.jade.api.ITooltip;
-import snownee.jade.api.IWailaClientRegistration;
-import snownee.jade.api.IWailaCommonRegistration;
-import snownee.jade.api.IWailaPlugin;
-import snownee.jade.api.WailaPlugin;
-import snownee.jade.api.config.IPluginConfig;
+import mcp.mobius.waila.api.BlockAccessor;
+import mcp.mobius.waila.api.IComponentProvider;
+import mcp.mobius.waila.api.IServerDataProvider;
+import mcp.mobius.waila.api.ITooltip;
+import mcp.mobius.waila.api.IWailaClientRegistration;
+import mcp.mobius.waila.api.IWailaCommonRegistration;
+import mcp.mobius.waila.api.IWailaPlugin;
+import mcp.mobius.waila.api.TooltipPosition;
+import mcp.mobius.waila.api.WailaPlugin;
+import mcp.mobius.waila.api.config.IPluginConfig;
 
 /**
  * Jade: water purity of water cauldrons (murky, or clean on a heat source) and of the tanks of any block exposing a fluid handler
- * (sent by the server). Jade finds and loads this class itself, only when installed; nothing else imports Jade.
+ * (sent by the server). Jade 5 keeps the Waila API ({@code mcp.mobius.waila.api}). Jade finds and loads this class itself, only when installed; nothing else imports Jade.
  */
 @WailaPlugin(BlueDroplets.ID)
 public class JadePlugin implements IWailaPlugin
@@ -42,10 +44,10 @@ public class JadePlugin implements IWailaPlugin
     @Override
     public void registerClient(IWailaClientRegistration registration)
     {
-        registration.registerBlockComponent(PurityProvider.INSTANCE, Block.class);
+        registration.registerComponentProvider(PurityProvider.INSTANCE, TooltipPosition.BODY, Block.class);
     }
 
-    private enum PurityProvider implements IBlockComponentProvider, IServerDataProvider<BlockEntity>
+    private enum PurityProvider implements IComponentProvider, IServerDataProvider<BlockEntity>
     {
         INSTANCE;
 
@@ -55,7 +57,7 @@ public class JadePlugin implements IWailaPlugin
         @Override
         public void appendServerData(CompoundTag data, ServerPlayer player, Level level, BlockEntity blockEntity, boolean showDetails)
         {
-            IFluidHandler handler = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
+            IFluidHandler handler = blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
             if (handler == null || !WaterPurity.enabled())
                 return;
 
@@ -85,13 +87,7 @@ public class JadePlugin implements IWailaPlugin
 
         private static void add(ITooltip tooltip, int purity)
         {
-            tooltip.add(Component.literal(WaterPurity.getPurityText(purity)).withStyle(style -> style.withColor(WaterPurity.getPurityColor(purity))));
-        }
-
-        @Override
-        public ResourceLocation getUid()
-        {
-            return UID;
+            tooltip.add(new TextComponent(WaterPurity.getPurityText(purity)).withStyle(style -> style.withColor(WaterPurity.getPurityColor(purity))));
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.darkona.droplets.content.thirst;
 
+import net.minecraft.network.chat.TranslatableComponent;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.data.DrinkValues;
 import com.darkona.droplets.content.data.DropletsDataMaps;
@@ -30,9 +31,9 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -59,7 +60,7 @@ public class PlayerThirstManager {
     public static void eatBlock(PlayerInteractEvent.RightClickBlock event) {
         if (event.getHand() != InteractionHand.MAIN_HAND || !(event.getEntity() instanceof ServerPlayer player))
             return;
-        DrinkValues values = DropletsDataMaps.HYDRATING_BLOCKS.get(event.getLevel().getBlockState(event.getPos()).getBlock().builtInRegistryHolder());
+        DrinkValues values = DropletsDataMaps.HYDRATING_BLOCKS.get(event.getWorld().getBlockState(event.getPos()).getBlock().builtInRegistryHolder());
         if (values == null)
             return;
         int food = player.getFoodData().getFoodLevel();
@@ -72,13 +73,13 @@ public class PlayerThirstManager {
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level.isClientSide && ModAttachment.thirst(event.getEntity()).handDrinkingAllowed())
+        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level.isClientSide && ModAttachment.thirst(event.getPlayer()).handDrinkingAllowed())
             DrinkByHandClient.drinkByHand();
     }
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickEmpty event) {
-        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level.isClientSide && ModAttachment.thirst(event.getEntity()).handDrinkingAllowed())
+        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level.isClientSide && ModAttachment.thirst(event.getPlayer()).handDrinkingAllowed())
             DrinkByHandClient.drinkByHand();
     }
 
@@ -119,14 +120,14 @@ public class PlayerThirstManager {
      */
     @SubscribeEvent
     public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        PlayerThirst thirst = ModAttachment.thirst(event.getEntity());
-        thirst.updateThirstData(event.getEntity());
+        PlayerThirst thirst = ModAttachment.thirst(event.getPlayer());
+        thirst.updateThirstData(event.getPlayer());
         thirst.invalidateModifier();
     }
 
     @SubscribeEvent
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        ModAttachment.thirst(event.getEntity()).updateThirstData(event.getEntity());
+        ModAttachment.thirst(event.getPlayer()).updateThirstData(event.getPlayer());
     }
 
     @SubscribeEvent
@@ -136,19 +137,19 @@ public class PlayerThirstManager {
     }
 
     @SubscribeEvent
-    public static void onEffectAdded(MobEffectEvent.Added event) {
+    public static void onEffectAdded(PotionEvent.PotionAddedEvent event) {
         if (event.getEntity() instanceof ServerPlayer player)
             ModAttachment.thirst(player).invalidateModifier();
     }
 
     @SubscribeEvent
-    public static void onEffectRemoved(MobEffectEvent.Remove event) {
+    public static void onEffectRemoved(PotionEvent.PotionRemoveEvent event) {
         if (event.getEntity() instanceof ServerPlayer player)
             ModAttachment.thirst(player).invalidateModifier();
     }
 
     @SubscribeEvent
-    public static void onEffectExpired(MobEffectEvent.Expired event) {
+    public static void onEffectExpired(PotionEvent.PotionExpiryEvent event) {
         if (event.getEntity() instanceof ServerPlayer player)
             ModAttachment.thirst(player).invalidateModifier();
     }
@@ -214,7 +215,7 @@ public class PlayerThirstManager {
         if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
             RecipeManager recipes = reloadingRecipes;
             reloadingRecipes = null;
-            ThirstHelper.rebuild(recipes, event.getRegistryAccess());
+            ThirstHelper.rebuild(recipes, event.getTagManager());
         }
         else if (event.shouldUpdateStaticData() && !ThirstHelper.hasServerTables())
             ThirstHelper.rebuild(null, null);
@@ -224,7 +225,7 @@ public class PlayerThirstManager {
     public static void estimatedTooltip(ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
         if (!ClientConfig.SHOW_TOOLTIP_ICONS.get() && ThirstHelper.isEstimated(stack))
-            event.getToolTip().add(Component.translatable("blue_droplets.tooltip.estimated", ThirstHelper.getThirst(stack), ThirstHelper.getQuenched(stack)).withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(new TranslatableComponent("blue_droplets.tooltip.estimated", ThirstHelper.getThirst(stack), ThirstHelper.getQuenched(stack)).withStyle(ChatFormatting.GRAY));
     }
 
     /**

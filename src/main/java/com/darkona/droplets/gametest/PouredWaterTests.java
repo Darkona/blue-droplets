@@ -70,7 +70,7 @@ public class PouredWaterTests
     }
 
     /**
-     * The game test world of 1.19.2 is not a plains superflat: its biomes can be oceans, whose water is always
+     * The game test world of 1.18.2 is not a plains superflat: its biomes can be oceans, whose water is always
      * contaminated. The tests need world water above that, so the salt water rule is off while they run.
      */
     private static void withoutSaltWater(Runnable test)
@@ -226,7 +226,7 @@ public class PouredWaterTests
     }
 
     /**
-     * 1.19.2 keeps the registry of a dimension in its saved data ({@code data/blue_droplets_poured_water.dat}) instead of
+     * 1.18.2 keeps the registry of a dimension in its saved data ({@code data/blue_droplets_poured_water.dat}) instead of
      * a chunk attachment: pouring marks it for saving, and what it saves loads back the same.
      */
     @GameTest(template = "box")

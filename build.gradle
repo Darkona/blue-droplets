@@ -16,7 +16,7 @@ base {
     archivesName = archives_name
 }
 
-// Minecraft 1.19.2 runs on Java 17: compile for it and run the game on it.
+// Minecraft 1.18.2 runs on Java 17: compile for it and run the game on it.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 java.withSourcesJar()
 
@@ -63,7 +63,7 @@ legacyForge {
             client()
             systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         }
-        // Boot check (scripts/client-boot-check.sh): 1.19.2 can't open a singleplayer world from the command line, so a
+        // Boot check (scripts/client-boot-check.sh): 1.18.2 can't open a singleplayer world from the command line, so a
         // dedicated server of its own (run/bootserver) hosts a copy of the test world and the headless client joins it.
         bootCheckServer {
             server()
@@ -129,7 +129,7 @@ dependencies {
     implementation sourceSets.api.output
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    // Forge 43 does not ship MixinExtras: bundled in the jar.
+    // Forge 40 does not ship MixinExtras: bundled in the jar.
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
 
@@ -162,7 +162,7 @@ dependencies {
         modLocalRuntime "maven.modrinth:reliquary-reincarnations:${reliquary_version}"
         modLocalRuntime "maven.modrinth:farmers-delight:${farmers_delight_version}"
     }
-    // ./gradlew runGameTestServer -PwithDelight: the Farmer's Delight addons that exist for 1.19.2, kept apart from
+    // ./gradlew runGameTestServer -PwithDelight: the Farmer's Delight addons that exist for 1.18.2, kept apart from
     // -PwithCompat so that one stays fast; both flags combine.
     if (project.hasProperty('withDelight')) {
         modLocalRuntime "maven.modrinth:farmers-delight:${farmers_delight_version}"
@@ -170,16 +170,11 @@ dependencies {
         modLocalRuntime "maven.modrinth:oceans-delight:${oceans_delight_version}"
         modLocalRuntime "maven.modrinth:enders-delight:${enders_delight_version}"
         modLocalRuntime "maven.modrinth:miners-delight:${miners_delight_version}"
-        modLocalRuntime "maven.modrinth:fruits-delight:${fruits_delight_version}"
-        modLocalRuntime "maven.modrinth:cultural-delights:${cultural_delights_version}"
-        modLocalRuntime "maven.modrinth:cooks-collection:${cooks_collection_version}"
         modLocalRuntime "maven.modrinth:corn-delight:${corn_delight_version}"
         modLocalRuntime "maven.modrinth:mmlib:${mmlib_version}"
-        modLocalRuntime "maven.modrinth:rustic-delight:${rustic_delight_version}"
         modLocalRuntime "maven.modrinth:crabbers-delight:${crabbers_delight_version}"
         modLocalRuntime "maven.modrinth:geckolib:${geckolib_version}"
         modLocalRuntime "maven.modrinth:ends-delight:${ends_delight_version}"
-        modLocalRuntime "maven.modrinth:my-nethers-delight:${my_nethers_delight_version}"
     }
     // JEI on every dev client, as on 1.21.1.
     modLocalRuntime "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"

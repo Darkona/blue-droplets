@@ -74,10 +74,10 @@ public final class CompatConfig
 
         BUILDER.comment("Farmer's Delight addons and Let's Do mods").push("delight");
         KETTLE_MIN_PURITY = BUILDER.comment("Lowest water purity that kettles take (they boil it): any block in the block tag blue_droplets:rejects_dirty_water",
-                        "(on 1.19.2 the tag is empty: the HerbalBrews and Brewery kettles have no 1.19.2 version). Dirtier water stays in the hand. 0 = any water")
+                        "(on 1.18.2 the tag is empty: the HerbalBrews and Brewery kettles have no 1.18.2 version). Dirtier water stays in the hand. 0 = any water")
                 .defineInRange("kettleMinPurity", PurityLevel.MURKY.level(), PurityLevel.MIN, PurityLevel.MAX);
         WORLD_PURITY_WATER_SOURCES = BUILDER.comment("Whether taps, sinks and wells of other mods give water with the purity of the world's water at their position, like water",
-                        "taken from a source block there; false = water without a purity, which reads as defaultPurity. On 1.19.2 no supported mod has one (Extra Delight and Farm & Charm have no 1.19.2 version)").define("worldPurityWaterSources", true);
+                        "taken from a source block there; false = water without a purity, which reads as defaultPurity. On 1.18.2 no supported mod has one (Extra Delight and Farm & Charm have no 1.18.2 version)").define("worldPurityWaterSources", true);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

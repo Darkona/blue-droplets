@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.List;
 
 /**
- * Minecraft 1.19.2 enables every data pack it has not seen before, and has no pack source that stays off (later
+ * Minecraft 1.18.2 enables every data pack it has not seen before, and has no pack source that stays off (later
  * versions have {@code PackSource.FEATURE}). The mod's opt-in packs (presets, smoker purification) count as disabled
  * here until a player enables them, when creating the world or with {@code /datapack enable}.
  */

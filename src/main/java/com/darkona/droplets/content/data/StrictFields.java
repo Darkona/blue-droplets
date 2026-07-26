@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 /**
  * Optional fields that fail on an invalid value instead of reading it as absent, like {@code optionalFieldOf} in the
- * codecs of later versions; the {@code optionalFieldOf} of Minecraft 1.19.2 hides the error.
+ * codecs of later versions; the {@code optionalFieldOf} of Minecraft 1.18.2 hides the error.
  */
 final class StrictFields
 {

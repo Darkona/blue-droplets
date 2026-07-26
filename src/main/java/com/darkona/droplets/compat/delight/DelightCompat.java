@@ -1,5 +1,6 @@
 package com.darkona.droplets.compat.delight;
 
+import net.minecraft.network.chat.TranslatableComponent;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.CompatConfig;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Farmer's Delight addons: blocks in {@code blue_droplets:rejects_dirty_water} refuse dirty water, and infinite water
  * sources give the purity of the world's water where they stand. Recipes and drink values are data; what is code runs
- * from small mixins in {@code foundation.mixin.<mod id>} (Miner's Delight on 1.19.2) and from the click event below.
+ * from small mixins in {@code foundation.mixin.<mod id>} (Miner's Delight on 1.18.2) and from the click event below.
  */
 public final class DelightCompat
 {
@@ -40,12 +41,12 @@ public final class DelightCompat
      */
     private static void rejectDirtyWater(PlayerInteractEvent.RightClickBlock event)
     {
-        if (!tooDirtyForKettle(event.getItemStack()) || !event.getLevel().getBlockState(event.getPos()).is(DropletsTags.REJECTS_DIRTY_WATER))
+        if (!tooDirtyForKettle(event.getItemStack()) || !event.getWorld().getBlockState(event.getPos()).is(DropletsTags.REJECTS_DIRTY_WATER))
             return;
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.FAIL);
-        if (!event.getLevel().isClientSide())
-            event.getEntity().displayClientMessage(Component.translatable("blue_droplets.message.water_too_dirty"), true);
+        if (!event.getWorld().isClientSide())
+            event.getPlayer().displayClientMessage(new TranslatableComponent("blue_droplets.message.water_too_dirty"), true);
     }
 
     /**

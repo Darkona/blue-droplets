@@ -19,7 +19,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -61,6 +61,6 @@ public final class ColdSweatCompat
         ItemStack item = event.getItem();
         if (cooling <= 0 || !item.isEmpty() && (!WaterPurity.isWaterFilledContainer(item) || ColdSweatBridge.isWaterskin(item)))
             return;
-        ColdSweatBridge.cool(event.getEntity(), cooling, CompatConfig.COLD_SWEAT_DRINK_COOLING_TICKS.get());
+        ColdSweatBridge.cool(event.getPlayer(), cooling, CompatConfig.COLD_SWEAT_DRINK_COOLING_TICKS.get());
     }
 }

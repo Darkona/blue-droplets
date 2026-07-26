@@ -40,7 +40,7 @@ public final class PurityEnabledCondition implements ICondition
     }
 
     @Override
-    public boolean test(IContext context)
+    public boolean test()
     {
         return PurityConfig.ENABLED.get();
     }

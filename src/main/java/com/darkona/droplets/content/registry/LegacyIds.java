@@ -2,14 +2,15 @@ package com.darkona.droplets.content.registry;
 
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.PurityLevel;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.MissingMappingsEvent;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Remaps the ids of Thirst Was Taken ({@code thirst:*}) to {@code blue_droplets:*} in worlds it saved, so items,
@@ -20,12 +21,9 @@ public final class LegacyIds
 {
     public static final String LEGACY_NAMESPACE = "thirst";
 
-    private static final Map<ResourceKey<? extends Registry<?>>, List<String>> REMAPS = Map.of(
-            Registry.ITEM_REGISTRY, List.of("clay_bowl", "terracotta_bowl", "terracotta_water_bowl", "sand_filter"),
-            Registry.BLOCK_REGISTRY, List.of("sand_filter"),
-            Registry.BLOCK_ENTITY_TYPE_REGISTRY, List.of("sand_filter"),
-            Registry.MOB_EFFECT_REGISTRY, List.of("quenchness")
-    );
+    private static final List<String> ITEMS = List.of("clay_bowl", "terracotta_bowl", "terracotta_water_bowl", "sand_filter");
+    private static final List<String> SAND_FILTER = List.of("sand_filter");
+    private static final List<String> EFFECTS = List.of("quenchness");
 
     /** Blue Droplets level of each Thirst Was Taken level: dirty, slightly dirty, acceptable, purified. */
     private static final int[] LEGACY_PURITY = {PurityLevel.CONTAMINATED.level(), PurityLevel.DIRTY.level(), PurityLevel.ACCEPTABLE.level(), PurityLevel.PURE.level()};
@@ -40,28 +38,26 @@ public final class LegacyIds
         return purity >= 0 && purity < LEGACY_PURITY.length ? LEGACY_PURITY[purity] : purity;
     }
 
+    /**
+     * Forge 1.18.2 fires one generic {@code MissingMappings} event per registry.
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void register()
     {
-        MinecraftForge.EVENT_BUS.addListener(LegacyIds::onMissingMappings);
+        MinecraftForge.EVENT_BUS.addGenericListener(Item.class, (RegistryEvent.MissingMappings<Item> event) -> remap(event, ITEMS));
+        MinecraftForge.EVENT_BUS.addGenericListener(Block.class, (RegistryEvent.MissingMappings<Block> event) -> remap(event, SAND_FILTER));
+        MinecraftForge.EVENT_BUS.addGenericListener(BlockEntityType.class, (RegistryEvent.MissingMappings event) -> remap(event, SAND_FILTER));
+        MinecraftForge.EVENT_BUS.addGenericListener(MobEffect.class, (RegistryEvent.MissingMappings<MobEffect> event) -> remap(event, EFFECTS));
     }
 
-    private static void onMissingMappings(MissingMappingsEvent event)
+    private static <T extends IForgeRegistryEntry<T>> void remap(RegistryEvent.MissingMappings<T> event, List<String> paths)
     {
-        List<String> paths = REMAPS.get(event.getKey());
-        if (paths != null)
-            remap(event, event.getKey(), paths);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> void remap(MissingMappingsEvent event, ResourceKey<? extends Registry<?>> key, List<String> paths)
-    {
-        IForgeRegistry<T> registry = (IForgeRegistry<T>) event.getRegistry();
-        for (MissingMappingsEvent.Mapping<T> mapping : event.getMappings((ResourceKey<? extends Registry<T>>) key, LEGACY_NAMESPACE))
+        for (RegistryEvent.MissingMappings.Mapping<T> mapping : event.getMappings(LEGACY_NAMESPACE))
         {
-            String path = mapping.getKey().getPath();
+            String path = mapping.key.getPath();
             if (!paths.contains(path))
                 continue;
-            T target = registry.getValue(BlueDroplets.asResource(path));
+            T target = mapping.registry.getValue(BlueDroplets.asResource(path));
             if (target != null)
                 mapping.remap(target);
         }

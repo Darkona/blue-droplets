@@ -1,15 +1,16 @@
 package com.darkona.droplets.foundation.common.loot;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * {@code blue_droplets:add_table}: rolls another loot table into the generated loot, like NeoForge's
@@ -18,10 +19,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddTableModifier extends LootModifier
 {
-    public static final Codec<AddTableModifier> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-            .and(ResourceLocation.CODEC.fieldOf("table").forGetter(modifier -> modifier.table))
-            .apply(instance, AddTableModifier::new));
-
     private final ResourceLocation table;
 
     public AddTableModifier(LootItemCondition[] conditions, ResourceLocation table)
@@ -31,15 +28,29 @@ public class AddTableModifier extends LootModifier
     }
 
     @Override
-    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context)
+    protected @NotNull List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context)
     {
         context.getLootTable(table).getRandomItemsRaw(context, generatedLoot::add);
         return generatedLoot;
     }
 
-    @Override
-    public Codec<? extends IGlobalLootModifier> codec()
+    /**
+     * Forge 1.18.2 reads loot modifiers from JSON with a serializer (later versions use a codec); the file format is the same.
+     */
+    public static final class Serializer extends GlobalLootModifierSerializer<AddTableModifier>
     {
-        return CODEC;
+        @Override
+        public AddTableModifier read(ResourceLocation location, JsonObject json, LootItemCondition[] conditions)
+        {
+            return new AddTableModifier(conditions, new ResourceLocation(GsonHelper.getAsString(json, "table")));
+        }
+
+        @Override
+        public JsonObject write(AddTableModifier instance)
+        {
+            JsonObject json = makeConditions(instance.conditions);
+            json.addProperty("table", instance.table.toString());
+            return json;
+        }
     }
 }

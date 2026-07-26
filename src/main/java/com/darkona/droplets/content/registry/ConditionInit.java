@@ -19,7 +19,7 @@ public class ConditionInit {
     public static final RegistryObject<LootItemConditionType> LOOT_CONFIG_LOOT_CONDITION = LOOT_CONDITIONS.register("loot_config", () -> new LootItemConditionType(LootConfigLootCondition.SERIALIZER));
 
     /**
-     * Recipe conditions go to Forge's own table (not a registry in 1.19.2); loot conditions to the vanilla registry.
+     * Recipe conditions go to Forge's own table (not a registry in 1.18.2); loot conditions to the vanilla registry.
      */
     public static void register(IEventBus modBus) {
         CraftingHelper.register(LootConfigCondition.SERIALIZER);

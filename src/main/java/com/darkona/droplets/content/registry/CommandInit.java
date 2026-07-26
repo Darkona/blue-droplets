@@ -1,5 +1,7 @@
 package com.darkona.droplets.content.registry;
 
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.TextComponent;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -65,7 +67,7 @@ public class CommandInit {
                                     IThirst thirst = ModAttachment.thirst(player);
                                     int value = thirst.getThirst();
                                     int quenched = thirst.getQuenched();
-                                    context.getSource().sendSuccess(Component.translatable("command.blue_droplets.query", value, quenched, player.getDisplayName()), false);
+                                    context.getSource().sendSuccess(new TranslatableComponent("command.blue_droplets.query", value, quenched, player.getDisplayName()), false);
                                     return value;
                                 }
                         )))
@@ -79,7 +81,7 @@ public class CommandInit {
                                             // Quenched never exceeds thirst and listeners may cancel or change it: report what was set.
                                             int value = thirst.getThirst();
                                             int quenched = thirst.getQuenched();
-                                            context.getSource().sendSuccess(Component.translatable("command.blue_droplets.set", value, quenched, player.getDisplayName()), true);
+                                            context.getSource().sendSuccess(new TranslatableComponent("command.blue_droplets.set", value, quenched, player.getDisplayName()), true);
                                             return value;
                                         })))
                 ))
@@ -94,7 +96,7 @@ public class CommandInit {
                                         thirstData.updateThirstData(player);
                                     }
                                     Component names = ComponentUtils.formatList(players, ServerPlayer::getDisplayName);
-                                    context.getSource().sendSuccess(Component.translatable(shouldTick ? "command.blue_droplets.enable" : "command.blue_droplets.disable", names), true);
+                                    context.getSource().sendSuccess(new TranslatableComponent(shouldTick ? "command.blue_droplets.enable" : "command.blue_droplets.disable", names), true);
                                     return players.size();
                                 }))))
                 .then(Commands.literal("debug")
@@ -108,7 +110,7 @@ public class CommandInit {
                         .then(Commands.literal("check")
                                 .executes(context -> configCheck(context.getSource()))))
                 .then(Commands.literal("infer")
-                        .then(Commands.argument("item", ItemArgument.item(event.getBuildContext()))
+                        .then(Commands.argument("item", ItemArgument.item())
                                 .executes(context -> infer(context.getSource(), ItemArgument.getItem(context, "item").getItem()))))
         );
         dispatcher.register(Commands.literal("thirst").requires(cs->cs.hasPermission(2)).redirect(root));
@@ -128,12 +130,12 @@ public class CommandInit {
         try
         {
             int rows = ItemDump.dump(Set.copyOf(Arrays.asList(namespaces.trim().split("\\s+"))));
-            source.sendSuccess(Component.literal("Wrote " + rows + " items to " + ItemDump.file()), false);
+            source.sendSuccess(new TextComponent("Wrote " + rows + " items to " + ItemDump.file()), false);
             return rows;
         }
         catch (IOException e)
         {
-            source.sendFailure(Component.literal("Could not write " + ItemDump.file() + ": " + e.getMessage()));
+            source.sendFailure(new TextComponent("Could not write " + ItemDump.file() + ": " + e.getMessage()));
             return 0;
         }
     }
@@ -154,7 +156,7 @@ public class CommandInit {
                 .append("\n  exhaustion ").append(format(thirst.getExhaustion())).append(" / ").append(format(GameplayConfig.EXHAUSTION_PER_POINT.get()))
                 .append(", thirst ").append(thirst.getThirst()).append(", quenched ").append(thirst.getQuenched())
                 .append(thirst.getShouldTickThirst() ? "" : " (thirst disabled for this player)");
-        source.sendSuccess(Component.literal(text.toString()), false);
+        source.sendSuccess(new TextComponent(text.toString()), false);
         return 1;
     }
 
@@ -175,7 +177,7 @@ public class CommandInit {
     {
         if (!WaterPurity.enabled())
         {
-            source.sendSuccess(Component.literal("purity.enabled is false: water has no purity"), false);
+            source.sendSuccess(new TextComponent("purity.enabled is false: water has no purity"), false);
             return 0;
         }
         Level level = player.level;
@@ -197,14 +199,14 @@ public class CommandInit {
                 .append(purity).append(" ").append(WaterPurity.getPurityText(purity));
         for (String step : trace)
             text.append("\n  ").append(step);
-        source.sendSuccess(Component.literal(text.toString()), false);
+        source.sendSuccess(new TextComponent(text.toString()), false);
         return purity;
     }
 
     private static int configCheck(CommandSourceStack source)
     {
         List<String> problems = ConfigCheck.problems();
-        source.sendSuccess(Component.literal(problems.isEmpty() ? "Blue Droplets config: no problems found"
+        source.sendSuccess(new TextComponent(problems.isEmpty() ? "Blue Droplets config: no problems found"
                 : "Blue Droplets config: " + problems.size() + " problem(s)\n  " + String.join("\n  ", problems)), false);
         return problems.size();
     }
@@ -216,7 +218,7 @@ public class CommandInit {
     {
         MinecraftServer server = source.getServer();
         List<String> lines = RecipeInference.explain(item, ThirstHelper.inferenceInputs(), server.getRecipeManager(), server.registryAccess());
-        source.sendSuccess(Component.literal(String.join("\n", lines)), false);
+        source.sendSuccess(new TextComponent(String.join("\n", lines)), false);
         return lines.size();
     }
 

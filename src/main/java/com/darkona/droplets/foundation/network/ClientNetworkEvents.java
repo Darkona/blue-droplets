@@ -10,7 +10,7 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 public class ClientNetworkEvents
 {
     @SubscribeEvent
-    public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event)
+    public static void onLoggingOut(ClientPlayerNetworkEvent.LoggedOutEvent event)
     {
         if (ThirstHelper.hasServerTables())
             ThirstHelper.clearServerTables();

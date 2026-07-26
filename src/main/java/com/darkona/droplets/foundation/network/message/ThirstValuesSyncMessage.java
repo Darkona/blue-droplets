@@ -28,8 +28,8 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
     {
         writeTable(buffer, drinks);
         writeTable(buffer, foods);
-        buffer.writeCollection(estimated, (buf, item) -> buf.writeId(Registry.ITEM, item));
-        buffer.writeCollection(containers, (buf, item) -> buf.writeId(Registry.ITEM, item));
+        buffer.writeCollection(estimated, (buf, item) -> buf.writeVarInt(Registry.ITEM.getId(item)));
+        buffer.writeCollection(containers, (buf, item) -> buf.writeVarInt(Registry.ITEM.getId(item)));
         buffer.writeVarInt(defaultPurity);
         buffer.writeVarInt(waterBottleStackSize);
         buffer.writeVarInt(pureThirstBonus);
@@ -42,8 +42,8 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
     {
         Map<Item, int[]> drinks = readTable(buffer);
         Map<Item, int[]> foods = readTable(buffer);
-        List<Item> estimated = buffer.readList(buf -> buf.readById(Registry.ITEM));
-        List<Item> containers = buffer.readList(buf -> buf.readById(Registry.ITEM));
+        List<Item> estimated = buffer.readList(buf -> Registry.ITEM.byId(buf.readVarInt()));
+        List<Item> containers = buffer.readList(buf -> Registry.ITEM.byId(buf.readVarInt()));
         int defaultPurity = buffer.readVarInt();
         int stackSize = buffer.readVarInt();
         int pureThirst = buffer.readVarInt();
@@ -55,7 +55,7 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
 
     private static void writeTable(FriendlyByteBuf buffer, Map<Item, int[]> table)
     {
-        buffer.writeMap(table, (buf, item) -> buf.writeId(Registry.ITEM, item), (buf, values) -> {
+        buffer.writeMap(table, (buf, item) -> buf.writeVarInt(Registry.ITEM.getId(item)), (buf, values) -> {
             buf.writeVarInt(values[0]);
             buf.writeVarInt(values[1]);
             buf.writeVarInt(values[2]);
@@ -64,7 +64,7 @@ public record ThirstValuesSyncMessage(Map<Item, int[]> drinks, Map<Item, int[]> 
 
     private static Map<Item, int[]> readTable(FriendlyByteBuf buffer)
     {
-        return buffer.readMap(HashMap::new, buf -> buf.readById(Registry.ITEM), buf -> new int[]{buf.readVarInt(), buf.readVarInt(), buf.readVarInt()});
+        return buffer.readMap(HashMap::new, buf -> Registry.ITEM.byId(buf.readVarInt()), buf -> new int[]{buf.readVarInt(), buf.readVarInt(), buf.readVarInt()});
     }
 
     public static ThirstValuesSyncMessage fromTables()

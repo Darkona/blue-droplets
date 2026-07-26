@@ -245,7 +245,7 @@ public class PurityTests
             base(helper, biome, 3, max, alt);
         for (var biome : List.of(Biomes.DESERT, Biomes.BADLANDS))
             base(helper, biome, 0, 2, alt);
-        for (var biome : List.of(Biomes.SWAMP, Biomes.MANGROVE_SWAMP))
+        for (var biome : List.of(Biomes.SWAMP))
             base(helper, biome, 0, 1, alt);
         helper.succeed();
     }
@@ -297,7 +297,7 @@ public class PurityTests
     }
 
     /**
-     * Minecraft 1.19.2 turns on every new data pack: the opt-in packs (presets, smoker purification) must stay off
+     * Minecraft 1.18.2 turns on every new data pack: the opt-in packs (presets, smoker purification) must stay off
      * until a player enables them, and the others must be on.
      */
     @GameTest(template = "empty")

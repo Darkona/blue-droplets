@@ -13,7 +13,7 @@
     "MixinFluidBucketWrapper",
     "MixinFluidStack",
     "MixinFluidUtil",
-    "MixinFluidType",
+    "MixinFluidAttributes",
     "MixinFoodData",
     "MixinItemStack",
     "MixinItemUtils",

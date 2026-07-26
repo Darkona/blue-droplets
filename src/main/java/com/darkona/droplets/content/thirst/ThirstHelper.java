@@ -36,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -428,7 +429,7 @@ public class ThirstHelper
     }
 
     /**
-     * Whether this player may drink this item. Every player can on 1.19.2: Supernatural's vampires, the only ones
+     * Whether this player may drink this item. Every player can on 1.18.2: Supernatural's vampires, the only ones
      * that are limited to blood, are not supported on this version.
      */
     public static boolean playerRestoresThirst(ItemStack itemStack, Player player)
@@ -529,7 +530,7 @@ public class ThirstHelper
     {
         int levels = 0;
         for(ItemStack armor : player.getArmorSlots())
-            levels += armor.getEnchantmentLevel(Enchantments.FIRE_PROTECTION);
+            levels += EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION, armor);
         return Math.max(0.0f, 1.0f - Math.min(levels, GameplayConfig.FIRE_PROTECTION_MAX_LEVELS.get()) * GameplayConfig.FIRE_PROTECTION_PER_LEVEL.get().floatValue());
     }
 
@@ -572,7 +573,7 @@ public class ThirstHelper
         Biome biome = biomeHolder.value();
         float temperature = seasons ? SereneSeasonsCompat.temperature(level, biomeHolder, pos, biome.getBaseTemperature()) : biome.getBaseTemperature();
         float season = seasons ? SereneSeasonsCompat.seasonMultiplier(level, biomeHolder) : 1.0F;
-        float downfall = biome.getModifiedClimateSettings().downfall();
+        float downfall = biome.getDownfall();
         if (GameplayConfig.CLIMATE_FORMULA.get() == GameplayConfig.ClimateFormula.CURVE)
             return season * multiplier * (float) (NumberRows.curve(TEMPERATURE_CURVE.get(GameplayConfig.TEMPERATURE_CURVE.get()), temperature)
                     * NumberRows.curve(HUMIDITY_CURVE.get(GameplayConfig.HUMIDITY_CURVE.get()), downfall));

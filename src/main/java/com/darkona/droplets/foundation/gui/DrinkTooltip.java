@@ -13,7 +13,8 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,9 +59,9 @@ public final class DrinkTooltip implements TooltipComponent, ClientTooltipCompon
         return new DrinkTooltip(values);
     }
 
-    public static void registerFactory(RegisterClientTooltipComponentFactoriesEvent event)
+    public static void registerFactory(FMLClientSetupEvent event)
     {
-        event.register(DrinkTooltip.class, tooltip -> tooltip);
+        MinecraftForgeClient.registerTooltipComponentFactory(DrinkTooltip.class, tooltip -> tooltip);
     }
 
     /**

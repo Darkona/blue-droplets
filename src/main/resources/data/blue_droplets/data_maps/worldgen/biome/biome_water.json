@@ -8,14 +8,12 @@
     "#forge:is_snowy": { "base": 2, "max": 5 },
     "minecraft:frozen_river": { "base": 2, "max": 5 },
     "#minecraft:is_mountain": { "base": 3, "max": 5 },
-    "#forge:is_mountain": { "base": 3, "max": 5 },
     "minecraft:windswept_hills": { "base": 3, "max": 5 },
     "minecraft:windswept_forest": { "base": 3, "max": 5 },
     "minecraft:windswept_gravelly_hills": { "base": 3, "max": 5 },
     "minecraft:windswept_savanna": { "base": 3, "max": 5 },
-    "#forge:is_desert": { "base": 0, "max": 2 },
+    "#forge:is_sandy": { "base": 0, "max": 2 },
     "#minecraft:is_badlands": { "base": 0, "max": 2 },
-    "#forge:is_swamp": { "base": 0, "max": 1 },
-    "minecraft:mangrove_swamp": { "base": 0, "max": 1 }
+    "#forge:is_swamp": { "base": 0, "max": 1 }
   }
 }
