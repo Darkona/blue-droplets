@@ -12,7 +12,7 @@
   "blue_droplets.purity.clean": "Clean",
   "blue_droplets.purity.pure": "Pure",
   "blue_droplets.message.water_too_dirty": "This water is too dirty for that: boil or filter it first",
-  "config.jade.plugin_blue_droplets.purity": "Water purity",
+  "config.waila.plugin_blue_droplets.purity": "Water purity",
   "attribute.name.blue_droplets.thirst_drain": "Thirst Drain",
   "block.blue_droplets.sand_filter": "Sand Filter",
 

@@ -30,7 +30,7 @@ import mcp.mobius.waila.api.config.IPluginConfig;
 
 /**
  * Jade: water purity of water cauldrons (murky, or clean on a heat source) and of the tanks of any block exposing a fluid handler
- * (sent by the server). Jade 5 keeps the Waila API ({@code mcp.mobius.waila.api}). Jade finds and loads this class itself, only when installed; nothing else imports Jade.
+ * (sent by the server). Jade 5 keeps the Waila API ({@code mcp.mobius.waila.api}); its settings switch comes from {@code addConfig}. Jade finds and loads this class itself, only when installed; nothing else imports Jade.
  */
 @WailaPlugin(BlueDroplets.ID)
 public class JadePlugin implements IWailaPlugin
@@ -38,6 +38,7 @@ public class JadePlugin implements IWailaPlugin
     @Override
     public void register(IWailaCommonRegistration registration)
     {
+        registration.addConfig(PurityProvider.UID, true);
         registration.registerBlockDataProvider(PurityProvider.INSTANCE, BlockEntity.class);
     }
 
@@ -75,7 +76,7 @@ public class JadePlugin implements IWailaPlugin
         @Override
         public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config)
         {
-            if (!WaterPurity.enabled())
+            if (!WaterPurity.enabled() || !config.get(UID))
                 return;
             BlockState state = accessor.getBlockState();
             if (state.is(Blocks.WATER_CAULDRON))
