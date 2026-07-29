@@ -6,6 +6,11 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " Y ",
+    "XZX",
+    "XXX"
+  ],
   "key": {
     "X": {
       "tag": "forge:ingots/copper"
@@ -86,11 +91,6 @@
       }
     ]
   },
-  "pattern": [
-    " Y ",
-    "XZX",
-    "XXX"
-  ],
   "result": {
     "item": "miners_delight:copper_pot"
   }

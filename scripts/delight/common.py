@@ -93,11 +93,11 @@ def modrinth_jar(cfg, mod):
     d = os.path.join(cache, "jars")
     os.makedirs(d, exist_ok=True)
     slug, version = mod["modrinth"], mod["version"]
-    marker = os.path.join(d, "1.19.2-%s-%s.jar" % (mod["id"], re.sub(r"[^A-Za-z0-9._-]", "_", version)))
+    marker = os.path.join(d, "1.18.2-%s-%s.jar" % (mod["id"], re.sub(r"[^A-Za-z0-9._-]", "_", version)))
     if os.path.exists(marker):
         return marker
     url = "https://api.modrinth.com/v2/project/%s/version?%s" % (
-        slug, urllib.parse.urlencode({"loaders": '["forge"]', "game_versions": '["1.19.2"]'}))
+        slug, urllib.parse.urlencode({"loaders": '["forge"]', "game_versions": '["1.18.2"]'}))
     req = urllib.request.Request(url, headers={"User-Agent": "blue-droplets-delight-tooling"})
     versions = json.load(urllib.request.urlopen(req, timeout=60))
     hit = next((v for v in versions if v["version_number"] == version), None)

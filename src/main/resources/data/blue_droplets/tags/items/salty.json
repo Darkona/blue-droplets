@@ -57,103 +57,7 @@
       "required": false
     },
     {
-      "id": "crabbersdelight:pufferfish_slice",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:acid",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:bloody_mary",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:brandy",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:cheese_wedge",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:cooked_sausage",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:cut_pickle",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:gin",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:lemon_liqueur",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:pickle",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:popcorn",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:popcorn_bucket",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:raw_sausage",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:rum",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:smoked_cut_eggplant",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:smoked_eggplant",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:smoked_tomato",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:smoked_white_eggplant",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:tequila",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:tortilla_chips",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:vodka",
-      "required": false
-    },
-    {
-      "id": "culturaldelights:whiskey",
-      "required": false
-    },
-    {
       "id": "ends_delight:dried_endermite_meat",
-      "required": false
-    },
-    {
-      "id": "ends_delight:ender_sausage",
-      "required": false
-    },
-    {
-      "id": "ends_delight:raw_ender_sausage",
       "required": false
     },
     {
@@ -194,18 +98,6 @@
     },
     {
       "id": "miners_delight:weird_caviar",
-      "required": false
-    },
-    {
-      "id": "mynethersdelight:hotdog",
-      "required": false
-    },
-    {
-      "id": "mynethersdelight:plate_of_stuffed_hoglin_ham",
-      "required": false
-    },
-    {
-      "id": "mynethersdelight:strider_slice",
       "required": false
     },
     {

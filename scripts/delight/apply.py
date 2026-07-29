@@ -8,7 +8,7 @@
                     que no estan en el CSV (tags, mods no volcados) se dejan como estan
   data/blue_droplets/tags/items/salty.json y no_thirst.json   desde data/items.csv
 
-Formatos de Minecraft 1.19.2 (Forge 43), los mismos que 1.20.1: "conditions" en recetas, "forge:conditions" en drinks.json, forge:difference y
+Formatos de Minecraft 1.18.2 (Forge 40), los mismos que 1.20.1: "conditions" en recetas, "forge:conditions" en drinks.json, forge:difference y
 forge:partial_nbt en los ingredientes, carpetas recipes/ y tags/items/.
 
   --check          no escribe: compara y sale con 1 si algo difiere
@@ -29,7 +29,7 @@ TAG_NO_THIRST = os.path.join(MAIN_DATA, "tags", "items", "no_thirst.json")
 
 
 def mcmeta(desc):
-    return c.dump_json({"pack": {"description": desc, "pack_format": 10}})
+    return c.dump_json({"pack": {"description": desc, "pack_format": 8}})
 
 
 def mod_loaded(mod):

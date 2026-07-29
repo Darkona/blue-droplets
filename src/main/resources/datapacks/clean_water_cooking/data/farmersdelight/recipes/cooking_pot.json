@@ -6,7 +6,18 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bSb",
+    "iWi",
+    "iii"
+  ],
   "key": {
+    "b": {
+      "item": "minecraft:brick"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
     "S": {
       "item": "minecraft:wooden_shovel"
     },
@@ -44,19 +55,8 @@
           }
         }
       ]
-    },
-    "b": {
-      "item": "minecraft:brick"
-    },
-    "i": {
-      "tag": "forge:ingots/iron"
     }
   },
-  "pattern": [
-    "bSb",
-    "iWi",
-    "iii"
-  ],
   "result": {
     "item": "farmersdelight:cooking_pot"
   }

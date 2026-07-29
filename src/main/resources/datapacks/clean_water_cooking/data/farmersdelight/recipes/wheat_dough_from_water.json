@@ -53,7 +53,7 @@
     }
   ],
   "result": {
-    "count": 3,
-    "item": "farmersdelight:wheat_dough"
+    "item": "farmersdelight:wheat_dough",
+    "count": 3
   }
 }
