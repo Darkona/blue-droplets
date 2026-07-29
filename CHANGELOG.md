@@ -2,6 +2,40 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
+## 1.0.0 beta (Minecraft 1.18.2, Forge 40), unreleased
+
+The 1.18.2 port has every feature of the 1.19.2 port (next section) and so of 1.0.0 for 1.21.1, with the differences below. The jar, `blue-droplets-beta-1.18.2-1.0.0.jar`, runs on Forge 40.2.3 or newer for Minecraft 1.18.2 (40.2.3 is the first Forge 40 that applies the mixins of the bundled MixinExtras).
+
+### Minecraft 1.18.2
+
+- Everything the 1.19.2 section says about storage, data, dehydration damage, the creative tab and the optional datapacks also holds here. The release jar starts and stops cleanly on a dedicated Forge 1.18.2-40.3.12 server, alone and with the optional mods. `[1.18.2]`
+- Worlds from Thirst Was Taken 1.18.2 (1.3.x) load like those of 1.19.2 and 1.20.1: the capability, the `thirst:` ids and the `Purity` of water containers and tanks use the same formats. `[1.18.2]`
+- The default `biome_water` data map uses the biome tags that Forge 40 has: deserts and badlands by `#forge:is_sandy`, swamps by `#forge:is_swamp`, snowy biomes by `#forge:is_snowy` and mountains by `#minecraft:is_mountain`, which on 1.18.2 holds Forge's peaks and slopes. Forge 40 has no `forge:is_desert` or `forge:is_mountain`. Every vanilla biome gets the same purity as on later versions; 1.18.2 has no mangrove swamp. `[1.18.2]`
+
+### Mod compatibility (1.18.2)
+
+- Built and tested with Create 0.5.1.i, Jade 5.3.2, JEI 10.2.1, AppleSkin 2.5.1, Cold Sweat 2.4.3, Serene Seasons 7.0.0.15, Traveler's Backpack 7.1.49, Reliquary 2.0.19 and Farmer's Delight 1.2.3 for 1.18.2, and built against Vampirism 1.8.8 (its red thirst bar is not covered by the tests). `[1.18.2]`
+- Create 0.5.1 for 1.18.2: the Sand Filter, its Ponder scene, fan and basin purification, spouts, drains, pipes and goggles work as on 1.19.2. `[1.18.2]`
+- Jade 5 still uses the Waila API: the purity lines are the same, and Jade's plugin settings have a switch for them. `[1.18.2]`
+- JEI: the hydration and purification pages are the same. Blue Droplets is built against the JEI 9.7 API, the line most 1.18.2 mods use, and runs on JEI 9.7.2 and 10.2.1. `[1.18.2]`
+- Farmer's Delight addons, data only (drink values and, where a recipe uses water, the clean water rule): Brewin' and Chewin' 1.0.1, Ocean's Delight 1.0.0, Ender's Delight 1.2.1, Miner's Delight 1.1.1, Corn Delight 1.0.6, Crabber's Delight 1.1.2 and End's Delight 1.2.1. The clean water rule: Farmer's Delight's cooking pot and wheat dough, Miner's Delight's copper pot and Corn Delight's raw tortilla need acceptable water or better (3). Miner's Delight's water cup carries a purity like a bottle. `[1.18.2]`
+- Serene Seasons 7.0.0.15 for 1.18.2 reports its version as `0.0NONE`, so Blue Droplets accepts any version of it. `[1.18.2]`
+
+### Not in this version
+
+- Supernatural: its 1.18.2 version (2.1.7) is another mod inside, as on 1.19.2, with no vampire state that Blue Droplets can read. Its vampires drink like other players and the thirst bar keeps its color. `[1.18.2]`
+- Fruits Delight, Cultural Delights, Rustic Delight and My Nether's Delight: no version for Minecraft 1.18.2 Forge, as for Farm & Charm, HerbalBrews, Brewery, Extra Delight and Expanded Delight on 1.19.2. The Miner's Delight cups that My Nether's Delight adds on 1.19.2 do not exist either. `[1.18.2]`
+- Miner's Delight with Create: Miner's Delight 1.1.1 for 1.18.2 ships no Create recipes for its cup, so spouts and item drains do not fill or empty it. `[1.18.2]`
+- Brewin' and Chewin' kegs take water of any purity, for the same reasons as on 1.19.2 and 1.20.1. `[1.18.2]`
+- KubeJS: no examples or tests, as on 1.19.2. Pumps and pipes of other mods cannot drain a water cauldron, as on 1.19.2: Forge 1.18.2 gives cauldrons no fluid handler. `[1.18.2]`
+
+### For developers (1.18.2)
+
+- Built with ModDevGradle Legacy 2.0.141 on Gradle 9.7.1, Java 17, Forge 40.3.12 and Parchment 2022.11.06; MixinExtras 0.4.1 bundled with jarJar. `-PwithCompat` and `-PwithDelight` add the optional mods to the dev runs. `scripts/client-boot-check.sh` works as on 1.19.2, with its own dedicated server, since Minecraft 1.18.2 has no quick play. `[1.18.2]`
+- API: the same as on 1.19.2, with Forge 40 names. The events are `PlayerEvent`s of Forge 40: `getPlayer()` gives the player (`getEntity()` gives it as an `Entity`). The thirst bar is the overlay "Blue Droplets Thirst" of Forge's `OverlayRegistry`, right above `ForgeIngameGui.FOOD_LEVEL_ELEMENT`; other mods can hide it with `OverlayRegistry.enableOverlay` or cancel it in `RenderGameOverlayEvent.PreLayer`. `[1.18.2]`
+- The loot modifier `blue_droplets:add_table` has a JSON serializer (Forge 40 has no codecs for loot modifiers); its files are the same. `[1.18.2]`
+- Game tests (`./gradlew runGameTestServer`): 54 without optional mods, 83 with `-PwithCompat`, 59 with `-PwithDelight` and 88 with both, the same tests as on 1.19.2. The swamp purity test no longer checks the mangrove swamp, and the test of a config default reads it from the spec, since `ConfigValue#getDefault` does not exist in Forge 40. `[1.18.2]`
+
 ## 1.0.0 beta (Minecraft 1.19.2, Forge 43), unreleased
 
 The 1.19.2 port has every feature of the 1.20.1 port (next section) and so of 1.0.0 for 1.21.1, with the differences below. The jar, `blue-droplets-beta-1.19.2-1.0.0.jar`, runs on Forge 43.5.2 or newer for Minecraft 1.19.2.
