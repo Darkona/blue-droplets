@@ -7,7 +7,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 
-@EventBusSubscriber(modid = BlueDroplets.ID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = BlueDroplets.ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class PurityTintClient
 {
     /**
