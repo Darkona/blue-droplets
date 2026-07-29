@@ -5,6 +5,7 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.foundation.gui.DrinkTooltip;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -38,7 +39,7 @@ final class HydrationCategory implements IRecipeCategory<HydrationEntry>
     HydrationCategory(IGuiHelper gui)
     {
         background = gui.createBlankDrawable(WIDTH, 32);
-        icon = gui.createDrawableItemStack(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()));
+        icon = gui.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()));
         slotBackground = gui.getSlotDrawable();
     }
 
@@ -87,7 +88,7 @@ final class HydrationCategory implements IRecipeCategory<HydrationEntry>
     }
 
     /**
-     * JEI 10 has no recipe widgets: the droplets and the numbers are drawn here, the droplets from a row cached per entry.
+     * JEI 9 has no recipe widgets: the droplets and the numbers are drawn here, the droplets from a row cached per entry.
      */
     @Override
     public void draw(HydrationEntry entry, IRecipeSlotsView slots, PoseStack poseStack, double mouseX, double mouseY)

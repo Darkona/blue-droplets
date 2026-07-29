@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Boots the real client headless (Xvfb + Mesa software GL) into a copy of a superflat test world and reports whether it
 # joined, ran the commands and left the log without errors. No screenshot: the check is the log.
-# Adapted from Green Feathers' scripts/client-boot-check.sh for 1.19.2. Minecraft 1.19.2 can't open a singleplayer world
+# Adapted from Green Feathers' scripts/client-boot-check.sh for 1.18.2. Minecraft 1.18.2 can't open a singleplayer world
 # from the command line (no --quickPlaySingleplayer), so a dedicated server of its own (run/bootserver, a free port from
 # 25699) hosts the world and the client connects to it on startup (--server/--port).
 #
@@ -128,7 +128,7 @@ PID=$!
 logs() { cat "$LOG" "$GAME_LOG" "$SERVER_LOG" 2>/dev/null; }
 
 FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*blue_droplets|FileNotFoundException: .*blue_droplets'
-# The server let the client in (the client doesn't log chat on 1.19.2).
+# The server let the client in (the client doesn't log chat on 1.18.2).
 OK_RE='BDBoot joined the game'
 verdict="TIMEOUT after ${TIMEOUT}s"
 for _ in $(seq 1 "$TIMEOUT"); do

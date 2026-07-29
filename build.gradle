@@ -146,7 +146,7 @@ dependencies {
     modCompileOnly "maven.modrinth:farmers-delight:${farmers_delight_version}"
     modCompileOnly "maven.modrinth:vampirism:${vampirism_version}"
     modCompileOnly "maven.modrinth:miners-delight:${miners_delight_version}"
-    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    modCompileOnly "mezz.jei:jei-${minecraft_version}:${jei_version}:api"
 
     // ./gradlew runGameTestServer -PwithCompat: the optional mods Blue Droplets has code for, on the dev runtime.
     // Create's slim jar does not bundle Flywheel and Registrate: they go in by hand.
@@ -177,7 +177,7 @@ dependencies {
         modLocalRuntime "maven.modrinth:ends-delight:${ends_delight_version}"
     }
     // JEI on every dev client, as on 1.21.1.
-    modLocalRuntime "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
+    modLocalRuntime "mezz.jei:jei-${minecraft_version}-forge:${jei_runtime_version}"
 }
 
 var cleanGameTestWorld = tasks.register('cleanGameTestWorld', Delete) {

@@ -5,6 +5,8 @@ import net.minecraft.network.chat.TextComponent;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.CompatConfig;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -30,7 +32,7 @@ final class PurificationCategory implements IRecipeCategory<PurificationEntry>
 {
     private static final int WIDTH = 150;
     private static final int TEXT_Y = 44;
-    /** The empty arrow of the vanilla furnace screen: JEI 10 has no recipe arrow widget. */
+    /** The empty arrow of the vanilla furnace screen: JEI 9 has no recipe arrow widget. */
     private static final ResourceLocation FURNACE = new ResourceLocation("textures/gui/container/furnace.png");
 
     private final Component title = new TranslatableComponent(BlueDroplets.ID + ".jei.purification");
@@ -42,7 +44,7 @@ final class PurificationCategory implements IRecipeCategory<PurificationEntry>
     PurificationCategory(IGuiHelper gui)
     {
         background = gui.createBlankDrawable(WIDTH, TEXT_Y + 20);
-        icon = gui.createDrawableItemStack(new ItemStack(Items.CAULDRON));
+        icon = gui.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(Items.CAULDRON));
         slotBackground = gui.getSlotDrawable();
         arrow = gui.createDrawable(FURNACE, 79, 34, 24, 17);
     }
@@ -108,14 +110,14 @@ final class PurificationCategory implements IRecipeCategory<PurificationEntry>
         {
             int purity = WaterPurity.getPurity(fluid);
             slot.setFluidRenderer(fluid.getAmount(), false, 16, 16)
-                    .addFluidStack(fluid.getFluid(), fluid.getAmount(), fluid.getTag())
+                    .addIngredient(ForgeTypes.FLUID_STACK, fluid)
                     .addTooltipCallback((view, tooltip) -> tooltip.add(new TextComponent(WaterPurity.getPurityText(purity)).withStyle(style -> style.withColor(WaterPurity.getPurityColor(purity)))));
         }
         return slot;
     }
 
     /**
-     * JEI 10 has no recipe widgets: the arrows and the line of text are drawn here.
+     * JEI 9 has no recipe widgets: the arrows and the line of text are drawn here.
      */
     @Override
     public void draw(PurificationEntry entry, IRecipeSlotsView slots, PoseStack poseStack, double mouseX, double mouseY)

@@ -25,9 +25,18 @@ Failed to retrieve profile key pair
 # -PwithCompat on 1.20.1: Traveler's Backpack logs this while it creates its config on the first start of a fresh run folder.
 ^java\.nio\.file\.NoSuchFileException: .*/config/travelersbackpack-common\.toml$
 
-# -PwithCompat on 1.19.2: Cold Sweat 2.4.3 ships a default config with minecraft:cherry_grove, a 1.20 biome.
+# -PwithCompat on 1.19.2 and 1.18.2: Cold Sweat 2.4.3 ships a default config with minecraft:cherry_grove, a 1.20 biome.
 Error parsing (config: worldgen/biome "minecraft:cherry_grove" does not exist|minecraft:worldgen/biome config "\[minecraft:cherry_grove)
 
 # -PwithCompat on 1.19.2: Cold Sweat 2.4.3's own JEI pages call a JEI class that no JEI for 1.19.2 has (Textures.getSlotDrawable).
 Found a broken recipe, failed to setRecipe with RecipeLayoutBuilder: (FuelRecipe|SewingRecipe)\[
 ^java\.lang\.NoSuchMethodError: 'mezz\.jei\.api\.gui\.drawable\.IDrawableStatic mezz\.jei\.common\.gui\.textures\.Textures\.getSlotDrawable\(\)'$
+
+# Forge 40 (1.18.2): FML writes config/fml.toml on the first start of a fresh run folder and its file watcher reads it half written.
+^com\.electronwill\.nightconfig\.core\.io\.ParsingException: Invalid TOML data: entry "\[maxThreads\]" defined twice in its table\.$
+
+# -PwithCompat on 1.18.2: Traveler's Backpack 7.1.49's JEI plugin extends a JEI 9 class (BasicRecipeTransferHandler) that JEI 10 moved.
+Could not find parent mezz/jei/transfer/BasicRecipeTransferHandler for class com/tiviacz/travelersbackpack/compat/jei/
+An error occurred building event handler
+Caught an error from mod plugin: class com\.tiviacz\.travelersbackpack\.compat\.jei\.TravelersBackpackPlugin
+^java\.lang\.(ClassNotFoundException: mezz\.jei\.transfer\.BasicRecipeTransferHandler|NoClassDefFoundError: mezz/jei/transfer/BasicRecipeTransferHandler)$
