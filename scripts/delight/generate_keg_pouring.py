@@ -14,7 +14,7 @@ PACK_CLEAN = os.path.join(c.PACKS, "clean_water_cooking")
 
 
 def mcmeta(desc):
-    return c.dump_json({"pack": {"description": desc, "pack_format": 48}})
+    return c.dump_json({"pack": {"description": desc, "min_format": 101, "max_format": 101}})
 
 
 def mod_loaded(mod):
@@ -24,7 +24,7 @@ def mod_loaded(mod):
 def water_ingredient_strict(purity):
     """Ingrediente estricto para cubo de agua con pureza específica."""
     return {
-        "type": "neoforge:components",
+        c.TYPE_KEY: "neoforge:components",
         "items": "#c:buckets/water",
         "components": {"blue_droplets:purity": purity},
         "strict": True
@@ -34,7 +34,7 @@ def water_ingredient_strict(purity):
 def potion_ingredient_strict(purity):
     """Ingrediente estricto para poción de agua con pureza específica."""
     return {
-        "type": "neoforge:components",
+        c.TYPE_KEY: "neoforge:components",
         "items": "minecraft:potion",
         "components": {"minecraft:potion_contents": {"potion": "minecraft:water"}, "blue_droplets:purity": purity},
         "strict": True

@@ -17,6 +17,8 @@ RULES = os.path.join(HERE, "rules")
 PACKS = os.path.join(REPO, "src", "main", "resources", "datapacks")
 MOD_ID = "blue_droplets"
 PURITY = "blue_droplets:purity"
+# Minecraft 26.1: NeoForge custom ingredients (item and fluid) name their type with this key, not "type"
+TYPE_KEY = "neoforge:ingredient_type"
 MAX_PURITY = 5      # niveles 0..5 (notes/NIVELES-PUREZA.md)
 DEFAULT_PURITY = 3  # el agua sin componente cuenta como 3
 
@@ -175,7 +177,7 @@ def _classify(node, path, parent, wr):
     if nested and node.get("fluid") in wr["fluid_ids"]:
         amt = parent.get("amount", 1000) if isinstance(parent, dict) else 1000
         return Hit(path, "fluid_nested", "fluid", amt, node, node["fluid"])
-    t = node.get("type")
+    t = ingredient_type(node)
     # items
     if t is None or t == "neoforge:components":
         if t is None and node.get("item") in wr["item_ids"]:
@@ -260,6 +262,11 @@ def heat_for(recipe_id, rtype, result_id, hr):
 
 # ---------------------------------------------------------------- ingredientes de agua limpia
 
+def ingredient_type(node):
+    """Type of a custom ingredient: TYPE_KEY in 26.1, "type" in the recipes of earlier versions."""
+    return node.get(TYPE_KEY, node.get("type")) if isinstance(node, dict) else None
+
+
 def purity_levels_below(min_purity):
     """Purezas a restar: todas las menores que el minimo (el agua sin componente cuenta como DEFAULT_PURITY)."""
     return list(range(0, min_purity))
@@ -268,15 +275,15 @@ def purity_levels_below(min_purity):
 def _comp_item(items, purity, extra):
     comps = {PURITY: purity}
     comps.update(extra or {})
-    return {"type": "neoforge:components", "items": items, "components": comps}
+    return {TYPE_KEY: "neoforge:components", "items": items, "components": comps}
 
 
 def _comp_fluid(fluids, purity):
-    return {"type": "neoforge:components", "fluids": fluids, "components": {PURITY: purity}}
+    return {TYPE_KEY: "neoforge:components", "fluids": fluids, "components": {PURITY: purity}}
 
 
 def _compound(children):
-    return {"type": "neoforge:compound", "children": children}
+    return {TYPE_KEY: "neoforge:compound", "children": children}
 
 
 def clean_replacement(hit, min_purity):
@@ -285,17 +292,17 @@ def clean_replacement(hit, min_purity):
     node = hit.node
     if hit.kind == "item":
         extra = None
-        if node.get("type") == "neoforge:components":
+        if ingredient_type(node) == "neoforge:components":
             extra = {k: v for k, v in node["components"].items() if k != PURITY}
         subs = [_comp_item(hit.ref, p, extra) for p in levels]
-        return {"type": "neoforge:difference", "base": node, "subtracted": _compound(subs)}
+        return {TYPE_KEY: "neoforge:difference", "base": node, "subtracted": _compound(subs)}
     fluids = [hit.ref] if not hit.ref.startswith("#") else hit.ref
     if hit.ref.startswith("#"):
         base = {"tag": hit.ref[1:]}
     else:
         base = {"fluid": hit.ref}
     subs = [_comp_fluid(fluids, p) for p in levels]
-    out = {"type": "neoforge:difference", "base": base, "subtracted": _compound(subs)}
+    out = {TYPE_KEY: "neoforge:difference", "base": base, "subtracted": _compound(subs)}
     if hit.kind == "fluid_flat":
         out["amount"] = hit.amount
     return out
@@ -336,7 +343,7 @@ def accepts(ing, stack):
     """Evalua un ingrediente generado contra un ejemplar: stack = {'id', 'tags': set, 'components': dict}."""
     if isinstance(ing, list):
         return any(accepts(i, stack) for i in ing)
-    t = ing.get("type")
+    t = ingredient_type(ing)
     if t == "neoforge:difference":
         return accepts(ing["base"], stack) and not accepts(ing["subtracted"], stack)
     if t == "neoforge:compound":
@@ -357,7 +364,7 @@ def find_differences(node, out=None):
     """Todos los nodos neoforge:difference de una receta generada."""
     out = [] if out is None else out
     if isinstance(node, dict):
-        if node.get("type") == "neoforge:difference":
+        if ingredient_type(node) == "neoforge:difference":
             out.append(node)
         for v in node.values():
             find_differences(v, out)
@@ -372,7 +379,7 @@ def _samples_for(diff, wr):
     base = diff["base"]
     subs = diff["subtracted"]["children"]
     first = subs[0] if subs else None
-    if base.get("type") == "neoforge:components":
+    if ingredient_type(base) == "neoforge:components":
         ident = base["items"] if isinstance(base["items"], str) else base["items"][0]
         tags = set()
         extra = {k: v for k, v in base["components"].items() if k != PURITY}

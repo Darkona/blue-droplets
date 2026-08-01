@@ -27,7 +27,8 @@ TAG_NO_THIRST = os.path.join(MAIN_DATA, "tags", "item", "no_thirst.json")
 
 
 def mcmeta(desc):
-    return c.dump_json({"pack": {"description": desc, "pack_format": 48}})
+    # Minecraft 26.1 data packs: format range instead of pack_format (data pack format 101)
+    return c.dump_json({"pack": {"description": desc, "min_format": 101, "max_format": 101}})
 
 
 def mod_loaded(mod):
@@ -97,7 +98,8 @@ def build_clean(source, problems, info):
         ns, path = rid.split(":", 1)
         files["data/%s/recipe/%s.json" % (ns, path)] = c.dump_json(out)
     # Keg de Brewin' and Chewin': recetas de vertido estrictas por pureza (generate_keg_pouring.py)
-    files.update(keg.build_keg_pouring(False, problems, info))
+    if "brewinandchewin" in by_id:
+        files.update(keg.build_keg_pouring(False, problems, info))
     # Archivos fijos escritos a mano (por ejemplo, arreglos de recetas rotas de otros mods): static/clean_water_cooking
     static = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "clean_water_cooking")
     for dp, _, fns in os.walk(static):
@@ -105,6 +107,9 @@ def build_clean(source, problems, info):
             src = os.path.join(dp, fn)
             with open(src, encoding="utf-8") as f:
                 files[os.path.relpath(src, static).replace(os.sep, "/")] = f.read()
+    if not files:
+        # sin recetas (ningun mod de mods.json en esta version) no hay pack: sync_dir lo borra
+        return files
     files["pack.mcmeta"] = mcmeta("Blue Droplets: recipes of Farmer's Delight addons need clean water")
     return files
 
@@ -234,7 +239,7 @@ def main():
     problems, info, diffs = [], [], []
     clean = build_clean(args.source, problems, info)
     sync_dir(PACK_CLEAN, clean, args.check, diffs)
-    print("clean_water_cooking: %d recetas" % (len(clean) - 1))
+    print("clean_water_cooking: %d recetas" % max(len(clean) - 1, 0))
 
     if args.check:
         wr = c.load_json(os.path.join(c.RULES, "water.json"))
@@ -259,7 +264,7 @@ def main():
         print("sin cambios")
     java = os.path.join(c.REPO, "src", "main", "java", "com", "darkona", "droplets", "BlueDroplets.java")
     src = open(java, encoding="utf-8").read() if os.path.exists(java) else ""
-    missing = [p for p in ("clean_water_cooking", "purify_cooking_pot") if '"%s"' % p not in src]
+    missing = [p for p in ("clean_water_cooking",) if clean and '"%s"' % p not in src]
     if missing:
         print("\nFalta en Java (no lo toco): registrar en BlueDroplets.addPacks (PackSource.BUILT_IN): " + ", ".join(missing))
     if problems or (args.check and diffs):
