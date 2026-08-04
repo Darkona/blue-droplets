@@ -1,20 +1,17 @@
 package com.darkona.droplets.gametest;
 
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.sereneseasons.SereneSeasonsCompat;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import sereneseasons.api.season.Season;
 import sereneseasons.season.SeasonHandler;
 import sereneseasons.season.SeasonSavedData;
@@ -27,12 +24,11 @@ import sereneseasons.season.SeasonTime;
  * the Cold Sweat switch apart. Each test sets the season and puts it back in the same call, so no other test sees it.
  * Registered by {@link DropletsGameTests} only when Serene Seasons is installed.
  */
-@PrefixGameTestTemplate(false)
 public class SereneSeasonsTests
 {
     private static Holder<Biome> biome(ServerLevel level, ResourceKey<Biome> key)
     {
-        return level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(key);
+        return level.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(key);
     }
 
     /** Climate multiplier of {@code biome} in the middle of {@code season}, with seasons; the level's season is restored. */
@@ -56,7 +52,7 @@ public class SereneSeasonsTests
         return ThirstHelper.biomeClimate(helper.getLevel(), biome, helper.absolutePos(BlockPos.ZERO), 1.0F, false);
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void winterLowersThirst(GameTestHelper helper)
     {
         Holder<Biome> plains = biome(helper.getLevel(), Biomes.PLAINS);
@@ -68,7 +64,7 @@ public class SereneSeasonsTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void tropicalDrySeasonRaisesThirst(GameTestHelper helper)
     {
         Holder<Biome> desert = biome(helper.getLevel(), Biomes.DESERT);
@@ -79,7 +75,7 @@ public class SereneSeasonsTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void seasonMultiplierScalesTheClimate(GameTestHelper helper)
     {
         Holder<Biome> plains = biome(helper.getLevel(), Biomes.PLAINS);
@@ -96,7 +92,7 @@ public class SereneSeasonsTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void biomeWithoutSeasonsDoesNotChange(GameTestHelper helper)
     {
         Holder<Biome> river = biome(helper.getLevel(), Biomes.RIVER);
@@ -106,7 +102,7 @@ public class SereneSeasonsTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void switchedOffDoesNotChange(GameTestHelper helper)
     {
         Holder<Biome> plains = biome(helper.getLevel(), Biomes.PLAINS);
@@ -121,13 +117,6 @@ public class SereneSeasonsTests
         {
             CompatConfig.SERENE_SEASONS_ENABLED.set(true);
         }
-        helper.succeed();
-    }
-
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
-    public static void coldSweatTakesOver(GameTestHelper helper)
-    {
-        helper.assertValueEqual(SereneSeasonsCompat.ACTIVE, !ColdSweatCompat.LOADED, "seasons used only without Cold Sweat");
         helper.succeed();
     }
 }

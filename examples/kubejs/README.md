@@ -1,6 +1,6 @@
 # Blue Droplets scripts for KubeJS
 
-Short examples of what a modpack can do with the Blue Droplets API from KubeJS 7 (Minecraft 1.21.1, NeoForge).
+Short examples of what a modpack can do with the Blue Droplets API from KubeJS 8 (Minecraft 26.1, NeoForge).
 Copy `server_scripts/` and `startup_scripts/` into the `kubejs/` folder of your instance, or run `./gradlew runGameTestServer -PwithKubeJS` in the mod's repository, which copies them into `run/kubejs-test/kubejs/` and runs the KubeJS game test.
 
 - `startup_scripts/blue_droplets_drinks.js`: a new drink item registered with its thirst values.

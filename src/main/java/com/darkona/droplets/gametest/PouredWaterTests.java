@@ -1,5 +1,7 @@
 package com.darkona.droplets.gametest;
 
+import net.minecraft.world.level.chunk.storage.SerializableChunkData;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.PurityLevel;
 import com.darkona.droplets.content.purity.PouredWater;
@@ -8,7 +10,6 @@ import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -22,20 +23,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 /**
  * Poured water: water sources poured into the world keep the purity of the water poured, the infinite source between
  * two of them inherits it, and picking one up hands it on.
  */
-@GameTestHolder(BlueDroplets.ID)
-@PrefixGameTestTemplate(false)
 public class PouredWaterTests
 {
     private static final int CONTAMINATED = PurityLevel.CONTAMINATED.level();
@@ -70,9 +64,9 @@ public class PouredWaterTests
 
     private static ItemStack useFromAbove(ServerPlayer player, BlockPos water, ItemStack stack)
     {
-        player.moveTo(water.getX() + 0.5, water.getY() + 1, water.getZ() + 0.5, 0.0F, 90.0F);
+        player.snapTo(water.getX() + 0.5, water.getY() + 1, water.getZ() + 0.5, 0.0F, 90.0F);
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        return stack.use(player.level(), player, InteractionHand.MAIN_HAND).getObject();
+        return TestSupport.heldResult(stack.use(player.level(), player, InteractionHand.MAIN_HAND), stack);
     }
 
     @GameTest(template = "box")
@@ -169,9 +163,7 @@ public class PouredWaterTests
     {
         BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
         worldPurity(helper, pos);
-        FluidTank tank = new FluidTank(1000);
-        tank.fill(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), CONTAMINATED), FluidTank.FluidAction.EXECUTE);
-        helper.assertTrue(FluidUtil.tryPlaceFluid(null, helper.getLevel(), InteractionHand.MAIN_HAND, pos, tank, tank.getFluid().copy()), "FluidUtil did not place the water");
+        helper.assertTrue(FluidUtil.tryPlaceFluid(WaterPurity.waterResource(CONTAMINATED), null, helper.getLevel(), pos, false), "FluidUtil did not place the water");
         helper.assertTrue(registered(helper, pos), "water placed by FluidUtil is not registered");
         helper.assertValueEqual(WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of water placed by FluidUtil");
         helper.succeed();
@@ -186,13 +178,13 @@ public class PouredWaterTests
         PouredWater water = chunk.getExistingDataOrNull(ModAttachment.POURED_WATER.get());
         helper.assertTrue(water != null && !water.isEmpty(), "no poured water in the chunk");
 
-        Tag saved = PouredWater.CODEC.encodeStart(NbtOps.INSTANCE, water).getOrThrow();
-        PouredWater loaded = PouredWater.CODEC.parse(NbtOps.INSTANCE, saved).getOrThrow();
+        Tag saved = PouredWater.CODEC.codec().encodeStart(NbtOps.INSTANCE, water).getOrThrow();
+        PouredWater loaded = PouredWater.CODEC.codec().parse(NbtOps.INSTANCE, saved).getOrThrow();
         helper.assertValueEqual(loaded.entries(), water.entries(), "entries after a save and a load");
 
-        CompoundTag chunkTag = ChunkSerializer.write(helper.getLevel(), chunk);
-        CompoundTag attachments = chunkTag.getCompound("neoforge:attachments");
-        helper.assertTrue(attachments.contains(BlueDroplets.asResource("poured_water").toString()), "the chunk save has no poured water: " + attachments.getAllKeys());
+        CompoundTag chunkTag = SerializableChunkData.copyOf(helper.getLevel(), chunk).write();
+        CompoundTag attachments = chunkTag.getCompoundOrEmpty("neoforge:attachments");
+        helper.assertTrue(attachments.contains(BlueDroplets.asResource("poured_water").toString()), "the chunk save has no poured water: " + attachments.keySet());
         helper.succeed();
     }
 }

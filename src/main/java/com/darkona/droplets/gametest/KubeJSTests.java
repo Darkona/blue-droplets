@@ -11,15 +11,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import java.util.UUID;
 
@@ -30,15 +28,14 @@ import static com.darkona.droplets.gametest.TestSupport.thirst;
  * The scripts of {@code examples/kubejs}, running inside KubeJS. Registered by {@link DropletsGameTests} only when
  * KubeJS is installed; {@code -PwithKubeJS} copies the scripts into {@code run/kubejs} before the run.
  */
-@PrefixGameTestTemplate(false)
 public class KubeJSTests
 {
     private static final String HINT = " (are the scripts of examples/kubejs in run/kubejs? use -PwithKubeJS)";
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void startupScriptRegistersADrink(GameTestHelper helper)
     {
-        Item lemonade = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("kubejs", "lemonade"));
+        Item lemonade = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("kubejs", "lemonade"));
         helper.assertTrue(lemonade != net.minecraft.world.item.Items.AIR, "kubejs:lemonade does not exist" + HINT);
         ThirstValues values = DropletsAPI.getDrinkValues(new ItemStack(lemonade));
         helper.assertTrue(values != null, "kubejs:lemonade has no thirst values" + HINT);
@@ -48,7 +45,7 @@ public class KubeJSTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void pureWaterRefreshesMoreForTaggedPlayersThroughAScriptListener(GameTestHelper helper)
     {
         ServerPlayer player = player(helper);
@@ -62,7 +59,7 @@ public class KubeJSTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void dirtyWaterIsCancelledInTheNether(GameTestHelper helper)
     {
         ServerPlayer nether = FakePlayerFactory.get(helper.getLevel().getServer().getLevel(Level.NETHER),
@@ -79,7 +76,7 @@ public class KubeJSTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void hubTagStopsThirstLossThroughAScriptListener(GameTestHelper helper)
     {
         ServerPlayer player = player(helper);
@@ -100,7 +97,7 @@ public class KubeJSTests
         NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickItem(player, InteractionHand.MAIN_HAND));
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void thirstScriptsReadChangeAndHydrate(GameTestHelper helper)
     {
         ServerPlayer player = player(helper);
@@ -110,7 +107,7 @@ public class KubeJSTests
         ItemStack carrot = new ItemStack(Items.GOLDEN_CARROT);
         ThirstValues own = DropletsAPI.getDrinkValues(carrot);
         int expected = 14 + (own == null ? 0 : own.thirst());
-        player.eat(helper.getLevel(), carrot);
+        carrot.finishUsingItem(helper.getLevel(), player);
         helper.assertValueEqual(DropletsAPI.view(player).thirst(), expected, "thirst after the golden carrot" + HINT);
 
         // The sponge dries 2 points
@@ -127,14 +124,14 @@ public class KubeJSTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void purityScriptsReadAndWrite(GameTestHelper helper)
     {
         ServerPlayer player = player(helper);
         // The glass bottle gives a pure water bottle
         rightClick(player, Items.GLASS_BOTTLE);
         boolean found = false;
-        for (ItemStack stack : player.getInventory().items)
+        for (ItemStack stack : player.getInventory().getNonEquipmentItems())
             if (stack.is(Items.POTION) && DropletsAPI.getPurity(stack) == PurityLevel.PURE.level())
                 found = true;
         helper.assertTrue(found, "no pure water bottle after the glass bottle" + HINT);

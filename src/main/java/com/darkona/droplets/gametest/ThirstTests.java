@@ -14,7 +14,7 @@ import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,8 +27,6 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import java.util.UUID;
 
@@ -38,8 +36,6 @@ import static com.darkona.droplets.gametest.TestSupport.thirst;
 /**
  * Drinking, eating, limits, overhydration, purity effects and the commands, with the default config.
  */
-@GameTestHolder(BlueDroplets.ID)
-@PrefixGameTestTemplate(false)
 public class ThirstTests
 {
     /** Cause of the last thirst change of any player; tests run one at a time on the server thread. */
@@ -108,6 +104,20 @@ public class ThirstTests
         helper.succeed();
     }
 
+    /** Minecraft 26.1 eats through the food component of the consumed stack: the hydration hook is there now. */
+    @GameTest(template = "empty")
+    public static void eatingAnAppleHydratesOnce(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 4, 0, ThirstChangeEvent.Cause.COMMAND);
+        ItemStack apples = new ItemStack(Items.APPLE, 2);
+        apples.finishUsingItem(helper.getLevel(), player);
+        helper.assertValueEqual(apples.getCount(), 1, "apples left after eating one");
+        helper.assertValueEqual(thirst.getThirst(), 6, "thirst after eating an apple (2)");
+        helper.succeed();
+    }
+
     @GameTest(template = "empty")
     public static void appleIsEaten(GameTestHelper helper)
     {
@@ -117,7 +127,7 @@ public class ThirstTests
         PlayerThirst.consume(new ItemStack(Items.APPLE), player);
         helper.assertValueEqual(thirst.getThirst(), 6, "thirst after an apple (2)");
         helper.assertValueEqual(lastCause, ThirstChangeEvent.Cause.EAT, "cause of eating an apple");
-        helper.assertFalse(player.hasEffect(MobEffects.CONFUSION), "food rolled purity effects");
+        helper.assertFalse(player.hasEffect(MobEffects.NAUSEA), "food rolled purity effects");
         helper.succeed();
     }
 
@@ -157,7 +167,7 @@ public class ThirstTests
         thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
         MobEffectInstance effect = player.getEffect(EffectInit.OVERHYDRATED);
         helper.assertTrue(effect != null && effect.getAmplifier() == 0, "two bottles past full give Overhydrated I");
-        helper.assertTrue(player.hasEffect(MobEffects.CONFUSION), "Overhydrated comes with Nausea");
+        helper.assertTrue(player.hasEffect(MobEffects.NAUSEA), "Overhydrated comes with Nausea");
         helper.succeed();
     }
 
@@ -179,7 +189,7 @@ public class ThirstTests
     {
         ServerPlayer player = player(helper);
         PlayerThirst.consume(waterBottle(0), player);
-        helper.assertTrue(player.hasEffect(MobEffects.CONFUSION), "dirty water gives Nausea (100% by default)");
+        helper.assertTrue(player.hasEffect(MobEffects.NAUSEA), "dirty water gives Nausea (100% by default)");
         helper.assertTrue(player.hasEffect(MobEffects.HUNGER), "dirty water gives Hunger (100% by default)");
         helper.succeed();
     }
@@ -222,7 +232,7 @@ public class ThirstTests
         ServerLevel end = helper.getLevel().getServer().getLevel(Level.END);
         helper.assertTrue(end != null, "no End");
         ServerPlayer player = FakePlayerFactory.get(end, new GameProfile(UUID.randomUUID(), "droplets-test"));
-        player.moveTo(0.5, 64, 0.5);
+        player.snapTo(0.5, 64, 0.5);
         DimensionWater water = end.dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
         helper.assertTrue(water != null && water.thirstMultiplier().isPresent(), "the End has no thirst_multiplier");
         float climate = ThirstHelper.getExhaustionBiomeModifier(player);
@@ -235,7 +245,7 @@ public class ThirstTests
     public static void commandsReturnTheirResult(GameTestHelper helper) throws Exception
     {
         ServerPlayer player = player(helper);
-        CommandSourceStack source = player.createCommandSourceStack().withPermission(2).withSuppressedOutput();
+        CommandSourceStack source = player.createCommandSourceStack().withPermission(LevelBasedPermissionSet.GAMEMASTER).withSuppressedOutput();
         var dispatcher = helper.getLevel().getServer().getCommands().getDispatcher();
         helper.assertValueEqual(dispatcher.execute("blue_droplets set @s 4 10", source), 4, "result of set");
         helper.assertValueEqual(thirst(player).getQuenched(), 4, "quenched after set 4 10");

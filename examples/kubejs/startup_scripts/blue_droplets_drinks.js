@@ -15,8 +15,9 @@ StartupEvents.registry('item', event => {
 })
 
 // The item exists now: give it thirst 6 and quenched 4, and a purity for the effects rolled when drinking it.
+// Minecraft 26.1 cannot build item stacks this early, so the item is looked up by id instead of with Item.of.
 StartupEvents.postInit(() => {
-  const lemonade = Item.of('kubejs:lemonade').item
+  const lemonade = Item.getItem('kubejs:lemonade')
   DropletsAPI.registerDrink(lemonade, 6, 4, PurityLevel.CLEAN.level())
   console.info('[Blue Droplets example] registered kubejs:lemonade')
 })

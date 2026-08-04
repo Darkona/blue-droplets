@@ -13,7 +13,6 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -21,11 +20,12 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.network.connection.ConnectionType;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
@@ -35,8 +35,6 @@ import static com.darkona.droplets.gametest.TestSupport.thirst;
  * Saved data and codecs: the player attachment, the purity component on disk and on the wire, the drinks data map and
  * the payloads the HUD is fed from.
  */
-@GameTestHolder(BlueDroplets.ID)
-@PrefixGameTestTemplate(false)
 public class SaveTests
 {
     @GameTest(template = "empty")
@@ -47,9 +45,10 @@ public class SaveTests
         thirst.change(player, 13, 7, ThirstChangeEvent.Cause.COMMAND);
         thirst.setExhaustion(2.5F);
         thirst.setShouldTickThirst(false);
-        CompoundTag tag = thirst.serializeNBT(helper.getLevel().registryAccess());
+        TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, helper.getLevel().registryAccess());
+        thirst.serialize(output);
         PlayerThirst loaded = new PlayerThirst();
-        loaded.deserializeNBT(helper.getLevel().registryAccess(), tag);
+        loaded.deserialize(TagValueInput.create(ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), output.buildResult()));
         helper.assertValueEqual(loaded.getThirst(), 13, "thirst after a save");
         helper.assertValueEqual(loaded.getQuenched(), 7, "quenched after a save");
         helper.assertValueEqual(loaded.getExhaustion(), 2.5F, "exhaustion after a save");
@@ -64,7 +63,7 @@ public class SaveTests
         tag.putInt("thirst", 10);
         tag.putInt("quenched", 15);
         PlayerThirst loaded = new PlayerThirst();
-        loaded.deserializeNBT(helper.getLevel().registryAccess(), tag);
+        loaded.deserialize(TagValueInput.create(ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), tag));
         helper.assertValueEqual(loaded.getQuenched(), 10, "quenched above thirst in an old save");
         helper.assertTrue(loaded.getShouldTickThirst(), "a save without the enable flag is disabled");
         helper.succeed();

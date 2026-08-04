@@ -7,12 +7,10 @@ import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.tiviacz.travelersbackpack.api.fluids.EffectFluid;
 import com.tiviacz.travelersbackpack.fluids.EffectFluidRegistry;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
@@ -20,10 +18,9 @@ import static com.darkona.droplets.gametest.TestSupport.thirst;
 /**
  * Traveler's Backpack: the hose water effect. Registered by {@link DropletsGameTests} only when it is installed.
  */
-@PrefixGameTestTemplate(false)
 public class TravelersBackpackTests
 {
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void hoseWaterHydratesWithTheTankPurity(GameTestHelper helper)
     {
         EffectFluid effect = EffectFluidRegistry.getRegisteredFluidEffects().get("blue_droplets:water");

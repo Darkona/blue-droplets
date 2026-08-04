@@ -1,5 +1,10 @@
 package com.darkona.droplets.gametest;
 
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.core.registries.Registries;
@@ -21,8 +26,6 @@ import java.util.List;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
@@ -31,7 +34,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -41,14 +43,10 @@ import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 /**
  * Purity of water taken from cauldrons (murky, or clean on a heat source) and of water in the world.
  */
-@GameTestHolder(BlueDroplets.ID)
-@PrefixGameTestTemplate(false)
 public class PurityTests
 {
     @GameTest(template = "box")
@@ -77,7 +75,7 @@ public class PurityTests
         ItemStack bottle = useOnFullCauldron(helper, player, pos, new ItemStack(Items.GLASS_BOTTLE, 3));
         helper.assertValueEqual(bottle.getCount(), 2, "glass bottles left in hand");
         ItemStack water = ItemStack.EMPTY;
-        for (ItemStack item : player.getInventory().items)
+        for (ItemStack item : player.getInventory().getNonEquipmentItems())
             if (item.is(Items.POTION))
                 water = item;
         helper.assertFalse(water.isEmpty(), "no water bottle in the inventory");
@@ -101,21 +99,25 @@ public class PurityTests
         BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
         helper.getLevel().setBlockAndUpdate(pos.below(), Blocks.CAMPFIRE.defaultBlockState());
         helper.getLevel().setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3));
-        IFluidHandler handler = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+        ResourceHandler<FluidResource> handler = helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, pos, null);
         helper.assertTrue(handler != null, "a water cauldron has no fluid handler");
         int heated = WaterPurity.HEATED_CAULDRON_PURITY;
 
-        FluidStack inTank = handler.getFluidInTank(0);
+        FluidResource inTank = handler.getResource(0);
         helper.assertTrue(WaterPurity.hasPurity(inTank), "tank contents have no purity");
         helper.assertValueEqual(WaterPurity.getPurity(inTank), heated, "purity of the tank contents");
-        FluidStack simulated = handler.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-        helper.assertValueEqual(WaterPurity.getPurity(simulated), heated, "purity of a simulated drain");
+        try (Transaction simulation = Transaction.openRoot())
+        {
+            helper.assertValueEqual(handler.extract(0, inTank, 1000, simulation), 1000, "amount of a simulated extraction of the tank contents");
+        }
+        helper.assertTrue(helper.getLevel().getBlockState(pos).is(Blocks.WATER_CAULDRON), "a simulated extraction emptied the cauldron");
 
-        FluidStack other = WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), WaterPurity.CAULDRON_PURITY);
-        helper.assertTrue(handler.drain(other, IFluidHandler.FluidAction.EXECUTE).isEmpty(), "drained water of another purity");
-        FluidStack drained = handler.drain(inTank.copyWithAmount(1000), IFluidHandler.FluidAction.EXECUTE);
-        helper.assertValueEqual(drained.getAmount(), 1000, "amount drained asking for the tank contents");
-        helper.assertValueEqual(WaterPurity.getPurity(drained), heated, "purity of the drained water");
+        try (Transaction transaction = Transaction.openRoot())
+        {
+            helper.assertValueEqual(handler.extract(0, WaterPurity.waterResource(WaterPurity.CAULDRON_PURITY), 1000, transaction), 0, "extracted water of another purity");
+            helper.assertValueEqual(handler.extract(0, FluidResource.of(Fluids.WATER).with(ThirstComponent.PURITY, heated), 1000, transaction), 1000, "amount extracted asking for the tank contents");
+            transaction.commit();
+        }
         helper.assertTrue(helper.getLevel().getBlockState(pos).is(Blocks.CAULDRON), "the cauldron was not emptied");
         helper.succeed();
     }
@@ -124,15 +126,15 @@ public class PurityTests
     public static void bucketsKeepPurityThroughTheFluidCapability(GameTestHelper helper)
     {
         ItemStack bucket = WaterPurity.addPurity(new ItemStack(Items.WATER_BUCKET), 0);
-        FluidStack inBucket = FluidUtil.getFluidContained(bucket).orElse(FluidStack.EMPTY);
+        FluidStack inBucket = FluidUtil.getFirstStackContained(bucket);
         helper.assertTrue(inBucket.is(Fluids.WATER), "no water in a water bucket");
         helper.assertTrue(WaterPurity.hasPurity(inBucket), "water read from a bucket has no purity");
         helper.assertValueEqual(WaterPurity.getPurity(inBucket), 0, "purity of water read from a bucket");
 
-        ItemStack filled = FluidUtil.getFilledBucket(WaterPurity.addPurity(new FluidStack(Fluids.WATER, 1000), PurityLevel.PURE.level()));
+        ItemStack filled = TestSupport.fillBucket(helper, WaterPurity.waterResource(PurityLevel.PURE.level()));
         helper.assertTrue(filled.is(Items.WATER_BUCKET), "no water bucket for water with a purity");
         helper.assertValueEqual(WaterPurity.getPurity(filled), PurityLevel.PURE.level(), "purity of a bucket filled with water");
-        helper.assertFalse(WaterPurity.hasPurity(FluidUtil.getFilledBucket(new FluidStack(Fluids.WATER, 1000))), "a bucket of water without purity got one");
+        helper.assertFalse(WaterPurity.hasPurity(TestSupport.fillBucket(helper, FluidResource.of(Fluids.WATER))), "a bucket of water without purity got one");
         helper.succeed();
     }
 
@@ -166,7 +168,7 @@ public class PurityTests
         helper.getLevel().setBlockAndUpdate(water, Blocks.WATER.defaultBlockState());
         int still = WaterPurity.getWaterPurity(helper.getLevel(), water, true);
         ServerPlayer player = TestSupport.player(helper);
-        player.moveTo(water.getX() + 0.5, water.getY() + 1, water.getZ() + 0.5, 0.0F, 90.0F);
+        player.snapTo(water.getX() + 0.5, water.getY() + 1, water.getZ() + 0.5, 0.0F, 90.0F);
 
         ItemStack bottle = useFromAbove(player, new ItemStack(Items.GLASS_BOTTLE));
         helper.assertTrue(bottle.is(Items.POTION), "the glass bottle was not filled");
@@ -194,23 +196,22 @@ public class PurityTests
     private static ItemStack useFromAbove(Player player, ItemStack stack)
     {
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        return stack.use(player.level(), player, InteractionHand.MAIN_HAND).getObject();
+        return TestSupport.heldResult(stack.use(player.level(), player, InteractionHand.MAIN_HAND), stack);
     }
 
     @GameTest(template = "empty")
-    public static void cookingReachesPureOnlyWithoutCreate(GameTestHelper helper)
+    public static void cookingReachesPure(GameTestHelper helper)
     {
         int max = -1;
         for (RecipeType<? extends AbstractCookingRecipe> type : List.of(RecipeType.SMELTING, RecipeType.CAMPFIRE_COOKING))
-            for (RecipeHolder<? extends AbstractCookingRecipe> holder : helper.getLevel().getRecipeManager().getAllRecipesFor(type))
-                if (holder.id().getNamespace().equals(BlueDroplets.ID))
+            for (RecipeHolder<? extends AbstractCookingRecipe> holder : helper.getLevel().getServer().getRecipeManager().recipeMap().byType(type))
+                if (holder.id().identifier().getNamespace().equals(BlueDroplets.ID))
                 {
-                    Integer purity = holder.value().getResultItem(helper.getLevel().registryAccess()).get(ThirstComponent.PURITY);
+                    Integer purity = holder.value().assemble(new SingleRecipeInput(ItemStack.EMPTY)).get(ThirstComponent.PURITY);
                     if (purity != null)
                         max = Math.max(max, purity);
                 }
-        int expected = ModList.get().isLoaded("create") ? PurityLevel.CLEAN.level() : PurityLevel.PURE.level();
-        helper.assertValueEqual(max, expected, "highest purity from cooking water");
+        helper.assertValueEqual(max, PurityLevel.PURE.level(), "highest purity from cooking water");
         helper.succeed();
     }
 
@@ -238,7 +239,7 @@ public class PurityTests
         var level = helper.getLevel();
         BlockPos pos = helper.absolutePos(new BlockPos(2, 1, 2));
         level.setBlockAndUpdate(pos, source ? Blocks.WATER.defaultBlockState() : Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 1));
-        var holder = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(biome);
+        var holder = level.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(biome);
         return WaterPurity.getWaterPurity(level, holder, pos, source, null);
     }
 
@@ -269,8 +270,8 @@ public class PurityTests
     /** Still water: base plus altitude; running water one more; both capped. */
     private static void base(GameTestHelper helper, ResourceKey<Biome> biome, int base, int max, int alt)
     {
-        check(helper, biome.location() + " still", biomePurity(helper, biome, true), Math.min(max, base + alt));
-        check(helper, biome.location() + " running", biomePurity(helper, biome, false), Math.min(max, base + alt + 1));
+        check(helper, biome.identifier() + " still", biomePurity(helper, biome, true), Math.min(max, base + alt));
+        check(helper, biome.identifier() + " running", biomePurity(helper, biome, false), Math.min(max, base + alt + 1));
     }
 
     /** Default {@code altitudeBands}: +1, +2, +3 from 30, 60 and 100 blocks above sea level and from 16, 48 and 80 below it. */
@@ -280,7 +281,7 @@ public class PurityTests
         var level = helper.getLevel();
         int sea = level.getSeaLevel();
         int[][] bands = {{0, 0}, {29, 0}, {30, 1}, {59, 1}, {60, 2}, {99, 2}, {100, 3}, {-15, 0}, {-16, 1}, {-47, 1}, {-48, 2}, {-79, 2}, {-80, 3}};
-        var plains = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS);
+        var plains = level.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS);
         for (int[] band : bands)
         {
             BlockPos pos = new BlockPos(0, sea + band[0], 0);

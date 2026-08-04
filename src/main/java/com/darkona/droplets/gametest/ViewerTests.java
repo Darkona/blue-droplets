@@ -1,20 +1,15 @@
 package com.darkona.droplets.gametest;
 
-import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.compat.create.CreateCompat;
 import com.darkona.droplets.compat.jei.HydrationEntry;
 import com.darkona.droplets.compat.jei.PurificationEntry;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import java.util.List;
 
@@ -22,12 +17,10 @@ import java.util.List;
  * What the recipe viewer pages (JEI, EMI) show. The pages are built from plain data that the server can build too,
  * so the content is checked here without a client.
  */
-@GameTestHolder(BlueDroplets.ID)
-@PrefixGameTestTemplate(false)
 public class ViewerTests
 {
     @GameTest(template = "empty")
-    public static void purificationPageShowsCauldronsAndSandFilter(GameTestHelper helper)
+    public static void purificationPageShowsCauldrons(GameTestHelper helper)
     {
         List<PurificationEntry> entries = PurificationEntry.all();
         PurificationEntry cauldron = entry(helper, entries, "cauldron");
@@ -38,11 +31,6 @@ public class ViewerTests
         for (ItemStack output : heated.outputs())
             helper.assertValueEqual(WaterPurity.getPurity(output), WaterPurity.HEATED_CAULDRON_PURITY, "purity out of a heated cauldron");
         helper.assertTrue(heated.below().stream().anyMatch(stack -> stack.is(Items.CAMPFIRE)), "a campfire heats the cauldron");
-        long filters = entries.stream().filter(entry -> entry.method().equals("sand_filter")).count();
-        helper.assertValueEqual(filters > 0, CreateCompat.LOADED, "Sand Filter entries with Create installed");
-        for (PurificationEntry entry : entries)
-            if (entry.method().equals("sand_filter"))
-                helper.assertTrue(WaterPurity.getPurity(entry.fluidOut()) > WaterPurity.getPurity(entry.fluidIn()), "a Sand Filter entry that does not purify");
         helper.succeed();
     }
 

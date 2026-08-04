@@ -4,13 +4,11 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import reliquary.init.ModItems;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
@@ -20,7 +18,6 @@ import static com.darkona.droplets.gametest.TestSupport.thirst;
  * Reliquary: the Emperor's Chalice hydrates, the Infernal Chalice does not, and the optional cooldown. Registered by
  * {@link DropletsGameTests} only when Reliquary is installed.
  */
-@PrefixGameTestTemplate(false)
 public class ReliquaryTests
 {
     /** The full use path: the item's own finish, then the Finish event that blue_droplets and the compat listen to. */
@@ -29,7 +26,7 @@ public class ReliquaryTests
         NeoForge.EVENT_BUS.post(new LivingEntityUseItemEvent.Finish(player, chalice, 0, chalice.finishUsingItem(helper.getLevel(), player)));
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void emperorChaliceHydratesAndInfernalDoesNot(GameTestHelper helper)
     {
         ServerPlayer player = player(helper);
@@ -45,7 +42,7 @@ public class ReliquaryTests
         helper.succeed();
     }
 
-    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    @GameTest(template = "empty")
     public static void emperorChaliceCooldownIsOptional(GameTestHelper helper)
     {
         int cooldown = CompatConfig.RELIQUARY_EMPEROR_CHALICE_COOLDOWN.get();
@@ -55,11 +52,11 @@ public class ReliquaryTests
             ItemStack chalice = new ItemStack(ModItems.EMPEROR_CHALICE.get());
             helper.assertValueEqual(cooldown, 0, "cooldown default");
             drink(helper, player, chalice);
-            helper.assertFalse(player.getCooldowns().isOnCooldown(chalice.getItem()), "the chalice is on cooldown with the cooldown off");
+            helper.assertFalse(player.getCooldowns().isOnCooldown(chalice), "the chalice is on cooldown with the cooldown off");
             CompatConfig.RELIQUARY_EMPEROR_CHALICE_COOLDOWN.set(100);
             drink(helper, player, chalice);
-            helper.assertTrue(player.getCooldowns().isOnCooldown(chalice.getItem()), "the chalice is not on cooldown after a drink");
-            helper.assertFalse(player.getCooldowns().isOnCooldown(ModItems.INFERNAL_CHALICE.get()), "the Infernal Chalice shares the cooldown");
+            helper.assertTrue(player.getCooldowns().isOnCooldown(chalice), "the chalice is not on cooldown after a drink");
+            helper.assertFalse(player.getCooldowns().isOnCooldown(new ItemStack(ModItems.INFERNAL_CHALICE.get())), "the Infernal Chalice shares the cooldown");
         }
         finally
         {

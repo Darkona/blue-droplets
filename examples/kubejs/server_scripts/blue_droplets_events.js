@@ -23,14 +23,14 @@ NativeEvents.onEvent(DrinkPre, event => {
 // Pure water refreshes more for players with the tag "hydro" (/tag <player> add hydro). Pre events can change the
 // values; getPurity() is -1 for drinks without a purity.
 NativeEvents.onEvent(DrinkPre, event => {
-  if (event.purity == PurityLevel.PURE.level() && event.entity.tags.contains('hydro')) {
+  if (event.purity == PurityLevel.PURE.level() && event.entity.entityTags().contains('hydro')) {
     event.setQuenched(event.quenched + 2)
   }
 })
 
 // No thirst loss in a hub. getCause() is DEPLETION, DRINK, EAT, RAIN, PEACEFUL, DEATH, COMMAND or API.
 NativeEvents.onEvent(ThirstChangePre, event => {
-  if (event.cause.name() == 'DEPLETION' && event.entity.tags.contains('hub')) {
+  if (event.cause.name() == 'DEPLETION' && event.entity.entityTags().contains('hub')) {
     event.canceled = true
   }
 })
@@ -39,4 +39,4 @@ NativeEvents.onEvent(ThirstChangePre, event => {
 // never every tick, and the result is cached. Registering the same id again replaces it.
 // After a /reload of scripts, registering again just replaces the previous modifier.
 DropletsAPI.registerExhaustionModifier('kubejs:night_watch', (player, multiplier) =>
-  player.level.isNight() ? multiplier * 0.75 : multiplier)
+  player.level.isDarkOutside() ? multiplier * 0.75 : multiplier)
