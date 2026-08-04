@@ -1,9 +1,10 @@
 package com.darkona.droplets.content.registry;
 
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.foundation.common.item.DrinkableItem;
 import com.darkona.droplets.foundation.common.item.TerracottaBowlItem;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.Consumables;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -21,14 +22,12 @@ public class ItemInit {
 
     static {
         ITEMS = DeferredRegister.createItems(BlueDroplets.ID);
-        CLAY_BOWL = ITEMS.register("clay_bowl", () -> new Item((new Item.Properties())
-                .stacksTo(64)
-        ));
-        TERRACOTTA_BOWL = ITEMS.register("terracotta_bowl", () -> new TerracottaBowlItem((new Item.Properties())
-                .stacksTo(64)
-        ));
-        TERRACOTTA_WATER_BOWL = ITEMS.register("terracotta_water_bowl", () -> (new DrinkableItem())
-                .setContainer(TERRACOTTA_BOWL.get())
+        CLAY_BOWL = ITEMS.registerSimpleItem("clay_bowl");
+        TERRACOTTA_BOWL = ITEMS.registerItem("terracotta_bowl", TerracottaBowlItem::new);
+        // Drunk like a water bottle (the drink component) and handed back as an empty bowl, into the inventory or dropped.
+        TERRACOTTA_WATER_BOWL = ITEMS.registerSimpleItem("terracotta_water_bowl", () -> new Item.Properties()
+                .component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
+                .usingConvertsTo(TERRACOTTA_BOWL.get())
         );
     }
 }

@@ -5,7 +5,7 @@ import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -26,10 +26,10 @@ public final class ExhaustionFactors
     public static final String[] FACTORS = {"climate", "fire protection", "fire resistance", "rain/thunder", "day/night", "sun", "altitude", "water", "hydrated", "other mods"};
 
     private static final NumberRows ALTITUDE = new NumberRows(3);
-    private static final Map<ResourceLocation, ExhaustionModifier> REGISTERED = new TreeMap<>();
+    private static final Map<Identifier, ExhaustionModifier> REGISTERED = new TreeMap<>();
     private static volatile ExhaustionModifier[] modifiers = new ExhaustionModifier[0];
 
-    public static synchronized void register(ResourceLocation id, ExhaustionModifier modifier)
+    public static synchronized void register(Identifier id, ExhaustionModifier modifier)
     {
         REGISTERED.put(Objects.requireNonNull(id), Objects.requireNonNull(modifier));
         modifiers = REGISTERED.values().toArray(new ExhaustionModifier[0]);
@@ -52,8 +52,8 @@ public final class ExhaustionFactors
         float fireResistance = ThirstHelper.getExhaustionFireResistanceModifier(player);
         float weather = !level.isRainingAt(eyes) ? 1.0F
                 : (level.isThundering() ? GameplayConfig.THUNDER_MULTIPLIER : GameplayConfig.RAIN_MULTIPLIER).get().floatValue();
-        float time = !dayCycle ? 1.0F : (level.isDay() ? GameplayConfig.DAY_MULTIPLIER : GameplayConfig.NIGHT_MULTIPLIER).get().floatValue();
-        float sun = dayCycle && level.isDay() && !level.isRaining() && level.canSeeSky(eyes) ? GameplayConfig.SUN_MULTIPLIER.get().floatValue() : 1.0F;
+        float time = !dayCycle ? 1.0F : (level.isBrightOutside() ? GameplayConfig.DAY_MULTIPLIER : GameplayConfig.NIGHT_MULTIPLIER).get().floatValue();
+        float sun = dayCycle && level.isBrightOutside() && !level.isRaining() && level.canSeeSky(eyes) ? GameplayConfig.SUN_MULTIPLIER.get().floatValue() : 1.0F;
         float altitude = (float) NumberRows.band(ALTITUDE.get(GameplayConfig.ALTITUDE_MULTIPLIERS.get()), player.getBlockY() - level.getSeaLevel(), 1.0);
         float water = player.isUnderWater() ? GameplayConfig.UNDERWATER_MULTIPLIER.get().floatValue() * underwaterBreathing(player)
                 : player.isInWater() ? GameplayConfig.IN_WATER_MULTIPLIER.get().floatValue() : 1.0F;

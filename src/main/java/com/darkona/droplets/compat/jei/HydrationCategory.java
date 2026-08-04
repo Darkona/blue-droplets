@@ -12,7 +12,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -31,14 +31,14 @@ final class HydrationCategory extends AbstractRecipeCategory<HydrationEntry>
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, HydrationEntry entry, IFocusGroup focuses)
     {
-        builder.addSlot(RecipeIngredientRole.INPUT, 1, 8).setStandardSlotBackground().addItemStack(entry.stack());
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 8).setStandardSlotBackground().add(entry.stack());
     }
 
     @Override
     public void createRecipeExtras(IRecipeExtrasBuilder builder, HydrationEntry entry, IFocusGroup focuses)
     {
         ThirstValues values = entry.values();
-        builder.addDrawable(new Droplets(DrinkTooltip.of(values)), VALUES_X, 1);
+        builder.addDrawableWidget(new Droplets(DrinkTooltip.of(values))).setPosition(VALUES_X, 1);
         String key = BlueDroplets.ID + (values.estimated() ? ".jei.hydration.values_estimated" : ".jei.hydration.values");
         builder.addText(Component.translatable(key, values.thirst(), values.quenched()), WIDTH - VALUES_X, 10).setPosition(VALUES_X, 22).setColor(0xFF404040);
     }
@@ -57,13 +57,13 @@ final class HydrationCategory extends AbstractRecipeCategory<HydrationEntry>
         @Override
         public int getHeight()
         {
-            return row.getHeight();
+            return row.getHeight(Minecraft.getInstance().font);
         }
 
         @Override
-        public void draw(GuiGraphics guiGraphics, int xOffset, int yOffset)
+        public void draw(GuiGraphicsExtractor guiGraphics, int xOffset, int yOffset)
         {
-            row.renderImage(Minecraft.getInstance().font, xOffset, yOffset, guiGraphics);
+            row.extractImage(Minecraft.getInstance().font, xOffset, yOffset, getWidth(), getHeight(), guiGraphics);
         }
     }
 }

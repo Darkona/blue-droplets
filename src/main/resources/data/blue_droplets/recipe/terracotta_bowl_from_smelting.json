@@ -1,9 +1,6 @@
 {
   "type": "minecraft:smelting",
-  "ingredient":
-  {
-    "item": "blue_droplets:clay_bowl"
-  },
+  "ingredient": "blue_droplets:clay_bowl",
   "result": {
     "id": "blue_droplets:terracotta_bowl",
     "count": 1

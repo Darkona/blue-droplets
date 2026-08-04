@@ -1,6 +1,5 @@
 package com.darkona.droplets.foundation.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.compat.appleskin.AppleSkinCompat;
@@ -12,12 +11,16 @@ import com.darkona.droplets.foundation.config.ClientConfig;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
@@ -29,15 +32,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class ThirstBarRenderer
 {
-    public static final ResourceLocation LAYER = BlueDroplets.asResource("thirst_level");
-    public static final ResourceLocation THIRST_ICONS = BlueDroplets.asResource("textures/gui/thirst_icons.png");
+    public static final Identifier LAYER = BlueDroplets.asResource("thirst_level");
+    public static final Identifier THIRST_ICONS = BlueDroplets.asResource("textures/gui/thirst_icons.png");
     /** Grayscale fill of {@link #THIRST_ICONS} (same UVs, no outline or background), tinted by {@link ThirstBarStyles}. */
-    public static final ResourceLocation THIRST_MASK = BlueDroplets.asResource("textures/gui/thirst_icons_mask.png");
+    public static final Identifier THIRST_MASK = BlueDroplets.asResource("textures/gui/thirst_icons_mask.png");
     /** Quenched outlines (row 0), exhaustion underlay (v 18) and tooltip quenched icons (7x7, v 27). */
-    public static final ResourceLocation QUENCHED_ICONS = BlueDroplets.asResource("textures/gui/quenched_icons.png");
-    private static final ResourceLocation QUENCHED_MASK = BlueDroplets.asResource("textures/gui/quenched_icons_mask.png");
+    public static final Identifier QUENCHED_ICONS = BlueDroplets.asResource("textures/gui/quenched_icons.png");
+    private static final Identifier QUENCHED_MASK = BlueDroplets.asResource("textures/gui/quenched_icons_mask.png");
     /** Tint of what a salty item would take away (preview) or takes away (tooltip). */
     public static final float SALTY_RED = 0.9f, SALTY_GREEN = 0.2f, SALTY_BLUE = 0.2f;
+    private static final int ICONS_WIDTH = 25, ICONS_HEIGHT = 9, QUENCHED_SIZE = 256;
     private static final RandomSource random = RandomSource.create();
     private static int lastNotFullTick;
 
@@ -48,7 +52,7 @@ public final class ThirstBarRenderer
         event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, LAYER, ThirstBarRenderer::render);
     }
 
-    private static void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker)
+    private static void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker)
     {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
@@ -60,13 +64,14 @@ public final class ThirstBarRenderer
         if (player.isAlive() && !thirst.getShouldTickThirst() || shouldHideBar(minecraft, player, thirst))
             return;
 
-        minecraft.getProfiler().push("thirst");
+        Profiler.get().push("thirst");
         int tint = ThirstBarStyles.resolve(player);
         float red = (tint >> 16 & 255) / 255f;
         float green = (tint >> 8 & 255) / 255f;
         float blue = (tint & 255) / 255f;
-        ResourceLocation fill = tint < 0 ? THIRST_ICONS : THIRST_MASK;
-        ResourceLocation outline = tint < 0 ? QUENCHED_ICONS : QUENCHED_MASK;
+        int color = ARGB.colorFromFloat(1f, red, green, blue);
+        Identifier fill = tint < 0 ? THIRST_ICONS : THIRST_MASK;
+        Identifier outline = tint < 0 ? QUENCHED_ICONS : QUENCHED_MASK;
         int right = guiGraphics.guiWidth() / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
         int top = guiGraphics.guiHeight() - minecraft.gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
         minecraft.gui.rightHeight += 10;
@@ -88,14 +93,13 @@ public final class ThirstBarRenderer
             newQuenched = Mth.clamp(quenched + gain.quenched(), 0, newLevel);
             flash = flashAlpha(ticks);
         }
+        int flashColor = ARGB.colorFromFloat(flash, red, green, blue);
+        int saltyColor = ARGB.colorFromFloat(flash, SALTY_RED, SALTY_GREEN, SALTY_BLUE);
 
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         if (ClientConfig.SHOW_EXHAUSTION_UNDERLAY.get() && AppleSkinCompat.exhaustionUnderlay())
         {
             int width = (int) (Mth.clamp(thirst.getExhaustion() / GameplayConfig.EXHAUSTION_PER_POINT.get().floatValue(), 0f, 1f) * 81);
-            guiGraphics.setColor(1f, 1f, 1f, 0.75f);
-            guiGraphics.blit(QUENCHED_ICONS, right - width, top, 81 - width, 18, width, 9);
+            quenched(guiGraphics, QUENCHED_ICONS, right - width, top, 81 - width, 18, width, ARGB.white(0.75f));
         }
 
         for (int i = 0; i < 10; ++i)
@@ -106,42 +110,42 @@ public final class ThirstBarRenderer
             if (i == wave)
                 y -= 2;
 
-            guiGraphics.setColor(1f, 1f, 1f, 1f);
-            guiGraphics.blit(THIRST_ICONS, x, y, 0, 0, 9, 9, 25, 9);
+            droplet(guiGraphics, THIRST_ICONS, x, y, 0, -1);
 
-            guiGraphics.setColor(red, green, blue, 1f);
             if (idx <= level)
-                guiGraphics.blit(fill, x, y, idx < level ? 16 : 8, 0, 9, 9, 25, 9);
+                droplet(guiGraphics, fill, x, y, idx < level ? 16 : 8, color);
             if (showQuenched && quenched > i * 2)
-                guiGraphics.blit(outline, x, y, outlineU(quenched, i), 0, 9, 9);
+                quenched(guiGraphics, outline, x, y, outlineU(quenched, i), 0, 9, color);
 
             if (gain == null)
                 continue;
-            guiGraphics.setColor(red, green, blue, flash);
             if (newLevel > level && idx >= level && idx <= newLevel)
-                guiGraphics.blit(fill, x, y, idx < newLevel ? 16 : 8, 0, 9, 9, 25, 9);
+                droplet(guiGraphics, fill, x, y, idx < newLevel ? 16 : 8, flashColor);
             if (newQuenched > quenched && newQuenched > i * 2 && i >= quenched / 2)
-                guiGraphics.blit(outline, x, y, outlineU(newQuenched, i), 0, 9, 9);
+                quenched(guiGraphics, outline, x, y, outlineU(newQuenched, i), 0, 9, flashColor);
 
             if (newLevel < level && idx <= level && idx >= newLevel)
             {
-                guiGraphics.setColor(SALTY_RED, SALTY_GREEN, SALTY_BLUE, flash);
-                guiGraphics.blit(THIRST_MASK, x, y, idx < level ? 16 : 8, 0, 9, 9, 25, 9);
+                droplet(guiGraphics, THIRST_MASK, x, y, idx < level ? 16 : 8, saltyColor);
                 if (idx == newLevel)
-                {
-                    guiGraphics.setColor(red, green, blue, 1f);
-                    guiGraphics.blit(fill, x, y, 8, 0, 9, 9, 25, 9);
-                }
+                    droplet(guiGraphics, fill, x, y, 8, color);
             }
             if (newQuenched < quenched && quenched > i * 2 && newQuenched < i * 2 + 2)
-            {
-                guiGraphics.setColor(SALTY_RED, SALTY_GREEN, SALTY_BLUE, flash);
-                guiGraphics.blit(QUENCHED_MASK, x, y, outlineU(quenched, i), 0, 9, 9);
-            }
+                quenched(guiGraphics, QUENCHED_MASK, x, y, outlineU(quenched, i), 0, 9, saltyColor);
         }
-        guiGraphics.setColor(1f, 1f, 1f, 1f);
-        RenderSystem.disableBlend();
-        minecraft.getProfiler().pop();
+        Profiler.get().pop();
+    }
+
+    /** One 9x9 droplet of the 25x9 droplet sheet, multiplied by {@code color} (ARGB). */
+    private static void droplet(GuiGraphicsExtractor guiGraphics, Identifier texture, int x, int y, int u, int color)
+    {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, u, 0, 9, 9, ICONS_WIDTH, ICONS_HEIGHT, color);
+    }
+
+    /** A 9-high piece of the 256x256 quenched sheet, multiplied by {@code color} (ARGB). */
+    private static void quenched(GuiGraphicsExtractor guiGraphics, Identifier texture, int x, int y, int u, int v, int width, int color)
+    {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, u, v, width, 9, QUENCHED_SIZE, QUENCHED_SIZE, color);
     }
 
     private static int outlineU(int quenched, int i)
@@ -168,9 +172,9 @@ public final class ThirstBarRenderer
 
     private static @Nullable ThirstValues drinkValues(Player player, ItemStack stack)
     {
-        if (stack.isEmpty() || !ThirstHelper.playerRestoresThirst(stack, player))
+        if (stack.isEmpty())
             return null;
-        FoodProperties food = stack.getFoodProperties(player);
+        FoodProperties food = stack.get(DataComponents.FOOD);
         if (food != null && !player.canEat(food.canAlwaysEat()))
             return null;
         return ThirstHelper.drinkValuesOf(stack);

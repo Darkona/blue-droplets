@@ -5,7 +5,7 @@ import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.food.FoodData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,9 +27,9 @@ public abstract class MixinFoodData
 
     @WrapOperation(
             method = {"tick"},
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;heal(F)V", ordinal = 0)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;heal(F)V", ordinal = 0)
     )
-    private void healWithSaturation(Player player, float amount, Operation<Void> original)
+    private void healWithSaturation(ServerPlayer player, float amount, Operation<Void> original)
     {
         FoodData foodData = player.getFoodData();
         PlayerThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
@@ -59,9 +59,9 @@ public abstract class MixinFoodData
 
     @WrapOperation(
             method = {"tick"},
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;heal(F)V", ordinal = 1)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;heal(F)V", ordinal = 1)
     )
-    private void healWithHunger(Player player, float amount, Operation<Void> original)
+    private void healWithHunger(ServerPlayer player, float amount, Operation<Void> original)
     {
         PlayerThirst thirstData = player.getData(ModAttachment.PLAYER_THIRST);
         boolean shouldHeal = !GameplayConfig.REGEN_HALTED_WHEN_THIRSTY.get() || thirstData.getThirst() >= GameplayConfig.HUNGER_REGEN_MIN_THIRST.get();
@@ -76,7 +76,7 @@ public abstract class MixinFoodData
     }
 
     @Inject(method = "tick",at = @At(value = "HEAD"))
-    private void DealWithExhaustionBySaturation(Player player, CallbackInfo ci){
+    private void DealWithExhaustionBySaturation(ServerPlayer player, CallbackInfo ci){
         if(exhaustionLevel>4.0F){
            player.getData(ModAttachment.PLAYER_THIRST).ExhaustionRecalculate();
         }

@@ -2,6 +2,7 @@ package com.darkona.droplets.content.purity;
 
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
@@ -36,7 +37,7 @@ public final class PouredWater
     private static final byte NONE = -1;
     private static final Direction[] HORIZONTAL = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
 
-    public static final Codec<PouredWater> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<PouredWater> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.LONG_STREAM.fieldOf("positions").forGetter(water -> LongStream.of(water.sources.keySet().toLongArray())),
             Codec.BYTE_BUFFER.fieldOf("purities").forGetter(water -> ByteBuffer.wrap(water.sources.values().toByteArray()))
     ).apply(instance, PouredWater::new));
@@ -80,7 +81,7 @@ public final class PouredWater
         if (chunk == null)
             return;
         chunk.getData(ModAttachment.POURED_WATER.get()).sources.put(pos.asLong(), (byte) WaterPurity.sanitizePurity(purity));
-        chunk.setUnsaved(true);
+        chunk.markUnsaved();
     }
 
     /**
@@ -112,7 +113,7 @@ public final class PouredWater
         if (water == null || !water.sources.containsKey(pos.asLong()))
             return worstNeighbour(level, pos);
         int purity = water.sources.remove(pos.asLong());
-        chunk.setUnsaved(true);
+        chunk.markUnsaved();
         BlockPos.MutableBlockPos next = new BlockPos.MutableBlockPos();
         for (Direction direction : HORIZONTAL)
         {
@@ -156,7 +157,7 @@ public final class PouredWater
         if (clean)
         {
             water.sources.remove(key);
-            chunk.setUnsaved(true);
+            chunk.markUnsaved();
         }
         return -1;
     }

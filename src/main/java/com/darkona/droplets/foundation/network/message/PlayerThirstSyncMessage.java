@@ -32,11 +32,6 @@ public record PlayerThirstSyncMessage(int thirst, int quenched, float exhaustion
     );
 
 
-    public static void serverHandle(final PlayerThirstSyncMessage message,final IPayloadContext context)
-    {
-
-    }
-
     public static void clientHandle(final PlayerThirstSyncMessage message,final IPayloadContext context)
     {
         context.enqueueWork(() -> {

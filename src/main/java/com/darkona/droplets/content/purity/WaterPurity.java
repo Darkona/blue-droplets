@@ -16,7 +16,7 @@ import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.core.NumberRows;
 import com.darkona.droplets.foundation.common.event.RegisterThirstValueEvent;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -53,11 +53,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCauldronInteractionEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -90,11 +93,11 @@ public class WaterPurity
     }
 
     /**
-     * Main thread only: the interaction maps are not thread-safe.
+     * Mod bus: the terracotta bowl fills from a water cauldron like a bottle.
      */
-    public static void registerCauldronInteractions()
+    public static void registerCauldronInteractions(RegisterCauldronInteractionEvent.Interaction event)
     {
-        CauldronInteraction.WATER.map().put(ItemInit.TERRACOTTA_BOWL.get(), fillFromCauldron(() -> new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), SoundEvents.BUCKET_FILL));
+        event.register(Identifier.withDefaultNamespace("water"), ItemInit.TERRACOTTA_BOWL.get(), fillFromCauldron(() -> new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), SoundEvents.BUCKET_FILL));
     }
 
     /**
@@ -113,14 +116,13 @@ public class WaterPurity
                 level.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         };
     }
 
     private static void registerContainers()
     {
-        addContainer(new ContainerWithPurity(Items.GLASS_BOTTLE,
-                PotionContents.createItemStack(Items.POTION,Potions.WATER).getItem()).setEqualsFilled(itemStack ->
+        addContainer(new ContainerWithPurity(Items.GLASS_BOTTLE, Items.POTION).setEqualsFilled(itemStack ->
                 itemStack.is(Items.POTION) && isWater(itemStack.get(DataComponents.POTION_CONTENTS))));
         addContainer(new ContainerWithPurity(ItemInit.TERRACOTTA_BOWL.get(),
                 ItemInit.TERRACOTTA_WATER_BOWL.get()));
@@ -255,6 +257,47 @@ public class WaterPurity
     public static Integer getPurity(FluidStack fluid)
     {
         return sanitizePurity(fluid.get(ThirstComponent.PURITY));
+    }
+
+    /**
+     * Purity of a fluid resource (a tank's contents through the fluid capability); missing or invalid reads as the default purity.
+     */
+    public static int getPurity(FluidResource fluid)
+    {
+        return sanitizePurity(fluid.get(ThirstComponent.PURITY));
+    }
+
+    public static boolean hasPurity(FluidResource fluid)
+    {
+        return fluid.get(ThirstComponent.PURITY) != null;
+    }
+
+    /** Water with each purity as a transfer resource, made on first use (resources need the registries). */
+    private static final FluidResource[] WATER_RESOURCES = new FluidResource[MAX_PURITY + 1];
+
+    /**
+     * Water of {@code purity} as a transfer resource; one shared, immutable instance per level, so fluid handlers that
+     * report water with a purity allocate nothing. Plain water with purity off.
+     */
+    public static FluidResource waterResource(int purity)
+    {
+        if (!enabled())
+            return FluidResource.of(Fluids.WATER);
+        int level = sanitizePurity(purity);
+        FluidResource resource = WATER_RESOURCES[level];
+        if (resource == null)
+            WATER_RESOURCES[level] = resource = FluidResource.of(Fluids.WATER).with(ThirstComponent.PURITY, level);
+        return resource;
+    }
+
+    /**
+     * {@code resource} with {@code purity}: the shared instance for water, a new resource for other fluids.
+     */
+    public static FluidResource withPurity(FluidResource resource, int purity)
+    {
+        if (resource.is(FluidTags.WATER) && resource.isComponentsPatchEmpty())
+            return waterResource(purity);
+        return enabled() ? resource.with(ThirstComponent.PURITY, sanitizePurity(purity)) : resource;
     }
 
     public static int sanitizePurity(@Nullable Integer purity)
@@ -592,7 +635,7 @@ public class WaterPurity
         if (!PurityConfig.isValidEffect(entry))
             return null;
         String[] parts = entry.split(",");
-        Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(parts[0].trim())).orElse(null);
+        Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.get(Identifier.parse(parts[0].trim())).orElse(null);
         if (effect == null)
             return null;
         return new PurityEffect(effect, Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim()),

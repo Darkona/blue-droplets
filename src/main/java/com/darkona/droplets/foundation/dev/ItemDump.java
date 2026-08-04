@@ -3,14 +3,18 @@ package com.darkona.droplets.foundation.dev;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.ThirstHelper;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.IOException;
@@ -24,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * {@code /blue_droplets dev dump_items <namespace>...}, development only: one CSV row per item of those namespaces
@@ -66,7 +71,7 @@ public final class ItemDump
         BuiltInRegistries.ITEM.keySet().stream()
                 .filter(id -> wanted.contains(id.getNamespace()))
                 .sorted()
-                .forEach(id -> lines.add(row(id, BuiltInRegistries.ITEM.get(id))));
+                .forEach(id -> lines.add(row(id, BuiltInRegistries.ITEM.getValue(id))));
         return lines;
     }
 
@@ -76,23 +81,24 @@ public final class ItemDump
     private static Set<String> consumableNamespaces()
     {
         Set<String> namespaces = new HashSet<>();
-        for (ResourceLocation id : BuiltInRegistries.ITEM.keySet())
+        for (Identifier id : BuiltInRegistries.ITEM.keySet())
         {
-            ItemStack stack = BuiltInRegistries.ITEM.get(id).getDefaultInstance();
-            if (stack.getFoodProperties(null) != null || stack.getUseAnimation() == UseAnim.DRINK || WaterPurity.isWaterFilledContainer(stack) || ThirstHelper.valuesOf(stack) != null)
+            ItemStack stack = BuiltInRegistries.ITEM.getValue(id).getDefaultInstance();
+            if (stack.has(DataComponents.FOOD) || stack.getUseAnimation() == ItemUseAnimation.DRINK || WaterPurity.isWaterFilledContainer(stack) || ThirstHelper.valuesOf(stack) != null)
                 namespaces.add(id.getNamespace());
         }
         return namespaces;
     }
 
-    private static String row(ResourceLocation id, Item item)
+    private static String row(Identifier id, Item item)
     {
         ItemStack stack = item.getDefaultInstance();
-        FoodProperties food = stack.getFoodProperties(null);
+        FoodProperties food = stack.get(DataComponents.FOOD);
+        Consumable consumable = stack.get(DataComponents.CONSUMABLE);
         ThirstValues values = ThirstHelper.valuesOf(stack);
-        boolean drink = stack.getUseAnimation() == UseAnim.DRINK || WaterPurity.isWaterFilledContainer(stack);
-        String effects = food == null ? "" : food.effects().stream().map(ItemDump::effect).collect(Collectors.joining(";"));
-        String tags = stack.getTags().map(TagKey::location).map(ResourceLocation::toString).sorted().collect(Collectors.joining(";"));
+        boolean drink = stack.getUseAnimation() == ItemUseAnimation.DRINK || WaterPurity.isWaterFilledContainer(stack);
+        String effects = food == null || consumable == null ? "" : consumable.onConsumeEffects().stream().flatMap(ItemDump::effects).collect(Collectors.joining(";"));
+        String tags = stack.tags().map(TagKey::location).map(Identifier::toString).sorted().collect(Collectors.joining(";"));
         return String.join(",",
                 id.toString(),
                 id.getNamespace(),
@@ -106,11 +112,18 @@ public final class ItemDump
                 quote(tags));
     }
 
-    private static String effect(FoodProperties.PossibleEffect possible)
+    /** Effects of eating: in 26.1 they are the food's consume effects that apply status effects. */
+    private static Stream<String> effects(ConsumeEffect consumeEffect)
     {
-        MobEffectInstance effect = possible.effect();
-        String id = effect.getEffect().unwrapKey().map(key -> key.location().toString()).orElse("?");
-        return id + "," + effect.getDuration() + "," + effect.getAmplifier() + "," + String.format(Locale.ROOT, "%.2f", possible.probability());
+        if (!(consumeEffect instanceof ApplyStatusEffectsConsumeEffect apply))
+            return Stream.empty();
+        return apply.effects().stream().map(effect -> effect(effect, apply.probability()));
+    }
+
+    private static String effect(MobEffectInstance effect, float probability)
+    {
+        String id = effect.getEffect().unwrapKey().map(key -> key.identifier().toString()).orElse("?");
+        return id + "," + effect.getDuration() + "," + effect.getAmplifier() + "," + String.format(Locale.ROOT, "%.2f", probability);
     }
 
     private static String quote(String field)

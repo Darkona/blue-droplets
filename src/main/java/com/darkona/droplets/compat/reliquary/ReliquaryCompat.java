@@ -1,7 +1,7 @@
 package com.darkona.droplets.compat.reliquary;
 
 import com.darkona.droplets.foundation.config.CompatConfig;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 public final class ReliquaryCompat
 {
     public static final boolean LOADED = ModList.get().isLoaded("reliquary");
-    public static final ResourceLocation EMPEROR_CHALICE = ResourceLocation.fromNamespaceAndPath("reliquary", "emperor_chalice");
+    public static final Identifier EMPEROR_CHALICE = Identifier.fromNamespaceAndPath("reliquary", "emperor_chalice");
 
     private ReliquaryCompat() {}
 
@@ -33,6 +33,6 @@ public final class ReliquaryCompat
         int cooldown = CompatConfig.RELIQUARY_EMPEROR_CHALICE_COOLDOWN.get();
         ItemStack item = event.getItem();
         if (cooldown > 0 && event.getEntity() instanceof ServerPlayer player && BuiltInRegistries.ITEM.getKey(item.getItem()).equals(EMPEROR_CHALICE))
-            player.getCooldowns().addCooldown(item.getItem(), cooldown);
+            player.getCooldowns().addCooldown(item, cooldown);
     }
 }

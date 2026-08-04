@@ -5,15 +5,15 @@ import com.darkona.droplets.content.purity.WaterPurity;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -47,22 +47,24 @@ public class JadePlugin implements IWailaPlugin
     {
         INSTANCE;
 
-        private static final ResourceLocation UID = BlueDroplets.asResource("purity");
+        private static final Identifier UID = BlueDroplets.asResource("purity");
         private static final String KEY = UID.toString();
 
         @Override
         public void appendServerData(CompoundTag data, BlockAccessor accessor)
         {
-            IFluidHandler handler = Capabilities.FluidHandler.BLOCK.getCapability(accessor.getLevel(), accessor.getPosition(),
+            if (!WaterPurity.enabled())
+                return;
+            ResourceHandler<FluidResource> handler = accessor.getLevel().getCapability(Capabilities.Fluid.BLOCK, accessor.getPosition(),
                     accessor.getBlockState(), accessor.getBlockEntity(), null);
-            if (handler == null || !WaterPurity.enabled())
+            if (handler == null)
                 return;
 
             IntArrayList purities = new IntArrayList();
-            for (int tank = 0; tank < handler.getTanks(); tank++)
+            for (int tank = 0; tank < handler.size(); tank++)
             {
-                FluidStack fluid = handler.getFluidInTank(tank);
-                if (!fluid.isEmpty() && (WaterPurity.hasPurity(fluid) || fluid.is(FluidTags.WATER)))
+                FluidResource fluid = handler.getResource(tank);
+                if (!fluid.isEmpty() && handler.getAmountAsLong(tank) > 0 && (WaterPurity.hasPurity(fluid) || fluid.is(FluidTags.WATER)))
                     purities.add(WaterPurity.getPurity(fluid));
             }
             if (!purities.isEmpty())
@@ -78,8 +80,10 @@ public class JadePlugin implements IWailaPlugin
             if (state.is(Blocks.WATER_CAULDRON))
                 add(tooltip, WaterPurity.cauldronPurity(accessor.getLevel(), accessor.getPosition()));
             else
-                for (int purity : accessor.getServerData().getIntArray(KEY))
-                    add(tooltip, WaterPurity.sanitizePurity(purity));
+                accessor.getServerData().getIntArray(KEY).ifPresent(purities -> {
+                    for (int purity : purities)
+                        add(tooltip, WaterPurity.sanitizePurity(purity));
+                });
         }
 
         private static void add(ITooltip tooltip, int purity)
@@ -88,7 +92,7 @@ public class JadePlugin implements IWailaPlugin
         }
 
         @Override
-        public ResourceLocation getUid()
+        public Identifier getUid()
         {
             return UID;
         }

@@ -6,51 +6,52 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.wrappers.CauldronWrapper;
-import org.spongepowered.asm.mixin.Final;
+import net.neoforged.neoforge.transfer.fluid.CauldronWrapper;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
  * Water in a cauldron seen through the fluid capability (pumps and pipes of other mods) carries the cauldron purity,
- * as buckets and bottles do: in the tank contents and in what is drained, simulated or not. A drain request for water
- * of exactly that purity is accepted too; NeoForge only accepts stacks without components.
+ * as buckets and bottles do: the resource it reports is water of that purity, and extracting that resource is
+ * accepted; NeoForge only accepts resources without components. The wrapper keeps its level and position in a
+ * private record, so they are kept here as well when {@code get} hands the wrapper out.
  */
 @Mixin(value = CauldronWrapper.class, remap = false)
 public abstract class MixinCauldronWrapper
 {
-    @Shadow @Final private Level level;
-    @Shadow @Final private BlockPos pos;
+    @Unique
+    private Level blue_droplets$level;
+    @Unique
+    private BlockPos blue_droplets$pos;
 
-    @ModifyReturnValue(method = "getFluidInTank", at = @At("RETURN"))
-    private FluidStack blue_droplets$tankPurity(FluidStack fluid)
+    @ModifyReturnValue(method = "get", at = @At("RETURN"))
+    private static CauldronWrapper blue_droplets$remember(CauldronWrapper wrapper, @Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos pos)
     {
-        return withPurity(fluid);
+        MixinCauldronWrapper self = (MixinCauldronWrapper) (Object) wrapper;
+        if (self.blue_droplets$pos == null)
+        {
+            self.blue_droplets$level = level;
+            self.blue_droplets$pos = pos.immutable();
+        }
+        return wrapper;
     }
 
-    @ModifyReturnValue(method = "drain(Lnet/minecraft/world/level/block/state/BlockState;ILnet/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction;)Lnet/neoforged/neoforge/fluids/FluidStack;", at = @At("RETURN"))
-    private FluidStack blue_droplets$drainPurity(FluidStack drained)
+    @ModifyReturnValue(method = "getResource", at = @At("RETURN"))
+    private FluidResource blue_droplets$tankPurity(FluidResource resource)
     {
-        return withPurity(drained);
+        if (blue_droplets$pos == null || resource.isEmpty() || !resource.is(FluidTags.WATER) || !WaterPurity.enabled())
+            return resource;
+        return WaterPurity.withPurity(resource, WaterPurity.cauldronPurity(blue_droplets$level, blue_droplets$pos));
     }
 
-    @WrapOperation(method = "drain(Lnet/neoforged/neoforge/fluids/FluidStack;Lnet/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction;)Lnet/neoforged/neoforge/fluids/FluidStack;",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/core/component/PatchedDataComponentMap;isEmpty()Z"))
-    private boolean blue_droplets$acceptOwnPurity(PatchedDataComponentMap components, Operation<Boolean> original, @Local(argsOnly = true) FluidStack resource)
+    @WrapOperation(method = "extract", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/transfer/fluid/FluidResource;isComponentsPatchEmpty()Z"))
+    private boolean blue_droplets$acceptOwnPurity(FluidResource resource, Operation<Boolean> original)
     {
-        return original.call(components) || components.size() == 1 && WaterPurity.hasPurity(resource) && resource.is(FluidTags.WATER)
-                && WaterPurity.getPurity(resource) == WaterPurity.cauldronPurity(level, pos);
-    }
-
-    private FluidStack withPurity(FluidStack fluid)
-    {
-        if (!fluid.isEmpty() && fluid.is(FluidTags.WATER))
-            WaterPurity.addPurity(fluid, WaterPurity.cauldronPurity(level, pos));
-        return fluid;
+        return original.call(resource) || blue_droplets$pos != null && resource.is(FluidTags.WATER)
+                && resource.equals(WaterPurity.waterResource(WaterPurity.cauldronPurity(blue_droplets$level, blue_droplets$pos)));
     }
 }

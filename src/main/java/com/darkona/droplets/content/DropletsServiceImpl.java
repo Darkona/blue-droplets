@@ -15,7 +15,7 @@ import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +39,7 @@ public final class DropletsServiceImpl implements DropletsService
 
     private static @Nullable PlayerThirst server(Player player)
     {
-        if (!player.level().isClientSide)
+        if (!player.level().isClientSide())
             return player.getData(ModAttachment.PLAYER_THIRST);
         if (!warnedClientChange)
         {
@@ -157,7 +157,7 @@ public final class DropletsServiceImpl implements DropletsService
     }
 
     @Override
-    public void registerExhaustionModifier(ResourceLocation id, ExhaustionModifier modifier)
+    public void registerExhaustionModifier(Identifier id, ExhaustionModifier modifier)
     {
         ExhaustionFactors.register(id, modifier);
     }
@@ -169,7 +169,7 @@ public final class DropletsServiceImpl implements DropletsService
     }
 
     @Override
-    public void registerBarStyle(ResourceLocation id, Predicate<Player> active, int rgb, int priority)
+    public void registerBarStyle(Identifier id, Predicate<Player> active, int rgb, int priority)
     {
         int color = rgb & 0xFFFFFF;
         ThirstBarStyles.register(id, active, () -> color, priority);

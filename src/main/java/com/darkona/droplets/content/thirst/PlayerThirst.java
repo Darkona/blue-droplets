@@ -11,7 +11,6 @@ import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.GameplayConfig;
-import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.registry.AttributeInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.foundation.common.capability.IThirst;
@@ -19,8 +18,7 @@ import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import com.darkona.droplets.foundation.common.damagesource.ModDamageSource;
 import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -30,17 +28,18 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.darkona.droplets.foundation.mixin.FoodDataAccessor;
 
 import static com.darkona.droplets.core.ThirstConstants.*;
 
-public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<CompoundTag>
+public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
 {
     public static final int SYNC_ENABLED = 1;
     public static final int SYNC_SPRINT_BLOCKED = 2;
@@ -201,10 +200,9 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         ThirstValues values = ThirstHelper.drinkValuesOf(item);
         if (values == null)
             return;
-        boolean hydrates = ThirstHelper.playerRestoresThirst(item, player);
-        int thirst = hydrates ? values.thirst() : 0;
-        int quenched = hydrates ? values.quenched() : 0;
-        if (item.getUseAnimation() == UseAnim.DRINK || WaterPurity.isWaterFilledContainer(item))
+        int thirst = values.thirst();
+        int quenched = values.quenched();
+        if (item.getUseAnimation() == ItemUseAnimation.DRINK || WaterPurity.isWaterFilledContainer(item))
             drink(player, item, thirst, quenched, WaterPurity.drinkPurity(item));
         else
             eat(player, item, thirst, quenched);
@@ -227,7 +225,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
      */
     public static boolean eat(Player player, ItemStack item, int thirst, int quenched)
     {
-        if (player.level().isClientSide)
+        if (player.level().isClientSide())
             return false;
         EatEvent.Pre pre = NeoForge.EVENT_BUS.post(new EatEvent.Pre(player, item, thirst, quenched));
         if (pre.isCanceled())
@@ -246,7 +244,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
      */
     public static boolean drink(Player player, ItemStack item, int thirst, int quenched, int purity)
     {
-        if (player.level().isClientSide)
+        if (player.level().isClientSide())
             return false;
         if (!WaterPurity.enabled())
             purity = DropletsAPI.NO_PURITY;
@@ -301,7 +299,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             return;
         player.addEffect(new MobEffectInstance(EffectInit.OVERHYDRATED, event.getDuration(), event.getAmplifier()));
         if (GameplayConfig.OVERHYDRATION_NAUSEA.get())
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, OVERHYDRATION_NAUSEA_TICKS));
+            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, OVERHYDRATION_NAUSEA_TICKS));
     }
 
     public void drink(int thirst, int quenched)
@@ -330,9 +328,6 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         if(stoppedByEffect)
             return;
 
-        if(VampirismCompat.isVampire(player))
-            return;
-
         if(interval)
         {
             modifierDirty = true;
@@ -345,7 +340,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         Difficulty difficulty = player.level().getDifficulty();
         boolean paused = pausedByEffect;
 
-        if(GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get() && player.hasEffect(MobEffects.CONFUSION))
+        if(GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get() && player.hasEffect(MobEffects.NAUSEA))
             exhaustion += GameplayConfig.NAUSEA_PER_TICK.get().floatValue() * exhaustionModifier(player);
 
         float activity;
@@ -408,8 +403,8 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
                 if (health > minHealth(difficulty) && (GameplayConfig.DAMAGE_CAN_KILL.get() || health > damage))
                 {
                     DehydrationDamageEvent event = NeoForge.EVENT_BUS.post(new DehydrationDamageEvent(player, damage));
-                    if (!event.isCanceled() && event.getAmount() > 0)
-                        player.hurt(ModDamageSource.getDamageSource(player.level(),ModDamageSource.DIE_OF_THIRST_KEY), event.getAmount());
+                    if (!event.isCanceled() && event.getAmount() > 0 && player.level() instanceof ServerLevel level)
+                        player.hurtServer(level, ModDamageSource.getDamageSource(level, ModDamageSource.DIE_OF_THIRST_KEY), event.getAmount());
                 }
 
                 damageTimer = 0;
@@ -455,7 +450,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
      */
     private float mirroredFoodExhaustion(Player player)
     {
-        float hungerExhaustion = player.getFoodData().getExhaustionLevel();
+        float hungerExhaustion = ((FoodDataAccessor) player.getFoodData()).blue_droplets$exhaustionLevel();
         float normalizedHungerExhaustion = hungerExhaustion < this.prevTickExhaustion ? (exhaustionRecalculate ? hungerExhaustion + 4.0F : hungerExhaustion) : hungerExhaustion;
         exhaustionRecalculate = false;
         float deltaExhaustion = normalizedHungerExhaustion - this.prevTickExhaustion;
@@ -650,22 +645,20 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
 
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putInt("thirst", thirst);
-        nbt.putInt("quenched", quenched);
-        nbt.putFloat("exhaustion", exhaustion);
-        nbt.putBoolean("enable",shouldTickThirst);
-        nbt.putFloat("overflow", overflow);
-        return nbt;
+    public void serialize(ValueOutput output) {
+        output.putInt("thirst", thirst);
+        output.putInt("quenched", quenched);
+        output.putFloat("exhaustion", exhaustion);
+        output.putBoolean("enable", shouldTickThirst);
+        output.putFloat("overflow", overflow);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
-        setThirst(nbt.getInt("thirst"));
-        setQuenched(nbt.getInt("quenched"));
-        exhaustion = nbt.getFloat("exhaustion");
-        shouldTickThirst = !nbt.contains("enable") || nbt.getBoolean("enable");
-        overflow = nbt.getFloat("overflow");
+    public void deserialize(ValueInput input) {
+        setThirst(input.getIntOr("thirst", 0));
+        setQuenched(input.getIntOr("quenched", 0));
+        exhaustion = input.getFloatOr("exhaustion", 0.0F);
+        shouldTickThirst = input.getBooleanOr("enable", true);
+        overflow = input.getFloatOr("overflow", 0.0F);
     }
 }

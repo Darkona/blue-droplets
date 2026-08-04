@@ -5,18 +5,15 @@
     }
   ],
   "type": "minecraft:smoking",
-  "ingredient": [
-    {
-      "type": "neoforge:components",
-      "items": "blue_droplets:terracotta_water_bowl",
-      "components": {
-        "blue_droplets:purity": 0
-      }
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "items": "blue_droplets:terracotta_water_bowl",
+    "components": {
+      "blue_droplets:purity": 0
     }
-  ],
+  },
   "result": {
     "id": "blue_droplets:terracotta_water_bowl",
-    "count": 1,
     "components": {
       "blue_droplets:purity": 2
     }

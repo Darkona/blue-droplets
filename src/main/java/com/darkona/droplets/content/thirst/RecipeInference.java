@@ -4,10 +4,15 @@ import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.context.ContextMap;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -32,7 +37,8 @@ import java.util.TreeMap;
  * that make them (E13, off by default). Built once per table rebuild on the server; one memoized depth-first pass over
  * a result → recipes index. An ingredient is worth the average of its items that have values; a recipe is worth the
  * sum of its ingredients times the multiplier of its category, divided by the result count and capped. The best recipe
- * wins. Negative values (salty items) count as 0. Fluids in recipes are not seen (only {@link Recipe#getIngredients()}).
+ * wins. Negative values (salty items) count as 0. Fluids in recipes are not seen (only the ingredients of
+ * {@link Recipe#placementInfo()}); the result is the first one the recipe displays.
  */
 public final class RecipeInference
 {
@@ -52,12 +58,12 @@ public final class RecipeInference
         public static final Result EMPTY = new Result(Map.of(), Map.of(), List.of());
     }
 
-    private record Entry(ResourceLocation id, ResourceLocation type, double multiplier, int count, List<Ingredient> ingredients) {}
+    private record Entry(Identifier id, Identifier type, double multiplier, int count, List<Ingredient> ingredients) {}
 
     private final Inputs inputs;
     private final Set<String> namespaces = new HashSet<>();
     private final Map<Item, List<Entry>> byResult = new HashMap<>();
-    private final Map<ResourceLocation, Integer> unreadable = new TreeMap<>();
+    private final Map<Identifier, Integer> unreadable = new TreeMap<>();
     private final List<String> problems = new ArrayList<>();
     private final Map<Item, int[]> memo = new HashMap<>();
     private final Set<Item> visiting = new HashSet<>();
@@ -76,27 +82,28 @@ public final class RecipeInference
         Set<String> ignoredTypes = new HashSet<>();
         for (String id : ItemsConfig.INFERENCE_IGNORED_RECIPE_TYPES.get())
         {
-            ResourceLocation type = ResourceLocation.tryParse(id);
+            Identifier type = Identifier.tryParse(id);
             if (type != null && !BuiltInRegistries.RECIPE_TYPE.containsKey(type) && ModList.get().isLoaded(type.getNamespace()))
                 problems.add("items.toml inference.ignoredRecipeTypes: unknown recipe type " + id);
             ignoredTypes.add(type == null ? id : type.toString());
         }
 
+        ContextMap display = new ContextMap.Builder().withParameter(SlotDisplayContext.REGISTRIES, registries).create(SlotDisplayContext.CONTEXT);
         List<RecipeHolder<?>> holders = new ArrayList<>(recipeManager.getRecipes());
-        holders.sort(Comparator.comparing(RecipeHolder::id));
+        holders.sort(Comparator.comparing(holder -> holder.id().identifier()));
         for (RecipeHolder<?> holder : holders)
         {
             Recipe<?> recipe = holder.value();
-            ResourceLocation type = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType());
+            Identifier type = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType());
             if (type == null || ignoredTypes.contains(type.toString()) || recipe.isSpecial())
                 continue;
             try
             {
-                ItemStack result = recipe.getResultItem(registries);
+                ItemStack result = result(recipe, display);
                 if (result.isEmpty())
                     continue;
                 byResult.computeIfAbsent(result.getItem(), item -> new ArrayList<>())
-                        .add(new Entry(holder.id(), type, multiplier(recipe.getType()), result.getCount(), recipe.getIngredients()));
+                        .add(new Entry(holder.id().identifier(), type, multiplier(recipe.getType()), result.getCount(), recipe.placementInfo().ingredients()));
                 recipes++;
             }
             catch (RuntimeException e)
@@ -148,7 +155,7 @@ public final class RecipeInference
         {
             lines.add(name + ", thirst/quenched per recipe (an ingredient is the average of its items that have values):");
             int[] best = NONE;
-            ResourceLocation bestId = null;
+            Identifier bestId = null;
             inference.visiting.add(item);
             for (Entry entry : entries)
             {
@@ -217,13 +224,13 @@ public final class RecipeInference
         {
             if (ingredient.isEmpty())
                 continue;
-            ItemStack[] stacks = ingredient.getItems();
+            List<Holder<Item>> items = ingredient.items().toList();
             double sumThirst = 0;
             double sumQuenched = 0;
             int counted = 0;
-            for (ItemStack stack : stacks)
+            for (Holder<Item> item : items)
             {
-                int[] values = value(stack.getItem(), depth + 1);
+                int[] values = value(item.value(), depth + 1);
                 if (values[0] > 0 || values[1] > 0)
                 {
                     sumThirst += Math.max(values[0], 0);
@@ -237,7 +244,7 @@ public final class RecipeInference
                 quenched += sumQuenched / counted;
             }
             if (trace != null)
-                trace.add("  " + describe(stacks) + ": " + (counted == 0 ? "0/0" : format(sumThirst / counted) + "/" + format(sumQuenched / counted)));
+                trace.add("  " + describe(items) + ": " + (counted == 0 ? "0/0" : format(sumThirst / counted) + "/" + format(sumQuenched / counted)));
         }
         double scale = entry.multiplier() / entry.count();
         return new int[]{Math.min(maxThirst, (int) Math.round(thirst * scale)), Math.min(maxQuenched, (int) Math.round(quenched * scale)), -1};
@@ -262,23 +269,37 @@ public final class RecipeInference
         return ItemsConfig.INFERENCE_OTHER.get();
     }
 
+    /**
+     * The first item result the recipe shows (recipe book displays); empty for recipes that show none, like special ones.
+     */
+    private static ItemStack result(Recipe<?> recipe, ContextMap context)
+    {
+        for (RecipeDisplay display : recipe.display())
+        {
+            ItemStack result = display.result().resolveForFirstStack(context);
+            if (!result.isEmpty())
+                return result;
+        }
+        return ItemStack.EMPTY;
+    }
+
     private static boolean isDrink(Item item)
     {
-        return item.getDefaultInstance().getUseAnimation() == UseAnim.DRINK;
+        return item.getDefaultInstance().getUseAnimation() == ItemUseAnimation.DRINK;
     }
 
     private static boolean consumable(Item item)
     {
         ItemStack stack = item.getDefaultInstance();
-        return stack.getUseAnimation() == UseAnim.DRINK || stack.getFoodProperties(null) != null;
+        return stack.getUseAnimation() == ItemUseAnimation.DRINK || stack.has(DataComponents.FOOD);
     }
 
-    private static String describe(ItemStack[] stacks)
+    private static String describe(List<Holder<Item>> items)
     {
-        if (stacks.length == 0)
+        if (items.isEmpty())
             return "(matches nothing)";
-        String first = BuiltInRegistries.ITEM.getKey(stacks[0].getItem()).toString();
-        return stacks.length == 1 ? first : first + " or " + (stacks.length - 1) + " more";
+        String first = BuiltInRegistries.ITEM.getKey(items.get(0).value()).toString();
+        return items.size() == 1 ? first : first + " or " + (items.size() - 1) + " more";
     }
 
     private static String format(double value)

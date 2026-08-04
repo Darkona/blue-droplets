@@ -3,20 +3,21 @@ package com.darkona.droplets.foundation.mixin;
 import com.darkona.droplets.content.purity.PurityTint;
 import com.darkona.droplets.foundation.config.ClientConfig;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.color.item.Potion;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ItemColors.class)
-public class MixinItemColors{
-
+@Mixin(Potion.class)
+public class MixinPotionTint
+{
     /**
-     * Tints the liquid layer of water containers by purity. Only the result changes, and only for water with a stored
-     * purity, so other potions and the color handlers other mods registered for them stay as they are.
+     * Tints the liquid of water bottles by purity: the potion tint source of vanilla's potion item model. Only the
+     * result changes, and only for water with a stored purity, so other potions keep their colors.
      */
-    @ModifyReturnValue(method = "getColor", at = @At("RETURN"))
-    private int tintWaterByPurity(int original, ItemStack stack, int tintIndex){
-        return tintIndex == 0 && ClientConfig.TINT_WATER_BY_PURITY.get() ? PurityTint.color(stack, tintIndex, original) : original;
+    @ModifyReturnValue(method = "calculate", at = @At("RETURN"))
+    private int blue_droplets$tintWaterByPurity(int original, ItemStack stack)
+    {
+        return ClientConfig.TINT_WATER_BY_PURITY.get() ? PurityTint.color(stack, 0, original) : original;
     }
 }

@@ -1,6 +1,5 @@
 package com.darkona.droplets.compat.jei;
 
-import com.darkona.droplets.compat.create.CreateCompat;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.registry.ItemInit;
@@ -12,30 +11,22 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A way of purifying water that is not a recipe, for the recipe viewer's purification category: the water cauldron
- * (plain and on a heat source) and, with Create, the Sand Filter. Cooking recipes and Create's own recipes are shown by
- * the viewer in their usual categories. Plain data, no recipe viewer classes, so the server can build it too.
+ * (plain and on a heat source). Cooking recipes are shown by the viewer in their usual categories. Plain data, no recipe viewer classes, so the server can build it too.
  *
- * @param method    {@code cauldron}, {@code heated_cauldron} or {@code sand_filter}: the last part of the text key
+ * @param method    {@code cauldron} or {@code heated_cauldron}: the last part of the text key
  * @param inputs    water containers going in, one per output (the viewer cycles them together)
  * @param outputs   water containers coming out
- * @param fluidIn   water going in, or empty
- * @param fluidOut  water coming out, or empty
  * @param machine   the block doing it
  * @param below     blocks that must be under {@code machine}, or none
  */
-public record PurificationEntry(String method, List<ItemStack> inputs, List<ItemStack> outputs, FluidStack fluidIn, FluidStack fluidOut,
-                                ItemStack machine, List<ItemStack> below)
+public record PurificationEntry(String method, List<ItemStack> inputs, List<ItemStack> outputs, ItemStack machine, List<ItemStack> below)
 {
-    public static final int FLUID_AMOUNT = 1000;
-
     /**
      * Every entry, in display order; none with {@code purity.enabled=false}, so the category is not shown then.
      */
@@ -49,14 +40,6 @@ public record PurificationEntry(String method, List<ItemStack> inputs, List<Item
         List<ItemStack> heat = heatSources();
         if (!heat.isEmpty())
             entries.add(containers("heated_cauldron", WaterPurity.HEATED_CAULDRON_PURITY, cauldron, heat));
-        Item filter = CreateCompat.sandFilter();
-        if (filter != Items.AIR)
-            for (int purity = WaterPurity.MIN_PURITY; purity < WaterPurity.MAX_PURITY; purity++)
-            {
-                int filtered = CreateCompat.sandFilterPurity(purity);
-                if (filtered > purity)
-                    entries.add(new PurificationEntry("sand_filter", List.of(), List.of(), water(purity), water(filtered), new ItemStack(filter), List.of()));
-            }
         return entries;
     }
 
@@ -73,7 +56,7 @@ public record PurificationEntry(String method, List<ItemStack> inputs, List<Item
                 inputs.add(WaterPurity.addPurity(container.copy(), from));
                 outputs.add(WaterPurity.addPurity(container.copy(), purity));
             }
-        return new PurificationEntry(method, inputs, outputs, FluidStack.EMPTY, FluidStack.EMPTY, machine, below);
+        return new PurificationEntry(method, inputs, outputs, machine, below);
     }
 
     /**
@@ -97,10 +80,5 @@ public record PurificationEntry(String method, List<ItemStack> inputs, List<Item
                 items.add(new ItemStack(item));
         }
         return items;
-    }
-
-    private static FluidStack water(int purity)
-    {
-        return WaterPurity.addPurity(new FluidStack(Fluids.WATER, FLUID_AMOUNT), purity);
     }
 }

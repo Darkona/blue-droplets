@@ -1,6 +1,6 @@
 package com.darkona.droplets.compat.appleskin;
 
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import squeek.appleskin.ModConfig;
 
 /**
@@ -27,6 +27,6 @@ final class AppleSkinBridge
 
     static boolean foodTooltip()
     {
-        return ModConfig.SHOW_FOOD_VALUES_IN_TOOLTIP.get() && (ModConfig.ALWAYS_SHOW_FOOD_VALUES_TOOLTIP.get() || Screen.hasShiftDown());
+        return ModConfig.SHOW_FOOD_VALUES_IN_TOOLTIP.get() && (ModConfig.ALWAYS_SHOW_FOOD_VALUES_TOOLTIP.get() || Minecraft.getInstance().hasShiftDown());
     }
 }

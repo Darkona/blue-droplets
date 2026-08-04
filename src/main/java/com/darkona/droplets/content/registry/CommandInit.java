@@ -58,7 +58,7 @@ public class CommandInit {
     public static void RegisterCommand(RegisterCommandsEvent event){
         CommandDispatcher<CommandSourceStack> dispatcher=event.getDispatcher();
         LiteralCommandNode<CommandSourceStack> root = dispatcher.register(Commands.literal(BlueDroplets.ID)
-                .requires(cs->cs.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("query").then(Commands.argument("Player", EntityArgument.player())
                         .executes(context -> {
                                     ServerPlayer player = EntityArgument.getPlayer(context,"Player");
@@ -109,11 +109,11 @@ public class CommandInit {
                                 .executes(context -> configCheck(context.getSource()))))
                 .then(Commands.literal("infer")
                         .then(Commands.argument("item", ItemArgument.item(event.getBuildContext()))
-                                .executes(context -> infer(context.getSource(), ItemArgument.getItem(context, "item").getItem()))))
+                                .executes(context -> infer(context.getSource(), ItemArgument.getItem(context, "item").item().value()))))
         );
-        dispatcher.register(Commands.literal("thirst").requires(cs->cs.hasPermission(2)).redirect(root));
-        if (!FMLEnvironment.production)
-            dispatcher.register(Commands.literal(BlueDroplets.ID).requires(cs->cs.hasPermission(2))
+        dispatcher.register(Commands.literal("thirst").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)).redirect(root));
+        if (!FMLEnvironment.isProduction())
+            dispatcher.register(Commands.literal(BlueDroplets.ID).requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                     .then(Commands.literal("dev")
                             .then(Commands.literal("dump_items")
                                     .then(Commands.argument("namespaces", StringArgumentType.greedyString())
@@ -163,7 +163,7 @@ public class CommandInit {
         DimensionWater dimension = player.level().dimensionTypeRegistration().getData(DropletsDataMaps.DIMENSION_WATER);
         if (dimension != null && dimension.thirstMultiplier().isPresent())
             return "dimension_water thirst_multiplier";
-        if (player.level().dimensionType().ultraWarm())
+        if (ThirstHelper.isUltraWarm(player.level(), player.blockPosition()))
             return "netherMultiplier";
         return GameplayConfig.CLIMATE_FORMULA.get() + " formula";
     }
@@ -192,7 +192,7 @@ public class CommandInit {
             trace.add("not water: " + (level.getBlockState(pos).is(Blocks.WATER_CAULDRON)
                     ? (purity == WaterPurity.HEATED_CAULDRON_PURITY ? "cauldron on a heat source" : "cauldron") : "defaultPurity"));
         }
-        String biome = level.getBiome(pos).unwrapKey().map(key -> key.location().toString()).orElse("?");
+        String biome = level.getBiome(pos).unwrapKey().map(key -> key.identifier().toString()).orElse("?");
         StringBuilder text = new StringBuilder("Purity at ").append(pos.toShortString()).append(" (").append(biome).append("): ")
                 .append(purity).append(" ").append(WaterPurity.getPurityText(purity));
         for (String step : trace)

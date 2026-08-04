@@ -9,7 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,15 +33,15 @@ public class TerracottaBowlItem extends Item
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand)
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand)
     {
         ItemStack bowl = player.getItemInHand(hand);
         BlockHitResult hit = getPlayerPOVHitResult(level, player, SyncedValues.canFillFromFlowingWater() ? ClipContext.Fluid.ANY : ClipContext.Fluid.SOURCE_ONLY);
         if (hit.getType() != HitResult.Type.BLOCK)
-            return InteractionResultHolder.pass(bowl);
+            return InteractionResult.PASS;
         BlockPos pos = hit.getBlockPos();
         if (!level.mayInteract(player, pos) || !level.getFluidState(pos).is(FluidTags.WATER))
-            return InteractionResultHolder.pass(bowl);
+            return InteractionResult.PASS;
 
         level.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
         level.gameEvent(player, GameEvent.FLUID_PICKUP, pos);
@@ -49,6 +49,6 @@ public class TerracottaBowlItem extends Item
         ItemStack water = new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get());
         if (!level.isClientSide() && WaterPurity.enabled())
             WaterPurity.addPurity(water, WaterPurity.takenWaterPurity(level, pos));
-        return InteractionResultHolder.sidedSuccess(ItemUtils.createFilledResult(bowl, player, water), level.isClientSide());
+        return InteractionResult.SUCCESS.heldItemTransformedTo(ItemUtils.createFilledResult(bowl, player, water));
     }
 }

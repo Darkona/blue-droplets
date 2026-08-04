@@ -2,54 +2,49 @@
   "neoforge:conditions": [
     {
       "type": "blue_droplets:purity_enabled"
-    },
-    {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:mod_loaded",
-        "modid": "create"
-      }
     }
   ],
   "type": "minecraft:smelting",
-  "ingredient": [
-    {
-      "type": "neoforge:components",
-      "items": "minecraft:potion",
-      "components": {
-        "blue_droplets:purity": 3,
-        "potion_contents": {
-          "potion": "minecraft:water"
-        }
-      }
-    },
-    {
-      "type": "neoforge:components",
-      "items": "minecraft:potion",
-      "components": {
-        "potion_contents": {
-          "potion": "minecraft:water"
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:compound",
+    "children": [
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "items": "minecraft:potion",
+        "components": {
+          "blue_droplets:purity": 3,
+          "minecraft:potion_contents": {
+            "potion": "minecraft:water"
+          }
         }
       },
-      "strict": true
-    },
-    {
-      "type": "neoforge:components",
-      "items": "minecraft:potion",
-      "components": {
-        "blue_droplets:purity": 4,
-        "potion_contents": {
-          "potion": "minecraft:water"
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "items": "minecraft:potion",
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:water"
+          }
+        },
+        "strict": true
+      },
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "items": "minecraft:potion",
+        "components": {
+          "blue_droplets:purity": 4,
+          "minecraft:potion_contents": {
+            "potion": "minecraft:water"
+          }
         }
       }
-    }
-  ],
+    ]
+  },
   "result": {
     "id": "minecraft:potion",
-    "count": 1,
     "components": {
       "blue_droplets:purity": 5,
-      "potion_contents": {
+      "minecraft:potion_contents": {
         "potion": "minecraft:water"
       }
     }

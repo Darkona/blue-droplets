@@ -4,7 +4,7 @@ import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.core.NumberRows;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.slf4j.Logger;
 
@@ -32,11 +32,10 @@ public final class ConfigCheck
         overlaps("gameplay.toml depletion.climate.altitude", GameplayConfig.ALTITUDE_MULTIPLIERS, problems);
         curve("gameplay.toml depletion.climate.temperatureCurve", GameplayConfig.TEMPERATURE_CURVE, problems);
         curve("gameplay.toml depletion.climate.humidityCurve", GameplayConfig.HUMIDITY_CURVE, problems);
-        curve("compat.toml coldsweat.bodyTemperatureCurve", CompatConfig.COLD_SWEAT_BODY_TEMPERATURE_CURVE, problems);
         for (int purity = 0; purity < PurityConfig.EFFECTS.size(); purity++)
             for (String entry : PurityConfig.EFFECTS.get(purity).get())
             {
-                ResourceLocation id = ResourceLocation.tryParse(entry.split(",")[0].trim());
+                Identifier id = Identifier.tryParse(entry.split(",")[0].trim());
                 if (id != null && !BuiltInRegistries.MOB_EFFECT.containsKey(id))
                     problems.add("purity.toml effects." + PurityConfig.EFFECT_LEVELS[purity] + ": unknown effect " + id + " (skipped)");
             }

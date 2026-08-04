@@ -4,7 +4,7 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.foundation.config.ClientConfig;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -23,15 +23,13 @@ import java.util.function.Predicate;
  */
 public final class ThirstBarStyles
 {
-    public static final int VAMPIRE_PRIORITY = 400;
     public static final int DEHYDRATION_PRIORITY = 300;
     public static final int OVERHYDRATED_PRIORITY = 250;
     public static final int POISON_PRIORITY = 200;
     public static final int QUENCHNESS_PRIORITY = 100;
     public static final int HYDRATED_PRIORITY = 50;
-    public static final IntSupplier VAMPIRE_COLOR = color(ClientConfig.VAMPIRE_COLOR);
 
-    private record Style(ResourceLocation id, Predicate<Player> active, IntSupplier rgb, int priority) {}
+    private record Style(Identifier id, Predicate<Player> active, IntSupplier rgb, int priority) {}
 
     private static final Comparator<Style> ORDER = Comparator.comparingInt(Style::priority).reversed().thenComparing(Style::id);
     private static volatile Style[] styles = {};
@@ -40,7 +38,7 @@ public final class ThirstBarStyles
     private ThirstBarStyles() {}
 
     /** Adds or replaces the style with this id. */
-    public static synchronized void register(ResourceLocation id, Predicate<Player> active, IntSupplier rgb, int priority)
+    public static synchronized void register(Identifier id, Predicate<Player> active, IntSupplier rgb, int priority)
     {
         List<Style> list = new ArrayList<>(List.of(styles));
         list.removeIf(style -> style.id.equals(id));
@@ -78,7 +76,7 @@ public final class ThirstBarStyles
         registerWave(EffectInit.HYDRATED);
         register(BlueDroplets.asResource("dehydration"), player -> player.hasEffect(EffectInit.DEHYDRATION), color(ClientConfig.DEHYDRATION_COLOR), DEHYDRATION_PRIORITY);
         register(BlueDroplets.asResource("overhydrated"), player -> player.hasEffect(EffectInit.OVERHYDRATED), color(ClientConfig.OVERHYDRATED_COLOR), OVERHYDRATED_PRIORITY);
-        register(ResourceLocation.withDefaultNamespace("poison"), player -> player.hasEffect(MobEffects.POISON), color(ClientConfig.POISON_COLOR), POISON_PRIORITY);
+        register(Identifier.withDefaultNamespace("poison"), player -> player.hasEffect(MobEffects.POISON), color(ClientConfig.POISON_COLOR), POISON_PRIORITY);
         register(BlueDroplets.asResource("quenchness"), player -> player.hasEffect(EffectInit.QUENCHNESS), color(ClientConfig.QUENCHNESS_COLOR), QUENCHNESS_PRIORITY);
         register(BlueDroplets.asResource("hydrated"), player -> player.hasEffect(EffectInit.HYDRATED), color(ClientConfig.HYDRATED_COLOR), HYDRATED_PRIORITY);
     }

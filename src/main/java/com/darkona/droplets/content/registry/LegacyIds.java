@@ -5,7 +5,7 @@ import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -26,9 +26,7 @@ public final class LegacyIds
     public static final String LEGACY_NAMESPACE = "thirst";
 
     private static final Map<ResourceKey<? extends Registry<?>>, List<String>> ALIASES = Map.of(
-            Registries.ITEM, List.of("clay_bowl", "terracotta_bowl", "terracotta_water_bowl", "sand_filter"),
-            Registries.BLOCK, List.of("sand_filter"),
-            Registries.BLOCK_ENTITY_TYPE, List.of("sand_filter"),
+            Registries.ITEM, List.of("clay_bowl", "terracotta_bowl", "terracotta_water_bowl"),
             Registries.MOB_EFFECT, List.of("quenchness"),
             NeoForgeRegistries.Keys.ATTACHMENT_TYPES, List.of("player_thirst"),
             NeoForgeRegistries.Keys.CONDITION_CODECS, List.of("loot_config")
@@ -55,13 +53,13 @@ public final class LegacyIds
     private static void addAliases(RegisterEvent event)
     {
         if (event.getRegistryKey().equals(Registries.DATA_COMPONENT_TYPE))
-            event.getRegistry().addAlias(ResourceLocation.fromNamespaceAndPath(LEGACY_NAMESPACE, "purity"), BlueDroplets.asResource("legacy_purity"));
+            event.getRegistry().addAlias(Identifier.fromNamespaceAndPath(LEGACY_NAMESPACE, "purity"), BlueDroplets.asResource("legacy_purity"));
         List<String> paths = ALIASES.get(event.getRegistryKey());
         if (paths == null)
             return;
 
         Registry<?> registry = event.getRegistry();
         for (String path : paths)
-            registry.addAlias(ResourceLocation.fromNamespaceAndPath(LEGACY_NAMESPACE, path), BlueDroplets.asResource(path));
+            registry.addAlias(Identifier.fromNamespaceAndPath(LEGACY_NAMESPACE, path), BlueDroplets.asResource(path));
     }
 }

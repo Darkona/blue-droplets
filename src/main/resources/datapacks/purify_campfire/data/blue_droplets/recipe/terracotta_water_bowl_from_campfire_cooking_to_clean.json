@@ -5,24 +5,26 @@
     }
   ],
   "type": "minecraft:campfire_cooking",
-  "ingredient": [
-    {
-      "type": "neoforge:components",
-      "items": "blue_droplets:terracotta_water_bowl",
-      "components": {
-        "blue_droplets:purity": 3
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:compound",
+    "children": [
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "items": "blue_droplets:terracotta_water_bowl",
+        "components": {
+          "blue_droplets:purity": 3
+        }
+      },
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "items": "blue_droplets:terracotta_water_bowl",
+        "components": {},
+        "strict": true
       }
-    },
-    {
-      "type": "neoforge:components",
-      "items": "blue_droplets:terracotta_water_bowl",
-      "components": {},
-      "strict": true
-    }
-  ],
+    ]
+  },
   "result": {
     "id": "blue_droplets:terracotta_water_bowl",
-    "count": 1,
     "components": {
       "blue_droplets:purity": 4
     }

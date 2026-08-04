@@ -13,7 +13,7 @@ public class ModDamageSource
     public static final ResourceKey<DamageType> DIE_OF_THIRST_KEY = ResourceKey.create(Registries.DAMAGE_TYPE, BlueDroplets.asResource("dehydrate"));
 
     public static DamageSource getDamageSource(Level level, ResourceKey<DamageType> type) {
-        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(type), null, null);
+        return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(type), null, null);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.darkona.droplets.foundation.mixin;
 
-import net.neoforged.fml.loading.LoadingModList;
+import net.neoforged.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -24,7 +24,7 @@ public class CompatMixinPlugin implements IMixinConfigPlugin
     {
         String pkg = mixinClassName.substring(0, mixinClassName.lastIndexOf('.'));
         String modId = pkg.substring(pkg.lastIndexOf('.') + 1);
-        return LoadingModList.get().getModFileById(modId) != null;
+        return FMLLoader.getCurrent().getLoadingModList().getModFileById(modId) != null;
     }
 
     @Override

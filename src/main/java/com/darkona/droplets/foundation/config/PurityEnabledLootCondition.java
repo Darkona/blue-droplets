@@ -1,11 +1,9 @@
 package com.darkona.droplets.foundation.config;
 
 import com.darkona.droplets.content.purity.WaterPurity;
-import com.darkona.droplets.content.registry.ConditionInit;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,8 +22,8 @@ public record PurityEnabledLootCondition() implements LootItemCondition
     }
 
     @Override
-    public @NotNull LootItemConditionType getType()
+    public @NotNull MapCodec<PurityEnabledLootCondition> codec()
     {
-        return ConditionInit.PURITY_ENABLED_LOOT_CONDITION.get();
+        return CODEC;
     }
 }

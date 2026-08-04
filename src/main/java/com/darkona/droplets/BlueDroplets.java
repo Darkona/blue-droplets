@@ -1,14 +1,7 @@
 package com.darkona.droplets;
 
 import com.darkona.droplets.api.DropletsAPI;
-import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.reliquary.ReliquaryCompat;
-import com.darkona.droplets.compat.delight.DelightCompat;
-import com.darkona.droplets.compat.create.CreateRegistry;
-import com.darkona.droplets.compat.create.SandFilterBlockEntity;
-import com.darkona.droplets.compat.create.ponder.ThirstPonderPlugin;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
-import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.DropletsServiceImpl;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
@@ -28,9 +21,8 @@ import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import com.darkona.droplets.foundation.network.ThirstModPacketHandler;
 import com.darkona.droplets.foundation.tab.ThirstTab;
 import com.darkona.droplets.gametest.DropletsGameTests;
-import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
@@ -41,7 +33,6 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
@@ -57,25 +48,21 @@ public class BlueDroplets
     {
         DropletsAPI.setService(DropletsServiceImpl.INSTANCE);
         modBus.addListener(this::commonSetup);
-        modBus.addListener(this::clientSetup);
         modBus.addListener(DropletsDataMaps::register);
+        modBus.addListener(WaterPurity::registerCauldronInteractions);
         modBus.addListener(PlayerThirstManager::onConfigReloaded);
         modBus.addListener(BlueDroplets::addPacks);
         modBus.addListener(ThirstModPacketHandler::register);
-        modBus.addListener(DropletsGameTests::register);
+        DropletsGameTests.register(modBus);
         TravelersBackpackCompat.init(modBus);
-        ColdSweatCompat.init();
         ReliquaryCompat.init();
-        DelightCompat.init();
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 
-        if(FMLEnvironment.dist.isClient())
+        if(FMLEnvironment.getDist().isClient())
         {
             modBus.addListener(ThirstBarRenderer::registerLayer);
             ThirstBarStyles.registerBuiltIns();
-            VampirismCompat.initClient();
-            SupernaturalCompat.initClient();
             modBus.addListener(DrinkTooltip::registerFactory);
             NeoForge.EVENT_BUS.addListener(EventPriority.LOW, DrinkTooltip::gather);
         }
@@ -86,12 +73,6 @@ public class BlueDroplets
         ConditionInit.CONDITION_CODECS.register(modBus);
         ConditionInit.LOOT_CONDITIONS.register(modBus);
         LegacyIds.register(modBus);
-
-        if(ModList.get().isLoaded("create"))
-        {
-            CreateRegistry.register();
-            modBus.addListener(SandFilterBlockEntity::registerCapabilities);
-        }
 
         ThirstTab.register(modBus);
         LegacyConfigMigration.run();
@@ -105,19 +86,6 @@ public class BlueDroplets
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         WaterPurity.init();
-        event.enqueueWork(WaterPurity::registerCauldronInteractions);
-    }
-
-    private void clientSetup(final FMLClientSetupEvent event)
-    {
-        if(ModList.get().isLoaded("create")){
-            event.enqueueWork(()-> new Object()
-            {
-                public void registerPonderPlugin(){
-                    PonderIndex.addPlugin(new ThirstPonderPlugin());
-                }
-            }.registerPonderPlugin());
-        }
     }
 
     /**
@@ -129,8 +97,6 @@ public class BlueDroplets
         addPack(event, "purify_smelting", "Water purification: furnace", PackSource.BUILT_IN);
         addPack(event, "purify_campfire", "Water purification: campfire", PackSource.BUILT_IN);
         addPack(event, "purify_smoking", "Water purification: smoker", PackSource.FEATURE);
-        addPack(event, "purify_cooking_pot", "Water purification: cooking pot", PackSource.BUILT_IN);
-        addPack(event, "clean_water_cooking", "Clean water for cooking recipes", PackSource.BUILT_IN);
         addPack(event, "preset_casual", "casual preset", PackSource.FEATURE);
         addPack(event, "preset_hardcore", "hardcore preset", PackSource.FEATURE);
     }
@@ -140,8 +106,8 @@ public class BlueDroplets
         event.addPackFinders(asResource("datapacks/" + name), PackType.SERVER_DATA, Component.literal("Blue Droplets: " + title), source, false, Pack.Position.TOP);
     }
 
-    public static ResourceLocation asResource(String path)
+    public static Identifier asResource(String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(ID, path);
+        return Identifier.fromNamespaceAndPath(ID, path);
     }
 }

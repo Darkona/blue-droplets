@@ -7,11 +7,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.ClipContext;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
-@OnlyIn(Dist.CLIENT)
+/**
+ * Client only: loaded from the right-click handlers only on the client side.
+ */
 public class DrinkByHandClient
 {
     /**
@@ -25,6 +25,6 @@ public class DrinkByHandClient
             return;
 
         if (player.level().getFluidState(WaterPurity.pickFluid(player, ClipContext.Fluid.ANY).getBlockPos()).is(FluidTags.WATER))
-            PacketDistributor.sendToServer(DrinkByHandMessage.INSTANCE);
+            ClientPacketDistributor.sendToServer(DrinkByHandMessage.INSTANCE);
     }
 }

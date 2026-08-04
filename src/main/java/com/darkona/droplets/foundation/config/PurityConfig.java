@@ -1,7 +1,7 @@
 package com.darkona.droplets.foundation.config;
 
 import com.darkona.droplets.api.PurityLevel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Arrays;
@@ -37,8 +37,6 @@ public final class PurityConfig
     public static final ModConfigSpec.IntValue HOT_DIRTY_WATER_DURATION;
     public static final ModConfigSpec.IntValue HOT_DIRTY_WATER_AMPLIFIER;
     public static final ModConfigSpec.DoubleValue HOT_DIRTY_WATER_MIN_BIOME_TEMPERATURE;
-    public static final ModConfigSpec.BooleanValue HOT_DIRTY_WATER_COLD_SWEAT;
-    public static final ModConfigSpec.DoubleValue HOT_DIRTY_WATER_COLD_SWEAT_MIN_BODY_TEMP;
 
     public static final ModConfigSpec SPEC;
 
@@ -89,17 +87,13 @@ public final class PurityConfig
         BUILDER.pop();
 
         BUILDER.comment("Drinking water of low purity in a hot climate also gives Dehydration (added to the effects above, so PurityEffectEvent sees it).",
-                "Hot: an ultra-warm dimension (Nether), a biome temperature at or above minBiomeTemperature (desert, savanna, badlands: 2.0; jungle: 0.95),",
-                "or, with Cold Sweat, a body temperature above coldSweatMinBodyTemp")
+                "Hot: an ultra-warm dimension (Nether) or a biome temperature at or above minBiomeTemperature (desert, savanna, badlands: 2.0; jungle: 0.95)")
                 .push("hotDirtyWater");
         HOT_DIRTY_WATER = BUILDER.define("enabled", true);
         HOT_DIRTY_WATER_MAX_PURITY = BUILDER.comment("Highest purity that counts (" + LEVELS + ")").defineInRange("maxPurity", PurityLevel.MURKY.level(), PurityLevel.MIN, PurityLevel.MAX);
         HOT_DIRTY_WATER_DURATION = BUILDER.comment("Duration of the Dehydration effect, in ticks").defineInRange("durationTicks", 600, 1, 1_000_000);
         HOT_DIRTY_WATER_AMPLIFIER = BUILDER.comment("Amplifier of the Dehydration effect (0 is level I)").defineInRange("amplifier", 0, 0, 255);
         HOT_DIRTY_WATER_MIN_BIOME_TEMPERATURE = BUILDER.comment("Biome base temperature from which the climate is hot").defineInRange("minBiomeTemperature", 1.0, -2.0, 5.0);
-        HOT_DIRTY_WATER_COLD_SWEAT = BUILDER.comment("Whether Cold Sweat's body temperature also counts as hot (when Cold Sweat is installed)").define("useColdSweat", true);
-        HOT_DIRTY_WATER_COLD_SWEAT_MIN_BODY_TEMP = BUILDER.comment("Cold Sweat body temperature (its own units: 0 neutral, 100 burning, -100 freezing) above which the player counts as hot")
-                .defineInRange("coldSweatMinBodyTemp", 50.0, -150.0, 150.0);
         BUILDER.pop();
 
         SPEC = BUILDER.build();
@@ -121,7 +115,7 @@ public final class PurityConfig
         if (!(entry instanceof String effect))
             return false;
         String[] parts = effect.split(",");
-        if (parts.length < 4 || parts.length > 5 || ResourceLocation.tryParse(parts[0].trim()) == null)
+        if (parts.length < 4 || parts.length > 5 || Identifier.tryParse(parts[0].trim()) == null)
             return false;
         if (parts.length == 5 && !parts[4].trim().equals("true") && !parts[4].trim().equals("false"))
             return false;

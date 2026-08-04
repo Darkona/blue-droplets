@@ -5,24 +5,21 @@
     }
   ],
   "type": "minecraft:smoking",
-  "ingredient": [
-    {
-      "type": "neoforge:components",
-      "items": "minecraft:potion",
-      "components": {
-        "blue_droplets:purity": 1,
-        "potion_contents": {
-          "potion": "minecraft:water"
-        }
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "items": "minecraft:potion",
+    "components": {
+      "blue_droplets:purity": 1,
+      "minecraft:potion_contents": {
+        "potion": "minecraft:water"
       }
     }
-  ],
+  },
   "result": {
     "id": "minecraft:potion",
-    "count": 1,
     "components": {
       "blue_droplets:purity": 3,
-      "potion_contents": {
+      "minecraft:potion_contents": {
         "potion": "minecraft:water"
       }
     }

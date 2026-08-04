@@ -5,7 +5,7 @@ import com.darkona.droplets.content.purity.WaterPurity;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -31,8 +31,8 @@ public abstract class MixinBucketItem
         return filled;
     }
 
-    @ModifyReturnValue(method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z", at = @At("RETURN"))
-    private boolean blue_droplets$registerPouredWater(boolean placed, @Nullable Player player, Level level, BlockPos pos, @Nullable BlockHitResult result, @Nullable ItemStack container)
+    @ModifyReturnValue(method = "emptyContents(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z", at = @At("RETURN"))
+    private boolean blue_droplets$registerPouredWater(boolean placed, @Nullable LivingEntity user, Level level, BlockPos pos, @Nullable BlockHitResult result, @Nullable ItemStack container)
     {
         if (placed && !level.isClientSide())
             PouredWater.poured(level, pos, container != null && WaterPurity.isWaterFilledContainer(container) ? WaterPurity.getPurity(container) : WaterPurity.defaultPurity());

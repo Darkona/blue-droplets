@@ -2,7 +2,6 @@ package com.darkona.droplets.foundation.network.message;
 
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.core.ThirstConstants;
@@ -41,14 +40,14 @@ public record DrinkByHandMessage() implements CustomPacketPayload
                 return;
 
             PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
-            int tick = player.server.getTickCount();
-            if (thirst.getThirst() >= ThirstConstants.MAX_THIRST || !thirst.canDrinkByHand(tick) || SupernaturalCompat.isVampire(player))
+            int tick = player.level().getServer().getTickCount();
+            if (thirst.getThirst() >= ThirstConstants.MAX_THIRST || !thirst.canDrinkByHand(tick))
                 return;
 
             if (!player.getMainHandItem().isEmpty() || GameplayConfig.HAND_DRINKING_BOTH_HANDS.get() && !player.getOffhandItem().isEmpty())
                 return;
 
-            ServerLevel level = player.serverLevel();
+            ServerLevel level = player.level();
             BlockHitResult hit = WaterPurity.pickFluid(player, ClipContext.Fluid.ANY);
             BlockPos pos = hit.getBlockPos();
             if (hit.getType() != HitResult.Type.BLOCK || !level.getFluidState(pos).is(FluidTags.WATER) || !level.mayInteract(player, pos))

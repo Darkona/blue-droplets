@@ -25,7 +25,7 @@ final class SereneSeasonsBridge
      */
     static float temperature(Level level, Holder<Biome> biome, BlockPos pos)
     {
-        return SeasonHooks.getBiomeTemperature(level, biome, pos);
+        return SeasonHooks.getBiomeTemperature(level, biome, pos, level.getSeaLevel());
     }
 
     /** No seasons here. */

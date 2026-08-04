@@ -1,15 +1,13 @@
 package com.darkona.droplets.compat.jei;
 
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.compat.create.CreateCompat;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
@@ -23,14 +21,14 @@ import java.util.List;
 @JeiPlugin
 public final class DropletsJeiPlugin implements IModPlugin
 {
-    static final RecipeType<PurificationEntry> PURIFICATION = RecipeType.create(BlueDroplets.ID, "purification", PurificationEntry.class);
-    static final RecipeType<HydrationEntry> HYDRATION = RecipeType.create(BlueDroplets.ID, "hydration", HydrationEntry.class);
+    static final IRecipeType<PurificationEntry> PURIFICATION = IRecipeType.create(BlueDroplets.ID, "purification", PurificationEntry.class);
+    static final IRecipeType<HydrationEntry> HYDRATION = IRecipeType.create(BlueDroplets.ID, "hydration", HydrationEntry.class);
 
     /** Purification entries of this start; empty with purity off, and then the category is not registered. */
     private List<PurificationEntry> purification = List.of();
 
     @Override
-    public ResourceLocation getPluginUid()
+    public Identifier getPluginUid()
     {
         return BlueDroplets.asResource("jei");
     }
@@ -57,9 +55,6 @@ public final class DropletsJeiPlugin implements IModPlugin
     {
         if (purification.isEmpty())
             return;
-        registration.addRecipeCatalyst(Items.CAULDRON, PURIFICATION);
-        Item filter = CreateCompat.sandFilter();
-        if (filter != Items.AIR)
-            registration.addRecipeCatalyst(filter, PURIFICATION);
+        registration.addCraftingStation(PURIFICATION, Items.CAULDRON);
     }
 }
