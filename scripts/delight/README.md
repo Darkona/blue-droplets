@@ -8,7 +8,7 @@ Scripts en Python 3 estándar. Se corren desde cualquier carpeta; los CSV de `da
 - `python3 scripts/delight/classify.py` pone una categoría a cada ítem de `data/items_raw.csv` con las reglas ordenadas de `rules/categories.toml` (primera que coincide gana: tags, efectos, palabras del id) y escribe `data/categories.csv` (`item_id,category,reason`, con la regla que decidió). `data/categories_manual.csv` (`item_id,category`) gana siempre. `--sample N` muestra ejemplos por categoría y `--show CAT` lista una categoría entera.
 - `python3 scripts/delight/prepare_items.py` toma `data/items_raw.csv` (lo genera el comando de desarrollo del mod) y escribe `data/items.csv` con comida y bebidas, sus pasos de crafteo y los valores iniciales de `rules/items.json`.
 - `python3 scripts/delight/apply.py` genera el datapack `clean_water_cooking`, las entradas de `drinks.json` y los tags `salty` y `no_thirst`. Con `--check` solo compara y sale con 1 si algo difiere.
-- `python3 scripts/delight/report.py` escribe `data/REPORT.md`, `data/REPORT_recipes.csv` y `data/REPORT_items.csv` para revisar.
+- `python3 scripts/delight/report.py` escribe `data/REPORT.md`, `data/REPORT_recipes.csv` y `data/REPORT_items.csv` para revisar (no se versionan).
 
 ## Qué se edita
 
