@@ -17,7 +17,7 @@ RULES = os.path.join(HERE, "rules")
 PACKS = os.path.join(REPO, "src", "main", "resources", "datapacks")
 MOD_ID = "blue_droplets"
 PURITY = "blue_droplets:purity"
-MAX_PURITY = 5      # niveles 0..5 (notes/NIVELES-PUREZA.md)
+MAX_PURITY = 5      # niveles 0..5
 DEFAULT_PURITY = 3  # el agua sin componente cuenta como 3
 
 RECIPE_FIELDS = ["mod", "recipe_id", "recipe_type", "water_form", "water_amount", "result_id",
