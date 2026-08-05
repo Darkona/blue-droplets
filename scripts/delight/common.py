@@ -19,7 +19,7 @@ MOD_ID = "blue_droplets"
 PURITY = "blue_droplets:purity"
 # Minecraft 26.1: NeoForge custom ingredients (item and fluid) name their type with this key, not "type"
 TYPE_KEY = "neoforge:ingredient_type"
-MAX_PURITY = 5      # niveles 0..5 (notes/NIVELES-PUREZA.md)
+MAX_PURITY = 5      # niveles 0..5
 DEFAULT_PURITY = 3  # el agua sin componente cuenta como 3
 
 RECIPE_FIELDS = ["mod", "recipe_id", "recipe_type", "water_form", "water_amount", "result_id",

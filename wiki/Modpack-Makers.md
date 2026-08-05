@@ -284,6 +284,6 @@ Two optional presets change the balance; the default is Blue Droplets' own behav
 | Part | casual | hardcore |
 |---|---|---|
 | Built-in datapack (disabled by default; enable when creating the world or with `/datapack enable`) | `mod/blue_droplets:datapacks/preset_casual`: Nether climate ×1.5 | `mod/blue_droplets:datapacks/preset_hardcore`: Nether climate ×4 |
-| TOML keys to copy into `config/blue_droplets/` ([`docs/presets/`](../docs/presets/) in the repository) | `multiplier` 0.8, riding ×0.5, dehydration stops at 5 hearts on Normal and never kills, drinking by hand on, no poison: contaminated water 50% nausea and hunger, dirty 25%, murky 10% | `multiplier` 1.6, weather/day/sun/water multipliers, riding ×1, rain every 2 s, drinking by hand with a 1 s cooldown, no running water bonus, world water starts contaminated, contaminated water: 60% poison |
+| TOML keys to copy into `config/blue_droplets/` ([`examples/presets/`](../examples/presets/) in the repository) | `multiplier` 0.8, riding ×0.5, dehydration stops at 5 hearts on Normal and never kills, drinking by hand on, no poison: contaminated water 50% nausea and hunger, dirty 25%, murky 10% | `multiplier` 1.6, weather/day/sun/water multipliers, riding ×1, rain every 2 s, drinking by hand with a 1 s cooldown, no running water bonus, world water starts contaminated, contaminated water: 60% poison |
 
 The TOML files only list the keys they change; Blue Droplets adds the rest with their defaults.

@@ -7,7 +7,7 @@ Outputs (all rewritten from scratch, stale files are deleted):
 Run:  python3 scripts/purify/generate.py          (rewrite files)
       python3 scripts/purify/generate.py --check  (fail if the files on disk differ)
 
-Scheme (notes/NIVELES-PUREZA.md): campfire +1 per cooking, furnace and smoker +2, up to 5. Water without a stored
+Scheme: campfire +1 per cooking, furnace and smoker +2, up to 5. Water without a stored
 purity counts as DEFAULT (3). Minecraft 26.1 has no Create, so there is no cap of 4 and no Create recipes on this
 branch. Recipe ids: <item>_from_<method>_to_<level>. Ingredients use NeoForge's custom ingredient format
 ({"neoforge:ingredient_type": ...}); several sources of one result are a neoforge:compound ingredient.
