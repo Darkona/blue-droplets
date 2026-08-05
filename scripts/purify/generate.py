@@ -11,7 +11,7 @@ Outputs (all rewritten from scratch, stale files are deleted):
 Run:  python3 scripts/purify/generate.py          (rewrite files)
       python3 scripts/purify/generate.py --check  (fail if the files on disk differ)
 
-Scheme (notes/NIVELES-PUREZA.md): campfire and cooking pot +1 per cooking, furnace and smoker +2.
+Scheme: campfire and cooking pot +1 per cooking, furnace and smoker +2.
 Caps: 4 with Create loaded, 5 without it. Water without a stored purity counts as DEFAULT (3), except in Create's
 fluid ingredients, which can only ask for "at least this NBT": there, water without a purity is not purified.
 Recipe ids: <item>_from_<method>_to_<level>[_with_create|_without_create]; the suffix appears only

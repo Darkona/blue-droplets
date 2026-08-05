@@ -303,7 +303,7 @@ The 1.20.1 port has every feature of 1.0.0 for 1.21.1 (next section), with the d
 - New player attribute `blue_droplets:thirst_drain` (base 1.0, 0-10, synced): thirst loss is multiplied by it, so items (`attribute_modifiers`), datapack enchantments (`minecraft:attributes`), effects, Curios and `/attribute` can change thirst loss without code (thirst#195, thirst#219). `[1.21.1]`
 - `blue_droplets:dimension_water` has a new optional `thirst_multiplier` (0-10) that replaces the climate multiplier in that dimension type. `[1.21.1]`
 - The End counts as cold: Blue Droplets' own `blue_droplets:dimension_water` gives `minecraft:the_end` a `thirst_multiplier` of `0.6`, about a snowy biome, so thirst drops slower there, with or without Serene Seasons or Cold Sweat. Before, the End went through the biome formula (about 0.8) or, with Cold Sweat, the body temperature curve. A datapack can change the value. `[1.21.1]`
-- Optional presets `casual` and `hardcore`: built-in datapacks `mod/blue_droplets:datapacks/preset_casual` and `preset_hardcore` (disabled by default; they set the Nether's thirst multiplier) plus example `gameplay.toml`/`purity.toml` keys in `docs/presets/` to copy by hand. See `wiki/Modpack-Makers.md`. `[1.21.1]`
+- Optional presets `casual` and `hardcore`: built-in datapacks `mod/blue_droplets:datapacks/preset_casual` and `preset_hardcore` (disabled by default; they set the Nether's thirst multiplier) plus example `gameplay.toml`/`purity.toml` keys in `examples/presets/` to copy by hand. See `wiki/Modpack-Makers.md`. `[1.21.1]`
 
 ### API
 
