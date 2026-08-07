@@ -24,6 +24,19 @@ MAIN_DATA = os.path.join(c.REPO, "src", "main", "resources", "data", "blue_dropl
 DRINKS = os.path.join(MAIN_DATA, "data_maps", "item", "drinks.json")
 TAG_SALTY = os.path.join(MAIN_DATA, "tags", "item", "salty.json")
 TAG_NO_THIRST = os.path.join(MAIN_DATA, "tags", "item", "no_thirst.json")
+# Datos de mods sin version para esta version de Minecraft: fuera del jar, en src/disabled (no es un source set)
+DISABLED_DATA = os.path.join(c.REPO, "src", "disabled", "resources", "data", "blue_droplets")
+DISABLED = {path: os.path.join(DISABLED_DATA, os.path.relpath(path, MAIN_DATA)) for path in (DRINKS, TAG_SALTY, TAG_NO_THIRST)}
+
+
+def active_namespaces():
+    """Namespaces cuyos datos van al jar: mods.json active_namespaces (los mods con version para esta Minecraft)."""
+    cfg, _ = c.load_mods()
+    return set(cfg.get("active_namespaces", ["minecraft", "blue_droplets"]))
+
+
+def is_active(key, active):
+    return key.startswith("#") or key.split(":", 1)[0] in active
 
 
 def mcmeta(desc):
@@ -128,9 +141,12 @@ def _int(v, default=0):
         return default
 
 
-def build_drinks(rows, problems):
-    """Texto nuevo de drinks.json: las claves presentes en items.csv se reescriben, el resto queda igual."""
-    cur = c.load_json(DRINKS)["values"]
+def build_drinks(rows, problems, active):
+    """Texto nuevo de drinks.json, activo y desactivado: las claves presentes en items.csv se reescriben, el resto queda
+    igual. Las claves de namespaces fuera de active van al drinks.json de src/disabled."""
+    cur = dict(c.load_json(DRINKS)["values"])
+    if os.path.exists(DISABLED[DRINKS]):
+        cur.update(c.load_json(DISABLED[DRINKS])["values"])
     managed = {r["item_id"] for r in rows}
     values = {k: v for k, v in cur.items() if k not in managed}
     gen = []
@@ -153,13 +169,20 @@ def build_drinks(rows, problems):
         gen.append((r["item_id"], entry))
     for k, v in gen:
         values[k] = v
-    lines = ['    %s: %s' % (json.dumps(k), json.dumps(v, ensure_ascii=False)) for k, v in values.items()]
-    return '{\n  "values": {\n' + ",\n".join(lines) + '\n  }\n}\n'
+
+    def text(entries):
+        lines = ['    %s: %s' % (json.dumps(k), json.dumps(v, ensure_ascii=False)) for k, v in entries]
+        return '{\n  "values": {\n' + ",\n".join(lines) + '\n  }\n}\n'
+    return (text([(k, v) for k, v in values.items() if is_active(k, active)]),
+            text([(k, v) for k, v in values.items() if not is_active(k, active)]))
 
 
-def build_tag(rows, col):
+def build_tag(rows, col, active):
     ids = sorted({r["item_id"] for r in rows if c.yes(r.get(col, ""))})
-    return c.dump_json({"values": [{"id": i, "required": False} for i in ids]})
+
+    def text(chosen):
+        return c.dump_json({"values": [{"id": i, "required": False} for i in chosen]})
+    return text([i for i in ids if is_active(i, active)]), text([i for i in ids if not is_active(i, active)])
 
 
 # ------------------------------------------------------------------ escritura / comparacion
@@ -247,9 +270,11 @@ def main():
 
     items = load_items()
     if items:
-        sync_file(DRINKS, build_drinks(items, problems), args.check, diffs)
-        sync_file(TAG_SALTY, build_tag(items, "salty"), args.check, diffs)
-        sync_file(TAG_NO_THIRST, build_tag(items, "no_thirst"), args.check, diffs)
+        active = active_namespaces()
+        for path, (on, off) in ((DRINKS, build_drinks(items, problems, active)), (TAG_SALTY, build_tag(items, "salty", active)),
+                                (TAG_NO_THIRST, build_tag(items, "no_thirst", active))):
+            sync_file(path, on, args.check, diffs)
+            sync_file(DISABLED[path], off, args.check, diffs)
         print("items.csv: %d items" % len(items))
     else:
         print("items.csv: no existe todavia, no se tocan drinks.json ni los tags")

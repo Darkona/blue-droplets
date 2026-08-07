@@ -1,0 +1,9 @@
+{
+  "block.blue_droplets.sand_filter": "모래 필터",
+  "blue_droplets.ponder.sand_filter.header": "Purifying Water with a Sand Filter",
+  "blue_droplets.ponder.sand_filter.text_1": "A Sand Filter purifies by one step water pumped through it",
+  "blue_droplets.ponder.sand_filter.text_2": "Dirty Water needs to be pumped in from the top...",
+  "blue_droplets.ponder.sand_filter.text_3": "and Purified Water can be pumped out from the bottom",
+  "blue_droplets.ponder.sand_filter.text_4": "A Wrench turns the filter: water always leaves on the side the bottom faces",
+  "blue_droplets.ponder.sand_filter.text_5": "Filters placed in a row facing the same way pass their water on, one step purer each"
+}

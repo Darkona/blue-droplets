@@ -7,12 +7,6 @@
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "肮脏",
   "blue_droplets.purity.acceptable": "可接受的",
-  "block.blue_droplets.sand_filter": "砂滤器",
-
-  "blue_droplets.ponder.sand_filter.header": "用砂滤器净化水",
-  "blue_droplets.ponder.sand_filter.text_1": "砂滤器会净化邻近泵入的水",
-  "blue_droplets.ponder.sand_filter.text_2": "脏水需要从上方泵入...",
-  "blue_droplets.ponder.sand_filter.text_3": "净化后的水会从底部泵出",
   "command.blue_droplets.query": "当前口渴值: %1$s, 当前解渴值: %2$s",
   "command.blue_droplets.set": "设置口渴值为 %1$s,解渴值为 %2$s",
   "command.blue_droplets.enable": "已为玩家 %1$s 启用口渴",

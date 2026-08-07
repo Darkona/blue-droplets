@@ -1,7 +1,5 @@
 {
   "values": [
-    "#minecraft:water",
-    { "id": "create:tea", "required": false },
-    { "id": "create:flowing_tea", "required": false }
+    "#minecraft:water"
   ]
 }

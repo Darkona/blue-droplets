@@ -1,7 +1,0 @@
-{
-  "values": [
-    { "id": "farmersdelight:nourishment", "required": false },
-    { "id": "bakery:stuffed", "required": false },
-    { "id": "brewery:saturated", "required": false }
-  ]
-}

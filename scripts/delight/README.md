@@ -18,7 +18,7 @@ Scripts en Python 3 estándar. Se corren desde cualquier carpeta; los CSV de `da
 - `rules/water.json`: cómo se reconoce el agua, tipos de receta soportados y filas manuales.
 - `rules/items.json`: la fórmula de sed (valores por categoría, palabras, bonus por pasos, regla de Hunger y Poison).
 - `rules/categories.toml`: las reglas de `classify.py`; `data/categories_manual.csv` para correcciones sueltas.
-- `mods.json`: mods y versiones fijadas.
+- `mods.json`: mods y versiones fijadas, y `active_namespaces`: los namespaces cuyos valores (`drinks.json`, tags `salty` y `no_thirst`) van al jar. Los demás (mods sin versión para esta Minecraft) se escriben en `src/disabled/resources`, fuera del build.
 
 ## Reglas de apply.py
 

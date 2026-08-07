@@ -7,12 +7,6 @@
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "Brudna",
   "blue_droplets.purity.acceptable": "Akceptowalna",
-  "block.blue_droplets.sand_filter": "Filtr Piaskowy",
-
-  "blue_droplets.ponder.sand_filter.header": "Oczyszczanie wody Filtrem Piaskowym",
-  "blue_droplets.ponder.sand_filter.text_1": "Filter Piaskowy oczyszcza w jednym stopniu pompowaną przez niego wodę",
-  "blue_droplets.ponder.sand_filter.text_2": "Brudna Woda musi być pompowana z góry...",
-  "blue_droplets.ponder.sand_filter.text_3": "a Oczyszczona Woda może być wypompowywana z dołu",
   "blue_droplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
   "effect.blue_droplets.dehydration": "Dehydration",
   "effect.blue_droplets.quenchness": "Quenchness",

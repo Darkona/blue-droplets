@@ -7,12 +7,6 @@
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "Грязная",
   "blue_droplets.purity.acceptable": "Приемлемая",
-  "block.blue_droplets.sand_filter": "Песочный фильтр",
-
-  "blue_droplets.ponder.sand_filter.header": "Очищайте воду с помощью песочного фильтра",
-  "blue_droplets.ponder.sand_filter.text_1": "Песочный фильтр за один этап очищает прокачиваемую через него воду",
-  "blue_droplets.ponder.sand_filter.text_2": "Грязную воду нужно закачивать сверху...",
-  "blue_droplets.ponder.sand_filter.text_3": "и очищенную воду, соответственно, снизу.",
   "blue_droplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
   "effect.blue_droplets.dehydration": "Dehydration",
   "effect.blue_droplets.quenchness": "Quenchness",

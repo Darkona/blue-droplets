@@ -7,12 +7,6 @@
   "itemGroup.blue_droplets": "Blue Droplets",
   "blue_droplets.purity.dirty": "Sale",
   "blue_droplets.purity.acceptable": "Buvable",
-  "block.blue_droplets.sand_filter": "Filtre à sable",
-
-  "blue_droplets.ponder.sand_filter.header": "Purifier de l'eau avec un Filtre à sable",
-  "blue_droplets.ponder.sand_filter.text_1": "Un Filtre à sable effectue une étape de purification quand de l'eau y est pompée à travers",
-  "blue_droplets.ponder.sand_filter.text_2": "L'eau sale doit être pompée dans le filtre par dessus...",
-  "blue_droplets.ponder.sand_filter.text_3": "et l'eau purifiée peut être pompée par le dessous",
   "blue_droplets.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
   "effect.blue_droplets.dehydration": "Dehydration",
   "effect.blue_droplets.quenchness": "Quenchness",

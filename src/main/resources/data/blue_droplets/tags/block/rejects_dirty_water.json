@@ -1,7 +1,0 @@
-{
-  "values": [
-    {"id": "brewery:wooden_brewingstation", "required": false},
-    {"id": "brewery:copper_brewingstation", "required": false},
-    {"id": "brewery:netherite_brewingstation", "required": false}
-  ]
-}

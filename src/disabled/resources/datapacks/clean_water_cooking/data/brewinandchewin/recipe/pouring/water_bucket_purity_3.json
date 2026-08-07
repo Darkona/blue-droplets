@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "brewinandchewin"
+    }
+  ],
+  "type": "brewinandchewin:keg_pouring",
+  "fluid": {
+    "amount": 1000,
+    "id": "minecraft:water",
+    "components": {
+      "blue_droplets:purity": 3
+    }
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:water_bucket",
+    "components": {
+      "blue_droplets:purity": 3
+    }
+  },
+  "strict": true,
+  "unit": "millibuckets"
+}

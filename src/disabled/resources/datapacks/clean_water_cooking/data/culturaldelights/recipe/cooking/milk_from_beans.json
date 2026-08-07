@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "culturaldelights"
+    }
+  ],
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "type": "neoforge:difference",
+      "base": {
+        "tag": "c:buckets/water"
+      },
+      "subtracted": {
+        "type": "neoforge:compound",
+        "children": [
+          {
+            "type": "neoforge:components",
+            "items": "#c:buckets/water",
+            "components": {
+              "blue_droplets:purity": 0
+            }
+          },
+          {
+            "type": "neoforge:components",
+            "items": "#c:buckets/water",
+            "components": {
+              "blue_droplets:purity": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "item": "culturaldelights:beans"
+    },
+    {
+      "item": "culturaldelights:beans"
+    },
+    {
+      "item": "culturaldelights:beans"
+    }
+  ],
+  "result": {
+    "id": "minecraft:milk_bucket",
+    "count": 1
+  },
+  "container": {
+    "id": "minecraft:bucket",
+    "count": 1
+  },
+  "experience": 0.2,
+  "cookingtime": 200
+}

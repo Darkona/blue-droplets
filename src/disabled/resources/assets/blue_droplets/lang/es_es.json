@@ -1,0 +1,12 @@
+{
+  "block.blue_droplets.sand_filter": "Filtro de arena",
+  "blue_droplets.ponder.tag.purification": "Purificación",
+  "blue_droplets.ponder.tag.purification.description": "Componentes que purifican el agua",
+  "blue_droplets.ponder.sand_filter.header": "Purificar agua con un filtro de arena",
+  "blue_droplets.ponder.sand_filter.text_1": "Un filtro de arena purifica un nivel el agua que se bombea a través de él",
+  "blue_droplets.ponder.sand_filter.text_2": "El agua sucia se bombea por arriba...",
+  "blue_droplets.ponder.sand_filter.text_3": "y el agua purificada se saca por abajo",
+  "blue_droplets.ponder.sand_filter.text_4": "Una llave inglesa gira el filtro: el agua siempre sale por el lado hacia el que mira la base",
+  "blue_droplets.ponder.sand_filter.text_5": "Los filtros en fila mirando hacia el mismo lado se pasan el agua, un nivel más pura en cada uno",
+  "blue_droplets.jei.purification.sand_filter": "Cada filtro suma %s, hasta %s"
+}
