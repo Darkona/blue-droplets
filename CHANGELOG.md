@@ -2,6 +2,33 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
+## 1.0.0 beta (Minecraft 26.2, NeoForge), unreleased
+
+The 26.2 port has every feature of the 26.1 port (next section), which lists what differs from 1.21.1, with the differences below. The jar is `blue-droplets-beta-26.2-1.0.0.jar`, for Minecraft 26.2 and NeoForge 26.2.0.88 or newer.
+
+### Minecraft 26.2
+
+- Thirst, quenched, dehydration, hand drinking, water purity, poured water, cauldrons, cooking purification, effects, config, data maps, commands and the API behave as on 26.1, with the same config keys and data formats. `[26.2]`
+- The thirst bar follows Minecraft 26.2's HUD: it hides with the rest of the HUD (F1) and still stacks above the food bar. `[26.2]`
+- An empty bucket takes the purity of the water it picks up at the pickup itself, so a change in the order of vanilla's bucket code cannot leave a bucket without purity. `[26.2]`
+- The built-in data packs (presets and purification packs) use data pack format 107. `[26.2]`
+- The mod list shows the logo as the mod's square icon (`iconFile`); NeoForge 26.2 deprecates `logoFile`. `[26.2]`
+
+### Mod compatibility (26.2)
+
+- Built and tested with Jade 26.2.10, JEI 30.38.0.231, AppleSkin 3.0.10, Serene Seasons 26.1.2.0.6 (its Minecraft 26.2 build), Traveler's Backpack 11.3.4 and Reliquary 2.0.92 for Minecraft 26.2. The integrations work as on 26.1. `[26.2]`
+- Serene Seasons: every Minecraft 26.2 build (26.1.2.0.4 or newer) works; none of them has the client stack overflow of 26.1.2.0.7 for Minecraft 26.1. `[26.2]`
+
+### Not in this version (26.2)
+
+- KubeJS has no build for Minecraft 26.2. Blue Droplets has no KubeJS code of its own, so nothing is disabled: the scripts in `examples/kubejs` are for 26.1 and have not been tried on 26.2. `[26.2]`
+- The mods disabled on 26.1 (Create, Farmer's Delight and its addons, Cold Sweat, Supernatural, Vampirism) still have no Minecraft 26.2 build; their integrations stay in `src/disabled`. `[26.2]`
+
+### For developers (26.2)
+
+- Built with ModDevGradle 2.0.148 on Gradle 9.7.1 and Java 25, against NeoForge 26.2.0.88. `-PwithKubeJS` is gone. `[26.2]`
+- Game tests (`./gradlew runGameTestServer`): 53 without optional mods and 61 with `-PwithCompat`. `scripts/client-boot-check.sh` turns off NeoForge's load warnings screen in its run folder (a warning about Blue Droplets still fails the check), uses the current game rule names, and fails when the game rejects one of its chat commands. `[26.2]`
+
 ## 1.0.0 beta (Minecraft 26.1, NeoForge), unreleased
 
 The 26.1 port has every feature of 1.0.0 for 1.21.1 (next section) that does not depend on a mod without a 26.1 build, with the differences below. The jar is `blue-droplets-beta-26.1-1.0.0.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer.
