@@ -283,7 +283,8 @@ public class PurityTests
             ItemStack bowl = WaterPurity.addPurity(new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), level);
             int expected = PurityTint.colorOf(level);
             check(helper, "bottle tint at level " + level, PurityTint.color(bottle, 0, vanilla), expected);
-            check(helper, "bowl tint at level " + level, PurityTint.color(bowl, 0, vanilla), expected);
+            check(helper, "bowl tint at level " + level, PurityTint.color(bowl, 1, vanilla), expected);
+            check(helper, "bowl layer at level " + level, PurityTint.color(bowl, 0, -1), -1);
             check(helper, "glass layer at level " + level, PurityTint.color(bottle, 1, -1), -1);
         }
         check(helper, "level 3 keeps vanilla blue", PurityTint.colorOf(3), vanilla);

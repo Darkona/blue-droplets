@@ -1,6 +1,7 @@
 package com.darkona.droplets.content.purity;
 
 import com.darkona.droplets.api.PurityLevel;
+import com.darkona.droplets.content.registry.ItemInit;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -27,9 +28,15 @@ public final class PurityTint
      */
     public static int color(ItemStack stack, int tintIndex, int original)
     {
-        if (tintIndex != 0 || !WaterPurity.enabled() || !WaterPurity.isWaterFilledContainer(stack) || !WaterPurity.hasPurity(stack))
+        if (tintIndex != liquidLayer(stack) || !WaterPurity.enabled() || !WaterPurity.isWaterFilledContainer(stack) || !WaterPurity.hasPurity(stack))
             return original;
         return colorOf(WaterPurity.getPurity(stack));
+    }
+
+    /** Model layer that holds the liquid: 0 for bottles (vanilla's overlay layer), 1 for the terracotta bowl. */
+    public static int liquidLayer(ItemStack stack)
+    {
+        return stack.is(ItemInit.TERRACOTTA_WATER_BOWL.get()) ? 1 : 0;
     }
 
     private PurityTint() {}

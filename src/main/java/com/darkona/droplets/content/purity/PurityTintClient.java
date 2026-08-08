@@ -11,13 +11,13 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 public final class PurityTintClient
 {
     /**
-     * The terracotta water bowl draws its liquid with a grey layer, so it needs the vanilla water color by default;
+     * The terracotta water bowl draws its liquid with a grey second layer (layer1 of its model), so it needs the vanilla water color by default;
      * the purity color replaces it in the {@code ItemColors} mixin.
      */
     @SubscribeEvent
     public static void registerItemColors(RegisterColorHandlersEvent.Item event)
     {
-        event.register((stack, tintIndex) -> tintIndex == 0 ? PurityTint.VANILLA_WATER : -1, ItemInit.TERRACOTTA_WATER_BOWL.get());
+        event.register((stack, tintIndex) -> tintIndex == 1 ? PurityTint.VANILLA_WATER : -1, ItemInit.TERRACOTTA_WATER_BOWL.get());
     }
 
     private PurityTintClient() {}
