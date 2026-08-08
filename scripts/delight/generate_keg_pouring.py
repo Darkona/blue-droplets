@@ -14,7 +14,7 @@ PACK_CLEAN = os.path.join(c.PACKS, "clean_water_cooking")
 
 
 def mcmeta(desc):
-    return c.dump_json({"pack": {"description": desc, "min_format": 101, "max_format": 101}})
+    return c.dump_json({"pack": {"description": desc, "min_format": 107, "max_format": 107}})
 
 
 def mod_loaded(mod):

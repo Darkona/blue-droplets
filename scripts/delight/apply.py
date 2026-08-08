@@ -40,8 +40,8 @@ def is_active(key, active):
 
 
 def mcmeta(desc):
-    # Minecraft 26.1 data packs: format range instead of pack_format (data pack format 101)
-    return c.dump_json({"pack": {"description": desc, "min_format": 101, "max_format": 101}})
+    # Minecraft 26.x data packs: format range instead of pack_format (data pack format 107 for 26.2)
+    return c.dump_json({"pack": {"description": desc, "min_format": 107, "max_format": 107}})
 
 
 def mod_loaded(mod):
