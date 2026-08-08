@@ -26,7 +26,7 @@ sourceSets {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-// src/disabled keeps the integrations of mods without a Minecraft 26.1 build (see its README). It is not a source
+// src/disabled keeps the integrations of mods without a Minecraft 26.2 build (see its README). It is not a source
 // set: nothing there is compiled or packaged.
 
 repositories {
@@ -43,7 +43,7 @@ repositories {
 }
 
 neoForge {
-    version = project.hasProperty('withKubeJS') ? project.kubejs_neo_version : project.neo_version
+    version = project.neo_version
     addModdingDependenciesTo(sourceSets.api)
 
     runs {
@@ -68,10 +68,7 @@ neoForge {
         }
         gameTestServer {
             type = 'gameTestServer'
-            // -PwithKubeJS keeps to its own folder, with the example scripts, so it never collides with other runs.
-            if (project.hasProperty('withKubeJS'))
-                gameDirectory = project.file('run/kubejs-test')
-            // Only this mod's tests (Minecraft 26.1 selects tests by id; NeoForge no longer filters by namespace)
+            // Only this mod's tests (Minecraft 26.x selects tests by id; NeoForge no longer filters by namespace)
             programArguments.addAll '--tests', "${project.mod_id}:*"
         }
         data {
@@ -102,47 +99,29 @@ dependencies {
     implementation sourceSets.api.output
 
     // Optional mods from Modrinth's maven by version id, since their version numbers are shared with the Fabric builds:
-    // Reliquary 26.1.2-2.0.92.1563, Jade 26.1.11, Traveler's Backpack 26.1.2-11.2.8, AppleSkin 3.0.9+mc26.1,
-    // Serene Seasons 26.1.2.0.4 (26.1.2.0.7 overflows the stack in its own Biome#hasPrecipitation mixin on the client),
-    // GlitchCore 26.1.2.0.2, KubeJS 26.1.2-8.0.6, Rhino 2101.2.8-build.91,
-    // Better Advanced Tooltips 2601.1.0-build.9.
+    // Reliquary 26.2-2.0.92.1568, Jade 26.2.10, Traveler's Backpack 26.2-11.3.4, AppleSkin 3.0.10+mc26.2,
+    // Serene Seasons 26.1.2.0.6 (its Minecraft 26.2 build, numbered after 26.1.2), GlitchCore 26.2.0.0.0.
+    // KubeJS has no Minecraft 26.2 build: KubeJSTests only run once it is installed.
 
-    compileOnly 'maven.modrinth:reliquary-reincarnations:oub7jUP0'
-    compileOnly 'maven.modrinth:jade:5jKeKXwB'
-    compileOnly 'maven.modrinth:travelersbackpack:glTGAXmg'
-    compileOnly 'maven.modrinth:appleskin:i8MiVItH'
+    compileOnly 'maven.modrinth:reliquary-reincarnations:G6PGb5oa'
+    compileOnly 'maven.modrinth:jade:GBES6etT'
+    compileOnly 'maven.modrinth:travelersbackpack:EMeTJkWH'
+    compileOnly 'maven.modrinth:appleskin:slnk1Qah'
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
-    compileOnly 'maven.modrinth:serene-seasons:OKhFVuHv'
-    compileOnly 'maven.modrinth:glitchcore:mYUbCfgT'
+    compileOnly 'maven.modrinth:serene-seasons:MZd2wAtJ'
+    compileOnly 'maven.modrinth:glitchcore:POAebwFo'
 
     // ./gradlew runClient -PwithCompat
     if (project.hasProperty('withCompat')) {
-        localRuntime 'maven.modrinth:reliquary-reincarnations:oub7jUP0'
-        localRuntime 'maven.modrinth:jade:5jKeKXwB'
-        localRuntime 'maven.modrinth:appleskin:i8MiVItH'
-        localRuntime 'maven.modrinth:travelersbackpack:glTGAXmg'
-        localRuntime 'maven.modrinth:serene-seasons:OKhFVuHv'
-        localRuntime 'maven.modrinth:glitchcore:mYUbCfgT'
-    }
-
-    // ./gradlew runGameTestServer -PwithKubeJS: KubeJS with its scripting engine (Rhino), to try examples/kubejs.
-    if (project.hasProperty('withKubeJS')) {
-        localRuntime 'maven.modrinth:kubejs:FzLyIIBB'
-        localRuntime 'maven.modrinth:rhino:SqkDvOLG'
-        localRuntime 'maven.modrinth:better-advanced-tooltips:dYc3PUcQ'
+        localRuntime 'maven.modrinth:reliquary-reincarnations:G6PGb5oa'
+        localRuntime 'maven.modrinth:jade:GBES6etT'
+        localRuntime 'maven.modrinth:appleskin:slnk1Qah'
+        localRuntime 'maven.modrinth:travelersbackpack:EMeTJkWH'
+        localRuntime 'maven.modrinth:serene-seasons:MZd2wAtJ'
+        localRuntime 'maven.modrinth:glitchcore:POAebwFo'
     }
 
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
-}
-
-// -PwithKubeJS: copy the example scripts into run/kubejs-test/kubejs before the game tests, which run in that folder.
-if (project.hasProperty('withKubeJS')) {
-    var installKubeJSExamples = tasks.register('installKubeJSExamples', Copy) {
-        from 'examples/kubejs'
-        include '*_scripts/**'
-        into 'run/kubejs-test/kubejs'
-    }
-    tasks.matching { it.name == 'runGameTestServer' }.configureEach { dependsOn installKubeJSExamples }
 }
 
 tasks.withType(ProcessResources).configureEach {

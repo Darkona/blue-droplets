@@ -56,7 +56,7 @@ public final class ThirstBarRenderer
     {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
-        if (player == null || minecraft.options.hideGui || !minecraft.gameMode.canHurtPlayer() || !(minecraft.getCameraEntity() instanceof Player)
+        if (player == null || minecraft.gui.hud.isHidden() || !minecraft.gameMode.canHurtPlayer() || !(minecraft.getCameraEntity() instanceof Player)
                 || player.getVehicle() instanceof LivingEntity vehicle && vehicle.showVehicleHealth())
             return;
 
@@ -73,10 +73,10 @@ public final class ThirstBarRenderer
         Identifier fill = tint < 0 ? THIRST_ICONS : THIRST_MASK;
         Identifier outline = tint < 0 ? QUENCHED_ICONS : QUENCHED_MASK;
         int right = guiGraphics.guiWidth() / 2 + 91 + ClientConfig.THIRST_BAR_X_OFFSET.get();
-        int top = guiGraphics.guiHeight() - minecraft.gui.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
-        minecraft.gui.rightHeight += 10;
+        int top = guiGraphics.guiHeight() - minecraft.gui.hud.rightHeight + ClientConfig.THIRST_BAR_Y_OFFSET.get();
+        minecraft.gui.hud.rightHeight += 10;
 
-        int ticks = minecraft.gui.getGuiTicks();
+        int ticks = minecraft.gui.hud.getGuiTicks();
         int level = thirst.getThirst();
         int quenched = thirst.getQuenched();
         boolean shake = quenched <= 0 && ticks % (level * 3 + 1) == 0;
@@ -185,7 +185,7 @@ public final class ThirstBarRenderer
         if (!ClientConfig.HIDE_BAR_WHEN_FULL.get())
             return false;
 
-        int ticks = minecraft.gui.getGuiTicks();
+        int ticks = minecraft.gui.hud.getGuiTicks();
         if (thirst.getThirst() < 20
                 || ThirstHelper.itemRestoresThirst(player.getMainHandItem())
                 || ThirstHelper.itemRestoresThirst(player.getOffhandItem())

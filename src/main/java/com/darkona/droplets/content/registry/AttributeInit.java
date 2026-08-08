@@ -2,7 +2,7 @@ package com.darkona.droplets.content.registry;
 
 import com.darkona.droplets.BlueDroplets;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.neoforged.bus.api.IEventBus;
@@ -31,6 +31,6 @@ public final class AttributeInit
 
     private static void addToPlayers(EntityAttributeModificationEvent event)
     {
-        event.add(EntityType.PLAYER, THIRST_DRAIN);
+        event.add(EntityTypes.PLAYER, THIRST_DRAIN);
     }
 }

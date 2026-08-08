@@ -13,7 +13,7 @@ displayName="${mod_name}"
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 
 displayURL="https://github.com/Darkona/blue-droplets"
-logoFile="logo.png"
+iconFile="logo.png"
 credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka, Mikul (NeoForge 1.21.1 port) and the Thirst Was Taken contributors. Optional integrations use the public APIs of Jade, JEI, Serene Seasons, Traveler's Backpack and others; none of their code or assets is included."
 authors="${mod_authors}"
 
@@ -77,21 +77,21 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="sereneseasons"
 type="optional"
-versionRange="[26.1.2.0.0,)"
+versionRange="[26.1.2.0.4,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="travelersbackpack"
 type="optional"
-versionRange="[11.2.8,)"
+versionRange="[11.3.0,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="jei"
 type="optional"
-versionRange="[29.43,)"
+versionRange="[30,)"
 ordering="NONE"
 side="CLIENT"
 
