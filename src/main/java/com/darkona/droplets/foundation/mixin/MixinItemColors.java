@@ -17,6 +17,6 @@ public class MixinItemColors{
      */
     @ModifyReturnValue(method = "getColor", at = @At("RETURN"))
     private int tintWaterByPurity(int original, ItemStack stack, int tintIndex){
-        return tintIndex == 0 && ClientConfig.TINT_WATER_BY_PURITY.get() ? PurityTint.color(stack, tintIndex, original) : original;
+        return ClientConfig.TINT_WATER_BY_PURITY.get() ? PurityTint.color(stack, tintIndex, original) : original;
     }
 }
