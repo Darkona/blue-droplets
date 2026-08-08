@@ -26,6 +26,8 @@ sourceSets {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+// src/disabled keeps the integrations of mods without a Minecraft 26.1 build (see its README). It is not a source
+// set: nothing there is compiled or packaged.
 
 repositories {
     maven {
@@ -99,12 +101,18 @@ configurations {
 dependencies {
     implementation sourceSets.api.output
 
+    // Optional mods from Modrinth's maven by version id, since their version numbers are shared with the Fabric builds:
+    // Reliquary 26.1.2-2.0.92.1563, Jade 26.1.11, Traveler's Backpack 26.1.2-11.2.8, AppleSkin 3.0.9+mc26.1,
+    // Serene Seasons 26.1.2.0.4 (26.1.2.0.7 overflows the stack in its own Biome#hasPrecipitation mixin on the client),
+    // GlitchCore 26.1.2.0.2, KubeJS 26.1.2-8.0.6, Rhino 2101.2.8-build.91,
+    // Better Advanced Tooltips 2601.1.0-build.9.
+
     compileOnly 'maven.modrinth:reliquary-reincarnations:oub7jUP0'
     compileOnly 'maven.modrinth:jade:5jKeKXwB'
     compileOnly 'maven.modrinth:travelersbackpack:glTGAXmg'
     compileOnly 'maven.modrinth:appleskin:i8MiVItH'
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
-    compileOnly 'maven.modrinth:serene-seasons:atclxQCD'
+    compileOnly 'maven.modrinth:serene-seasons:OKhFVuHv'
     compileOnly 'maven.modrinth:glitchcore:mYUbCfgT'
 
     // ./gradlew runClient -PwithCompat
@@ -113,7 +121,7 @@ dependencies {
         localRuntime 'maven.modrinth:jade:5jKeKXwB'
         localRuntime 'maven.modrinth:appleskin:i8MiVItH'
         localRuntime 'maven.modrinth:travelersbackpack:glTGAXmg'
-        localRuntime 'maven.modrinth:serene-seasons:atclxQCD'
+        localRuntime 'maven.modrinth:serene-seasons:OKhFVuHv'
         localRuntime 'maven.modrinth:glitchcore:mYUbCfgT'
     }
 

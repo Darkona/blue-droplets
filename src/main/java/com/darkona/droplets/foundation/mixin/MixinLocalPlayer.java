@@ -11,14 +11,16 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MixinLocalPlayer{
 
     /**
-     * Prevents sprinting when thirsty, using the server's rule from the last sync: the food level reads as 0 when
-     * thirst is too low to sprint. Riding and flying still allow it, as vanilla checks them first.
+     * Prevents sprinting when thirsty, using the server's rule from the last sync: the player counts as having too
+     * little food to sprint while thirst is too low. Riding and flying still allow it, as vanilla checks them first.
+     * Minecraft 26.1 checks this every tick while sprinting too, so thirst stops a sprint as hunger does.
      */
-    @ModifyExpressionValue(method = "hasEnoughFoodToStartSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;getFoodLevel()I"))
-    private int hasEnoughThirstToStartSprinting(int food){
-        PlayerThirst thirst = ((LocalPlayer) (Object) this).getData(ModAttachment.PLAYER_THIRST);
-        if(!thirst.isSprintBlocked() || thirst.getThirst() > thirst.sprintMinThirst())
+    @ModifyExpressionValue(method = "isSprintingPossible", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;hasEnoughFoodToDoExhaustiveManoeuvres()Z"))
+    private boolean hasEnoughThirstToSprint(boolean food){
+        LocalPlayer player = (LocalPlayer) (Object) this;
+        PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
+        if(!food || !thirst.isSprintBlocked() || thirst.getThirst() > thirst.sprintMinThirst() || player.mayFly())
             return food;
-        return 0;
+        return false;
     }
 }

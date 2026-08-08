@@ -31,24 +31,25 @@ import snownee.jade.api.config.IPluginConfig;
 @WailaPlugin(BlueDroplets.ID)
 public class JadePlugin implements IWailaPlugin
 {
+    private static final Identifier UID = BlueDroplets.asResource("purity");
+    private static final String KEY = UID.toString();
+
     @Override
     public void register(IWailaCommonRegistration registration)
     {
-        registration.registerBlockDataProvider(PurityProvider.INSTANCE, BlockEntity.class);
+        registration.registerBlockDataProvider(PurityData.INSTANCE, BlockEntity.class);
     }
 
     @Override
     public void registerClient(IWailaClientRegistration registration)
     {
-        registration.registerBlockComponent(PurityProvider.INSTANCE, Block.class);
+        registration.registerBlockComponent(PurityTooltip.INSTANCE, Block.class);
     }
 
-    private enum PurityProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor>
+    /** Server side: the purities of the block's tanks. Jade 26.1 wants data and tooltip in separate providers. */
+    private enum PurityData implements IServerDataProvider<BlockAccessor>
     {
         INSTANCE;
-
-        private static final Identifier UID = BlueDroplets.asResource("purity");
-        private static final String KEY = UID.toString();
 
         @Override
         public void appendServerData(CompoundTag data, BlockAccessor accessor)
@@ -70,6 +71,18 @@ public class JadePlugin implements IWailaPlugin
             if (!purities.isEmpty())
                 data.putIntArray(KEY, purities.toIntArray());
         }
+
+        @Override
+        public Identifier getUid()
+        {
+            return UID;
+        }
+    }
+
+    /** Client side: the cauldron purity, or the purities the server sent. */
+    private enum PurityTooltip implements IBlockComponentProvider
+    {
+        INSTANCE;
 
         @Override
         public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config)
