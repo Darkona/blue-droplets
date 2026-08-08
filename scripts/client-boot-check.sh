@@ -61,6 +61,11 @@ done
 sed -i "/^onboardAccessibility:/d" "$OPTS"; echo "onboardAccessibility:false" >> "$OPTS"
 # No tutorial toast waiting for input.
 sed -i "/^tutorialStep:/d" "$OPTS"; echo "tutorialStep:none" >> "$OPTS"
+# NeoForge opens a screen that waits for a click when mods load with warnings (since 26.2, any mod still using logoFile
+# in its mods.toml in a dev run), and quick play never starts. The warnings are still logged; one about this mod fails
+# the check.
+NEO_CLIENT="$RUN/config/neoforge-client.toml"; mkdir -p "$RUN/config"; touch "$NEO_CLIENT"
+sed -i "/^showLoadWarnings *=/d" "$NEO_CLIENT"; echo "showLoadWarnings = false" >> "$NEO_CLIENT"
 
 LOG="build/client-boot-check.log"; mkdir -p build; : > "$LOG"
 GAME_LOG="$RUN/logs/latest.log"; rm -f "$GAME_LOG"
@@ -79,14 +84,15 @@ PID=$!
 logs() { cat "$LOG" "$GAME_LOG" 2>/dev/null; }
 X="env DISPLAY=:$DISPLAY_NUM XAUTHORITY=$XAUTH xdotool"
 
-FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*blue_droplets|FileNotFoundException: .*blue_droplets'
+# Fatal log lines, including a chat command the game rejected: the setup and COMMANDS must all run.
+FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*blue_droplets|FileNotFoundException: .*blue_droplets|ClientModLoader/LOADING\]: Mod blue_droplets |\[CHAT\] (Incorrect argument for command|Unknown or incomplete command)'
 OK_RE='joined the game'
 verdict="TIMEOUT after ${TIMEOUT}s"
 for _ in $(seq 1 "$TIMEOUT"); do
     if logs | grep -qE "$FAIL_RE"; then verdict="FAIL"; break; fi
     if logs | grep -qE "$OK_RE"; then
         sleep 20
-        SETUP='gamerule sendCommandFeedback false;difficulty peaceful;time set noon;weather clear;gamerule doDaylightCycle false;gamerule doWeatherCycle false;gamerule doMobSpawning false'
+        SETUP='gamerule send_command_feedback false;difficulty peaceful;time set noon;weather clear;gamerule advance_time false;gamerule advance_weather false;gamerule spawn_mobs false'
         IFS=';' read -ra CMDS <<< "$SETUP;${COMMANDS:-}"
         for cmd in "${CMDS[@]}"; do
             [ -z "$cmd" ] && continue
