@@ -18,10 +18,9 @@ import sereneseasons.season.SeasonSavedData;
 import sereneseasons.season.SeasonTime;
 
 /**
- * Serene Seasons: the biome climate formula with the season's temperature and the tropical dry season. The runs with
- * Serene Seasons also have Cold Sweat, which turns the compat off in play, so these tests call
- * {@link ThirstHelper#biomeClimate} with the seasons forced on (the call the game makes without Cold Sweat) and check
- * the Cold Sweat switch apart. Each test sets the season and puts it back in the same call, so no other test sees it.
+ * Serene Seasons: the biome climate formula with the season's temperature and the tropical dry season. These tests
+ * call {@link ThirstHelper#biomeClimate} with the seasons on. Each test sets the season and puts it back in the same
+ * call, so no other test sees it.
  * Registered by {@link DropletsGameTests} only when Serene Seasons is installed.
  */
 public class SereneSeasonsTests

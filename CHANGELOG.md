@@ -2,6 +2,44 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
+## 1.0.0 beta (Minecraft 26.1, NeoForge), unreleased
+
+The 26.1 port has every feature of 1.0.0 for 1.21.1 (next section) that does not depend on a mod without a 26.1 build, with the differences below. The jar is `blue-droplets-beta-26.1-1.0.0.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer.
+
+### Minecraft 26.1
+
+- Thirst, quenched, dehydration, hand drinking, water purity, poured water, cauldrons, cooking purification, effects, config, data maps and commands behave as on 1.21.1, with the same config keys (except those of dropped integrations, below) and the same data formats for drinks, biomes and dimensions. `[26.1]`
+- Food hydrates where the food component feeds the player (Minecraft 26.1 eats every food item through its food component; `Player#eat` no longer exists). Water containers and drinks without food values hydrate when they are finished, as before. `[26.1]`
+- The terracotta water bowl is drunk like a water bottle and hands the empty bowl back into the inventory, or drops it when the inventory is full. Water bottles do the same now in vanilla, so Blue Droplets no longer patches the potion item for it. `[26.1]`
+- Being too thirsty to sprint also stops a sprint in progress: Minecraft 26.1 checks it every tick, as it does for hunger. Flying and riding still allow sprinting. `[26.1]`
+- The Nether multiplier and the hot climate of `hotDirtyWater` follow the environment attribute `minecraft:gameplay/water_evaporates` (the 26.1 form of the old `ultrawarm` dimension flag), so a biome or dimension that sets it counts as the Nether. `[26.1]`
+- Water in a cauldron seen through NeoForge's fluid capability, and the water of a bucket, carry their purity through NeoForge's new transfer API; pumps and pipes that take the reported water from a cauldron take it with the cauldron purity. `[26.1]`
+- Tints: water bottles are tinted by purity through vanilla's potion tint; the terracotta water bowl through its own item model tint `blue_droplets:water_purity`, which now colours its liquid layer (on 1.21.1 the tint fell on the bowl layer). `[26.1]`
+- Data: recipes, packs and item models use the 26.1 formats (custom ingredients with `neoforge:ingredient_type`, `min_format`/`max_format` in `pack.mcmeta`, item model definitions in `assets/blue_droplets/items/`). Each chest loot modifier carries the `blue_droplets:loot_config` condition; NeoForge 26.1 loads every file under `loot_modifiers` without a list. Cooking water reaches pure (5) with no cap of 4, since there is no Create. `[26.1]`
+- The drink values, item tags and effect tags of mods without a 26.1 build are not in the jar (see below); the drinks data map keeps vanilla, Blue Droplets and Reliquary. `[26.1]`
+
+### Mod compatibility (26.1)
+
+- Built and tested with Jade 26.1.11, JEI 29.43.0.106, AppleSkin 3.0.9, Serene Seasons 26.1.2.0.4, Traveler's Backpack 11.2.8, Reliquary 2.0.92 and KubeJS 8.0.6 for Minecraft 26.1.2. The integrations work as on 1.21.1. `[26.1]`
+- Jade shows the purity of cauldrons and tanks through a data provider and a separate tooltip provider, as Jade 26.1 requires. `[26.1]`
+- The KubeJS examples use `Item.getItem` in startup scripts (item stacks cannot be built that early in 26.1), `entityTags()` and `isDarkOutside()`. `[26.1]`
+
+### Not in this version (code kept, disabled)
+
+These mods have no NeoForge build for Minecraft 26.1. Their integration code, mixins, game tests, recipes, loot, tags, drink values and assets are kept in `src/disabled` as they were for 1.21.1, but they are not compiled into or packaged in the jar, so a later release of those mods with a changed API cannot break Blue Droplets. Each one comes back with its own port. `[26.1]`
+
+- Create: the Sand Filter (block, Ponder scene, recipe viewer page), fan and basin purification, spouts, drains, pipes, hose pulleys and goggles. Without Create, cooking is the way to pure water. `[26.1]`
+- Farmer's Delight and its addons (Brewin' and Chewin', Extra Delight, Ocean's Delight, Ender's Delight, Farm & Charm, HerbalBrews, Brewery, Fruits Delight, Cultural Delights, Expanded Delight, Miner's Delight, Corn Delight, Rustic Delight, Crabber's Delight, End's Delight, My Nether's Delight, Cook's Collection, Collector's Reap, Farmer's Respite): drink values, the clean water rule (`clean_water_cooking` pack), the cooking pot purification pack, kettles, taps, sinks, wells, cups and their chest loot. `[26.1]`
+- Cold Sweat: body temperature, drink cooling and the waterskin. `[26.1]`
+- Supernatural and Vampirism: vampires. Vampirism has a 26.1 alpha, but it requires a library that is not published. `[26.1]`
+- Config keys of these integrations are gone: `compat.toml` sections `create`, `coldsweat` and `delight`, `purity.toml` `hotDirtyWater.useColdSweat` and `hotDirtyWater.coldSweatMinBodyTemp`, and `client.toml` `Bar Colors.vampire`. Serene Seasons no longer steps aside for Cold Sweat. `[26.1]`
+
+### For developers (26.1)
+
+- Built with ModDevGradle 2.0.148 on Gradle 9.7.1, Java 25, without Parchment (Minecraft 26.1 ships Mojang's names). Optional mods come from Modrinth's maven by version id. `-PwithCompat` adds the integrations to the dev runs; `-PwithKubeJS` runs on NeoForge 26.1.2.109, since KubeJS 8.0.6 does not load on 26.1.2.112. `[26.1]`
+- API: the same classes and methods as on 1.21.1, with `Identifier` in place of `ResourceLocation`. The HUD layer is still `blue_droplets:thirst_level`. `[26.1]`
+- Game tests (`./gradlew runGameTestServer`): 53 without optional mods, 61 with `-PwithCompat` and 59 with `-PwithKubeJS`. Minecraft 26.1 has no `@GameTestHolder`: each test method is registered as a test function and a test instance, and the game test server runs `--tests blue_droplets:*`. Tests of the fluid capability use NeoForge's transfer API; a new test eats an apple through its food component. `scripts/client-boot-check.sh` takes no screenshot: it passes when the client joins, runs the commands and leaves the log clean. `[26.1]`
+
 ## 1.0.0 beta (Minecraft 1.21.1, NeoForge), unreleased
 
 ### Rebrand: Blue Droplets
