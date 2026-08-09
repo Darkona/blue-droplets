@@ -26,7 +26,7 @@ sourceSets {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-// src/disabled keeps the integrations of mods without a Minecraft 26.2 build (see its README). It is not a source
+// src/disabled keeps the integrations of mods without a Minecraft 26.3 build (see its README). It is not a source
 // set: nothing there is compiled or packaged.
 
 repositories {
@@ -99,24 +99,24 @@ dependencies {
     implementation sourceSets.api.output
 
     // Optional mods from Modrinth's maven by version id, since their version numbers are shared with the Fabric builds:
-    // Jade 26.2.10, Traveler's Backpack 26.2-11.3.4, AppleSkin 3.0.10+mc26.2,
-    // Serene Seasons 26.1.2.0.6 (its Minecraft 26.2 build, numbered after 26.1.2), GlitchCore 26.2.0.0.0.
-    // KubeJS has no Minecraft 26.2 build: KubeJSTests only run once it is installed.
+    // Jade 26.3.1, Traveler's Backpack 26.3-11.4.1, AppleSkin 3.0.10+mc26.3, Serene Seasons 26.1.2.0.7 (its
+    // Minecraft 26.3 build, numbered after 26.1.2), GlitchCore 26.3.0.0.3.
+    // Reliquary and KubeJS have no Minecraft 26.3 build: their integrations wait in src/disabled.
 
-    compileOnly 'maven.modrinth:jade:GBES6etT'
-    compileOnly 'maven.modrinth:travelersbackpack:EMeTJkWH'
-    compileOnly 'maven.modrinth:appleskin:slnk1Qah'
+    compileOnly 'maven.modrinth:jade:bzrrwapQ'
+    compileOnly 'maven.modrinth:travelersbackpack:WH4UEEYQ'
+    compileOnly 'maven.modrinth:appleskin:6vok7cLb'
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
-    compileOnly 'maven.modrinth:serene-seasons:MZd2wAtJ'
-    compileOnly 'maven.modrinth:glitchcore:POAebwFo'
+    compileOnly 'maven.modrinth:serene-seasons:QnvW5HPm'
+    compileOnly 'maven.modrinth:glitchcore:5FMzBcg1'
 
     // ./gradlew runClient -PwithCompat
     if (project.hasProperty('withCompat')) {
-        localRuntime 'maven.modrinth:jade:GBES6etT'
-        localRuntime 'maven.modrinth:appleskin:slnk1Qah'
-        localRuntime 'maven.modrinth:travelersbackpack:EMeTJkWH'
-        localRuntime 'maven.modrinth:serene-seasons:MZd2wAtJ'
-        localRuntime 'maven.modrinth:glitchcore:POAebwFo'
+        localRuntime 'maven.modrinth:jade:bzrrwapQ'
+        localRuntime 'maven.modrinth:appleskin:6vok7cLb'
+        localRuntime 'maven.modrinth:travelersbackpack:WH4UEEYQ'
+        localRuntime 'maven.modrinth:serene-seasons:QnvW5HPm'
+        localRuntime 'maven.modrinth:glitchcore:5FMzBcg1'
     }
 
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"

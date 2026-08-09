@@ -2,7 +2,7 @@ package com.darkona.droplets.content.thirst;
 
 import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
@@ -73,7 +73,7 @@ public final class RecipeInference
     private final boolean onlyConsumables = ItemsConfig.INFERENCE_ONLY_CONSUMABLES.get();
     private int recipes, cycles, cutoffs;
 
-    private RecipeInference(Inputs inputs, RecipeManager recipeManager, HolderLookup.Provider registries)
+    private RecipeInference(Inputs inputs, RecipeManager recipeManager, RegistryAccess registries)
     {
         this.inputs = inputs;
         for (String id : ItemsConfig.INFERENCE_BLACKLIST.get())
@@ -88,7 +88,7 @@ public final class RecipeInference
             ignoredTypes.add(type == null ? id : type.toString());
         }
 
-        ContextMap display = new ContextMap.Builder().withParameter(SlotDisplayContext.REGISTRIES, registries).create(SlotDisplayContext.CONTEXT);
+        ContextMap display = ContextMap.builder().set(SlotDisplayContext.REGISTRIES, registries).buildAndValidate(SlotDisplayContext.CONTEXT);
         List<RecipeHolder<?>> holders = new ArrayList<>(recipeManager.getRecipes());
         holders.sort(Comparator.comparing(holder -> holder.id().identifier()));
         for (RecipeHolder<?> holder : holders)
@@ -114,7 +114,7 @@ public final class RecipeInference
         unreadable.forEach((type, count) -> problems.add("inference: " + count + " recipe(s) of type " + type + " could not be read (skipped)"));
     }
 
-    public static Result run(Inputs inputs, RecipeManager recipeManager, HolderLookup.Provider registries)
+    public static Result run(Inputs inputs, RecipeManager recipeManager, RegistryAccess registries)
     {
         long start = System.nanoTime();
         RecipeInference inference = new RecipeInference(inputs, recipeManager, registries);
@@ -138,7 +138,7 @@ public final class RecipeInference
     /**
      * Every recipe of the item with its ingredients' values, the estimate and why it would not be used.
      */
-    public static List<String> explain(Item item, Inputs inputs, RecipeManager recipeManager, HolderLookup.Provider registries)
+    public static List<String> explain(Item item, Inputs inputs, RecipeManager recipeManager, RegistryAccess registries)
     {
         RecipeInference inference = new RecipeInference(inputs, recipeManager, registries);
         List<String> lines = new ArrayList<>();

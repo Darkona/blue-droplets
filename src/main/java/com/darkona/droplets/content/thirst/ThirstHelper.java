@@ -21,7 +21,6 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -141,7 +140,7 @@ public class ThirstHelper
      * ({@link RecipeInference}, server only: {@code recipes} is null on a remote client).
      */
     @SuppressWarnings("deprecation")
-    public static void rebuild(@Nullable RecipeManager recipes, @Nullable HolderLookup.Provider registries)
+    public static void rebuild(@Nullable RecipeManager recipes, @Nullable RegistryAccess registries)
     {
         Tables tables = new Tables();
         List<ContainerWithPurity> containers = new ArrayList<>();

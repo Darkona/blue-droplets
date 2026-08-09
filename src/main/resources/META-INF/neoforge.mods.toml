@@ -70,21 +70,21 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="sereneseasons"
 type="optional"
-versionRange="[26.1.2.0.4,)"
+versionRange="[26.1.2.0.7,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="travelersbackpack"
 type="optional"
-versionRange="[11.3.0,)"
+versionRange="[11.4.0,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="jei"
 type="optional"
-versionRange="[30,)"
+versionRange="[31,)"
 ordering="NONE"
 side="CLIENT"
 
