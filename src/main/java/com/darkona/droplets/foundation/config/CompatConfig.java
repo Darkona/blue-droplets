@@ -18,8 +18,6 @@ public final class CompatConfig
     public static final ModConfigSpec.DoubleValue SERENE_SEASONS_AUTUMN;
     public static final ModConfigSpec.DoubleValue SERENE_SEASONS_WINTER;
 
-    public static final ModConfigSpec.IntValue RELIQUARY_EMPEROR_CHALICE_COOLDOWN;
-
     public static final ModConfigSpec SPEC;
 
     static
@@ -32,10 +30,6 @@ public final class CompatConfig
         SERENE_SEASONS_SUMMER = defineSeason("summer");
         SERENE_SEASONS_AUTUMN = defineSeason("autumn");
         SERENE_SEASONS_WINTER = defineSeason("winter");
-        BUILDER.pop();
-
-        BUILDER.comment("Reliquary: the Emperor's Chalice hydrates like a drink of pure water (values in the blue_droplets:drinks data map); the Infernal Chalice does not").push("reliquary");
-        RELIQUARY_EMPEROR_CHALICE_COOLDOWN = BUILDER.comment("Ticks before the Emperor's Chalice can be used again after a drink (20 ticks = 1 second); 0 = no cooldown").defineInRange("emperorChaliceCooldown", 0, 0, 72000);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

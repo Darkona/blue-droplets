@@ -451,6 +451,8 @@
     "mynethersdelight:tear_popsicle": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "mynethersdelight"}], "thirst": 3, "quenched": 3},
     "oceansdelight:bowl_of_guardian_soup": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "oceansdelight"}], "thirst": 3, "quenched": 3},
     "oceansdelight:braised_sea_pickle": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "oceansdelight"}], "thirst": -2, "quenched": -2},
+    "reliquary:emperor_chalice": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "reliquary"}], "thirst": 4, "quenched": 5, "purity": 5},
+    "reliquary:potion": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "reliquary"}], "thirst": 2, "quenched": 3},
     "rusticdelight:bell_pepper_black": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},
     "rusticdelight:bell_pepper_blue": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},
     "rusticdelight:bell_pepper_green": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},

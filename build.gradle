@@ -99,11 +99,10 @@ dependencies {
     implementation sourceSets.api.output
 
     // Optional mods from Modrinth's maven by version id, since their version numbers are shared with the Fabric builds:
-    // Reliquary 26.2-2.0.92.1568, Jade 26.2.10, Traveler's Backpack 26.2-11.3.4, AppleSkin 3.0.10+mc26.2,
+    // Jade 26.2.10, Traveler's Backpack 26.2-11.3.4, AppleSkin 3.0.10+mc26.2,
     // Serene Seasons 26.1.2.0.6 (its Minecraft 26.2 build, numbered after 26.1.2), GlitchCore 26.2.0.0.0.
     // KubeJS has no Minecraft 26.2 build: KubeJSTests only run once it is installed.
 
-    compileOnly 'maven.modrinth:reliquary-reincarnations:G6PGb5oa'
     compileOnly 'maven.modrinth:jade:GBES6etT'
     compileOnly 'maven.modrinth:travelersbackpack:EMeTJkWH'
     compileOnly 'maven.modrinth:appleskin:slnk1Qah'
@@ -113,7 +112,6 @@ dependencies {
 
     // ./gradlew runClient -PwithCompat
     if (project.hasProperty('withCompat')) {
-        localRuntime 'maven.modrinth:reliquary-reincarnations:G6PGb5oa'
         localRuntime 'maven.modrinth:jade:GBES6etT'
         localRuntime 'maven.modrinth:appleskin:slnk1Qah'
         localRuntime 'maven.modrinth:travelersbackpack:EMeTJkWH'

@@ -52,8 +52,6 @@ public final class DropletsGameTests
                 SaveTests.class, CompatTests.class, ViewerTests.class, DevTests.class));
         if (ModList.get().isLoaded("travelersbackpack"))
             classes.add(TravelersBackpackTests.class);
-        if (ModList.get().isLoaded("reliquary"))
-            classes.add(ReliquaryTests.class);
         if (ModList.get().isLoaded("sereneseasons"))
             classes.add(SereneSeasonsTests.class);
         if (ModList.get().isLoaded("kubejs"))

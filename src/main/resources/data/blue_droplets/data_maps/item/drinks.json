@@ -23,8 +23,6 @@
     "minecraft:spider_eye": {"thirst": -3, "quenched": -3},
     "minecraft:suspicious_stew": {"thirst": 2, "quenched": 2},
     "minecraft:sweet_berries": {"thirst": 2, "quenched": 2},
-    "minecraft:water_bucket": {"thirst": 4, "quenched": 5},
-    "reliquary:emperor_chalice": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "reliquary"}], "thirst": 4, "quenched": 5, "purity": 5},
-    "reliquary:potion": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "reliquary"}], "thirst": 2, "quenched": 3}
+    "minecraft:water_bucket": {"thirst": 4, "quenched": 5}
   }
 }

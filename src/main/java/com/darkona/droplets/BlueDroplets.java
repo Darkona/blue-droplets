@@ -1,7 +1,6 @@
 package com.darkona.droplets;
 
 import com.darkona.droplets.api.DropletsAPI;
-import com.darkona.droplets.compat.reliquary.ReliquaryCompat;
 import com.darkona.droplets.content.DropletsServiceImpl;
 import com.darkona.droplets.content.data.DropletsDataMaps;
 import com.darkona.droplets.content.purity.WaterPurity;
@@ -55,7 +54,6 @@ public class BlueDroplets
         modBus.addListener(ThirstModPacketHandler::register);
         DropletsGameTests.register(modBus);
         TravelersBackpackCompat.init(modBus);
-        ReliquaryCompat.init();
         ModAttachment.ATTACHMENT_TYPES.register(modBus);
         ThirstComponent.DR.register(modBus);
 
