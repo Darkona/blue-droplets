@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "blue_droplets:quenchness_potion"
+    }
+  ],
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "blue_droplets:quenchness"
+    }
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  },
+  "output": {
+    "id": "minecraft:lingering_potion",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "blue_droplets:quenchness"
+      }
+    }
+  }
+}

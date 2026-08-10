@@ -5,6 +5,7 @@ import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.config.LootConfigCondition;
 import com.darkona.droplets.foundation.config.PurityEnabledCondition;
 import com.darkona.droplets.foundation.config.PurityEnabledLootCondition;
+import com.darkona.droplets.foundation.config.QuenchnessPotionCondition;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -18,6 +19,7 @@ public class ConditionInit {
 
     public static final Supplier<MapCodec<LootConfigCondition>> LOOT_CONFIG_CONDITION = CONDITION_CODECS.register("loot_config", () -> LootConfigCondition.CODEC);
     public static final Supplier<MapCodec<PurityEnabledCondition>> PURITY_ENABLED_CONDITION = CONDITION_CODECS.register("purity_enabled", () -> PurityEnabledCondition.CODEC);
+    public static final Supplier<MapCodec<QuenchnessPotionCondition>> QUENCHNESS_POTION_CONDITION = CONDITION_CODECS.register("quenchness_potion", () -> QuenchnessPotionCondition.CODEC);
 
     public static final DeferredRegister<MapCodec<? extends LootItemCondition>> LOOT_CONDITIONS = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, BlueDroplets.ID);
 

@@ -218,7 +218,7 @@ public final class GameplayConfig
         BUILDER.push("effects");
         DEHYDRATION_MULTIPLIER = BUILDER.comment("Multiplier of the thirst exhaustion the Dehydration effect adds every tick (0.005 per level)").defineInRange("dehydrationMultiplier", 1.0, 0.0, 10.0);
         QUENCHNESS_INTERVAL_TICKS = BUILDER.comment("Quenchness restores (level) thirst and quenched every this many ticks").defineInRange("quenchnessIntervalTicks", 40, 1, 1200);
-        QUENCHNESS_POTION = BUILDER.comment("Brewing recipes for the Quenchness potions (awkward potion + prismarine crystals). Keep the same value on the server and the clients").define("quenchnessPotion", true);
+        QUENCHNESS_POTION = BUILDER.comment("Brewing recipes for the Quenchness potions (awkward potion + prismarine crystals). A load condition of the recipes: a change applies when datapacks load (/reload)").define("quenchnessPotion", true);
         HYDRATED_MULTIPLIER = BUILDER.comment("Thirst loss with the Hydrated effect, once per level (0.5: level I halves it, level II quarters it)").defineInRange("hydratedMultiplier", 0.5, 0.0, 1.0);
         WATER_BREATHING_REDUCES_THIRST = BUILDER.comment("Whether Water Breathing or Conduit Power multiplies thirst loss by underwaterBreathingMultiplier while fully underwater").define("waterBreathingReducesThirst", false);
         UNDERWATER_BREATHING_MULTIPLIER = BUILDER.comment("With waterBreathingReducesThirst: on top of climate.underwater").defineInRange("underwaterBreathingMultiplier", 0.5, 0.0, 10.0);
