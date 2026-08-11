@@ -5,11 +5,9 @@
     }
   ],
   "type": "neoforge:add_table",
-  "conditions": [
-    {
-      "condition": "neoforge:loot_table_id",
-      "loot_table_id": "minecraft:chests/shipwreck_supply"
-    }
-  ],
+  "condition": {
+    "type": "neoforge:loot_table_id",
+    "loot_table_id": "minecraft:chests/shipwreck_supply"
+  },
   "table": "blue_droplets:chests/shipwreck_supply"
 }
