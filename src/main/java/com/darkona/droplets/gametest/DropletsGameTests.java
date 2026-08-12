@@ -49,7 +49,7 @@ public final class DropletsGameTests
     private static List<Class<?>> classes()
     {
         List<Class<?>> classes = new ArrayList<>(List.of(ThirstTests.class, PurityTests.class, PurityOffTests.class, PouredWaterTests.class,
-                SaveTests.class, CompatTests.class, ViewerTests.class, DevTests.class));
+                SaveTests.class, CompatTests.class, ViewerTests.class, DevTests.class, DataTests.class));
         if (ModList.get().isLoaded("travelersbackpack"))
             classes.add(TravelersBackpackTests.class);
         if (ModList.get().isLoaded("sereneseasons"))
