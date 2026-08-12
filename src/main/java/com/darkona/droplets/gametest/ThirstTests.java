@@ -13,6 +13,7 @@ import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.core.BlockPos;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -213,6 +214,19 @@ public class ThirstTests
             }
         }
         helper.assertValueEqual(PurityConfig.HOT_DIRTY_WATER_MAX_PURITY.getDefault(), PurityLevel.MURKY.level(), "hotDirtyWater.maxPurity default");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void climateFallsWithAltitude(GameTestHelper helper)
+    {
+        Level level = helper.getLevel();
+        BlockPos low = helper.absolutePos(BlockPos.ZERO).atY(level.getSeaLevel());
+        BlockPos high = low.above(200);
+        var plains = level.getBiome(low);
+        float atSea = ThirstHelper.biomeClimate(level, plains, low, 1.0F, false);
+        float onTop = ThirstHelper.biomeClimate(level, plains, high, 1.0F, false);
+        helper.assertTrue(onTop < atSea, "climate multiplier 200 blocks above sea level " + onTop + ", not below " + atSea);
         helper.succeed();
     }
 
