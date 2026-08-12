@@ -8,7 +8,7 @@ Water is not all the same. Water from a swamp or a puddle can make you sick, and
 
 It is made for modpacks and works with many popular mods. It continues **[Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod)** by **ghen**.
 
-This is the **Minecraft 26.2** version, for **NeoForge 26.2.0.88 or newer**. What differs from the 1.21.1 version is in the wiki page [Minecraft 26.2](https://github.com/Darkona/blue-droplets/wiki/Minecraft-26.2) and in the [changelog](CHANGELOG.md).
+This is the **Minecraft 26.3** version, for **NeoForge 26.3.0.36-beta** (NeoForge for 26.3 is still in beta; 26.3.0.37-beta and newer are not supported yet). What differs from the 1.21.1 version is in the wiki page [Minecraft 26.3](https://github.com/Darkona/blue-droplets/wiki/Minecraft-26.3) and in the [changelog](CHANGELOG.md).
 
 ## Credits and license
 

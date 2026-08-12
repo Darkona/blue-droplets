@@ -2,6 +2,34 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
+## 1.0.0 beta (Minecraft 26.3, NeoForge), unreleased
+
+The 26.3 port has every feature of the 26.2 port (next section) except the Reliquary integration, with the differences below. The jar is `blue-droplets-beta-26.3-1.0.0.jar`, for Minecraft 26.3 and NeoForge 26.3.0.36-beta only.
+
+### Minecraft 26.3
+
+- Thirst, quenched, dehydration, hand drinking, water purity, poured water, cauldrons, cooking purification, effects, config, data maps, commands and the API behave as on 26.2, with the same config keys (except Reliquary's, below). `[26.3]`
+- Potion of Quenchness: Minecraft 26.3 brews potions from data recipes, so the three mixes (awkward potion and prismarine crystals, then redstone or glowstone dust) are now 15 `minecraft:brewing` recipes in `data/blue_droplets/recipe/brewing`, one per mix and container plus the gunpowder and dragon's breath container changes. A data pack can change or remove them. `[26.3]`
+- `gameplay.toml` `effects.quenchnessPotion` acts through the recipes' load condition `blue_droplets:quenchness_potion`: a change applies when data packs load (a restart or `/reload`), and only the server's value counts. `[26.3]`
+- Chest loot: the loot tables and global loot modifiers use Minecraft 26.3's loot format (`modifier` in place of `functions`, a single `condition` in place of `conditions`, `type` as the function and condition key). Data packs that add Blue Droplets loot in the old format lose their functions and conditions without an error; a global loot modifier in the old format loses its `loot_table_id` condition and adds its table to every loot table. `scripts/loot/convert.py` converts such files. `[26.3]`
+- The built-in data packs (presets and purification packs) use data pack format 121. `[26.3]`
+
+### Mod compatibility (26.3)
+
+- Built and tested with Jade 26.3.1, JEI 31.8.0.48, AppleSkin 3.0.10, Serene Seasons 26.1.2.0.7 (its Minecraft 26.3 build), GlitchCore 26.3.0.0.3 and Traveler's Backpack 11.4.1 for Minecraft 26.3. The integrations work as on 26.2. `[26.3]`
+- Serene Seasons: the climate formula reads the seasonal biome temperature at sea level. Above sea level vanilla also lowers the biome temperature with height, which the formula without Serene Seasons does not do, so installing Serene Seasons made thirst loss fall with height. Now only the season changes the climate, as intended. `[26.3]`
+- Known upstream incompatibility: NeoForge 26.3.0.37-beta renamed the config types (`ModConfig.Type.COMMON`/`SERVER` became `LOCAL`/`SYNCED`), and JEI 31.8.0.48 and Traveler's Backpack 11.4.1 crash on it (`NoSuchFieldError`). This build targets NeoForge 26.3.0.36-beta, the last build before the rename, and refuses 26.3.0.37-beta and newer. Moving to the new config types waits for JEI and Traveler's Backpack builds that load there. `[26.3]`
+
+### Not in this version (26.3)
+
+- Reliquary has no build for Minecraft 26.3: its integration (Emperor's Chalice drink values and the cooldown) moves to `src/disabled` and the `compat.toml` section `reliquary` (`emperorChaliceCooldown`) is gone. It comes back with its own port when Reliquary publishes a 26.3 build. `[26.3]`
+- KubeJS, Create, Farmer's Delight and its addons, Cold Sweat, Supernatural and Vampirism still have no Minecraft 26.3 build; their integrations stay in `src/disabled`. `[26.3]`
+
+### For developers (26.3)
+
+- Built with ModDevGradle 2.0.148 on Gradle 9.7.1 and Java 25, against NeoForge 26.3.0.36-beta (FML 12). `scripts/brewing/generate.py` writes the brewing recipes; `scripts/loot/convert.py` converts loot tables and global loot modifiers to the 26.3 format. `[26.3]`
+- Game tests (`./gradlew runGameTestServer`): 57 without optional mods and 63 with `-PwithCompat`. New `data_tests`: a Potion of Quenchness brewed in a brewing stand, the recipes of every container, the config switch on the recipes' load condition, and the chest loot (functions applied, modifiers only on their own chest). Minecraft 26.3 runs game tests at y=4 instead of y=-59, above the test world's sea level. `[26.3]`
+
 ## 1.0.0 beta (Minecraft 26.2, NeoForge), unreleased
 
 The 26.2 port has every feature of the 26.1 port (next section), which lists what differs from 1.21.1, with the differences below. The jar is `blue-droplets-beta-26.2-1.0.0.jar`, for Minecraft 26.2 and NeoForge 26.2.0.88 or newer.
