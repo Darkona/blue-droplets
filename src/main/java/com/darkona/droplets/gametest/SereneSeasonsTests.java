@@ -30,6 +30,16 @@ public class SereneSeasonsTests
         return level.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(key);
     }
 
+    /**
+     * Where the tests read the climate: the test's column at sea level. Above sea level + 17 vanilla also cools the
+     * biome with height and Serene Seasons' temperature includes that, which the formula without seasons does not;
+     * since 26.3 the tests run above the test world's sea level, so they read below it to compare only the season.
+     */
+    private static BlockPos at(GameTestHelper helper)
+    {
+        return helper.absolutePos(BlockPos.ZERO).atY(helper.getLevel().getSeaLevel());
+    }
+
     /** Climate multiplier of {@code biome} in the middle of {@code season}, with seasons; the level's season is restored. */
     private static float inSeason(GameTestHelper helper, Holder<Biome> biome, Season.SubSeason season)
     {
@@ -38,7 +48,7 @@ public class SereneSeasonsTests
         try
         {
             data.seasonCycleTicks = SeasonTime.ZERO.getSubSeasonDuration() * season.ordinal();
-            return ThirstHelper.biomeClimate(helper.getLevel(), biome, helper.absolutePos(BlockPos.ZERO), 1.0F, true);
+            return ThirstHelper.biomeClimate(helper.getLevel(), biome, at(helper), 1.0F, true);
         }
         finally
         {
@@ -48,7 +58,7 @@ public class SereneSeasonsTests
 
     private static float withoutSeasons(GameTestHelper helper, Holder<Biome> biome)
     {
-        return ThirstHelper.biomeClimate(helper.getLevel(), biome, helper.absolutePos(BlockPos.ZERO), 1.0F, false);
+        return ThirstHelper.biomeClimate(helper.getLevel(), biome, at(helper), 1.0F, false);
     }
 
     @GameTest(template = "empty")
