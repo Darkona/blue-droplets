@@ -21,13 +21,11 @@ final class SereneSeasonsBridge
     /**
      * The biome's temperature at {@code pos} in the current sub-season: its own plus Serene Seasons'
      * {@code biome_temp_adjustment}, except where the season does not apply (tropical, warm or blacklisted biomes,
-     * other dimensions). Read at sea level: above it vanilla also cools the biome with height, which the formula
-     * without seasons does not do, so only the season changes the climate.
+     * other dimensions).
      */
     static float temperature(Level level, Holder<Biome> biome, BlockPos pos)
     {
-        int seaLevel = level.getSeaLevel();
-        return SeasonHooks.getBiomeTemperature(level, biome, pos.getY() > seaLevel ? pos.atY(seaLevel) : pos, seaLevel);
+        return SeasonHooks.getBiomeTemperature(level, biome, pos, level.getSeaLevel());
     }
 
     /** No seasons here. */
