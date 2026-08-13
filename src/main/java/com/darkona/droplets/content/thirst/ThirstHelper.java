@@ -5,6 +5,7 @@ import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.config.ConfigCheck;
 import com.darkona.droplets.foundation.config.GameplayConfig;
+import com.darkona.droplets.foundation.mixin.BiomeAccessor;
 import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
@@ -566,12 +567,14 @@ public class ThirstHelper
     /**
      * The biome formula of {@link #getExhaustionBiomeModifier}, LEGACY or CURVE, times {@code multiplier}. With
      * {@code seasons} (Serene Seasons loaded) the temperature is the one of the current season, and a tropical biome's
-     * dry season adds its multiplier.
+     * dry season adds its multiplier. The temperature is vanilla's at {@code pos}, cooled with height, with or without seasons.
      */
     public static float biomeClimate(Level level, Holder<Biome> biomeHolder, BlockPos pos, float multiplier, boolean seasons)
     {
         Biome biome = biomeHolder.value();
-        float temperature = seasons ? SereneSeasonsCompat.temperature(level, biomeHolder, pos, biome.getBaseTemperature()) : biome.getBaseTemperature();
+        // Vanilla's temperature at pos, cooled with height; Serene Seasons' one includes that too, so the formula agrees with and without it.
+        float base = ((BiomeAccessor) (Object) biome).blue_droplets$getTemperature(pos);
+        float temperature = seasons ? SereneSeasonsCompat.temperature(level, biomeHolder, pos, base) : base;
         float season = seasons ? SereneSeasonsCompat.seasonMultiplier(level, biomeHolder) : 1.0F;
         float downfall = biome.getDownfall();
         if (GameplayConfig.CLIMATE_FORMULA.get() == GameplayConfig.ClimateFormula.CURVE)

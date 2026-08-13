@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "blue_droplets.refmap.json",
   "mixins": [
+    "BiomeAccessor",
     "MixinAbstractCauldronBlock",
     "MixinBottleItem",
     "MixinBucketItem",
