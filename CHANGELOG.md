@@ -21,6 +21,7 @@ The 1.20.1 port has every feature of 1.0.0 for 1.21.1 (next section), with the d
 - Dispensers give a filled water container the purity of the water in front of them where the container goes back into the dispenser (Minecraft 1.20.1 has no `consumeWithRemainder`); a vanilla bucket that falls out because the dispenser is full keeps no purity, since the vanilla dispenser code builds a new stack for the drop after giving the filled one its purity. That is a limit of this version. `[1.20.1]`
 - Create goggles show the purity through `CreateLang.fluidName`, which in Create 6 for 1.20.1 names fluids only in the goggle tooltips of tanks and basins, so basins show it too. `[1.20.1]`
 - Other thirst mods (Tough As Nails, Legendary Survival Overhaul, Homeostatic, Survive) show a warning on the loading screen and in the log, since Forge 47 has no `discouraged` dependency type. Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) still stop the game from starting, through a dependency range no version satisfies. `[1.20.1]`
+- The biome climate of thirst loss uses vanilla's height-adjusted biome temperature, with and without Serene Seasons, so thirst loss falls with height the same either way; before, only Serene Seasons cooled it with height and the formula otherwise read the flat base temperature. `[1.20.1]`
 
 ### Mod compatibility (1.20.1)
 
