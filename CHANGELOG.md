@@ -17,6 +17,7 @@ The 26.1 port has every feature of 1.0.0 for 1.21.1 (next section) that does not
 - Tints: water bottles are tinted by purity through vanilla's potion tint; the terracotta water bowl through its own item model tint `blue_droplets:water_purity`, which now colours its liquid layer (on 1.21.1 the tint fell on the bowl layer). `[26.1]`
 - Data: recipes, packs and item models use the 26.1 formats (custom ingredients with `neoforge:ingredient_type`, `min_format`/`max_format` in `pack.mcmeta`, item model definitions in `assets/blue_droplets/items/`). Each chest loot modifier carries the `blue_droplets:loot_config` condition; NeoForge 26.1 loads every file under `loot_modifiers` without a list. Cooking water reaches pure (5) with no cap of 4, since there is no Create. `[26.1]`
 - The drink values, item tags and effect tags of mods without a 26.1 build are not in the jar (see below); the drinks data map keeps vanilla, Blue Droplets and Reliquary. `[26.1]`
+- The biome climate of thirst loss uses vanilla's height-adjusted biome temperature, with and without Serene Seasons, so thirst loss falls with height the same either way; before, only Serene Seasons cooled it with height and the formula otherwise read the flat base temperature. `[26.1]`
 
 ### Mod compatibility (26.1)
 
