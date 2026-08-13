@@ -13,6 +13,7 @@ The 1.19.2 port has every feature of the 1.20.1 port (next section) and so of 1.
 - Dehydration damage is a damage source (`dehydrate`) with the same rules as starving: it goes through armor, enchantments and Resistance. Minecraft 1.19.2 has no damage types, so datapacks cannot change it. `[1.19.2]`
 - The creative tab lists the same stacks (the water containers once per purity, the Sand Filter with Create). The Sand Filter is only in the Blue Droplets tab: a 1.19.2 item has one tab, and Create's tab only lists Create's own items. `[1.19.2]`
 - Optional datapacks: Minecraft 1.19.2 turns on every datapack it has not seen before and has no "off by default" pack. The presets and the smoker purification pack stay off until a player turns them on, when creating the world or with `/datapack enable`, as in later versions; the others are on by default, also in existing worlds. `[1.19.2]`
+- The biome climate of thirst loss uses vanilla's height-adjusted biome temperature, with and without Serene Seasons, so thirst loss falls with height the same either way; before, only Serene Seasons cooled it with height and the formula otherwise read the flat base temperature. `[1.19.2]`
 
 ### Mod compatibility (1.19.2)
 
