@@ -17,7 +17,7 @@ The 26.3 port has every feature of the 26.2 port (next section) except the Reliq
 ### Mod compatibility (26.3)
 
 - Built and tested with Jade 26.3.1, JEI 31.8.0.48, AppleSkin 3.0.10, Serene Seasons 26.1.2.0.7 (its Minecraft 26.3 build), GlitchCore 26.3.0.0.3 and Traveler's Backpack 11.4.1 for Minecraft 26.3. The integrations work as on 26.2. `[26.3]`
-- Serene Seasons: the climate formula reads the seasonal biome temperature at sea level. Above sea level vanilla also lowers the biome temperature with height, which the formula without Serene Seasons does not do, so installing Serene Seasons made thirst loss fall with height. Now only the season changes the climate, as intended. `[26.3]`
+- The biome climate of thirst loss uses vanilla's height-adjusted biome temperature, with and without Serene Seasons, so thirst loss falls with height the same either way; before, only Serene Seasons cooled it with height and the formula otherwise read the flat base temperature. `[26.3]`
 - Known upstream incompatibility: NeoForge 26.3.0.37-beta renamed the config types (`ModConfig.Type.COMMON`/`SERVER` became `LOCAL`/`SYNCED`), and JEI 31.8.0.48 and Traveler's Backpack 11.4.1 crash on it (`NoSuchFieldError`). This build targets NeoForge 26.3.0.36-beta, the last build before the rename, and refuses 26.3.0.37-beta and newer. Moving to the new config types waits for JEI and Traveler's Backpack builds that load there. `[26.3]`
 
 ### Not in this version (26.3)

@@ -31,9 +31,9 @@ public class SereneSeasonsTests
     }
 
     /**
-     * Where the tests read the climate: the test's column at sea level. Above sea level + 17 vanilla also cools the
-     * biome with height and Serene Seasons' temperature includes that, which the formula without seasons does not;
-     * since 26.3 the tests run above the test world's sea level, so they read below it to compare only the season.
+     * Where the tests read the climate: the test's column at sea level. Both formulas use vanilla's height-adjusted
+     * temperature, so any height would compare the same; the tests run above the test world's sea level and this keeps
+     * them out of the height cooling.
      */
     private static BlockPos at(GameTestHelper helper)
     {

@@ -3,6 +3,7 @@
   "package": "com.darkona.droplets.foundation.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "BiomeAccessor",
     "FoodDataAccessor",
     "MixinAbstractCauldronBlock",
     "MixinBottleItem",
