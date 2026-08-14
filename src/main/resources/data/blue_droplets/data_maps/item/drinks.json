@@ -15,7 +15,6 @@
     "collectorsreap:lime": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "collectorsreap"}], "thirst": 2, "quenched": 3},
     "collectorsreap:portobello_rice_soup": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "collectorsreap"}], "thirst": 6, "quenched": 8},
     "collectorsreap:lime_popsicle": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "collectorsreap"}], "thirst": 7, "quenched": 9},
-    "namespace:item": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "namespace"}], "thirst": 1, "quenched": 1},
     "blue_droplets:terracotta_water_bowl": {"thirst": 4, "quenched": 5},
     "brewery:beer_barley": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "brewery"}], "thirst": 1, "quenched": 0},
     "brewery:beer_haley": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "brewery"}], "thirst": 1, "quenched": 0},
