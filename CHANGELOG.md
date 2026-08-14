@@ -13,6 +13,7 @@ The 26.2 port has every feature of the 26.1 port (next section), which lists wha
 - An empty bucket takes the purity of the water it picks up at the pickup itself, so a change in the order of vanilla's bucket code cannot leave a bucket without purity. `[26.2]`
 - The built-in data packs (presets and purification packs) use data pack format 107. `[26.2]`
 - The mod list shows the logo as the mod's square icon (`iconFile`); NeoForge 26.2 deprecates `logoFile`. `[26.2]`
+- The biome climate of thirst loss uses vanilla's height-adjusted biome temperature, with and without Serene Seasons, so thirst loss falls with height the same either way; before, only Serene Seasons cooled it with height and the formula otherwise read the flat base temperature. `[26.2]`
 
 ### Mod compatibility (26.2)
 
