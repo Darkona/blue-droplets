@@ -293,7 +293,7 @@ public final class DropletsAPI
 
     /**
      * Tints the thirst bar's droplets with {@code rgb} ({@code 0xRRGGBB}) while {@code active} is true for the local
-     * player. The active style with the highest priority wins; built-in priorities: vampire 400, Dehydration 300, Overhydrated 250,
+     * player. The active style with the highest priority wins; built-in priorities: Dehydration 300, Overhydrated 250,
      * Poison 200, Quenchness 100. Registering the same id again replaces it. Client side only (for example in
      * {@code FMLClientSetupEvent}); {@code active} is tested every frame, so keep it cheap and allocation free.
      */
