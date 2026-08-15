@@ -130,8 +130,7 @@ public final class GameplayConfig
 
         BUILDER.comment("Multipliers from the player's surroundings, recomputed every second. 1.0 = no change").push("climate");
         CLIMATE_FORMULA = BUILDER.comment("LEGACY: 'multiplier' x biome temperature / humidity, softened below 1 by legacyHarshness (as before).",
-                        "CURVE: 'multiplier' x temperatureCurve(biome temperature) x humidityCurve(biome downfall).",
-                        "With Cold Sweat and compat.toml coldsweat.useBodyTemperature, coldsweat.bodyTemperatureCurve replaces both")
+                        "CURVE: 'multiplier' x temperatureCurve(biome temperature) x humidityCurve(biome downfall).")
                 .defineEnum("formula", ClimateFormula.LEGACY);
         LEGACY_HARSHNESS = BUILDER.comment("LEGACY: how much of a multiplier below 1 is kept (0.5 = halfway to 1)").defineInRange("legacyHarshness", 0.5, 0.0, 1.0);
         TEMPERATURE_CURVE = BUILDER.comment("CURVE: [\"temperature,multiplier\", ...] in ascending temperature; straight lines between points, flat beyond the ends")

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Fluids read from a save or the network (tanks, Create pipes): a Thirst Was Taken purity becomes a purity on the new
+ * Fluids read from a save or the network (tanks, pipes): a Thirst Was Taken purity becomes a purity on the new
  * scale, as for item stacks.
  */
 @Mixin(FluidStack.class)

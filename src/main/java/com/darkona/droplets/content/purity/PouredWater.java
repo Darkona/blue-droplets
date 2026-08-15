@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
 import java.util.stream.LongStream;
 
 /**
- * Water sources poured into the world (buckets, dispensers, {@code FluidUtil.tryPlaceFluid}, Create open pipe ends),
+ * Water sources poured into the world (buckets, dispensers, {@code FluidUtil.tryPlaceFluid}),
  * with the purity of the water poured, so pouring sea water into a meadow does not give clean water back. One map
  * per chunk ({@code BlockPos.asLong} to purity), saved with the chunk and never synced: only the server decides a
  * purity. Nothing runs per tick: the map is read when water is taken from the world and written when it is poured.

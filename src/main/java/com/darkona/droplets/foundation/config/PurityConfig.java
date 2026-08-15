@@ -53,7 +53,7 @@ public final class PurityConfig
         BUILDER.pop();
 
         BUILDER.comment("Pure water (purity " + PurityLevel.PURE.level() + ") hydrates more than other water: these points are added to what the container gives.",
-                "Bottles, buckets, bowls, the Traveler's Backpack hose, Cold Sweat waterskins and other purity containers count; a sip by hand does not.",
+                "Bottles, buckets, bowls, the Traveler's Backpack hose and other purity containers count; a sip by hand does not.",
                 "Other drinks with a purity do not get it. 2 points = 1 droplet on the HUD").push("pureWater");
         PURE_THIRST_BONUS = BUILDER.comment("Thirst added when drinking pure water").defineInRange("thirstBonus", 2, 0, 20);
         PURE_QUENCHED_BONUS = BUILDER.comment("Quenched added when drinking pure water").defineInRange("quenchedBonus", 3, 0, 20);
