@@ -24,6 +24,7 @@ The 26.3 port has every feature of the 26.2 port (next section) except the Reliq
 
 - Reliquary has no build for Minecraft 26.3: its integration (Emperor's Chalice drink values and the cooldown) moves to `src/disabled` and the `compat.toml` section `reliquary` (`emperorChaliceCooldown`) is gone. It comes back with its own port when Reliquary publishes a 26.3 build. `[26.3]`
 - KubeJS, Create, Farmer's Delight and its addons, Cold Sweat, Supernatural and Vampirism still have no Minecraft 26.3 build; their integrations stay in `src/disabled`. `[26.3]`
+- Nothing from Thirst Was Taken is migrated: it has no build for Minecraft 26.3, so the `thirst:` id aliases, the `thirst:purity` conversion (with its two runtime mixins into `ItemStack` and `FluidStack`) and the copy of the old `config/thirst/` and single-file configs are gone. Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) are no longer marked incompatible but discouraged, like the other thirst mods, and Thirst Was Taken 2 (mod id `thirstwastaken2`) is discouraged too: the game starts with a warning and both thirst systems run side by side. `[26.3]`
 
 ### For developers (26.3)
 

@@ -8,7 +8,6 @@ import com.darkona.droplets.content.registry.AttributeInit;
 import com.darkona.droplets.content.registry.ConditionInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.registry.ItemInit;
-import com.darkona.droplets.content.registry.LegacyIds;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.PlayerThirstManager;
@@ -70,10 +69,8 @@ public class BlueDroplets
         AttributeInit.register(modBus);
         ConditionInit.CONDITION_CODECS.register(modBus);
         ConditionInit.LOOT_CONDITIONS.register(modBus);
-        LegacyIds.register(modBus);
 
         ThirstTab.register(modBus);
-        LegacyConfigMigration.run();
         modContainer.registerConfig(ModConfig.Type.COMMON, GameplayConfig.SPEC, ID + "/gameplay.toml");
         modContainer.registerConfig(ModConfig.Type.COMMON, PurityConfig.SPEC, ID + "/purity.toml");
         modContainer.registerConfig(ModConfig.Type.COMMON, ItemsConfig.SPEC, ID + "/items.toml");

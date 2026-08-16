@@ -171,6 +171,6 @@ Gunpowder turns them into splash potions and dragon's breath into lingering poti
 - **Serene Seasons**: the season changes the climate of thirst loss.
 - **Traveler's Backpack**: drinking water through the hose hydrates like a water bottle, with the purity of the water in the tank. Water the hose sucks from the world keeps its purity.
 
-Tough As Nails, Legendary Survival Overhaul, Homeostatic and Survive have their own thirst. With one of them installed the game starts with a warning, and both thirst systems run until one is turned off. Thirst Was Taken and Thirst Was Reclaimed cannot be installed together with Blue Droplets.
+Tough As Nails, Legendary Survival Overhaul, Homeostatic, Survive and Thirst Was Taken 2 have their own thirst. With one of them installed the game starts with a warning, and both thirst systems run until one is turned off. On Minecraft 1.x, Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) cannot be installed together with Blue Droplets; on 26.x, where Thirst Was Taken has no build, Thirst Was Reclaimed only gets the warning too.
 
 Other versions of Blue Droplets work with more mods, Create and Farmer's Delight among them. See the version table on the [home page](Home).

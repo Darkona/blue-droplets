@@ -46,6 +46,8 @@ Problems that a single key cannot show (unknown effect or item ids, overlapping 
 
 ## Moving from Thirst Was Taken
 
+This section is for Minecraft 1.x. Thirst Was Taken has no build for Minecraft 26.x, so the 26.x versions of Blue Droplets do not move any old files, worlds or configs.
+
 On first start, if a new file does not exist yet, its values are copied from the old files (`common.toml`, `item_settings.toml`, `container.toml`, `keyword.toml`, also from Thirst Was Taken's `config/thirst/`). The old files are then renamed to `*.toml.old` and no longer read. A warning in the log lists what was moved. Modpacks that ship `defaultconfigs/` must use the new file names and keys.
 
 | Old file and key | New file and key |
@@ -71,7 +73,7 @@ On first start, if a new file does not exist yet, its values are copied from the
 | `container.toml` `Containers` | `items.toml` `containers.containers` |
 | `keyword.toml` (all keys) | `items.toml` `keywords.*` (`enabled`, `drinkThirst`, `drinkQuenched`, `soupThirst`, …, `blacklist`, `drink`, `soup`, `fruit`) |
 
-Thirst Was Taken had four purity levels. Its purity values move to the six of Blue Droplets: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
+On Minecraft 1.x, Thirst Was Taken had four purity levels. Its purity values move to the six of Blue Droplets: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
 
 ---
 
@@ -272,7 +274,7 @@ One list per purity: `contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `p
 - Any mob effect id works, also from other mods, including `blue_droplets:dehydration` and `blue_droplets:hydrated` (for example `"blue_droplets:hydrated,600,0,100"` in `pure`). An unknown id is skipped and listed by `/blue_droplets config check`.
 - One roll per drink is shared by the whole list: an entry applies when the roll is below its chance. So a 40% entry always comes together with the 100% ones.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
-- Old configs: the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and durations. Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`, and `murky` and `clean` keep their defaults.
+- Old configs (Minecraft 1.x only): the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and durations. Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`, and `murky` and `clean` keep their defaults.
 
 ### `[hotDirtyWater]`
 
