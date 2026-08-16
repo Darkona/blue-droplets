@@ -34,6 +34,7 @@ These mods have no NeoForge build for Minecraft 26.1. Their integration code, mi
 - Cold Sweat: body temperature, drink cooling and the waterskin. `[26.1]`
 - Supernatural and Vampirism: vampires. Vampirism has a 26.1 alpha, but it requires a library that is not published. `[26.1]`
 - Config keys of these integrations are gone: `compat.toml` sections `create`, `coldsweat` and `delight`, `purity.toml` `hotDirtyWater.useColdSweat` and `hotDirtyWater.coldSweatMinBodyTemp`, and `client.toml` `Bar Colors.vampire`. Serene Seasons no longer steps aside for Cold Sweat. `[26.1]`
+- Nothing from Thirst Was Taken is migrated (the rebrand and purity entries below that describe the migration apply to 1.21.1 only): it has no build for Minecraft 26.1, so the `thirst:` id aliases, the `thirst:purity` conversion (with its two runtime mixins into `ItemStack` and `FluidStack`) and the copy of the old `config/thirst/` and single-file configs are gone. Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) are no longer marked incompatible but discouraged, like the other thirst mods, and Thirst Was Taken 2 (mod id `thirstwastaken2`) is discouraged too: the game starts with a warning and both thirst systems run side by side. `[26.1]`
 
 ### For developers (26.1)
 
