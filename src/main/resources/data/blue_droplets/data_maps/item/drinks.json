@@ -425,7 +425,6 @@
     "minecraft:spider_eye": {"thirst": -3, "quenched": -3},
     "minecraft:suspicious_stew": {"thirst": 2, "quenched": 2},
     "minecraft:sweet_berries": {"thirst": 2, "quenched": 2},
-    "minecraft:water_bucket": {"thirst": 4, "quenched": 5},
     "minersdelight:baked_cod_stew_cup": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "minersdelight"}], "thirst": 2, "quenched": 2},
     "minersdelight:bat_soup": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "minersdelight"}], "thirst": 3, "quenched": 3},
     "minersdelight:bat_soup_cup": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "minersdelight"}], "thirst": 3, "quenched": 3},
