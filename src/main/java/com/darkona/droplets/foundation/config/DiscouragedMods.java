@@ -22,7 +22,8 @@ public final class DiscouragedMods
             "toughasnails", "Tough As Nails",
             "legendarysurvivaloverhaul", "Legendary Survival Overhaul",
             "homeostatic", "Homeostatic",
-            "survive", "Survive");
+            "survive", "Survive",
+            "thirstwastaken2", "Thirst Was Taken 2");
 
     private DiscouragedMods() {}
 
