@@ -24,6 +24,7 @@ The 26.2 port has every feature of the 26.1 port (next section), which lists wha
 
 - KubeJS has no build for Minecraft 26.2. Blue Droplets has no KubeJS code of its own, so nothing is disabled: the scripts in `examples/kubejs` are for 26.1 and have not been tried on 26.2. `[26.2]`
 - The mods disabled on 26.1 (Create, Farmer's Delight and its addons, Cold Sweat, Supernatural, Vampirism) still have no Minecraft 26.2 build; their integrations stay in `src/disabled`. `[26.2]`
+- Nothing from Thirst Was Taken is migrated: it has no build for Minecraft 26.2, so the `thirst:` id aliases, the `thirst:purity` conversion (with its two runtime mixins into `ItemStack` and `FluidStack`) and the copy of the old `config/thirst/` and single-file configs are gone. Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) are no longer marked incompatible but discouraged, like the other thirst mods, and Thirst Was Taken 2 (mod id `thirstwastaken2`) is discouraged too: the game starts with a warning and both thirst systems run side by side. `[26.2]`
 
 ### For developers (26.2)
 

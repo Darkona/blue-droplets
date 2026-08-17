@@ -12,7 +12,6 @@
     "MixinCampfireBlockEntity",
     "MixinCauldronWrapper",
     "MixinDefaultDispenseItemBehavior",
-    "MixinFluidStack",
     "MixinFluidType",
     "MixinFluidUtil",
     "MixinFoodData",
