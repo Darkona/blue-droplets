@@ -471,7 +471,7 @@ minecraft:splash_potion,minecraft,drink,0,0,0,no,no,non_food,,cat:non_food,0/0/n
 minecraft:suspicious_stew,minecraft,food,0,2,2,no,no,stew,,cat:stew,2/2/no/no
 minecraft:sweet_berries,minecraft,food,0,2,2,no,no,fresh_produce,antes: 1/2,cat:fresh_produce>fruit,2/2/no/no
 minecraft:tropical_fish,minecraft,food,0,0,0,no,no,seafood,,cat:seafood,0/0/no/no
-minecraft:water_bucket,minecraft,drink,0,4,5,no,no,water,,manual (fijo por el codigo o por Javier),manual
+minecraft:water_bucket,minecraft,drink,0,0,0,no,no,water,un cubo no se bebe,manual (fijo por el codigo o por Javier),manual
 miners_delight:baked_cave_carrot,miners_delight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
 miners_delight:baked_cod_stew_cup,miners_delight,food,0,2,2,no,no,stew,,cat:stew,2/2/no/no
 miners_delight:baked_squid,miners_delight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
