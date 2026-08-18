@@ -22,7 +22,6 @@
     "minecraft:rotten_flesh": {"thirst": -3, "quenched": -3},
     "minecraft:spider_eye": {"thirst": -3, "quenched": -3},
     "minecraft:suspicious_stew": {"thirst": 2, "quenched": 2},
-    "minecraft:sweet_berries": {"thirst": 2, "quenched": 2},
-    "minecraft:water_bucket": {"thirst": 4, "quenched": 5}
+    "minecraft:sweet_berries": {"thirst": 2, "quenched": 2}
   }
 }
