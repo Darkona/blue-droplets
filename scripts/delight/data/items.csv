@@ -1447,4 +1447,4 @@ rusticdelight:syrup_coffee,rusticdelight,drink,1,2,2,no,no,drink_crafted,,cat:dr
 rusticdelight:syrup_cookie,rusticdelight,food,1,0,0,no,no,baked_sweet,,cat:baked_sweet,0/0/no/no
 rusticdelight:syrup_sandwich,rusticdelight,food,1,0,0,no,no,meal,,cat:meal,0/0/no/no
 rusticdelight:vegetable_pancake,rusticdelight,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
-supernatural:blood_bottle,supernatural,drink,0,0,0,no,no,non_food,antes: 9/12,cat:non_food,0/0/no/no
+supernatural:blood_bottle,supernatural,drink,0,6,6,no,no,non_food,"Valor fijado a mano (compat vampiros): solo los vampiros de Supernatural la beben, y la sangre es lo único que los hidrata",cat:non_food,manual

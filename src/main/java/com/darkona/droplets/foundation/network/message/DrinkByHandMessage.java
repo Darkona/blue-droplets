@@ -2,9 +2,9 @@ package com.darkona.droplets.foundation.network.message;
 
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.BlueDroplets;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.content.thirst.VampireThirst;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import io.netty.buffer.ByteBuf;
@@ -42,7 +42,7 @@ public record DrinkByHandMessage() implements CustomPacketPayload
 
             PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
             int tick = player.server.getTickCount();
-            if (thirst.getThirst() >= ThirstConstants.MAX_THIRST || !thirst.canDrinkByHand(tick) || SupernaturalCompat.isVampire(player))
+            if (thirst.getThirst() >= ThirstConstants.MAX_THIRST || !thirst.canDrinkByHand(tick) || VampireThirst.isVampire(player))
                 return;
 
             if (!player.getMainHandItem().isEmpty() || GameplayConfig.HAND_DRINKING_BOTH_HANDS.get() && !player.getOffhandItem().isEmpty())

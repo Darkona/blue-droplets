@@ -8,6 +8,7 @@ import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.thirst.ExhaustionFactors;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -56,7 +57,7 @@ public class CompatTests
         helper.assertTrue(Double.isFinite(ColdSweatCompat.bodyTemperature(player)), "Cold Sweat body temperature");
         helper.assertFalse(VampirismCompat.isVampire(player), "a new player is a Vampirism vampire");
         helper.assertFalse(SupernaturalCompat.isVampire(player), "a new player is a Supernatural vampire");
-        helper.assertTrue(SupernaturalCompat.canDrinkItem(new ItemStack(Items.POTION), player), "a new player cannot drink a potion");
+        helper.assertTrue(ThirstHelper.playerRestoresThirst(new ItemStack(Items.POTION), player), "a new player cannot drink a potion");
         float[] factors = new float[ExhaustionFactors.FACTORS.length];
         float total = ExhaustionFactors.compute(player, factors);
         helper.assertTrue(Float.isFinite(total) && total >= 0, "thirst loss multiplier " + total);

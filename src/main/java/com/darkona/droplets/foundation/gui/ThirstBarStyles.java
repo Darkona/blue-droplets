@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -56,6 +57,15 @@ public final class ThirstBarStyles
             if (style.active.test(player))
                 return style.rgb.getAsInt();
         return -1;
+    }
+
+    /** Id of the winning active style, or null for the normal bar. */
+    public static @Nullable ResourceLocation activeStyle(Player player)
+    {
+        for (Style style : styles)
+            if (style.active.test(player))
+                return style.id;
+        return null;
     }
 
     /** Effects that make the droplets bounce one at a time, like hearts under Regeneration. */

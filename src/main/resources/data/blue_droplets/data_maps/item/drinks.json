@@ -521,6 +521,7 @@
     "rusticdelight:roasted_bell_pepper_slice_yellow": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},
     "rusticdelight:roasted_bell_pepper_white": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},
     "rusticdelight:roasted_bell_pepper_yellow": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},
-    "rusticdelight:syrup_coffee": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "rusticdelight"}], "thirst": 2, "quenched": 2}
+    "rusticdelight:syrup_coffee": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "rusticdelight"}], "thirst": 2, "quenched": 2},
+    "supernatural:blood_bottle": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "supernatural"}], "thirst": 6, "quenched": 6}
   }
 }

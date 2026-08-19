@@ -30,6 +30,8 @@ public final class DropletsTags
     public static final TagKey<Item> NO_THIRST = TagKey.create(Registries.ITEM, BlueDroplets.asResource("no_thirst"));
     /** Items that take the {@code salty} penalties of {@code items.toml} when nothing else gives them values. */
     public static final TagKey<Item> SALTY = TagKey.create(Registries.ITEM, BlueDroplets.asResource("salty"));
+    /** The only items that hydrate a vampire (Vampirism, Supernatural), with their values in {@code blue_droplets:drinks}. */
+    public static final TagKey<Item> BLOOD = TagKey.create(Registries.ITEM, BlueDroplets.asResource("blood"));
 
     /** Effects that pause thirst loss from activity while active, e.g. Farmer's Delight Nourishment. */
     public static final TagKey<MobEffect> PAUSES_THIRST = TagKey.create(Registries.MOB_EFFECT, BlueDroplets.asResource("pauses_thirst"));
