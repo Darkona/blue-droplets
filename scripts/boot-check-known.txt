@@ -21,3 +21,8 @@ The following entities have not registered to the RegisterSpawnPlacementsEvent
 # Dev environment: no Mojang account, so no chat signing keys or profile lookups.
 Failed to fetch user properties
 Failed to retrieve profile key pair
+
+# -PwithVampirism: Vampirism 1.10.13 ships README/LICENSE files inside its sounds folder; the resource loader rejects them.
+Invalid path in pack: vampirism:sounds/
+# -PwithDelight, second batch: Mysterious Mountain Lib has no subtitle translation for its own sound.
+Missing subtitle translation\{key='mmlib\.sound\.presented_by_zaia'
