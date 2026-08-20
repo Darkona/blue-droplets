@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
@@ -47,6 +48,15 @@ public final class ThirstBarStyles
         list.add(new Style(id, active, rgb, priority));
         list.sort(ORDER);
         styles = list.toArray(Style[]::new);
+    }
+
+    /** Id of the winning active style, or null for the normal bar. */
+    public static @Nullable ResourceLocation activeStyle(Player player)
+    {
+        for (Style style : styles)
+            if (style.active.test(player))
+                return style.id;
+        return null;
     }
 
     /** {@code 0xRRGGBB} of the winning active style, or -1 for the normal bar. */

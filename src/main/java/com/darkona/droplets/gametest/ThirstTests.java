@@ -11,6 +11,7 @@ import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -58,6 +60,35 @@ public class ThirstTests
     private static ItemStack waterBottle(int purity)
     {
         return WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), purity);
+    }
+
+    /** MIRROR_FOOD: hunger exhaustion that another mod empties between ticks (Vampirism, for its vampires) still counts. */
+    @GameTest(template = "empty")
+    public static void emptiedHungerExhaustionStillCounts(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        double basal = GameplayConfig.BASAL_PER_TICK.get();
+        try
+        {
+            GameplayConfig.BASAL_PER_TICK.set(0.0);
+            FoodData food = player.getFoodData();
+            food.setExhaustion(0.0F);
+            thirst.tick(player);
+            float start = thirst.getExhaustion();
+            food.setExhaustion(0.5F);
+            thirst.tick(player);
+            float first = thirst.getExhaustion();
+            assertTrue(helper, first > start, "hunger exhaustion did not add thirst exhaustion");
+            food.setExhaustion(0.25F);
+            thirst.tick(player);
+            assertTrue(helper, thirst.getExhaustion() > first, "thirst exhaustion went from " + first + " to " + thirst.getExhaustion() + " after the hunger exhaustion was emptied and grew again");
+        }
+        finally
+        {
+            GameplayConfig.BASAL_PER_TICK.set(basal);
+        }
+        helper.succeed();
     }
 
     @GameTest(template = "empty")

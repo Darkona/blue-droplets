@@ -434,7 +434,7 @@ public class ThirstHelper
      */
     public static boolean playerRestoresThirst(ItemStack itemStack, Player player)
     {
-        return true;
+        return VampireThirst.canHydrate(itemStack, player);
     }
 
     public static boolean isDrink(ItemStack itemStack)
