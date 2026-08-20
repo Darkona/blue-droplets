@@ -3,9 +3,12 @@ package com.darkona.droplets.compat.supernatural;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 
+/**
+ * Supernatural: its vampires get the red bar, and only blood hydrates them ({@code VampireThirst}; the blood bottle is
+ * in {@code blue_droplets:blood}). Supernatural has no bite that drinks blood: its vampires fill bottles and drink those.
+ */
 public final class SupernaturalCompat
 {
     public static final boolean LOADED = ModList.get().isLoaded("supernatural");
@@ -16,11 +19,6 @@ public final class SupernaturalCompat
     {
         if (LOADED)
             ThirstBarStyles.register(BlueDroplets.asResource("supernatural_vampire"), SupernaturalBridge::isVampire, ThirstBarStyles.VAMPIRE_COLOR, ThirstBarStyles.VAMPIRE_PRIORITY);
-    }
-
-    public static boolean canDrinkItem(ItemStack stack, Player player)
-    {
-        return !LOADED || !SupernaturalBridge.isVampire(player) || SupernaturalBridge.isBlood(stack);
     }
 
     public static boolean isVampire(Player player)

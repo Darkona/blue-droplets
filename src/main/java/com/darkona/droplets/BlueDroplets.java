@@ -73,6 +73,7 @@ public class BlueDroplets
         TravelersBackpackCompat.init(modBus);
         ColdSweatCompat.init();
         ReliquaryCompat.init();
+        VampirismCompat.init();
         DelightCompat.init();
         ModAttachment.register(modBus);
 

@@ -11,7 +11,6 @@ import com.darkona.droplets.foundation.config.ItemsConfig;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.sereneseasons.SereneSeasonsCompat;
-import com.darkona.droplets.compat.supernatural.SupernaturalCompat;
 import com.darkona.droplets.content.data.DimensionWater;
 import com.darkona.droplets.content.data.DrinkValues;
 import com.darkona.droplets.content.data.DropletsDataMaps;
@@ -432,7 +431,7 @@ public class ThirstHelper
 
     public static boolean playerRestoresThirst(ItemStack itemStack, Player player)
     {
-        return SupernaturalCompat.canDrinkItem(itemStack, player);
+        return VampireThirst.canHydrate(itemStack, player);
     }
 
     public static boolean isDrink(ItemStack itemStack)

@@ -344,6 +344,7 @@
     "rusticdelight:roasted_bell_pepper_slice_yellow": {"forge:conditions": [{"type": "forge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},
     "rusticdelight:roasted_bell_pepper_white": {"forge:conditions": [{"type": "forge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},
     "rusticdelight:roasted_bell_pepper_yellow": {"forge:conditions": [{"type": "forge:mod_loaded", "modid": "rusticdelight"}], "thirst": 1, "quenched": 1},
-    "rusticdelight:syrup_coffee": {"forge:conditions": [{"type": "forge:mod_loaded", "modid": "rusticdelight"}], "thirst": 2, "quenched": 2}
+    "rusticdelight:syrup_coffee": {"forge:conditions": [{"type": "forge:mod_loaded", "modid": "rusticdelight"}], "thirst": 2, "quenched": 2},
+    "supernatural:blood_bottle": {"forge:conditions": [{"type": "forge:mod_loaded", "modid": "supernatural"}], "thirst": 6, "quenched": 6}
   }
 }

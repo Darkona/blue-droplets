@@ -11,7 +11,6 @@ import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.content.data.DropletsTags;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.foundation.config.GameplayConfig;
-import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.registry.AttributeInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.foundation.common.capability.IThirst;
@@ -74,6 +73,8 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     int handDrinkReadyTick = 0;
     int fullHydrationTicks;
     float overflow;
+    float bloodThirst;
+    float bloodQuenched;
 
     public PlayerThirst() {}
 
@@ -189,21 +190,39 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     public boolean getShouldTickThirst(){return shouldTickThirst;}
 
     /**
-     * Drinking or eating an item with thirst values; nothing for other items. Drunk when it has the drink animation or
-     * is a water container, eaten otherwise. Pure water gets the {@code pureWater} bonus.
+     * Drinking or eating an item with thirst values; nothing for other items, nor for a vampire and anything but blood.
+     * Drunk when it has the drink animation or is a water container, eaten otherwise. Pure water gets the
+     * {@code pureWater} bonus.
      */
     public static void consume(ItemStack item, Player player)
     {
         ThirstValues values = ThirstHelper.drinkValuesOf(item);
-        if (values == null)
+        if (values == null || !ThirstHelper.playerRestoresThirst(item, player))
             return;
-        boolean hydrates = ThirstHelper.playerRestoresThirst(item, player);
-        int thirst = hydrates ? values.thirst() : 0;
-        int quenched = hydrates ? values.quenched() : 0;
         if (item.getUseAnimation() == UseAnim.DRINK || WaterPurity.isWaterFilledContainer(item))
-            drink(player, item, thirst, quenched, WaterPurity.drinkPurity(item));
+            drink(player, item, values.thirst(), values.quenched(), WaterPurity.drinkPurity(item));
         else
-            eat(player, item, thirst, quenched);
+            eat(player, item, values.thirst(), values.quenched());
+    }
+
+    /**
+     * Blood a vampire drank outside the drinks data map (Vampirism's bites, bottles and containers): a drink without
+     * purity that never counts towards Overhydrated. Fractions carry over to the next sip.
+     *
+     * @return whether thirst or quenched changed
+     */
+    public static boolean drinkBlood(Player player, ItemStack source, float thirst, float quenched)
+    {
+        if (player.level().isClientSide)
+            return false;
+        PlayerThirst data = ModAttachment.thirst(player);
+        thirst += data.bloodThirst;
+        quenched += data.bloodQuenched;
+        int wholeThirst = (int) thirst;
+        int wholeQuenched = (int) quenched;
+        data.bloodThirst = thirst - wholeThirst;
+        data.bloodQuenched = quenched - wholeQuenched;
+        return (wholeThirst != 0 || wholeQuenched != 0) && drink(player, source, wholeThirst, wholeQuenched, DropletsAPI.NO_PURITY, false);
     }
 
     /**
@@ -217,13 +236,14 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
 
     /**
      * Every bite (food items, block foods, the API), server side only: {@link EatEvent.Pre}, hydration,
-     * {@link EatEvent.Post}. No purity effects. {@code item} is empty for block foods and the API.
+     * {@link EatEvent.Post}. No purity effects. {@code item} is empty for block foods and the API. Nothing for a vampire
+     * unless the item is blood.
      *
      * @return whether thirst or quenched changed
      */
     public static boolean eat(Player player, ItemStack item, int thirst, int quenched)
     {
-        if (player.level().isClientSide)
+        if (player.level().isClientSide || !VampireThirst.canHydrate(item, player))
             return false;
         EatEvent.Pre pre = Events.post(new EatEvent.Pre(player, item, thirst, quenched));
         if (pre.isCanceled())
@@ -236,11 +256,16 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     /**
      * Every drink (items, hand drinking, the API), server side only: {@link DrinkEvent.Pre}, purity effects, which may
      * prevent hydration, hydration, {@link DrinkEvent.Post}. {@code item} is empty for hand drinking and the API. With
-     * purity off the events carry {@code NO_PURITY}.
+     * purity off the events carry {@code NO_PURITY}. Nothing for a vampire unless the item is blood.
      *
      * @return whether thirst or quenched changed
      */
     public static boolean drink(Player player, ItemStack item, int thirst, int quenched, int purity)
+    {
+        return VampireThirst.canHydrate(item, player) && drink(player, item, thirst, quenched, purity, true);
+    }
+
+    private static boolean drink(Player player, ItemStack item, int thirst, int quenched, int purity, boolean overflows)
     {
         if (player.level().isClientSide)
             return false;
@@ -250,7 +275,7 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         if (pre.isCanceled())
             return false;
         boolean hydrated = WaterPurity.givePurityEffects(player, pre.getPurity())
-                && ModAttachment.thirst(player).hydrate(player, pre.getThirst(), pre.getQuenched(), true, ThirstChangeEvent.Cause.DRINK);
+                && ModAttachment.thirst(player).hydrate(player, pre.getThirst(), pre.getQuenched(), overflows, ThirstChangeEvent.Cause.DRINK);
         Events.post(new DrinkEvent.Post(player, item, pre.getThirst(), pre.getQuenched(), pre.getPurity(), hydrated));
         return hydrated;
     }
@@ -326,9 +351,6 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         if(stoppedByEffect)
             return;
 
-        if(VampirismCompat.isVampire(player))
-            return;
-
         if(interval)
         {
             modifierDirty = true;
@@ -387,7 +409,8 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             change(player, thirst + GameplayConfig.PEACEFUL_REGEN_AMOUNT.get(), quenched, ThirstChangeEvent.Cause.PEACEFUL);
 
         if(GameplayConfig.RAIN_DRINKING.get() && player.tickCount % GameplayConfig.RAIN_INTERVAL_TICKS.get() == 0
-                && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above()))
+                && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above())
+                && !VampireThirst.isVampire(player))
         {
             int rainThirst = GameplayConfig.RAIN_THIRST.get();
             int rainQuenched = GameplayConfig.RAIN_QUENCHED.get();
@@ -452,9 +475,15 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     private float mirroredFoodExhaustion(Player player)
     {
         float hungerExhaustion = player.getFoodData().getExhaustionLevel();
-        float normalizedHungerExhaustion = hungerExhaustion < this.prevTickExhaustion ? (exhaustionRecalculate ? hungerExhaustion + 4.0F : hungerExhaustion) : hungerExhaustion;
+        float deltaExhaustion;
+        if (hungerExhaustion >= this.prevTickExhaustion)
+            deltaExhaustion = hungerExhaustion - this.prevTickExhaustion;
+        else if (exhaustionRecalculate)
+            deltaExhaustion = hungerExhaustion + 4.0F - this.prevTickExhaustion;
+        else
+            //Emptied by someone else since last tick (Vampirism moves it to a vampire's blood bar every tick): counted from 0.
+            deltaExhaustion = hungerExhaustion;
         exhaustionRecalculate = false;
-        float deltaExhaustion = normalizedHungerExhaustion - this.prevTickExhaustion;
         this.prevTickExhaustion = hungerExhaustion;
         return deltaExhaustion;
     }
