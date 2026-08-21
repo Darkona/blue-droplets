@@ -32,12 +32,13 @@ Everything the [1.20.1 page](Minecraft-1.20.1#modpack-makers) says about data ho
 
 ## Mod compatibility
 
-Tested with Create 0.5.1.i, Jade 8.9.2, JEI 11.39, AppleSkin 2.4.2, Cold Sweat 2.4.3, Serene Seasons 8.1.0.24, Traveler's Backpack 8.2.41, Reliquary 2.0.40 and Farmer's Delight 1.2.4, all for 1.19.2. Built against Vampirism 1.9.5.
+Tested with Create 0.5.1.i, Jade 8.9.2, JEI 11.39, AppleSkin 2.4.2, Cold Sweat 2.4.3, Serene Seasons 8.1.0.24, Traveler's Backpack 8.2.41, Reliquary 2.0.40 and Farmer's Delight 1.2.4, all for 1.19.2, and Vampirism 1.9.5.
 
 - **Create 0.5.1**: the Sand Filter, its Ponder scene, fan and basin purification, spouts, drains, pipes and goggles work as with Create 6.
 - **Farmer's Delight addons**, as data (drink values and, where a recipe uses water, the clean water rule): Brewin' and Chewin' 1.19-2.0, Ocean's Delight 1.0.2, Ender's Delight 1.2.2, Miner's Delight 1.1.1, Fruits Delight 0.5.9, Cultural Delights 0.16.0, Corn Delight 1.0.3, Rustic Delight 1.3.0, Crabber's Delight 1.1.4, End's Delight 2.1 and My Nether's Delight 1.7.6. Farmer's Delight's cooking pot and wheat dough, Miner's Delight's copper pot, Cultural Delights' corn dough and Corn Delight's raw tortilla need acceptable water or better (3). Cultural Delights' bean milk, which is cooked, needs murky or better (2).
 - **Miner's Delight**'s water cup carries a purity like a bottle.
 - **Serene Seasons** 8.1.0.24 reports its version as `0.0NONE`, so any version is accepted.
+- **Vampirism** vampires work as on 1.21.1: their thirst goes down, only blood quenches it, and every drink of blood counts, with the same `compat.toml` `vampirism` keys. Vampirism 1.9.5 has no event for drinking blood, so Blue Droplets reads it with a small hook of its own. The item tag `blue_droplets:blood` is empty here: add items to it, with drinks data map values, to let vampires drink them.
 
 Not on 1.19.2:
 

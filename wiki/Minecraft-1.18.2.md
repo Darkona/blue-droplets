@@ -31,13 +31,14 @@ The data formats are those of [1.19.2](Minecraft-1.19.2#modpack-makers) and [1.2
 
 ## Mod compatibility
 
-Tested with Create 0.5.1.i, Jade 5.3.2, JEI 10.2.1, AppleSkin 2.5.1, Cold Sweat 2.4.3, Serene Seasons 7.0.0.15, Traveler's Backpack 7.1.49, Reliquary 2.0.19 and Farmer's Delight 1.2.3, all for 1.18.2. Built against Vampirism 1.8.8.
+Tested with Create 0.5.1.i, Jade 5.3.2, JEI 10.2.1, AppleSkin 2.5.1, Cold Sweat 2.4.3, Serene Seasons 7.0.0.15, Traveler's Backpack 7.1.49, Reliquary 2.0.19 and Farmer's Delight 1.2.3, all for 1.18.2, and Vampirism 1.8.8.
 
 - **Create 0.5.1**: the Sand Filter, its Ponder scene, fan and basin purification, spouts, drains, pipes and goggles work as on 1.19.2.
 - **Jade 5** still uses the Waila API: the purity lines are the same, with their switch in Jade's plugin settings.
 - **JEI**: Blue Droplets is built against the JEI 9.7 API and runs on JEI 9.7.2 and 10.2.1. The hydration and purification pages are the same.
 - **Farmer's Delight addons**, as data (drink values and, where a recipe uses water, the clean water rule): Brewin' and Chewin' 1.0.1, Ocean's Delight 1.0.0, Ender's Delight 1.2.1, Miner's Delight 1.1.1, Corn Delight 1.0.6, Crabber's Delight 1.1.2 and End's Delight 1.2.1. Farmer's Delight's cooking pot and wheat dough, Miner's Delight's copper pot and Corn Delight's raw tortilla need acceptable water or better (3). Miner's Delight's water cup carries a purity like a bottle.
 - **Serene Seasons** 7.0.0.15 reports its version as `0.0NONE`, so any version is accepted.
+- **Vampirism** vampires work as on 1.21.1: their thirst goes down, only blood quenches it, and every drink of blood counts, with the same `compat.toml` `vampirism` keys. Vampirism 1.8.8 has no event for drinking blood, so Blue Droplets reads it with a small hook of its own. The item tag `blue_droplets:blood` is empty here: add items to it, with drinks data map values, to let vampires drink them.
 
 Not on 1.18.2, besides what 1.19.2 lacks (Supernatural vampires, Farm & Charm, HerbalBrews, Brewery, Extra Delight, Expanded Delight, KubeJS):
 

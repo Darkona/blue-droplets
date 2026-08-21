@@ -47,8 +47,14 @@ Blue Droplets for Minecraft 1.21.1 runs on **NeoForge 21.1.219 or newer** (branc
 
 ### Vampires
 
-- **Vampirism**: vampires see their thirst bar with blood-red droplets, and their thirst does not go down.
-- **Supernatural**: vampires get the same red droplets. They cannot drink by hand, and only blood restores their thirst.
+A vampire gets thirsty like anyone else, but only blood quenches its thirst. Its thirst bar has blood-red droplets.
+
+- Thirst goes down with the same activity and climate rules as for other players.
+- Water, other drinks, food, rain and drinking by hand give a vampire nothing: no thirst, no quenched and no purity effects. Hand drinking is off for vampires. The HUD shows no preview for these items.
+- Blood has no purity, so it never makes a vampire sick, and it never counts towards Overhydrated.
+- **Vampirism**: every drink of blood restores thirst: biting a creature, blood bottles, blood containers and blood food. One point of blood gives `vampirism.thirstPerBlood` thirst (1.0: the blood bar and the thirst bar are both 20, so a full blood refill is a full thirst bar) and quenched by the blood's saturation (`vampirism.quenchedPerBlood`). Altars and commands that fill the blood bar do not count. Vampirism stops a vampire from drinking a bottle while its blood bar is full, so blood and thirst usually go down together.
+- **Supernatural**: its blood bottle gives thirst 6 and quenched 6. Supernatural has no bite, so bottles are the way to drink blood.
+- Items in the item tag `blue_droplets:blood` hydrate vampires with their values in the drinks data map. By default it holds `#supernatural:blood`.
 
 ### Reliquary
 
@@ -75,6 +81,8 @@ These keys exist on 1.21.1 and not on 26.3.
 | `delight.kettleMinPurity` | `2` | Lowest water purity that kettles take (0-5): the HerbalBrews tea kettle, the Brewery brewing stations and any block in `blue_droplets:rejects_dirty_water`. `0` = any water |
 | `delight.worldPurityWaterSources` | `true` | Taps and sinks of Extra Delight, the Let's Do sink and the Farm & Charm timber well give water with the world's purity where they stand. `false` = water without a purity, read as `defaultPurity` |
 | `reliquary.emperorChaliceCooldown` | `0` | Ticks before the Emperor's Chalice can be used again after a drink. `0` = no cooldown |
+| `vampirism.thirstPerBlood` | `1.0` | Thirst a Vampirism vampire gets per point of blood it drinks (0-20). `1.0` = a full blood refill fills the thirst bar |
+| `vampirism.quenchedPerBlood` | `1.0` | Quenched per point of blood, times the blood's saturation in Vampirism (0.3 poor to 1.0 rich; a blood bottle is 0.45) |
 
 `sereneseasons.*` does nothing while Cold Sweat is installed.
 
@@ -109,6 +117,7 @@ These keys exist on 1.21.1 and not on 26.3.
 |---|---|
 | `blue_droplets:purity_containers` (item) | Create builder's tea, Collector's Reap teas, Cold Sweat filled waterskin, Miner's Delight water cup |
 | `blue_droplets:salty` (item) | The four vanilla items, plus the salty, pickled and strong alcoholic items of the Delight addons |
+| `blue_droplets:blood` (item) | `#supernatural:blood`. The only items that hydrate a vampire (Vampirism, Supernatural), with their drinks data map values |
 | `blue_droplets:carries_purity` (fluid) | `#minecraft:water`, Create tea. Fluids made in a Create basin from water keep the water's purity |
 | `blue_droplets:rejects_dirty_water` (block) | Brewery wooden, copper and netherite brewing stations. Blocks filled by clicking with water that boil it: water below `delight.kettleMinPurity` is refused |
 | `blue_droplets:pauses_thirst` (mob_effect) | Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated |

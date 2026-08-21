@@ -17,7 +17,7 @@ It has most integrations of the 1.21.1 version (Create, Farmer's Delight and its
 
 ## Configuration
 
-The config files have the same keys as on 1.21.1, including the `compat.toml` sections `create`, `coldsweat`, `delight` and `reliquary`, `hotDirtyWater.useColdSweat`, `hotDirtyWater.coldSweatMinBodyTemp` and `Bar Colors.vampire` (see [Minecraft 1.21.1](Minecraft-1.21.1#configuration)). Two keys behave differently:
+The config files have the same keys as on 1.21.1, including the `compat.toml` sections `create`, `coldsweat`, `delight`, `reliquary` and `vampirism`, `hotDirtyWater.useColdSweat`, `hotDirtyWater.coldSweatMinBodyTemp` and `Bar Colors.vampire` (see [Minecraft 1.21.1](Minecraft-1.21.1#configuration)). Two keys behave differently:
 
 - `gameplay.toml` `loot.enabled` is checked on every loot roll, so turning it off applies at once, without `/reload`.
 - `gameplay.toml` `effects.quenchnessPotion` is read by one Forge brewing recipe each time a potion brews.
@@ -65,13 +65,13 @@ The player's thirst is a capability (`blue_droplets:player_thirst`), kept on dea
 
 ## Mod compatibility
 
-Tested with Create 6.0.8, Jade 11.13.3, JEI 15.56, AppleSkin 2.5.1, Cold Sweat 2.4.3.2, Serene Seasons 9.1.0.3, Traveler's Backpack 9.1.57, Reliquary 2.0.65, Farmer's Delight 1.3.4 and Supernatural 2.12.1, all for 1.20.1. JEI must be 15.56 or newer when installed. Some of these mods need a newer Forge than 47.1 on their own (Serene Seasons and GlitchCore ask for 47.3), so they do not run on NeoForge 47.1.
+Tested with Create 6.0.8, Jade 11.13.3, JEI 15.56, AppleSkin 2.5.1, Cold Sweat 2.4.3.2, Serene Seasons 9.1.0.3, Traveler's Backpack 9.1.57, Reliquary 2.0.65, Farmer's Delight 1.3.4, Supernatural 2.12.1 and Vampirism 1.10.17, all for 1.20.1. JEI must be 15.56 or newer when installed. Some of these mods need a newer Forge than 47.1 on their own (Serene Seasons and GlitchCore ask for 47.3), so they do not run on NeoForge 47.1.
 
 - **Farmer's Delight addons**: Brewin' and Chewin' 3.2.1, Ocean's Delight 1.0.2, Ender's Delight 1.1.4, Miner's Delight 1.4.5, Farm & Charm 1.0.14, HerbalBrews 1.0.12 and Brewery 2.0.6 work as on 1.21.1. Fruits Delight, Cultural Delights, Corn Delight, Rustic Delight, Crabber's Delight, End's Delight and My Nether's Delight get drink values and, where a crafting recipe uses water (Cultural Delights' corn dough, Corn Delight's raw tortilla), the clean water rule.
 - **Miner's Delight**'s mod id on 1.20.1 is `miners_delight`: its water cup is `miners_delight:water_cup`. Create spouts and drains fill and empty it through Miner's Delight's own recipes.
 - **Brewin' and Chewin' kegs** do not take water that carries a purity, and the clean water rule does not apply to them. Water with no purity stored works as before.
 - **Create mixing** recipes of Fruits Delight (jams, juices, teas) and Rustic Delight's coffee accept water of any purity.
-- **Supernatural** vampires work as on 1.21.1. The red droplets follow Supernatural's own vampire check.
+- **Vampires** work as on 1.21.1: their thirst goes down and only blood quenches it. Vampirism 1.10.17 counts every drink of blood, as on 1.21.1. Supernatural 2.12.1 has no blood tag, so `blue_droplets:blood` lists its blood bottle directly (thirst 6, quenched 6). The red droplets follow Supernatural's own vampire check.
 
 Not on 1.20.1:
 
