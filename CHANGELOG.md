@@ -127,6 +127,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 - Purity effects use the player's random generator instead of creating a new one for every drink. `[1.21.1]`
 - Create Sand Filter: an idle filter (not enough dirty water, or a full purified tank) does no fluid work at all each tick. `[1.21.1]`
 - The purity line of a water container's tooltip, and the purity names in Jade, Create goggles and the Sand Filter, are translated once per language instead of on every frame the tooltip is shown. `[1.21.1]`
+- The tooltip line of estimated values (shown when the tooltip icons are off) is built when the values change, not on every frame. `[1.21.1]`
 
 ### Effects
 

@@ -12,9 +12,12 @@ import com.darkona.droplets.foundation.config.PurityConfig;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.content.thirst.PlayerThirstManager;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -288,6 +291,18 @@ public class ThirstTests
         helper.assertValueEqual(dispatcher.execute("thirst query @s", source), 4, "result of the /thirst alias");
         helper.assertValueEqual(dispatcher.execute("blue_droplets enable @s false", source), 1, "result of enable");
         helper.assertFalse(thirst(player).getShouldTickThirst(), "thirst still enabled after enable false");
+        helper.succeed();
+    }
+
+    /** The tooltip line of estimated values: the translated values in gray, kept while they stay the same. */
+    @GameTest(template = "empty")
+    public static void estimatedLineIsKeptWhileTheValuesStay(GameTestHelper helper)
+    {
+        Component line = PlayerThirstManager.estimatedLine(3, 2);
+        helper.assertValueEqual(line, Component.translatable("blue_droplets.tooltip.estimated", 3, 2).withStyle(ChatFormatting.GRAY), "line for 3 thirst and 2 quenched");
+        helper.assertTrue(PlayerThirstManager.estimatedLine(3, 2) == line, "the line is built again for the same values");
+        helper.assertValueEqual(PlayerThirstManager.estimatedLine(4, 2), Component.translatable("blue_droplets.tooltip.estimated", 4, 2).withStyle(ChatFormatting.GRAY), "line for 4 thirst and 2 quenched");
+        helper.assertValueEqual(PlayerThirstManager.estimatedLine(4, 1).getString(), Component.translatable("blue_droplets.tooltip.estimated", 4, 1).getString(), "text for 4 thirst and 1 quenched");
         helper.succeed();
     }
 }
