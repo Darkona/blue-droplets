@@ -1,10 +1,19 @@
 package com.darkona.droplets.compat.vampirism;
 
 import com.darkona.droplets.BlueDroplets;
+import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.foundation.config.CompatConfig;
 import com.darkona.droplets.foundation.gui.ThirstBarStyles;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 
+/**
+ * Vampirism: its vampires get the red bar and lose thirst like anyone; only blood hydrates them. This Vampirism has no
+ * blood drinking event, so every drink of blood (bite, bottle, container, blood food) arrives through a mixin at the
+ * head of {@code VampirePlayer#drinkBlood} ({@code foundation.mixin.vampirism}) and restores thirst by
+ * {@code compat.toml} {@code vampirism.*}.
+ */
 public final class VampirismCompat
 {
     public static final boolean LOADED = ModList.get().isLoaded("vampirism");
@@ -20,5 +29,17 @@ public final class VampirismCompat
     public static boolean isVampire(Player player)
     {
         return LOADED && VampirismBridge.isVampire(player);
+    }
+
+    /**
+     * {@code blood} points a vampire player drinks, with Vampirism's saturation modifier. The altars and the blood bar
+     * command fill the bar with {@code Integer.MAX_VALUE}: that is not drinking.
+     */
+    public static void bloodDrunk(Player player, int blood, float saturation)
+    {
+        if (blood <= 0 || blood == Integer.MAX_VALUE || player.level.isClientSide)
+            return;
+        PlayerThirst.drinkBlood(player, ItemStack.EMPTY, (float) (blood * CompatConfig.VAMPIRISM_THIRST_PER_BLOOD.get()),
+                (float) (blood * saturation * CompatConfig.VAMPIRISM_QUENCHED_PER_BLOOD.get()));
     }
 }

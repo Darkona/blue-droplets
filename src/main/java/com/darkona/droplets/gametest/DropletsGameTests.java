@@ -27,5 +27,7 @@ public final class DropletsGameTests
             event.register(DelightTests.class);
         if (ModList.get().isLoaded("miners_delight"))
             event.register(MinersDelightTests.class);
+        if (ModList.get().isLoaded("vampirism"))
+            event.register(VampirismTests.class);
     }
 }

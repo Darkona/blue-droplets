@@ -3,6 +3,7 @@ package com.darkona.droplets.foundation.network.message;
 import com.darkona.droplets.foundation.config.GameplayConfig;
 import com.darkona.droplets.content.purity.WaterPurity;
 import com.darkona.droplets.content.thirst.PlayerThirst;
+import com.darkona.droplets.content.thirst.VampireThirst;
 import com.darkona.droplets.core.ThirstConstants;
 import com.darkona.droplets.foundation.common.capability.ModAttachment;
 import net.minecraft.core.BlockPos;
@@ -45,7 +46,7 @@ public record DrinkByHandMessage()
 
         PlayerThirst thirst = ModAttachment.thirst(player);
         int tick = player.server.getTickCount();
-        if (thirst.getThirst() >= ThirstConstants.MAX_THIRST || !thirst.canDrinkByHand(tick))
+        if (thirst.getThirst() >= ThirstConstants.MAX_THIRST || !thirst.canDrinkByHand(tick) || VampireThirst.isVampire(player))
             return;
 
         if (!player.getMainHandItem().isEmpty() || GameplayConfig.HAND_DRINKING_BOTH_HANDS.get() && !player.getOffhandItem().isEmpty())

@@ -162,6 +162,10 @@ dependencies {
         modLocalRuntime "maven.modrinth:reliquary-reincarnations:${reliquary_version}"
         modLocalRuntime "maven.modrinth:farmers-delight:${farmers_delight_version}"
     }
+    // ./gradlew runGameTestServer -PwithVampirism: Vampirism loaded at runtime, to exercise the compat with the real mod.
+    if (project.hasProperty('withVampirism')) {
+        modLocalRuntime "maven.modrinth:vampirism:${vampirism_version}"
+    }
     // ./gradlew runGameTestServer -PwithDelight: the Farmer's Delight addons that exist for 1.18.2, kept apart from
     // -PwithCompat so that one stays fast; both flags combine.
     if (project.hasProperty('withDelight')) {

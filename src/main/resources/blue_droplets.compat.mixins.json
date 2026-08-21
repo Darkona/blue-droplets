@@ -15,7 +15,8 @@
     "create.MixinLang",
     "create.MixinOpenEndedPipe",
     "miners_delight.MixinCopperCupItem",
-    "travelersbackpack.MixinHoseItem"
+    "travelersbackpack.MixinHoseItem",
+    "vampirism.MixinVampirePlayer"
   ],
   "injectors": {
     "defaultRequire": 1
