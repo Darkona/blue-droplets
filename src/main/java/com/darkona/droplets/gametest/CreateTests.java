@@ -125,6 +125,52 @@ public class CreateTests
         });
     }
 
+    /**
+     * A filter hands its water on to a filter placed in front of it after it was filtered, and, once turned, to the one
+     * in its new front; not to a filter that was taken away.
+     */
+    @GameTest(template = "box", templateNamespace = BlueDroplets.ID, timeoutTicks = 400)
+    public static void sandFilterFindsTheFilterInFrontWhenItChanges(GameTestHelper helper)
+    {
+        BlockPos first = helper.absolutePos(new BlockPos(2, 3, 2));
+        BlockPos below = first.below();
+        BlockPos east = first.east();
+        BlockState filter = CreateRegistry.SAND_FILTER_BLOCK.get().defaultBlockState();
+        helper.getLevel().setBlockAndUpdate(first, filter);
+        helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, first, Direction.UP).fill(water(0, 200), IFluidHandler.FluidAction.EXECUTE);
+        int twice = SandFilterBlockEntity.filteredPurity(SandFilterBlockEntity.filteredPurity(0));
+        helper.startSequence()
+                .thenExecuteAfter(40, () -> {
+                    helper.assertValueEqual(purified(helper, first, Direction.DOWN).getAmount(), 200, "water waiting in a filter with nothing in front");
+                    helper.getLevel().setBlockAndUpdate(below, filter);
+                })
+                .thenWaitUntil(() -> {
+                    FluidStack out = purified(helper, below, Direction.DOWN);
+                    helper.assertValueEqual(out.getAmount(), 200, "water out of the filter placed in front later");
+                    helper.assertValueEqual(WaterPurity.getPurity(out), twice, "purity after the filter placed later");
+                })
+                .thenExecute(() -> {
+                    helper.getLevel().setBlockAndUpdate(below, Blocks.AIR.defaultBlockState());
+                    helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, first, Direction.UP).fill(water(0, 200), IFluidHandler.FluidAction.EXECUTE);
+                })
+                .thenExecuteAfter(40, () -> {
+                    helper.assertValueEqual(purified(helper, first, Direction.DOWN).getAmount(), 200, "water handed on to a filter that was taken away");
+                    helper.getLevel().setBlockAndUpdate(east, filter.setValue(SandFilterBlock.FACING, Direction.EAST));
+                    helper.getLevel().setBlockAndUpdate(first, filter.setValue(SandFilterBlock.FACING, Direction.EAST));
+                })
+                .thenWaitUntil(() -> {
+                    FluidStack out = purified(helper, east, Direction.EAST);
+                    helper.assertValueEqual(out.getAmount(), 200, "water out of the filter in front after turning");
+                    helper.assertValueEqual(WaterPurity.getPurity(out), twice, "purity after turning");
+                })
+                .thenSucceed();
+    }
+
+    private static FluidStack purified(GameTestHelper helper, BlockPos pos, Direction facing)
+    {
+        return helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, facing).getFluidInTank(0);
+    }
+
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void sandFilterStopsAtMaxPurity(GameTestHelper helper)
     {

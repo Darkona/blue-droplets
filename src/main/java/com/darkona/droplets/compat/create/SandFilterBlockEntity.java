@@ -13,14 +13,17 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,6 +35,13 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
     /** The block in front, recomputed only when the filter is turned. */
     private Direction nextFacing;
     private BlockPos nextPos;
+    /**
+     * Watches the block in front: NeoForge invalidates it when a block entity is placed, removed, loaded or unloaded
+     * there, and only then is the filter in front looked up again. Its capability is not used.
+     */
+    private @Nullable BlockCapabilityCache<IFluidHandler, @Nullable Direction> nextWatch;
+    private @Nullable SandFilterBlockEntity next;
+    private boolean nextStale = true;
 
     public SandFilterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
     {
@@ -118,18 +128,36 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
         SmartFluidTank purified = purifiedTank.getPrimaryHandler();
         if(purified.isEmpty())
             return;
-        Direction facing = getBlockState().getValue(SandFilterBlock.FACING);
+        SandFilterBlockEntity ahead = nextFilter(getBlockState().getValue(SandFilterBlock.FACING));
+        if(ahead == null)
+            return;
+        SmartFluidTank nextDirty = ahead.dirtyTank.getPrimaryHandler();
+        int accepted = nextDirty.fill(purified.drain(rate, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.SIMULATE);
+        if(accepted > 0)
+            nextDirty.fill(purified.drain(accepted, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+    }
+
+    /**
+     * The filter right in front, facing the same way, or null. The block entity there is looked up only after the
+     * filter is turned or the watch on the block in front is invalidated, not every tick.
+     */
+    private @Nullable SandFilterBlockEntity nextFilter(Direction facing)
+    {
         if(facing != nextFacing)
         {
             nextFacing = facing;
             nextPos = worldPosition.relative(facing);
+            nextWatch = BlockCapabilityCache.create(Capabilities.FluidHandler.BLOCK, (ServerLevel) level, nextPos, facing.getOpposite(), () -> !isRemoved(), () -> nextStale = true);
+            nextStale = true;
         }
-        if(!(level.getBlockEntity(nextPos) instanceof SandFilterBlockEntity next) || next.getBlockState().getValue(SandFilterBlock.FACING) != facing)
-            return;
-        SmartFluidTank nextDirty = next.dirtyTank.getPrimaryHandler();
-        int accepted = nextDirty.fill(purified.drain(rate, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.SIMULATE);
-        if(accepted > 0)
-            nextDirty.fill(purified.drain(accepted, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+        if(nextStale || next != null && next.isRemoved())
+        {
+            nextStale = false;
+            // Only a query arms the watch again after an invalidation.
+            nextWatch.getCapability();
+            next = level.getBlockEntity(nextPos) instanceof SandFilterBlockEntity filter ? filter : null;
+        }
+        return next != null && next.getBlockState().getValue(SandFilterBlock.FACING) == facing ? next : null;
     }
 
     public boolean hasFluid()
