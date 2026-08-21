@@ -13,6 +13,8 @@ import net.minecraft.world.item.alchemy.Potions;
 import com.darkona.droplets.content.registry.ItemInit;
 import com.darkona.droplets.content.registry.ThirstComponent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -310,6 +312,29 @@ public class PurityTests
         check(helper, "water without purity", PurityTint.color(plain, 0, vanilla), vanilla);
         ItemStack healing = WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.HEALING), 0);
         check(helper, "healing potion", PurityTint.color(healing, 0, 0xFFF82423), 0xFFF82423);
+        helper.succeed();
+    }
+
+    /**
+     * Each level reads as its translation (the id when there is none), and its tooltip line is that text in its colour;
+     * out-of-range values read as the default purity. Both are built once, not on every frame of a tooltip.
+     */
+    @GameTest(template = "empty")
+    public static void purityTextFollowsTheTranslation(GameTestHelper helper)
+    {
+        for (PurityLevel level : PurityLevel.values())
+        {
+            String text = WaterPurity.getPurityText(level.level());
+            helper.assertValueEqual(text, Component.translatableWithFallback(level.translationKey(), level.id()).getString(), "text of " + level.id());
+            helper.assertTrue(WaterPurity.getPurityText(level.level()) == text, "the text of " + level.id() + " is built again on every call");
+            Component line = WaterPurity.purityLine(level.level());
+            helper.assertValueEqual(line.getString(), text, "tooltip line of " + level.id());
+            helper.assertValueEqual(line.getStyle().getColor(), TextColor.fromRgb(level.color()), "tooltip colour of " + level.id());
+            helper.assertTrue(WaterPurity.purityLine(level.level()) == line, "the tooltip line of " + level.id() + " is built again on every call");
+        }
+        String fallback = WaterPurity.getPurityText(WaterPurity.defaultPurity());
+        helper.assertValueEqual(WaterPurity.getPurityText(-1), fallback, "text of purity -1");
+        helper.assertValueEqual(WaterPurity.getPurityText(PurityLevel.MAX + 1), fallback, "text of a purity past the maximum");
         helper.succeed();
     }
 

@@ -24,6 +24,8 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Style;
@@ -210,17 +212,7 @@ public class WaterPurity
         {
             int purity = getPurity(event.getItemStack());
             if(purity >= MIN_PURITY && purity <= MAX_PURITY)
-            {
-                String purityText = getPurityText(purity);
-
-                int purityColor = getPurityColor(purity);
-
-                assert purityText != null;
-                event.getToolTip()
-                        .add(MutableComponent
-                                .create(new PlainTextContents.LiteralContents(purityText))
-                                .setStyle(Style.EMPTY.withColor(purityColor)));
-            }
+                event.getToolTip().add(purityLine(purity));
         }
     }
 
@@ -267,8 +259,43 @@ public class WaterPurity
      */
     public static String getPurityText(int purity)
     {
-        PurityLevel level = level(purity);
-        return MutableComponent.create(new TranslatableContents(level.translationKey(), level.id(), TranslatableContents.NO_ARGS)).getString();
+        return purityTexts().texts()[level(purity).level()];
+    }
+
+    /**
+     * The purity line of a water container's tooltip: the purity text in the purity colour. The same instance while the
+     * language stays the same, so the tooltip, rebuilt every frame, allocates nothing for it.
+     */
+    public static Component purityLine(int purity)
+    {
+        return purityTexts().lines()[level(purity).level()];
+    }
+
+    /** Texts and tooltip lines of every purity level in one language. */
+    private record PurityTexts(Language language, String[] texts, Component[] lines) {}
+
+    private static volatile @Nullable PurityTexts purityTexts;
+
+    /**
+     * Translated once per language: a resource reload or a language change gives a new {@link Language} instance.
+     */
+    private static PurityTexts purityTexts()
+    {
+        Language language = Language.getInstance();
+        PurityTexts cached = purityTexts;
+        if (cached == null || cached.language() != language)
+        {
+            String[] texts = new String[MAX_PURITY + 1];
+            Component[] lines = new Component[MAX_PURITY + 1];
+            for (PurityLevel level : PurityLevel.values())
+            {
+                String text = MutableComponent.create(new TranslatableContents(level.translationKey(), level.id(), TranslatableContents.NO_ARGS)).getString();
+                texts[level.level()] = text;
+                lines[level.level()] = MutableComponent.create(new PlainTextContents.LiteralContents(text)).setStyle(Style.EMPTY.withColor(level.color()));
+            }
+            purityTexts = cached = new PurityTexts(language, texts, lines);
+        }
+        return cached;
     }
 
     /**
