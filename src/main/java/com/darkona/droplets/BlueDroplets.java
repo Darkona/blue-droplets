@@ -38,7 +38,7 @@ import com.darkona.droplets.compat.travelersbackpack.TravelersBackpackCompat;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
+import com.darkona.droplets.compat.create.CreateCompat;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -90,7 +90,7 @@ public class BlueDroplets
         ConditionInit.LOOT_CONDITIONS.register(modBus);
         LegacyIds.register(modBus);
 
-        if(ModList.get().isLoaded("create"))
+        if(CreateCompat.LOADED)
         {
             CreateRegistry.register();
             modBus.addListener(SandFilterBlockEntity::registerCapabilities);
@@ -113,7 +113,7 @@ public class BlueDroplets
 
     private void clientSetup(final FMLClientSetupEvent event)
     {
-        if(ModList.get().isLoaded("create")){
+        if(CreateCompat.LOADED){
             event.enqueueWork(()-> new Object()
             {
                 public void registerPonderPlugin(){
