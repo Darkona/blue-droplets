@@ -17,6 +17,11 @@ import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.gametest.framework.GameTest;
@@ -303,6 +308,32 @@ public class ThirstTests
         helper.assertTrue(PlayerThirstManager.estimatedLine(3, 2) == line, "the line is built again for the same values");
         helper.assertValueEqual(PlayerThirstManager.estimatedLine(4, 2), Component.translatable("blue_droplets.tooltip.estimated", 4, 2).withStyle(ChatFormatting.GRAY), "line for 4 thirst and 2 quenched");
         helper.assertValueEqual(PlayerThirstManager.estimatedLine(4, 1).getString(), Component.translatable("blue_droplets.tooltip.estimated", 4, 1).getString(), "text for 4 thirst and 1 quenched");
+        helper.succeed();
+    }
+
+    /** Gaining or losing an effect recomputes the thirst loss multiplier right away (Fire Resistance: none by default). */
+    @GameTest(template = "empty")
+    public static void effectsRecomputeTheMultiplier(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        float plain = thirst.exhaustionModifier(player);
+        helper.assertTrue(plain > 0.0F, "multiplier without effects " + plain);
+        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200));
+        helper.assertValueEqual(thirst.exhaustionModifier(player), plain * GameplayConfig.FIRE_RESISTANCE_PERCENT.get() / 100.0F, "multiplier with Fire Resistance");
+        player.removeEffect(MobEffects.FIRE_RESISTANCE);
+        helper.assertValueEqual(thirst.exhaustionModifier(player), plain, "multiplier after Fire Resistance is removed");
+        helper.succeed();
+    }
+
+    /** Right clicks reach this mod's handlers on the server too; hand drinking itself only acts on the client. */
+    @GameTest(template = "empty")
+    public static void rightClicksRunOnTheServer(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        BlockPos pos = helper.absolutePos(BlockPos.ZERO);
+        NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, pos, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false)));
+        NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickEmpty(player, InteractionHand.MAIN_HAND));
         helper.succeed();
     }
 }
