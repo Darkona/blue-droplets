@@ -79,6 +79,8 @@ public class BlueDroplets
             SupernaturalCompat.initClient();
             modBus.addListener(DrinkTooltip::registerFactory);
             NeoForge.EVENT_BUS.addListener(EventPriority.LOW, DrinkTooltip::gather);
+            NeoForge.EVENT_BUS.addListener(WaterPurity::renderPurityTooltip);
+            NeoForge.EVENT_BUS.addListener(PlayerThirstManager::estimatedTooltip);
         }
 
         ItemInit.register(modBus);

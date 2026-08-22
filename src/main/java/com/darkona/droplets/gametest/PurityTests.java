@@ -29,7 +29,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -335,6 +337,16 @@ public class PurityTests
         String fallback = WaterPurity.getPurityText(WaterPurity.defaultPurity());
         helper.assertValueEqual(WaterPurity.getPurityText(-1), fallback, "text of purity -1");
         helper.assertValueEqual(WaterPurity.getPurityText(PurityLevel.MAX + 1), fallback, "text of a purity past the maximum");
+        helper.succeed();
+    }
+
+    /** Some mods build tooltips on a dedicated server, where the client config is not loaded. */
+    @GameTest(template = "empty")
+    public static void tooltipsBuildOnADedicatedServer(GameTestHelper helper)
+    {
+        ItemStack water = WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), PurityLevel.MURKY.level());
+        water.getTooltipLines(Item.TooltipContext.of(helper.getLevel()), null, TooltipFlag.Default.NORMAL);
+        new ItemStack(Items.APPLE).getTooltipLines(Item.TooltipContext.of(helper.getLevel()), null, TooltipFlag.Default.NORMAL);
         helper.succeed();
     }
 
