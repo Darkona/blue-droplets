@@ -1,5 +1,8 @@
 package com.darkona.droplets.gametest;
 
+import com.darkona.droplets.foundation.config.SyncedValues;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.network.chat.Component;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.core.registries.Registries;
@@ -292,6 +295,61 @@ public class PurityTests
         check(helper, "water without purity", PurityTint.color(plain, 0, vanilla), vanilla);
         ItemStack healing = WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.HEALING), 0);
         check(helper, "healing potion", PurityTint.color(healing, 0, 0xFFF82423), 0xFFF82423);
+        helper.succeed();
+    }
+
+    /** Each level reads as its translation (the id when there is none); out-of-range values as the default purity. */
+    @GameTest(template = "empty")
+    public static void purityTextFollowsTheTranslation(GameTestHelper helper)
+    {
+        for (PurityLevel level : PurityLevel.values())
+            assertValueEqual(helper, WaterPurity.getPurityText(level.level()), Component.translatableWithFallback(level.translationKey(), level.id()).getString(), "text of " + level.id());
+        String fallback = WaterPurity.getPurityText(WaterPurity.defaultPurity());
+        assertValueEqual(helper, WaterPurity.getPurityText(-1), fallback, "text of purity -1");
+        assertValueEqual(helper, WaterPurity.getPurityText(PurityLevel.MAX + 1), fallback, "text of a purity past the maximum");
+        helper.succeed();
+    }
+
+    /** Some mods build tooltips on a dedicated server, where the client config is not loaded. */
+    @GameTest(template = "empty")
+    public static void tooltipsBuildOnADedicatedServer(GameTestHelper helper)
+    {
+        ItemStack water = WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), PurityLevel.MURKY.level());
+        water.getTooltipLines(null, TooltipFlag.NORMAL);
+        new ItemStack(Items.APPLE).getTooltipLines(null, TooltipFlag.NORMAL);
+        helper.succeed();
+    }
+
+    /**
+     * A potion is water when its {@code Potion} tag names water, in any form a resource location accepts; water bottles
+     * stack to {@code waterBottleStackSize}, other potions to 1.
+     */
+    @GameTest(template = "empty")
+    public static void waterBottlesAreToldApartFromPotions(GameTestHelper helper)
+    {
+        for (String name : new String[]{"minecraft:water", "water", ":water"})
+        {
+            ItemStack bottle = new ItemStack(Items.POTION);
+            bottle.getOrCreateTag().putString("Potion", name);
+            helper.assertTrue(WaterPurity.isWaterFilledContainer(bottle), "potion named " + name + " is not water");
+            assertValueEqual(helper, bottle.getMaxStackSize(), SyncedValues.waterBottleStackSize(), "stack size of a potion named " + name);
+        }
+        for (String name : new String[]{"minecraft:awkward", "minecraft:healing", "", "Not A Potion!", "minecraft:water_breathing"})
+        {
+            ItemStack potion = new ItemStack(Items.POTION);
+            potion.getOrCreateTag().putString("Potion", name);
+            helper.assertFalse(WaterPurity.isWaterFilledContainer(potion), "potion named " + name + " is water");
+            assertValueEqual(helper, potion.getMaxStackSize(), 1, "stack size of a potion named " + name);
+        }
+        helper.assertFalse(WaterPurity.isWaterFilledContainer(new ItemStack(Items.POTION)), "a potion without a tag is water");
+        helper.assertFalse(WaterPurity.isWaterFilledContainer(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.WATER)), "a splash water bottle is a water container");
+        ItemStack water = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+        ItemStack healing = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.HEALING);
+        for (int i = 0; i < 3; i++)
+        {
+            helper.assertTrue(WaterPurity.isWaterFilledContainer(water), "water after a healing potion");
+            helper.assertFalse(WaterPurity.isWaterFilledContainer(healing), "healing after a water bottle");
+        }
         helper.succeed();
     }
 
