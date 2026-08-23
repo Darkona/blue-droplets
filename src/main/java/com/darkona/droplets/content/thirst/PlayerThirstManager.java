@@ -12,6 +12,7 @@ import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
 import com.darkona.droplets.BlueDroplets;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
@@ -227,7 +228,22 @@ public class PlayerThirstManager {
     public static void estimatedTooltip(ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
         if (!ClientConfig.SHOW_TOOLTIP_ICONS.get() && ThirstHelper.isEstimated(stack))
-            event.getToolTip().add(Component.translatable("blue_droplets.tooltip.estimated", ThirstHelper.getThirst(stack), ThirstHelper.getQuenched(stack)).withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(estimatedLine(ThirstHelper.getThirst(stack), ThirstHelper.getQuenched(stack)));
+    }
+
+    private record EstimatedLine(int thirst, int quenched, Component line) {}
+
+    private static volatile @Nullable EstimatedLine lastEstimated;
+
+    /**
+     * The tooltip line of an item with estimated values. The tooltip is rebuilt every frame, so the last line is kept
+     * while the values stay the same; it is translated when drawn, so a language change needs no new line.
+     */
+    public static Component estimatedLine(int thirst, int quenched){
+        EstimatedLine last = lastEstimated;
+        if (last == null || last.thirst() != thirst || last.quenched() != quenched)
+            lastEstimated = last = new EstimatedLine(thirst, quenched, Component.translatable("blue_droplets.tooltip.estimated", thirst, quenched).withStyle(ChatFormatting.GRAY));
+        return last.line();
     }
 
     /**
