@@ -40,7 +40,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
@@ -118,7 +120,7 @@ public class WaterPurity
     private static void registerContainers()
     {
         addContainer(new ContainerWithPurity(Items.GLASS_BOTTLE, Items.POTION).setEqualsFilled(itemStack ->
-                itemStack.is(Items.POTION) && PotionUtils.getPotion(itemStack) == Potions.WATER));
+                itemStack.is(Items.POTION) && isWaterPotion(itemStack)));
         addContainer(new ContainerWithPurity(ItemInit.TERRACOTTA_BOWL.get(),
                 ItemInit.TERRACOTTA_WATER_BOWL.get()));
         addContainer(new ContainerWithPurity(Items.BUCKET,
@@ -203,6 +205,28 @@ public class WaterPurity
             if(purity >= MIN_PURITY && purity <= MAX_PURITY)
                 event.getToolTip().add(purityLine(purity));
         }
+    }
+
+    /** The last {@code Potion} name read, and whether it names water. */
+    private record PotionName(String name, boolean water) {}
+
+    private static volatile PotionName lastPotionName = new PotionName("", false);
+
+    /**
+     * Whether the stack's {@code Potion} tag names water, as {@code PotionUtils.getPotion(stack) == Potions.WATER}. That
+     * parses the name into a resource location on every call, and stack sizes, item colours and tooltips ask all the
+     * time; copies of a stack share the same name string, so the answer for the last name is kept.
+     */
+    public static boolean isWaterPotion(ItemStack stack)
+    {
+        CompoundTag tag = stack.getTag();
+        if (tag == null)
+            return false;
+        String name = tag.getString("Potion");
+        PotionName last = lastPotionName;
+        if (!last.name().equals(name))
+            lastPotionName = last = new PotionName(name, Potion.byName(name) == Potions.WATER);
+        return last.water();
     }
 
     /**

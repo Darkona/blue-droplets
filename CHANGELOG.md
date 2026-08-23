@@ -22,6 +22,7 @@ The 1.20.1 port has every feature of 1.0.0 for 1.21.1 (next section), with the d
 - Create goggles show the purity through `CreateLang.fluidName`, which in Create 6 for 1.20.1 names fluids only in the goggle tooltips of tanks and basins, so basins show it too. `[1.20.1]`
 - Other thirst mods (Tough As Nails, Legendary Survival Overhaul, Homeostatic, Survive, Thirst Was Taken 2) show a warning on the loading screen and in the log, since Forge 47 has no `discouraged` dependency type. Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) still stop the game from starting, through a dependency range no version satisfies. `[1.20.1]`
 - The biome climate of thirst loss uses vanilla's height-adjusted biome temperature, with and without Serene Seasons, so thirst loss falls with height the same either way; before, only Serene Seasons cooled it with height and the formula otherwise read the flat base temperature. `[1.20.1]`
+- Telling a water bottle from other potions (stack size, item colour, tooltips) no longer parses the potion's name on every call: the answer for the last name read is kept. `[1.20.1]`
 
 ### Mod compatibility (1.20.1)
 
