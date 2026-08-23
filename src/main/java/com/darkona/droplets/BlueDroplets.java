@@ -40,6 +40,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
+import com.darkona.droplets.compat.create.CreateCompat;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -96,7 +97,7 @@ public class BlueDroplets
         LootInit.register(modBus);
         LegacyIds.register();
 
-        if(ModList.get().isLoaded("create"))
+        if(CreateCompat.LOADED)
             CreateRegistry.register();
 
         ThirstTab.register(modBus);
@@ -118,7 +119,7 @@ public class BlueDroplets
 
     private void clientSetup(final FMLClientSetupEvent event)
     {
-        if(ModList.get().isLoaded("create")){
+        if(CreateCompat.LOADED){
             event.enqueueWork(()-> new Object()
             {
                 public void registerPonderPlugin(){
