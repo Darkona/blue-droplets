@@ -82,6 +82,8 @@ public class BlueDroplets
             VampirismCompat.initClient();
             modBus.addListener(DrinkTooltip::registerFactory);
             MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, DrinkTooltip::gather);
+            MinecraftForge.EVENT_BUS.addListener(WaterPurity::renderPurityTooltip);
+            MinecraftForge.EVENT_BUS.addListener(PlayerThirstManager::estimatedTooltip);
         }
 
         ItemInit.register(modBus);

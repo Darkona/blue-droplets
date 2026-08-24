@@ -220,7 +220,10 @@ public class PlayerThirstManager {
             ThirstHelper.rebuild(null, null);
     }
 
-    @SubscribeEvent
+    /**
+     * Client only (registered in {@code BlueDroplets}): it reads the client config, which a dedicated server does not
+     * load, and some mods build tooltips there.
+     */
     public static void estimatedTooltip(ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
         if (!ClientConfig.SHOW_TOOLTIP_ICONS.get() && ThirstHelper.isEstimated(stack))

@@ -53,12 +53,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import com.darkona.droplets.foundation.common.event.Events;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import com.darkona.droplets.foundation.gui.ClientKeys;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +70,6 @@ import java.util.function.Supplier;
 
 
 @SuppressWarnings({"SpellCheckingInspection","unused"})
-@EventBusSubscriber
 public class WaterPurity
 {
     private static final List<ContainerWithPurity> codeContainers = new CopyOnWriteArrayList<>();
@@ -196,13 +192,12 @@ public class WaterPurity
     }
 
     /**
-     * Renders the client-side tooltip for items that have a water
-     * purity tag
+     * Client only (registered in {@code BlueDroplets}): the purity line of water containers. It reads the client
+     * config, which a dedicated server does not load, and some mods build tooltips there.
      */
-    @SubscribeEvent
-    static void renderPurityTooltip(ItemTooltipEvent event)
+    public static void renderPurityTooltip(ItemTooltipEvent event)
     {
-        if(enabled() && isWaterFilledContainer(event.getItemStack()) && (!ClientConfig.ONLY_SHOW_PURITY_WHEN_SHIFTING.get() || FMLEnvironment.dist.isClient() && ClientKeys.shiftDown()))
+        if(enabled() && isWaterFilledContainer(event.getItemStack()) && (!ClientConfig.ONLY_SHOW_PURITY_WHEN_SHIFTING.get() || ClientKeys.shiftDown()))
         {
             int purity = getPurity(event.getItemStack());
             if(purity >= MIN_PURITY && purity <= MAX_PURITY)
