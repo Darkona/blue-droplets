@@ -1,5 +1,7 @@
 package com.darkona.droplets.gametest;
 
+import com.darkona.droplets.foundation.config.SyncedValues;
+import net.minecraft.world.item.TooltipFlag;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.PurityLevel;
 import net.minecraft.core.Registry;
@@ -309,6 +311,49 @@ public class PurityTests
             assertFalse(helper, selected.contains("mod/" + BlueDroplets.ID + ":datapacks/" + pack), pack + " is enabled by default");
         for (String pack : List.of("purify_smelting", "purify_campfire", "purify_cooking_pot", "clean_water_cooking"))
             assertTrue(helper, selected.contains("mod/" + BlueDroplets.ID + ":datapacks/" + pack), pack + " is not enabled by default");
+        helper.succeed();
+    }
+
+    /** Some mods build tooltips on a dedicated server, where the client config is not loaded. */
+    @GameTest(template = "empty")
+    public static void tooltipsBuildOnADedicatedServer(GameTestHelper helper)
+    {
+        ItemStack water = WaterPurity.addPurity(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), PurityLevel.MURKY.level());
+        water.getTooltipLines(null, TooltipFlag.Default.NORMAL);
+        new ItemStack(Items.APPLE).getTooltipLines(null, TooltipFlag.Default.NORMAL);
+        helper.succeed();
+    }
+
+    /**
+     * A potion is water when its {@code Potion} tag names water, in any form a resource location accepts; water bottles
+     * stack to {@code waterBottleStackSize}, other potions to 1.
+     */
+    @GameTest(template = "empty")
+    public static void waterBottlesAreToldApartFromPotions(GameTestHelper helper)
+    {
+        for (String name : new String[]{"minecraft:water", "water", ":water"})
+        {
+            ItemStack bottle = new ItemStack(Items.POTION);
+            bottle.getOrCreateTag().putString("Potion", name);
+            assertTrue(helper, WaterPurity.isWaterFilledContainer(bottle), "potion named " + name + " is not water");
+            assertValueEqual(helper, bottle.getMaxStackSize(), SyncedValues.waterBottleStackSize(), "stack size of a potion named " + name);
+        }
+        for (String name : new String[]{"minecraft:awkward", "minecraft:healing", "", "Not A Potion!", "minecraft:water_breathing"})
+        {
+            ItemStack potion = new ItemStack(Items.POTION);
+            potion.getOrCreateTag().putString("Potion", name);
+            assertFalse(helper, WaterPurity.isWaterFilledContainer(potion), "potion named " + name + " is water");
+            assertValueEqual(helper, potion.getMaxStackSize(), 1, "stack size of a potion named " + name);
+        }
+        assertFalse(helper, WaterPurity.isWaterFilledContainer(new ItemStack(Items.POTION)), "a potion without a tag is water");
+        assertFalse(helper, WaterPurity.isWaterFilledContainer(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.WATER)), "a splash water bottle is a water container");
+        ItemStack water = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+        ItemStack healing = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.HEALING);
+        for (int i = 0; i < 3; i++)
+        {
+            assertTrue(helper, WaterPurity.isWaterFilledContainer(water), "water after a healing potion");
+            assertFalse(helper, WaterPurity.isWaterFilledContainer(healing), "healing after a water bottle");
+        }
         helper.succeed();
     }
 
