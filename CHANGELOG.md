@@ -14,6 +14,7 @@ The 1.19.2 port has every feature of the 1.20.1 port (next section) and so of 1.
 - The creative tab lists the same stacks (the water containers once per purity, the Sand Filter with Create). The Sand Filter is only in the Blue Droplets tab: a 1.19.2 item has one tab, and Create's tab only lists Create's own items. `[1.19.2]`
 - Optional datapacks: Minecraft 1.19.2 turns on every datapack it has not seen before and has no "off by default" pack. The presets and the smoker purification pack stay off until a player turns them on, when creating the world or with `/datapack enable`, as in later versions; the others are on by default, also in existing worlds. `[1.19.2]`
 - The biome climate of thirst loss uses vanilla's height-adjusted biome temperature, with and without Serene Seasons, so thirst loss falls with height the same either way; before, only Serene Seasons cooled it with height and the formula otherwise read the flat base temperature. `[1.19.2]`
+- Telling a water bottle from other potions (stack size, item colour, tooltips) no longer parses the potion's name on every call: the answer for the last name read is kept. `[1.19.2]`
 
 ### Mod compatibility (1.19.2)
 
