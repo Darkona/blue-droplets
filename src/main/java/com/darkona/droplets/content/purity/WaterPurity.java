@@ -207,15 +207,7 @@ public class WaterPurity
         {
             int purity = getPurity(event.getItemStack());
             if(purity >= MIN_PURITY && purity <= MAX_PURITY)
-            {
-                String purityText = getPurityText(purity);
-
-                int purityColor = getPurityColor(purity);
-
-                assert purityText != null;
-                event.getToolTip()
-                        .add(new TextComponent(purityText).setStyle(Style.EMPTY.withColor(purityColor)));
-            }
+                event.getToolTip().add(purityLine(purity));
         }
     }
 
@@ -266,6 +258,32 @@ public class WaterPurity
         Language language = Language.getInstance();
         return language.has(level.translationKey()) ? language.getOrDefault(level.translationKey()) : level.id();
     }
+
+    /**
+     * The purity line of a water container's tooltip: the purity text in the purity colour. The same instance while the
+     * language stays the same, so the tooltip, rebuilt every frame, allocates nothing for it.
+     */
+    public static Component purityLine(int purity)
+    {
+        Language language = Language.getInstance();
+        PurityLines cached = purityLines;
+        if (cached == null || cached.language() != language)
+        {
+            Component[] lines = new Component[MAX_PURITY + 1];
+            for (PurityLevel level : PurityLevel.values())
+            {
+                String text = getPurityText(level.level());
+                lines[level.level()] = new TextComponent(text).setStyle(Style.EMPTY.withColor(level.color()));
+            }
+            purityLines = cached = new PurityLines(language, lines);
+        }
+        return cached.lines()[level(purity).level()];
+    }
+
+    /** Tooltip lines of every purity level in one language; a resource reload or a language change gives a new {@link Language}. */
+    private record PurityLines(Language language, Component[] lines) {}
+
+    private static volatile @Nullable PurityLines purityLines;
 
     /**
      * Returns the purity color, {@code 0xRRGGBB}

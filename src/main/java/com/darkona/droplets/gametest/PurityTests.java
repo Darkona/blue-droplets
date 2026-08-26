@@ -1,5 +1,7 @@
 package com.darkona.droplets.gametest;
 
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.Component;
 import com.darkona.droplets.foundation.config.SyncedValues;
 import net.minecraft.world.item.TooltipFlag;
 import com.darkona.droplets.BlueDroplets;
@@ -311,6 +313,21 @@ public class PurityTests
             assertFalse(helper, selected.contains("mod/" + BlueDroplets.ID + ":datapacks/" + pack), pack + " is enabled by default");
         for (String pack : List.of("purify_smelting", "purify_campfire", "purify_cooking_pot", "clean_water_cooking"))
             assertTrue(helper, selected.contains("mod/" + BlueDroplets.ID + ":datapacks/" + pack), pack + " is not enabled by default");
+        helper.succeed();
+    }
+
+    /** The tooltip line of each level is its purity text in its colour, built once, not on every frame of a tooltip. */
+    @GameTest(template = "empty")
+    public static void purityLineIsTheTextInItsColour(GameTestHelper helper)
+    {
+        for (PurityLevel level : PurityLevel.values())
+        {
+            Component line = WaterPurity.purityLine(level.level());
+            assertValueEqual(helper, line.getString(), WaterPurity.getPurityText(level.level()), "tooltip line of " + level.id());
+            assertValueEqual(helper, line.getStyle().getColor(), TextColor.fromRgb(level.color()), "tooltip colour of " + level.id());
+            assertTrue(helper, WaterPurity.purityLine(level.level()) == line, "the tooltip line of " + level.id() + " is built again on every call");
+        }
+        assertTrue(helper, WaterPurity.purityLine(-1) == WaterPurity.purityLine(WaterPurity.defaultPurity()), "purity -1 does not read as the default purity");
         helper.succeed();
     }
 
