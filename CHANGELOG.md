@@ -12,6 +12,7 @@ The 1.18.2 port has every feature of the 1.19.2 port (next section) and so of 1.
 - Worlds from Thirst Was Taken 1.18.2 (1.3.x) load like those of 1.19.2 and 1.20.1: the capability, the `thirst:` ids and the `Purity` of water containers and tanks use the same formats. `[1.18.2]`
 - The default `biome_water` data map uses the biome tags that Forge 40 has: deserts and badlands by `#forge:is_sandy`, swamps by `#forge:is_swamp`, snowy biomes by `#forge:is_snowy` and mountains by `#minecraft:is_mountain`, which on 1.18.2 holds Forge's peaks and slopes. Forge 40 has no `forge:is_desert` or `forge:is_mountain`. Every vanilla biome gets the same purity as on later versions; 1.18.2 has no mangrove swamp. `[1.18.2]`
 - The biome climate of thirst loss uses vanilla's height-adjusted biome temperature, with and without Serene Seasons, so thirst loss falls with height the same either way; before, only Serene Seasons cooled it with height and the formula otherwise read the flat base temperature. `[1.18.2]`
+- Telling a water bottle from other potions (stack size, item colour, tooltips) no longer parses the potion's name on every call: the answer for the last name read is kept. `[1.18.2]`
 
 ### Mod compatibility (1.18.2)
 
