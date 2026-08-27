@@ -1,5 +1,6 @@
 package com.darkona.droplets;
 
+import com.darkona.droplets.compat.create.CreateCompat;
 import com.darkona.droplets.api.DropletsAPI;
 import com.darkona.droplets.compat.coldsweat.ColdSweatCompat;
 import com.darkona.droplets.compat.create.CreateRegistry;
@@ -91,7 +92,7 @@ public class BlueDroplets
         LootInit.register(modBus);
         LegacyIds.register();
 
-        if(ModList.get().isLoaded("create"))
+        if(CreateCompat.LOADED)
             CreateRegistry.register();
 
         LegacyConfigMigration.run();
@@ -112,7 +113,7 @@ public class BlueDroplets
 
     private void clientSetup(final FMLClientSetupEvent event)
     {
-        if(ModList.get().isLoaded("create")){
+        if(CreateCompat.LOADED){
             event.enqueueWork(ThirstPonders::register);
         }
     }
