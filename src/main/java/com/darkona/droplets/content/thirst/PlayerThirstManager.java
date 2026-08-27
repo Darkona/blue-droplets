@@ -74,12 +74,15 @@ public class PlayerThirstManager {
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level.isClientSide && ModAttachment.thirst(event.getPlayer()).handDrinkingAllowed())
-            DrinkByHandClient.drinkByHand();
+        drinkByHandIfAllowed(event);
     }
 
     @SubscribeEvent
     public static void drinkByHand(PlayerInteractEvent.RightClickEmpty event) {
+        drinkByHandIfAllowed(event);
+    }
+
+    private static void drinkByHandIfAllowed(PlayerInteractEvent event) {
         if (event.getHand() == InteractionHand.MAIN_HAND && event.getEntity().level.isClientSide && ModAttachment.thirst(event.getPlayer()).handDrinkingAllowed())
             DrinkByHandClient.drinkByHand();
     }
@@ -139,18 +142,20 @@ public class PlayerThirstManager {
 
     @SubscribeEvent
     public static void onEffectAdded(PotionEvent.PotionAddedEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player)
-            ModAttachment.thirst(player).invalidateModifier();
+        effectsChanged(event);
     }
 
     @SubscribeEvent
     public static void onEffectRemoved(PotionEvent.PotionRemoveEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player)
-            ModAttachment.thirst(player).invalidateModifier();
+        effectsChanged(event);
     }
 
     @SubscribeEvent
     public static void onEffectExpired(PotionEvent.PotionExpiryEvent event) {
+        effectsChanged(event);
+    }
+
+    private static void effectsChanged(PotionEvent event) {
         if (event.getEntity() instanceof ServerPlayer player)
             ModAttachment.thirst(player).invalidateModifier();
     }
