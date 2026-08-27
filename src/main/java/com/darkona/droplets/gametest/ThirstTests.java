@@ -1,5 +1,7 @@
 package com.darkona.droplets.gametest;
 
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.core.registries.Registries;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
@@ -262,7 +264,9 @@ public class ThirstTests
         Level level = helper.getLevel();
         BlockPos low = helper.absolutePos(BlockPos.ZERO).atY(level.getSeaLevel());
         BlockPos high = low.above(200);
-        var plains = level.getBiome(low);
+        // Plains, not the biome where the test runs: in a hot biome the LEGACY formula halves temperatures above 1, so
+        // cooling with height can raise the multiplier there.
+        var plains = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS);
         float atSea = ThirstHelper.biomeClimate(level, plains, low, 1.0F, false);
         float onTop = ThirstHelper.biomeClimate(level, plains, high, 1.0F, false);
         helper.assertTrue(onTop < atSea, "climate multiplier 200 blocks above sea level " + onTop + ", not below " + atSea);
