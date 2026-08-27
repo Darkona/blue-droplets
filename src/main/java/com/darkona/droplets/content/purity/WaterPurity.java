@@ -54,8 +54,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCauldronInteractionEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -74,7 +72,6 @@ import java.util.function.Supplier;
 
 
 @SuppressWarnings({"SpellCheckingInspection","unused"})
-@EventBusSubscriber
 public class WaterPurity
 {
     private static final List<ContainerWithPurity> codeContainers = new CopyOnWriteArrayList<>();
@@ -202,11 +199,10 @@ public class WaterPurity
     }
 
     /**
-     * Renders the client-side tooltip for items that have a water
-     * purity tag
+     * Client only (registered in {@code BlueDroplets}): the purity line of water containers. It reads the client
+     * config, which a dedicated server does not load, and some mods build tooltips there.
      */
-    @SubscribeEvent
-    static void renderPurityTooltip(ItemTooltipEvent event)
+    public static void renderPurityTooltip(ItemTooltipEvent event)
     {
         if(enabled() && isWaterFilledContainer(event.getItemStack()) && (event.getFlags().hasShiftDown() || !ClientConfig.ONLY_SHOW_PURITY_WHEN_SHIFTING.get()))
         {

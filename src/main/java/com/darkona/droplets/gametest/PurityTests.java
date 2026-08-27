@@ -1,5 +1,8 @@
 package com.darkona.droplets.gametest;
 
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.fluid.FluidUtil;
@@ -310,6 +313,28 @@ public class PurityTests
         check(helper, "water without purity", PurityTint.color(plain, 0, vanilla), vanilla);
         ItemStack healing = WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.HEALING), 0);
         check(helper, "healing potion", PurityTint.color(healing, 0, 0xFFF82423), 0xFFF82423);
+        helper.succeed();
+    }
+
+    /** Each level reads as its translation (the id when there is none); out-of-range values as the default purity. */
+    @GameTest(template = "empty")
+    public static void purityTextFollowsTheTranslation(GameTestHelper helper)
+    {
+        for (PurityLevel level : PurityLevel.values())
+            helper.assertValueEqual(WaterPurity.getPurityText(level.level()), Component.translatableWithFallback(level.translationKey(), level.id()).getString(), "text of " + level.id());
+        String fallback = WaterPurity.getPurityText(WaterPurity.defaultPurity());
+        helper.assertValueEqual(WaterPurity.getPurityText(-1), fallback, "text of purity -1");
+        helper.assertValueEqual(WaterPurity.getPurityText(PurityLevel.MAX + 1), fallback, "text of a purity past the maximum");
+        helper.succeed();
+    }
+
+    /** Some mods build tooltips on a dedicated server, where the client config is not loaded. */
+    @GameTest(template = "empty")
+    public static void tooltipsBuildOnADedicatedServer(GameTestHelper helper)
+    {
+        ItemStack water = WaterPurity.addPurity(PotionContents.createItemStack(Items.POTION, Potions.WATER), PurityLevel.MURKY.level());
+        water.getTooltipLines(Item.TooltipContext.of(helper.getLevel()), null, TooltipFlag.Default.NORMAL);
+        new ItemStack(Items.APPLE).getTooltipLines(Item.TooltipContext.of(helper.getLevel()), null, TooltipFlag.Default.NORMAL);
         helper.succeed();
     }
 
