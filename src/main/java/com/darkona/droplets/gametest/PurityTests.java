@@ -1,5 +1,6 @@
 package com.darkona.droplets.gametest;
 
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.Item;
 import net.minecraft.network.chat.Component;
@@ -321,7 +322,15 @@ public class PurityTests
     public static void purityTextFollowsTheTranslation(GameTestHelper helper)
     {
         for (PurityLevel level : PurityLevel.values())
-            helper.assertValueEqual(WaterPurity.getPurityText(level.level()), Component.translatableWithFallback(level.translationKey(), level.id()).getString(), "text of " + level.id());
+        {
+            String text = WaterPurity.getPurityText(level.level());
+            helper.assertValueEqual(text, Component.translatableWithFallback(level.translationKey(), level.id()).getString(), "text of " + level.id());
+            helper.assertTrue(WaterPurity.getPurityText(level.level()) == text, "the text of " + level.id() + " is built again on every call");
+            Component line = WaterPurity.purityLine(level.level());
+            helper.assertValueEqual(line.getString(), text, "tooltip line of " + level.id());
+            helper.assertValueEqual(line.getStyle().getColor(), TextColor.fromRgb(level.color()), "tooltip colour of " + level.id());
+            helper.assertTrue(WaterPurity.purityLine(level.level()) == line, "the tooltip line of " + level.id() + " is built again on every call");
+        }
         String fallback = WaterPurity.getPurityText(WaterPurity.defaultPurity());
         helper.assertValueEqual(WaterPurity.getPurityText(-1), fallback, "text of purity -1");
         helper.assertValueEqual(WaterPurity.getPurityText(PurityLevel.MAX + 1), fallback, "text of a purity past the maximum");
