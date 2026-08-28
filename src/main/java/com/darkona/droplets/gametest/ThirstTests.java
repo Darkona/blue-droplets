@@ -1,5 +1,8 @@
 package com.darkona.droplets.gametest;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import com.darkona.droplets.content.thirst.PlayerThirstManager;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.core.registries.Registries;
 import com.darkona.droplets.foundation.config.GameplayConfig;
@@ -303,6 +306,17 @@ public class ThirstTests
         BlockPos pos = helper.absolutePos(BlockPos.ZERO);
         NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, pos, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false)));
         NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickEmpty(player, InteractionHand.MAIN_HAND));
+        helper.succeed();
+    }
+
+    /** The tooltip line of estimated values: the translated values in gray, kept while they stay the same. */
+    @GameTest(template = "empty")
+    public static void estimatedLineIsKeptWhileTheValuesStay(GameTestHelper helper)
+    {
+        Component line = PlayerThirstManager.estimatedLine(3, 2);
+        helper.assertValueEqual(line, Component.translatable("blue_droplets.tooltip.estimated", 3, 2).withStyle(ChatFormatting.GRAY), "line for 3 thirst and 2 quenched");
+        helper.assertTrue(PlayerThirstManager.estimatedLine(3, 2) == line, "the line is built again for the same values");
+        helper.assertValueEqual(PlayerThirstManager.estimatedLine(4, 2), Component.translatable("blue_droplets.tooltip.estimated", 4, 2).withStyle(ChatFormatting.GRAY), "line for 4 thirst and 2 quenched");
         helper.succeed();
     }
 }
