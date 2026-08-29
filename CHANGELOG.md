@@ -85,6 +85,7 @@ Changes by feature, newest version first. Upstream issues are cited as `thirst#N
 ### Bug fixes
 
 - A dedicated server no longer throws when another mod builds an item's tooltip there ("Cannot get config value before config is loaded"): the purity and estimated values tooltip lines read the client config, and are now only registered on the client. `[1.21.1]`
+- The Dehydration effect no longer piles up thirst exhaustion on creative players and on players with thirst disabled, which came due all at once when they went back to survival or thirst was enabled again. `[1.21.1]`
 - Create Sand Filter: water below `sandFilterMbPerTick` left in the dirty tank (the last millibuckets a pipe delivers) is filtered too; before, it stayed there until more water arrived. `[1.21.1]`
 - `/blue_droplets query` now returns the player's thirst (usable with `/execute store result`), `set` returns the thirst it set and `enable` the number of players; they all returned 0. `set` reports the values actually stored (quenched never above thirst, or what another mod's `ThirstChangeEvent` left), `enable` lists every player instead of only the first, and `set`/`enable` are shown to other operators like vanilla admin commands. `[1.21.1]`
 - A purity component with a value outside 0-5 (other mods) now reads as the default purity when the item or fluid is loaded, so that water also stacks with water of the default purity; it no longer stays stored as an invalid number. Purity is sent to clients in one byte instead of four (network protocol version `0.1.12`). `[1.21.1]`
