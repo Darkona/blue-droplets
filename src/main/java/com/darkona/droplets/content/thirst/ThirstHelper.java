@@ -432,11 +432,15 @@ public class ThirstHelper
         return valuesOf(itemStack) != null;
     }
 
+    /** For other mods, as in Thirst Was Taken; this mod reads the tables directly. */
+    @SuppressWarnings("unused")
     public static boolean isDrink(ItemStack itemStack)
     {
         return table.drinks().containsKey(itemStack.getItem());
     }
 
+    /** For other mods, as in Thirst Was Taken; this mod reads the tables directly. */
+    @SuppressWarnings("unused")
     public static boolean isFood(ItemStack itemStack)
     {
         return table.foods().containsKey(itemStack.getItem());
