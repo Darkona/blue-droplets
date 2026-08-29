@@ -192,6 +192,25 @@ public class CreateTests
         helper.succeed();
     }
 
+    /** Water below the rate per tick (the last millibuckets a pipe delivers) is filtered too, not left in the dirty tank. */
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void sandFilterFiltersLessThanItsRate(GameTestHelper helper)
+    {
+        BlockPos pos = helper.absolutePos(BlockPos.ZERO);
+        helper.getLevel().setBlockAndUpdate(pos, CreateRegistry.SAND_FILTER_BLOCK.get().defaultBlockState());
+        SandFilterBlockEntity filter = (SandFilterBlockEntity) helper.getLevel().getBlockEntity(pos);
+        int rate = CompatConfig.SAND_FILTER_MB_PER_TICK.get();
+        int amount = rate + rate / 2;
+        helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.UP).fill(water(0, amount), IFluidHandler.FluidAction.EXECUTE);
+        for (int tick = 0; tick < 10; tick++)
+            filter.tick();
+        FluidStack out = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.DOWN).getFluidInTank(0);
+        helper.assertValueEqual(out.getAmount(), amount, "water out of a filter fed less than its rate");
+        helper.assertValueEqual(WaterPurity.getPurity(out), SandFilterBlockEntity.filteredPurity(0), "purity of the water out");
+        helper.assertValueEqual(helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.UP).getFluidInTank(0).getAmount(), 0, "water left in the dirty tank");
+        helper.succeed();
+    }
+
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void sandFilterIsInCreateAndOwnCreativeTabs(GameTestHelper helper)
     {
