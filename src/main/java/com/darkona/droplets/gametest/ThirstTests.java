@@ -1,5 +1,13 @@
 package com.darkona.droplets.gametest;
 
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.core.registries.Registries;
+import com.darkona.droplets.foundation.config.GameplayConfig;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.Direction;
 import com.darkona.droplets.api.ThirstValues;
 import com.darkona.droplets.BlueDroplets;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
@@ -233,7 +241,9 @@ public class ThirstTests
         Level level = helper.getLevel();
         BlockPos low = helper.absolutePos(BlockPos.ZERO).atY(level.getSeaLevel());
         BlockPos high = low.above(200);
-        var plains = level.getBiome(low);
+        // Plains, not the biome where the test runs: in a hot biome the LEGACY formula halves temperatures above 1, so
+        // cooling with height can raise the multiplier there.
+        var plains = level.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS);
         float atSea = ThirstHelper.biomeClimate(level, plains, low, 1.0F, false);
         float onTop = ThirstHelper.biomeClimate(level, plains, high, 1.0F, false);
         helper.assertTrue(onTop < atSea, "climate multiplier 200 blocks above sea level " + onTop + ", not below " + atSea);
@@ -267,6 +277,32 @@ public class ThirstTests
         helper.assertValueEqual(dispatcher.execute("thirst query @s", source), 4, "result of the /thirst alias");
         helper.assertValueEqual(dispatcher.execute("blue_droplets enable @s false", source), 1, "result of enable");
         helper.assertFalse(thirst(player).getShouldTickThirst(), "thirst still enabled after enable false");
+        helper.succeed();
+    }
+
+    /** Gaining or losing an effect recomputes the thirst loss multiplier right away (Fire Resistance: none by default). */
+    @GameTest(template = "empty")
+    public static void effectsRecomputeTheMultiplier(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        float plain = thirst.exhaustionModifier(player);
+        helper.assertTrue(plain > 0.0F, "multiplier without effects " + plain);
+        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200));
+        helper.assertValueEqual(thirst.exhaustionModifier(player), plain * GameplayConfig.FIRE_RESISTANCE_PERCENT.get() / 100.0F, "multiplier with Fire Resistance");
+        player.removeEffect(MobEffects.FIRE_RESISTANCE);
+        helper.assertValueEqual(thirst.exhaustionModifier(player), plain, "multiplier after Fire Resistance is removed");
+        helper.succeed();
+    }
+
+    /** Right clicks reach this mod's handlers on the server too; hand drinking itself only acts on the client. */
+    @GameTest(template = "empty")
+    public static void rightClicksRunOnTheServer(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        BlockPos pos = helper.absolutePos(BlockPos.ZERO);
+        NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, pos, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false)));
+        NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickEmpty(player, InteractionHand.MAIN_HAND));
         helper.succeed();
     }
 }
