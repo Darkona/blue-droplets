@@ -39,8 +39,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -58,10 +61,16 @@ public class ThirstTests
 {
     /** Cause of the last thirst change of any player; tests run one at a time on the server thread. */
     private static ThirstChangeEvent.Cause lastCause;
+    /** Players with this tag do not die: their death is cancelled after every other listener, like a modded totem. */
+    private static final String IMMORTAL_TAG = "droplets-test-immortal";
 
     static
     {
         NeoForge.EVENT_BUS.addListener((ThirstChangeEvent.Post event) -> lastCause = event.getCause());
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, (LivingDeathEvent event) -> {
+            if (event.getEntity().getTags().contains(IMMORTAL_TAG))
+                event.setCanceled(true);
+        });
     }
 
     private static ItemStack waterBottle(int purity)
@@ -328,6 +337,37 @@ public class ThirstTests
         helper.assertValueEqual(thirst.exhaustionModifier(player), plain * GameplayConfig.FIRE_RESISTANCE_PERCENT.get() / 100.0F, "multiplier with Fire Resistance");
         player.removeEffect(MobEffects.FIRE_RESISTANCE);
         helper.assertValueEqual(thirst.exhaustionModifier(player), plain, "multiplier after Fire Resistance is removed");
+        helper.succeed();
+    }
+
+    /** The respawn values come with the respawn, not with the death: a death another mod cancels (its own totem) keeps the thirst. */
+    @GameTest(template = "empty")
+    public static void aCancelledDeathKeepsThirst(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 7, 3, ThirstChangeEvent.Cause.COMMAND);
+        player.addTag(IMMORTAL_TAG);
+        NeoForge.EVENT_BUS.post(new LivingDeathEvent(player, player.damageSources().generic()));
+        helper.assertValueEqual(thirst.getThirst(), 7, "thirst after a cancelled death");
+        helper.assertValueEqual(thirst.getQuenched(), 3, "quenched after a cancelled death");
+        helper.succeed();
+    }
+
+    /** Respawning after a death gives {@code death.respawnThirst} and {@code respawnQuenched}; coming back from the End is not a death. */
+    @GameTest(template = "empty")
+    public static void respawningGivesTheRespawnValues(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 7, 3, ThirstChangeEvent.Cause.COMMAND);
+        NeoForge.EVENT_BUS.post(new PlayerEvent.PlayerRespawnEvent(player, true));
+        helper.assertValueEqual(thirst.getThirst(), 7, "thirst after coming back from the End");
+        helper.assertValueEqual(thirst.getQuenched(), 3, "quenched after coming back from the End");
+        NeoForge.EVENT_BUS.post(new PlayerEvent.PlayerRespawnEvent(player, false));
+        helper.assertValueEqual(thirst.getThirst(), GameplayConfig.RESPAWN_THIRST.get(), "thirst after respawning");
+        helper.assertValueEqual(thirst.getQuenched(), GameplayConfig.RESPAWN_QUENCHED.get(), "quenched after respawning");
+        helper.assertValueEqual(lastCause, ThirstChangeEvent.Cause.DEATH, "cause of the respawn values");
         helper.succeed();
     }
 

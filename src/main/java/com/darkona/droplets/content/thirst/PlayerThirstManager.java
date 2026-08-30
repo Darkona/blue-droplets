@@ -27,7 +27,6 @@ import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -128,9 +127,20 @@ public class PlayerThirstManager {
         thirst.invalidateModifier();
     }
 
+    /**
+     * The new player after a death gets {@code death.respawnThirst} and {@code respawnQuenched} (-1 keeps what was
+     * copied from the dead player). Done here and not at the death, which another mod may cancel; coming back from
+     * the End is not a death. Then a full sync: the client player is new too.
+     */
     @SubscribeEvent
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        event.getEntity().getData(ModAttachment.PLAYER_THIRST).updateThirstData(event.getEntity());
+        PlayerThirst thirst = event.getEntity().getData(ModAttachment.PLAYER_THIRST);
+        if (!event.isEndConquered()) {
+            int respawnThirst = GameplayConfig.RESPAWN_THIRST.get();
+            int respawnQuenched = GameplayConfig.RESPAWN_QUENCHED.get();
+            thirst.change(event.getEntity(), respawnThirst >= 0 ? respawnThirst : thirst.getThirst(), respawnQuenched >= 0 ? respawnQuenched : thirst.getQuenched(), ThirstChangeEvent.Cause.DEATH);
+        }
+        thirst.updateThirstData(event.getEntity());
     }
 
     @SubscribeEvent
@@ -191,16 +201,6 @@ public class PlayerThirstManager {
             player.getData(ModAttachment.PLAYER_THIRST).addActivity(player, value.get().floatValue() * factor);
     }
 
-    @SubscribeEvent
-    public static void onPlayerDeath(LivingDeathEvent event){
-        if(event.getEntity() instanceof ServerPlayer player){
-            PlayerThirst thirst = player.getData(ModAttachment.PLAYER_THIRST);
-            int respawnThirst = GameplayConfig.RESPAWN_THIRST.get();
-            int respawnQuenched = GameplayConfig.RESPAWN_QUENCHED.get();
-            thirst.change(player, respawnThirst >= 0 ? respawnThirst : thirst.getThirst(), respawnQuenched >= 0 ? respawnQuenched : thirst.getQuenched(), ThirstChangeEvent.Cause.DEATH);
-        }
-    }
-
     /**
      * The recipes of the data reload in progress: its {@code TagsUpdatedEvent} comes before the server exists on world load.
      */
@@ -212,7 +212,7 @@ public class PlayerThirstManager {
     /**
      * Lowest priority: NeoForge applies the reloaded data maps in its own {@code TagsUpdatedEvent} listener.
      */
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public static void rebuildDrinks(TagsUpdatedEvent event){
         if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
             RecipeManager recipes = reloadingRecipes;
