@@ -4,7 +4,6 @@ import com.darkona.droplets.foundation.network.message.DrinkByHandMessage;
 import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
 import com.darkona.droplets.foundation.network.message.ThirstValuesSyncMessage;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 /**
@@ -26,13 +25,10 @@ public class ThirstModPacketHandler
                 ThirstValuesSyncMessage.STREAM_CODEC,
                 ThirstValuesSyncMessage::clientHandle
         );
-        registrar.playBidirectional(
+        registrar.playToClient(
                 PlayerThirstSyncMessage.TYPE,
                 PlayerThirstSyncMessage.STREAM_CODEC,
-                new DirectionalPayloadHandler<>(
-                        PlayerThirstSyncMessage::clientHandle,
-                        PlayerThirstSyncMessage::serverHandle
-                )
+                PlayerThirstSyncMessage::clientHandle
         );
     }
 }

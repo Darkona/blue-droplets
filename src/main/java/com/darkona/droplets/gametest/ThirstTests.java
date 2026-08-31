@@ -25,6 +25,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.resources.ResourceLocation;
+import com.darkona.droplets.foundation.network.message.PlayerThirstSyncMessage;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -445,6 +450,16 @@ public class ThirstTests
         BlockPos pos = helper.absolutePos(BlockPos.ZERO);
         NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, pos, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false)));
         NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickEmpty(player, InteractionHand.MAIN_HAND));
+        helper.succeed();
+    }
+
+    /** The thirst sync only goes to clients: a server refuses to decode one sent by a client. */
+    @GameTest(template = "empty")
+    public static void thirstSyncOnlyGoesToClients(GameTestHelper helper)
+    {
+        ResourceLocation id = PlayerThirstSyncMessage.TYPE.id();
+        helper.assertTrue(NetworkRegistry.getCodec(id, ConnectionProtocol.PLAY, PacketFlow.CLIENTBOUND) != null, "no codec for the thirst sync sent to a client");
+        helper.assertTrue(NetworkRegistry.getCodec(id, ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND) == null, "the server accepts a thirst sync from a client");
         helper.succeed();
     }
 }
