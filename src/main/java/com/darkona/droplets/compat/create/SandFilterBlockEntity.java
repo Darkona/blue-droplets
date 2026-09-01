@@ -42,6 +42,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
     private @Nullable BlockCapabilityCache<IFluidHandler, @Nullable Direction> nextWatch;
     private @Nullable SandFilterBlockEntity next;
     private boolean nextStale = true;
+    private final SandFilterTanksView tanksView = new SandFilterTanksView(this);
 
     public SandFilterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
     {
@@ -61,13 +62,16 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
         return super.createRenderBoundingBox().expandTowards(0, -2, 0);
     }
 
+    /**
+     * Back: the dirty tank; front: the purified tank; no side: both, read only, for Jade and other inspectors.
+     */
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 CreateRegistry.SAND_FILTER_BE.get(),
                 (be, side) -> {
                     if (side == null)
-                        return null;
+                        return be.tanksView;
                     Direction facing = be.getBlockState().getValue(SandFilterBlock.FACING);
                     if (side == facing)
                         return be.purifiedTank.getCapability();
