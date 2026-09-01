@@ -48,6 +48,10 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
     /** Bits 8-15 of the synced rules: {@code sprint.minThirst}. */
     public static final int SYNC_SPRINT_MIN_SHIFT = 8;
     private static final double MAX_STEP = 10.0;
+    /** Results of {@link #apply}. */
+    private static final int UNCHANGED = 0;
+    private static final int CHANGED = 1;
+    private static final int CANCELLED = 2;
 
     int thirst = MAX_THIRST;
     int quenched = RESPAWN_QUENCHED;
@@ -171,23 +175,31 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
      */
     public boolean change(Player player, int newThirst, int newQuenched, ThirstChangeEvent.Cause cause)
     {
+        return apply(player, newThirst, newQuenched, cause) == CHANGED;
+    }
+
+    /**
+     * {@link #change}, telling a change that another mod cancelled apart from one that changes nothing.
+     */
+    private int apply(Player player, int newThirst, int newQuenched, ThirstChangeEvent.Cause cause)
+    {
         newThirst = Mth.clamp(newThirst, 0, MAX_THIRST);
         newQuenched = Mth.clamp(newQuenched, 0, newThirst);
         if (newThirst == thirst && newQuenched == quenched)
-            return false;
+            return UNCHANGED;
         ThirstChangeEvent.Pre pre = NeoForge.EVENT_BUS.post(new ThirstChangeEvent.Pre(player, cause, thirst, quenched, newThirst, newQuenched));
         if (pre.isCanceled())
-            return false;
+            return CANCELLED;
         newThirst = Mth.clamp(pre.getNewThirst(), 0, MAX_THIRST);
         newQuenched = Mth.clamp(pre.getNewQuenched(), 0, newThirst);
         if (newThirst == thirst && newQuenched == quenched)
-            return false;
+            return UNCHANGED;
         int oldThirst = thirst;
         int oldQuenched = quenched;
         thirst = newThirst;
         quenched = newQuenched;
         NeoForge.EVENT_BUS.post(new ThirstChangeEvent.Post(player, cause, oldThirst, oldQuenched, thirst, quenched));
-        return true;
+        return CHANGED;
     }
 
     @Override
@@ -296,6 +308,9 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
         return absorb(player, thirst, quenched, this.thirst + thirst, this.quenched + quenched + extra, overflows, cause);
     }
 
+    /**
+     * What does not fit counts towards Overhydrated, unless another mod cancels the change: then nothing was drunk.
+     */
     private boolean absorb(Player player, int thirst, int quenched, int newThirst, int newQuenched, boolean overflows, ThirstChangeEvent.Cause cause)
     {
         int wasted = 0;
@@ -304,10 +319,10 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             int fitThirst = Mth.clamp(newThirst, 0, MAX_THIRST);
             wasted = thirst + quenched - (fitThirst - this.thirst) - (Mth.clamp(newQuenched, 0, fitThirst) - this.quenched);
         }
-        boolean changed = change(player, newThirst, newQuenched, cause);
-        if (wasted > 0)
+        int result = apply(player, newThirst, newQuenched, cause);
+        if (wasted > 0 && result != CANCELLED)
             overflow(player, wasted);
-        return changed;
+        return result == CHANGED;
     }
 
     /**
