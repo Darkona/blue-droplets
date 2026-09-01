@@ -179,7 +179,7 @@ Both world data maps are only read on the server.
 
 ## Quenchness effect and potions
 
-`blue_droplets:quenchness` is a beneficial effect: every `effects.quenchnessIntervalTicks` (default 40) it restores (level) thirst and (level) quenched, like Regeneration for health. Potions (registry `minecraft:potion`, usable in loot tables, `set_potion`, recipes and `/give @p minecraft:potion[potion_contents={potion:"blue_droplets:quenchness"}]`):
+`blue_droplets:quenchness` is a beneficial effect: every `effects.quenchnessIntervalTicks` (default 40) it restores (level) thirst and (level) quenched, like Regeneration for health. Vampires (Vampirism, Supernatural) get nothing from it: only blood hydrates them. Potions (registry `minecraft:potion`, usable in loot tables, `set_potion`, recipes and `/give @p minecraft:potion[potion_contents={potion:"blue_droplets:quenchness"}]`):
 
 | Potion | Effect | Brewing |
 |---|---|---|
