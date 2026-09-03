@@ -163,6 +163,25 @@ public class CreateTests
         helper.succeed();
     }
 
+    /** Water below the rate per tick (the last millibuckets a pipe delivers) is filtered too, not left in the dirty tank. */
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void sandFilterFiltersLessThanItsRate(GameTestHelper helper)
+    {
+        BlockPos pos = helper.absolutePos(BlockPos.ZERO);
+        helper.getLevel().setBlockAndUpdate(pos, CreateRegistry.SAND_FILTER_BLOCK.get().defaultBlockState());
+        SandFilterBlockEntity filter = (SandFilterBlockEntity) helper.getLevel().getBlockEntity(pos);
+        int rate = CompatConfig.SAND_FILTER_MB_PER_TICK.get();
+        int amount = rate + rate / 2;
+        tank(helper, pos, Direction.UP).fill(water(0, amount), IFluidHandler.FluidAction.EXECUTE);
+        for (int tick = 0; tick < 10; tick++)
+            filter.tick();
+        FluidStack out = tank(helper, pos, Direction.DOWN).getFluidInTank(0);
+        assertValueEqual(helper, out.getAmount(), amount, "water out of a filter fed less than its rate");
+        assertValueEqual(helper, WaterPurity.getPurity(out), SandFilterBlockEntity.filteredPurity(0), "purity of the water out");
+        assertValueEqual(helper, tank(helper, pos, Direction.UP).getFluidInTank(0).getAmount(), 0, "water left in the dirty tank");
+        helper.succeed();
+    }
+
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void sandFilterIsInOwnCreativeTab(GameTestHelper helper)
     {
@@ -307,6 +326,11 @@ public class CreateTests
         FluidStack plain = GenericItemEmptying.emptyItem(helper.getLevel(), new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), true).getFirst();
         assertFalse(helper, WaterPurity.hasPurity(plain), "the emptying recipe kept the purity of an earlier bowl");
         helper.succeed();
+    }
+
+    private static IFluidHandler tank(GameTestHelper helper, BlockPos pos, Direction side)
+    {
+        return helper.getLevel().getBlockEntity(pos).getCapability(ForgeCapabilities.FLUID_HANDLER, side).orElseThrow(IllegalStateException::new);
     }
 
     private static FluidStack water(int purity, int amount)
