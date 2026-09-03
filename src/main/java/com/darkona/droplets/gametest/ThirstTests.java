@@ -30,6 +30,7 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodData;
@@ -51,6 +52,7 @@ import static com.darkona.droplets.gametest.TestSupport.thirst;
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 import static com.darkona.droplets.gametest.TestSupport.assertTrue;
 import static com.darkona.droplets.gametest.TestSupport.assertFalse;
+import static com.darkona.droplets.gametest.TestSupport.set;
 
 /**
  * Drinking, eating, limits, overhydration, purity effects and the commands, with the default config.
@@ -81,7 +83,7 @@ public class ThirstTests
         double basal = GameplayConfig.BASAL_PER_TICK.get();
         try
         {
-            GameplayConfig.BASAL_PER_TICK.set(0.0);
+            set(GameplayConfig.BASAL_PER_TICK, 0.0);
             FoodData food = player.getFoodData();
             food.setExhaustion(0.0F);
             thirst.tick(player);
@@ -96,7 +98,7 @@ public class ThirstTests
         }
         finally
         {
-            GameplayConfig.BASAL_PER_TICK.set(basal);
+            set(GameplayConfig.BASAL_PER_TICK, basal);
         }
         helper.succeed();
     }
@@ -319,6 +321,27 @@ public class ThirstTests
         assertValueEqual(helper, thirst.exhaustionModifier(player), plain * GameplayConfig.FIRE_RESISTANCE_PERCENT.get() / 100.0F, "multiplier with Fire Resistance");
         player.removeEffect(MobEffects.FIRE_RESISTANCE);
         assertValueEqual(helper, thirst.exhaustionModifier(player), plain, "multiplier after Fire Resistance is removed");
+        helper.succeed();
+    }
+
+    /** Dehydration adds thirst exhaustion like any activity: not to creative players nor to players with thirst disabled. */
+    @GameTest(template = "empty")
+    public static void dehydrationSparesCreativeAndDisabledPlayers(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        MobEffect dehydration = EffectInit.DEHYDRATION.get();
+        float start = thirst.getExhaustion();
+        dehydration.applyEffectTick(player, 0);
+        assertTrue(helper, thirst.getExhaustion() > start, "Dehydration added no exhaustion to a survival player");
+        float survival = thirst.getExhaustion();
+        player.getAbilities().invulnerable = true;
+        dehydration.applyEffectTick(player, 0);
+        assertValueEqual(helper, thirst.getExhaustion(), survival, "exhaustion of a creative player with Dehydration");
+        player.getAbilities().invulnerable = false;
+        thirst.setShouldTickThirst(false);
+        dehydration.applyEffectTick(player, 0);
+        assertValueEqual(helper, thirst.getExhaustion(), survival, "exhaustion of a player with thirst disabled and Dehydration");
         helper.succeed();
     }
 
