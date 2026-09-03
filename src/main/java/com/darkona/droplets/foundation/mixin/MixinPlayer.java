@@ -18,6 +18,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Player.class)
 public abstract class MixinPlayer
 {
+    /**
+     * Food hydrates here, once per bite; water containers and drinks that are not food hydrate when their use finishes
+     * ({@code PlayerThirstManager#drink}).
+     */
     @Inject(method = "eat", at = @At("HEAD"))
     public void onEatDrink(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir)
     {
