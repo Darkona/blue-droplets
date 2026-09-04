@@ -46,6 +46,8 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.level.BlockEvent;
 
 import java.util.UUID;
 
@@ -64,12 +66,22 @@ public class ThirstTests
     private static ThirstChangeEvent.Cause lastCause;
     /** Players with this tag do not die: their death is cancelled after every other listener, like a modded totem. */
     private static final String IMMORTAL_TAG = "droplets-test-immortal";
+    /** Players with this tag cannot break blocks nor attack: cancelled at low priority, like a claim or PvP mod. */
+    private static final String PROTECTED_TAG = "droplets-test-protected";
 
     static
     {
         MinecraftForge.EVENT_BUS.addListener((ThirstChangeEvent.Post event) -> lastCause = event.getCause());
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, (LivingDeathEvent event) -> {
             if (event.getEntity().getTags().contains(IMMORTAL_TAG))
+                event.setCanceled(true);
+        });
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (BlockEvent.BreakEvent event) -> {
+            if (event.getPlayer().getTags().contains(PROTECTED_TAG))
+                event.setCanceled(true);
+        });
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (AttackEntityEvent event) -> {
+            if (event.getEntity().getTags().contains(PROTECTED_TAG))
                 event.setCanceled(true);
         });
     }
@@ -378,6 +390,39 @@ public class ThirstTests
         thirst.setShouldTickThirst(false);
         dehydration.applyEffectTick(player, 0);
         assertValueEqual(helper, thirst.getExhaustion(), survival, "exhaustion of a player with thirst disabled and Dehydration");
+        helper.succeed();
+    }
+
+    /** OWN mode: a block break or an attack that another mod cancels (claims, PvP rules) costs no thirst, as it costs no hunger in vanilla. */
+    @GameTest(template = "empty")
+    public static void cancelledActivitiesCostNothingInOwnMode(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        GameplayConfig.Mode mode = GameplayConfig.MODE.get();
+        double basal = GameplayConfig.BASAL_PER_TICK.get();
+        try
+        {
+            GameplayConfig.MODE.set(GameplayConfig.Mode.OWN);
+            GameplayConfig.BASAL_PER_TICK.set(0.0);
+            BlockPos pos = helper.absolutePos(BlockPos.ZERO);
+            thirst.tick(player);
+            float start = thirst.getExhaustion();
+            player.addTag(PROTECTED_TAG);
+            MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(helper.getLevel(), pos, helper.getLevel().getBlockState(pos), player));
+            MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, player));
+            thirst.tick(player);
+            assertValueEqual(helper, thirst.getExhaustion(), start, "exhaustion after a cancelled block break and attack");
+            player.removeTag(PROTECTED_TAG);
+            MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(helper.getLevel(), pos, helper.getLevel().getBlockState(pos), player));
+            thirst.tick(player);
+            helper.assertTrue(thirst.getExhaustion() > start, "a block break added no exhaustion in OWN mode");
+        }
+        finally
+        {
+            GameplayConfig.MODE.set(mode);
+            GameplayConfig.BASAL_PER_TICK.set(basal);
+        }
         helper.succeed();
     }
 
