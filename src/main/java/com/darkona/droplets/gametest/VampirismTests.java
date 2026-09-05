@@ -7,6 +7,7 @@ import com.darkona.droplets.api.event.DrinkEvent;
 import com.darkona.droplets.api.event.ThirstChangeEvent;
 import com.darkona.droplets.compat.vampirism.VampirismCompat;
 import com.darkona.droplets.content.purity.WaterPurity;
+import com.darkona.droplets.content.registry.EffectInit;
 import com.darkona.droplets.content.thirst.PlayerThirst;
 import com.darkona.droplets.content.thirst.ThirstHelper;
 import com.darkona.droplets.foundation.config.GameplayConfig;
@@ -71,6 +72,19 @@ public class VampirismTests
         thirst.setExhaustion(GameplayConfig.EXHAUSTION_PER_POINT.get().floatValue() + 0.5F);
         thirst.tick(player);
         assertValueEqual(helper, thirst.getThirst(), 19, "a vampire's thirst after a point of exhaustion");
+        helper.succeed();
+    }
+
+    /** Quenchness is not blood: it gives a vampire nothing. */
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void quenchnessDoesNotHydrateAVampire(GameTestHelper helper)
+    {
+        ServerPlayer player = vampire(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 10, 0, ThirstChangeEvent.Cause.COMMAND);
+        EffectInit.QUENCHNESS.get().applyEffectTick(player, 1);
+        assertValueEqual(helper, thirst.getThirst(), 10, "a vampire's thirst after a Quenchness tick");
+        assertValueEqual(helper, thirst.getQuenched(), 0, "a vampire's quenched after a Quenchness tick");
         helper.succeed();
     }
 
