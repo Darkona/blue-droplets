@@ -342,15 +342,6 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, OVERHYDRATION_NAUSEA_TICKS));
     }
 
-    public void drink(int thirst, int quenched)
-    {
-        int extra_quenched = Math.max(this.thirst + thirst - MAX_THIRST, 0);
-        if(!GameplayConfig.EXTRA_THIRST_TO_QUENCHED.get())
-            extra_quenched = 0;
-        setThirst(this.thirst + thirst);
-        setQuenched(this.quenched + quenched + extra_quenched);
-    }
-
     /**
     * Method adapted from minecraft's Food Data class equivalent for hunger.
     */
@@ -634,15 +625,6 @@ public class PlayerThirst implements IThirst, DropletsView, INBTSerializable<Com
 
     @Override
     public void ExhaustionRecalculate(){exhaustionRecalculate = true;}
-
-    @Override
-    public void copy(IThirst cap)
-    {
-        setThirst(cap.getThirst());
-        setQuenched(cap.getQuenched());
-        exhaustion = cap.getExhaustion();
-        shouldTickThirst = cap.getShouldTickThirst();
-    }
 
     public void addExhaustion(Player player, float amount)
     {
