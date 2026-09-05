@@ -68,6 +68,8 @@ public class ThirstTests
     private static final String IMMORTAL_TAG = "droplets-test-immortal";
     /** Players with this tag cannot break blocks nor attack: cancelled at low priority, like a claim or PvP mod. */
     private static final String PROTECTED_TAG = "droplets-test-protected";
+    /** Thirst changes of players with this tag are cancelled, like a mod that freezes thirst. */
+    private static final String FROZEN_TAG = "droplets-test-frozen";
 
     static
     {
@@ -82,6 +84,10 @@ public class ThirstTests
         });
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, (AttackEntityEvent event) -> {
             if (event.getEntity().getTags().contains(PROTECTED_TAG))
+                event.setCanceled(true);
+        });
+        MinecraftForge.EVENT_BUS.addListener((ThirstChangeEvent.Pre event) -> {
+            if (event.getEntity().getTags().contains(FROZEN_TAG))
                 event.setCanceled(true);
         });
     }
@@ -223,6 +229,23 @@ public class ThirstTests
         MobEffectInstance effect = player.getEffect(EffectInit.OVERHYDRATED.get());
         helper.assertTrue(effect != null && effect.getAmplifier() == 0, "two bottles past full give Overhydrated I");
         helper.assertTrue(player.hasEffect(MobEffects.CONFUSION), "Overhydrated comes with Nausea");
+        helper.succeed();
+    }
+
+    /** Water that another mod keeps from being drunk ({@code ThirstChangeEvent.Pre} cancelled) is not drunk past full either. */
+    @GameTest(template = "empty")
+    public static void cancelledDrinksDoNotOverhydrate(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 20, 12, ThirstChangeEvent.Cause.COMMAND);
+        player.addTag(FROZEN_TAG);
+        for (int i = 0; i < 4; i++)
+            thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
+        player.removeTag(FROZEN_TAG);
+        helper.assertFalse(player.hasEffect(EffectInit.OVERHYDRATED.get()), "cancelled drinks overhydrated");
+        thirst.hydrate(player, 6, 8, true, ThirstChangeEvent.Cause.DRINK);
+        helper.assertFalse(player.hasEffect(EffectInit.OVERHYDRATED.get()), "one bottle past full after cancelled drinks overhydrated");
         helper.succeed();
     }
 
