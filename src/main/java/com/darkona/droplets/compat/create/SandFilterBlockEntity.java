@@ -157,16 +157,12 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking)
     {
-            LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
-            CreateLang.translate("gui.goggles.fluid_container")
-                    .forGoggles(tooltip);
+        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
+        CreateLang.translate("gui.goggles.fluid_container")
+                .forGoggles(tooltip);
 
-            int dirtyWaterAmount = dirtyTank.getPrimaryHandler().getFluidAmount();
-            int purifiedWaterAmount = purifiedTank.getPrimaryHandler().getFluidAmount();
-
-        buildTooltip(tooltip, mb, dirtyWaterAmount, dirtyTank);
-
-        buildTooltip(tooltip, mb, purifiedWaterAmount, purifiedTank);
+        tankTooltip(tooltip, mb, dirtyTank);
+        tankTooltip(tooltip, mb, purifiedTank);
 
         if(dirtyTank.isEmpty() && purifiedTank.isEmpty()){
             CreateLang.translate("gui.goggles.fluid_container.capacity")
@@ -180,24 +176,27 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
         return hasFluid();
     }
 
-    private void buildTooltip(List<Component> tooltip, LangBuilder mb, int purifiedWaterAmount, SmartFluidTankBehaviour purifiedTank) {
-        if(!purifiedTank.isEmpty())
-        {
-            CreateLang.builder()
-                    .text(WaterPurity.enabled() ? WaterPurity.getPurityText(WaterPurity.getPurity(purifiedTank.getPrimaryHandler().getFluid())) + " " : "")
-                    .add(CreateLang.fluidName(purifiedTank.getPrimaryHandler().getFluid()))
-                    .style(ChatFormatting.GRAY)
-                    .forGoggles(tooltip);
+    /**
+     * The purity and fluid name of a tank, and its amount over its capacity; nothing for an empty tank.
+     */
+    private static void tankTooltip(List<Component> tooltip, LangBuilder mb, SmartFluidTankBehaviour tank) {
+        if(tank.isEmpty())
+            return;
+        SmartFluidTank handler = tank.getPrimaryHandler();
+        CreateLang.builder()
+                .text(WaterPurity.enabled() ? WaterPurity.getPurityText(WaterPurity.getPurity(handler.getFluid())) + " " : "")
+                .add(CreateLang.fluidName(handler.getFluid()))
+                .style(ChatFormatting.GRAY)
+                .forGoggles(tooltip);
 
-            CreateLang.builder()
-                    .add(CreateLang.number(purifiedWaterAmount)
-                            .add(mb)
-                            .style(ChatFormatting.GOLD))
-                    .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(purifiedTank.getPrimaryHandler().getCapacity())
-                            .add(mb)
-                            .style(ChatFormatting.DARK_GRAY))
-                    .forGoggles(tooltip, 1);
-        }
+        CreateLang.builder()
+                .add(CreateLang.number(handler.getFluidAmount())
+                        .add(mb)
+                        .style(ChatFormatting.GOLD))
+                .text(ChatFormatting.GRAY, " / ")
+                .add(CreateLang.number(handler.getCapacity())
+                        .add(mb)
+                        .style(ChatFormatting.DARK_GRAY))
+                .forGoggles(tooltip, 1);
     }
 }
