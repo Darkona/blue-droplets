@@ -31,6 +31,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodData;
@@ -43,12 +44,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.UUID;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
-
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 import static com.darkona.droplets.gametest.TestSupport.assertTrue;
 import static com.darkona.droplets.gametest.TestSupport.assertFalse;
@@ -63,10 +66,16 @@ public class ThirstTests
 {
     /** Cause of the last thirst change of any player; tests run one at a time on the server thread. */
     private static ThirstChangeEvent.Cause lastCause;
+    /** Players with this tag do not die: their death is cancelled after every other listener, like a modded totem. */
+    private static final String IMMORTAL_TAG = "droplets-test-immortal";
 
     static
     {
         MinecraftForge.EVENT_BUS.addListener((ThirstChangeEvent.Post event) -> lastCause = event.getCause());
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, (LivingDeathEvent event) -> {
+            if (event.getEntity().getTags().contains(IMMORTAL_TAG))
+                event.setCanceled(true);
+        });
     }
 
     private static ItemStack waterBottle(int purity)
@@ -321,6 +330,37 @@ public class ThirstTests
         assertValueEqual(helper, thirst.exhaustionModifier(player), plain * GameplayConfig.FIRE_RESISTANCE_PERCENT.get() / 100.0F, "multiplier with Fire Resistance");
         player.removeEffect(MobEffects.FIRE_RESISTANCE);
         assertValueEqual(helper, thirst.exhaustionModifier(player), plain, "multiplier after Fire Resistance is removed");
+        helper.succeed();
+    }
+
+    /** The respawn values come with the respawn, not with the death: a death another mod cancels (its own totem) keeps the thirst. */
+    @GameTest(template = "empty")
+    public static void aCancelledDeathKeepsThirst(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 7, 3, ThirstChangeEvent.Cause.COMMAND);
+        player.addTag(IMMORTAL_TAG);
+        MinecraftForge.EVENT_BUS.post(new LivingDeathEvent(player, DamageSource.GENERIC));
+        assertValueEqual(helper, thirst.getThirst(), 7, "thirst after a cancelled death");
+        assertValueEqual(helper, thirst.getQuenched(), 3, "quenched after a cancelled death");
+        helper.succeed();
+    }
+
+    /** Respawning after a death gives {@code death.respawnThirst} and {@code respawnQuenched}; coming back from the End is not a death. */
+    @GameTest(template = "empty")
+    public static void respawningGivesTheRespawnValues(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        thirst.change(player, 7, 3, ThirstChangeEvent.Cause.COMMAND);
+        MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerRespawnEvent(player, true));
+        assertValueEqual(helper, thirst.getThirst(), 7, "thirst after coming back from the End");
+        assertValueEqual(helper, thirst.getQuenched(), 3, "quenched after coming back from the End");
+        MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerRespawnEvent(player, false));
+        assertValueEqual(helper, thirst.getThirst(), GameplayConfig.RESPAWN_THIRST.get(), "thirst after respawning");
+        assertValueEqual(helper, thirst.getQuenched(), GameplayConfig.RESPAWN_QUENCHED.get(), "quenched after respawning");
+        assertValueEqual(helper, lastCause, ThirstChangeEvent.Cause.DEATH, "cause of the respawn values");
         helper.succeed();
     }
 
