@@ -80,10 +80,10 @@ public final class PurityConfig
                 "always comes together with the 100% ones. blocksHydration (default false): the drink restores no thirst unless quenchWhenDebuffed")
                 .push("effects");
         EFFECTS = List.of(
-                effects(PurityLevel.CONTAMINATED, List.of("minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,40,true")),
-                effects(PurityLevel.DIRTY, List.of("minecraft:nausea,100,0,60", "minecraft:hunger,600,0,60", "minecraft:poison,200,0,15,true")),
-                effects(PurityLevel.MURKY, List.of("minecraft:nausea,100,0,25", "minecraft:hunger,600,0,25")),
-                effects(PurityLevel.ACCEPTABLE, List.of("minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5")),
+                effects(PurityLevel.CONTAMINATED, List.of("minecraft:nausea,200,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,40,true")),
+                effects(PurityLevel.DIRTY, List.of("minecraft:nausea,200,0,60", "minecraft:hunger,600,0,60", "minecraft:poison,200,0,15,true")),
+                effects(PurityLevel.MURKY, List.of("minecraft:nausea,200,0,25", "minecraft:hunger,600,0,25")),
+                effects(PurityLevel.ACCEPTABLE, List.of("minecraft:nausea,200,0,5", "minecraft:hunger,600,0,5")),
                 effects(PurityLevel.CLEAN, List.of()),
                 effects(PurityLevel.PURE, List.of()));
         BUILDER.pop();

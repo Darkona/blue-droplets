@@ -248,7 +248,10 @@ public class ThirstTests
     {
         ServerPlayer player = player(helper);
         PlayerThirst.consume(waterBottle(0), player);
-        assertTrue(helper, player.hasEffect(MobEffects.CONFUSION), "dirty water gives Nausea (100% by default)");
+        MobEffectInstance nausea = player.getEffect(MobEffects.CONFUSION);
+        assertTrue(helper, nausea != null, "dirty water gives Nausea (100% by default)");
+        // Vanilla only builds up the screen distortion while more than 60 ticks are left, at 1/150 per tick.
+        assertTrue(helper, nausea.getDuration() >= 200, "dirty water gives at least 10 seconds of Nausea, not " + nausea.getDuration() + " ticks");
         assertTrue(helper, player.hasEffect(MobEffects.HUNGER), "dirty water gives Hunger (100% by default)");
         helper.succeed();
     }
