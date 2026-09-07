@@ -35,6 +35,7 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
     /** The block in front, recomputed only when the filter is turned. */
     private Direction nextFacing;
     private BlockPos nextPos;
+    private final LazyOptional<IFluidHandler> tanksView = LazyOptional.of(() -> new SandFilterTanksView(this));
 
     public SandFilterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)
     {
@@ -56,13 +57,15 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
 
     /**
      * Pipes connect only to the two ends: purified water leaves from the {@code FACING} side, dirty water enters
-     * from the opposite one.
+     * from the opposite one. Without a side, both tanks, read only, for Jade and other inspectors.
      */
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
     {
-        if (cap == ForgeCapabilities.FLUID_HANDLER && side != null)
+        if (cap == ForgeCapabilities.FLUID_HANDLER)
         {
+            if (side == null)
+                return tanksView.cast();
             Direction facing = getBlockState().getValue(SandFilterBlock.FACING);
             if (side == facing)
                 return purifiedTank.getCapability().cast();
@@ -71,6 +74,13 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
             return LazyOptional.empty();
         }
         return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps()
+    {
+        super.invalidateCaps();
+        tanksView.invalidate();
     }
 
     /**
