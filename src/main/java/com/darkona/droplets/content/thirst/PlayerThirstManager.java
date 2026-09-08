@@ -29,7 +29,6 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
@@ -176,15 +175,16 @@ public class PlayerThirstManager {
     }
 
     /**
-     * Lowest priority, like {@link #onBlockBreak}: an attack or a block break that another mod cancels (claims, PvP
-     * rules) costs nothing, as it costs no hunger in vanilla.
+     * An attack that landed, from {@code MixinPlayer}, where vanilla charges it hunger.
      */
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onAttack(AttackEntityEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player)
-            activity(player, GameplayConfig.ATTACK, 1.0F);
+    public static void attackLanded(ServerPlayer player) {
+        activity(player, GameplayConfig.ATTACK, 1.0F);
     }
 
+    /**
+     * Lowest priority: a block break that another mod cancels (claims, spawn protection) costs nothing, as it costs no
+     * hunger in vanilla.
+     */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getPlayer() instanceof ServerPlayer player)
