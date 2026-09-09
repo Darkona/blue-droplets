@@ -16,11 +16,9 @@ public interface IThirst
     void setExhaustion(float value);
     void addExhaustion(Player player, float amount);
     void tick(Player player);
-    void drink(int thirst, int quenched);
     void updateThirstData(Player player);
     void setJustHealed();
     void ExhaustionRecalculate();
     void setShouldTickThirst(boolean value);
     boolean getShouldTickThirst();
-    void copy(IThirst cap);
 }
