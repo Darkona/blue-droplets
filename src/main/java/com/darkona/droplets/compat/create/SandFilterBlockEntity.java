@@ -94,11 +94,11 @@ public class SandFilterBlockEntity extends SmartBlockEntity implements IHaveGogg
     {
         SmartFluidTank dirty = dirtyTank.getPrimaryHandler();
         SmartFluidTank purified = purifiedTank.getPrimaryHandler();
-        if(dirty.getFluidAmount() < rate || purified.getSpace() <= 0)
+        if(dirty.isEmpty() || purified.getSpace() <= 0)
             return;
 
         FluidStack water = dirty.drain(rate, IFluidHandler.FluidAction.SIMULATE);
-        if(water.getAmount() < rate)
+        if(water.isEmpty())
             return;
 
         if(water.getFluid().is(FluidTags.WATER))
