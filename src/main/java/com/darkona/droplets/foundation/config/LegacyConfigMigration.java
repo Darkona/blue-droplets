@@ -167,7 +167,7 @@ public final class LegacyConfigMigration
 
     /**
      * The eight {@code *NauseaPercentage}/{@code *PoisonPercentage} values become the effect lists of the purities
-     * they map to, with the old fixed effects: nausea 5 s and hunger 30 s sharing the nausea chance, poison 10 s
+     * they map to, with the default durations: nausea 10 s and hunger 30 s sharing the nausea chance, poison 10 s
      * blocking hydration. The levels Thirst Was Taken did not have keep their defaults.
      */
     private static void moveEffectPercentages(Config common, Map<String, CommentedConfig> newFiles)
@@ -186,7 +186,7 @@ public final class LegacyConfigMigration
             List<String> effects = new ArrayList<>();
             if (nauseaChance > 0)
             {
-                effects.add("minecraft:nausea,100,0," + nauseaChance);
+                effects.add("minecraft:nausea,200,0," + nauseaChance);
                 effects.add("minecraft:hunger,600,0," + nauseaChance);
             }
             if (poisonChance > 0)
