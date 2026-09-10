@@ -182,6 +182,24 @@ public class CreateTests
         helper.succeed();
     }
 
+    /** Asked without a side (Jade, other inspectors), the filter shows both tanks and lets nothing in or out. */
+    @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
+    public static void sandFilterShowsItsTanksWithoutASide(GameTestHelper helper)
+    {
+        BlockPos pos = helper.absolutePos(BlockPos.ZERO);
+        helper.getLevel().setBlockAndUpdate(pos, CreateRegistry.SAND_FILTER_BLOCK.get().defaultBlockState());
+        tank(helper, pos, Direction.UP).fill(water(0, 500), IFluidHandler.FluidAction.EXECUTE);
+        IFluidHandler tanks = TestSupport.fluidHandler(helper, pos, null);
+        assertTrue(helper, tanks != null, "no fluid handler without a side");
+        assertValueEqual(helper, tanks.getTanks(), 2, "tanks seen without a side");
+        assertValueEqual(helper, tanks.getFluidInTank(0).getAmount(), 500, "dirty water seen without a side");
+        assertTrue(helper, tanks.getFluidInTank(1).isEmpty(), "the purified tank should be empty");
+        assertValueEqual(helper, tanks.fill(water(0, 100), IFluidHandler.FluidAction.EXECUTE), 0, "water filled without a side");
+        assertTrue(helper, tanks.drain(100, IFluidHandler.FluidAction.EXECUTE).isEmpty(), "water drained without a side");
+        assertValueEqual(helper, tanks.getFluidInTank(0).getAmount(), 500, "dirty water after a fill and a drain without a side");
+        helper.succeed();
+    }
+
     @GameTest(template = "empty", templateNamespace = BlueDroplets.ID)
     public static void sandFilterIsInOwnCreativeTab(GameTestHelper helper)
     {
