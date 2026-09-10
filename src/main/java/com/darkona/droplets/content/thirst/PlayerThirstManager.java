@@ -29,7 +29,6 @@ import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -129,9 +128,20 @@ public class PlayerThirstManager {
         thirst.invalidateModifier();
     }
 
+    /**
+     * The new player after a death gets {@code death.respawnThirst} and {@code respawnQuenched} (-1 keeps what was
+     * copied from the dead player). Done here and not at the death, which another mod may cancel; coming back from
+     * the End is not a death. Then a full sync: the client player is new too.
+     */
     @SubscribeEvent
     public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        ModAttachment.thirst(event.getPlayer()).updateThirstData(event.getPlayer());
+        PlayerThirst thirst = ModAttachment.thirst(event.getPlayer());
+        if (!event.isEndConquered()) {
+            int respawnThirst = GameplayConfig.RESPAWN_THIRST.get();
+            int respawnQuenched = GameplayConfig.RESPAWN_QUENCHED.get();
+            thirst.change(event.getPlayer(), respawnThirst >= 0 ? respawnThirst : thirst.getThirst(), respawnQuenched >= 0 ? respawnQuenched : thirst.getQuenched(), ThirstChangeEvent.Cause.DEATH);
+        }
+        thirst.updateThirstData(event.getPlayer());
     }
 
     @SubscribeEvent
@@ -193,16 +203,6 @@ public class PlayerThirstManager {
     private static void activity(ServerPlayer player, ForgeConfigSpec.DoubleValue value, float factor) {
         if (GameplayConfig.MODE.get() == GameplayConfig.Mode.OWN)
             ModAttachment.thirst(player).addActivity(player, value.get().floatValue() * factor);
-    }
-
-    @SubscribeEvent
-    public static void onPlayerDeath(LivingDeathEvent event){
-        if(event.getEntity() instanceof ServerPlayer player){
-            PlayerThirst thirst = ModAttachment.thirst(player);
-            int respawnThirst = GameplayConfig.RESPAWN_THIRST.get();
-            int respawnQuenched = GameplayConfig.RESPAWN_QUENCHED.get();
-            thirst.change(player, respawnThirst >= 0 ? respawnThirst : thirst.getThirst(), respawnQuenched >= 0 ? respawnQuenched : thirst.getQuenched(), ThirstChangeEvent.Cause.DEATH);
-        }
     }
 
     /**
