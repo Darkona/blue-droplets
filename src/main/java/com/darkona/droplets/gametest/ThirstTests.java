@@ -36,6 +36,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -438,17 +440,50 @@ public class ThirstTests
             set(GameplayConfig.MODE, GameplayConfig.Mode.OWN);
             set(GameplayConfig.BASAL_PER_TICK, 0.0);
             BlockPos pos = helper.absolutePos(BlockPos.ZERO);
+            Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, BlockPos.ZERO.above());
             thirst.tick(player);
             float start = thirst.getExhaustion();
             player.addTag(PROTECTED_TAG);
             MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(helper.getLevel(), pos, helper.getLevel().getBlockState(pos), player));
-            MinecraftForge.EVENT_BUS.post(new AttackEntityEvent(player, player));
+            player.attack(zombie);
             thirst.tick(player);
             assertValueEqual(helper, thirst.getExhaustion(), start, "exhaustion after a cancelled block break and attack");
             player.removeTag(PROTECTED_TAG);
             MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(helper.getLevel(), pos, helper.getLevel().getBlockState(pos), player));
             thirst.tick(player);
             assertTrue(helper, thirst.getExhaustion() > start, "a block break added no exhaustion in OWN mode");
+        }
+        finally
+        {
+            set(GameplayConfig.MODE, mode);
+            set(GameplayConfig.BASAL_PER_TICK, basal);
+        }
+        helper.succeed();
+    }
+
+    /** OWN mode: an attack costs thirst only when it lands, as vanilla charges hunger; a swing at an invulnerable mob costs nothing. */
+    @GameTest(template = "empty")
+    public static void onlyLandedAttacksCostThirstInOwnMode(GameTestHelper helper)
+    {
+        ServerPlayer player = player(helper);
+        PlayerThirst thirst = thirst(player);
+        GameplayConfig.Mode mode = GameplayConfig.MODE.get();
+        double basal = GameplayConfig.BASAL_PER_TICK.get();
+        try
+        {
+            set(GameplayConfig.MODE, GameplayConfig.Mode.OWN);
+            set(GameplayConfig.BASAL_PER_TICK, 0.0);
+            Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, BlockPos.ZERO.above());
+            zombie.setInvulnerable(true);
+            thirst.tick(player);
+            float start = thirst.getExhaustion();
+            player.attack(zombie);
+            thirst.tick(player);
+            assertValueEqual(helper, thirst.getExhaustion(), start, "exhaustion after an attack on an invulnerable mob");
+            zombie.setInvulnerable(false);
+            player.attack(zombie);
+            thirst.tick(player);
+            assertTrue(helper, thirst.getExhaustion() > start, "an attack that landed added no exhaustion in OWN mode");
         }
         finally
         {

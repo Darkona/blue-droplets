@@ -201,7 +201,7 @@ The 1.20.1 port has every feature of 1.0.0 for 1.21.1 (next section), with the d
 
 - `death.respawnThirst` and `respawnQuenched` are applied when the player respawns, not when they die: a death that another mod cancels (a totem of its own, a knock-down mechanic) no longer resets the thirst, and the death screen no longer shows the respawn values. Coming back from the End is not a death. The `ThirstChangeEvent` with cause `DEATH` is posted on the respawned player. `[1.21.1]`
 - The Dehydration effect no longer piles up thirst exhaustion on creative players and on players with thirst disabled, which came due all at once when they went back to survival or thirst was enabled again. `[1.21.1]`
-- OWN depletion mode: an attack or a block break that another mod cancels (claims, PvP rules) no longer costs thirst, as it costs no hunger in vanilla. `[1.21.1]`
+- OWN depletion mode: an attack costs thirst only when it lands, charged where vanilla charges hunger; a swing at an invulnerable target, or one that another mod cancels (claims, PvP rules), costs nothing. A block break that another mod cancels no longer costs thirst either. `[1.21.1]`
 - Create Sand Filter: water below `sandFilterMbPerTick` left in the dirty tank (the last millibuckets a pipe delivers) is filtered too; before, it stayed there until more water arrived. `[1.21.1]`
 - Create Sand Filter: Jade and other mods that ask for a block's fluid tanks without naming a side now see both of its tanks (dirty and purified) and their purity; before, they saw nothing. Water still only goes in at the back and out at the front. `[1.21.1]`
 - Overhydration: a drink whose thirst change another mod cancels (`ThirstChangeEvent.Pre`) no longer counts towards Overhydrated; nothing was drunk. `[1.21.1]`
