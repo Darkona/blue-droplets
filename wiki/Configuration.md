@@ -236,17 +236,18 @@ One list per purity: `contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `p
 
 | Key | Default |
 |---|---|
-| `contaminated` | `["minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,40,true"]` |
-| `dirty` | `["minecraft:nausea,100,0,60", "minecraft:hunger,600,0,60", "minecraft:poison,200,0,15,true"]` |
-| `murky` | `["minecraft:nausea,100,0,25", "minecraft:hunger,600,0,25"]` |
-| `acceptable` | `["minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5"]` |
+| `contaminated` | `["minecraft:nausea,200,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,40,true"]` |
+| `dirty` | `["minecraft:nausea,200,0,60", "minecraft:hunger,600,0,60", "minecraft:poison,200,0,15,true"]` |
+| `murky` | `["minecraft:nausea,200,0,25", "minecraft:hunger,600,0,25"]` |
+| `acceptable` | `["minecraft:nausea,200,0,5", "minecraft:hunger,600,0,5"]` |
 | `clean` | `[]` |
 | `pure` | `[]` |
 
 - Any mob effect id works, also from other mods, including `blue_droplets:dehydration` (for example `"blue_droplets:dehydration,600,0,20"`). An unknown id is skipped (listed by `/blue_droplets config check`).
+- Nausea lasts 10 seconds (200 ticks) per drink by default. Vanilla only builds up the screen distortion while more than 3 seconds of Nausea are left, and needs 7.5 seconds to reach its full strength, so a shorter Nausea is barely a wobble. Drinking again resets it to 10 seconds; it does not add up.
 - **One roll per drink** is shared by the whole list: an entry applies when the roll is below its chance. With the defaults, poisoned water always also gives nausea and hunger, as before.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
-- Old configs: the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and durations (nausea 5 s and hunger 30 s share the nausea chance; poison 10 s blocks hydration). Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`; `murky` and `clean` keep their defaults. Other Thirst Was Taken purity values (`defaultPurity`, `worldWaterBasePurity`, `saltWaterPurity`) move the same way: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
+- Old configs: the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects (nausea and hunger share the nausea chance; poison blocks hydration) and the current durations (nausea 10 s, hunger 30 s, poison 10 s). Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`; `murky` and `clean` keep their defaults. Other Thirst Was Taken purity values (`defaultPurity`, `worldWaterBasePurity`, `saltWaterPurity`) move the same way: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
 
 ### `[hotDirtyWater]`
 
