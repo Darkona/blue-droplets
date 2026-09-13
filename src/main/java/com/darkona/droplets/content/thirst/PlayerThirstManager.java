@@ -178,13 +178,17 @@ public class PlayerThirstManager {
             activity(player, player.isSprinting() ? GameplayConfig.SPRINT_JUMP : GameplayConfig.JUMP, 1.0F);
     }
 
-    @SubscribeEvent
+    /**
+     * Lowest priority, like {@link #onBlockBreak}: an attack or a block break that another mod cancels (claims, PvP
+     * rules) costs nothing, as it costs no hunger in vanilla.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onAttack(AttackEntityEvent event) {
         if (event.getEntity() instanceof ServerPlayer player)
             activity(player, GameplayConfig.ATTACK, 1.0F);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onBlockBreak(BreakBlockEvent event) {
         if (event.getPlayer() instanceof ServerPlayer player)
             activity(player, GameplayConfig.BLOCK_BREAK, 1.0F);
