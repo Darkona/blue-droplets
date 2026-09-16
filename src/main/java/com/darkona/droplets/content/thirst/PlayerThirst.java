@@ -68,6 +68,7 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
     boolean effectsDirty = true;
     boolean pausedByEffect;
     boolean stoppedByEffect;
+    boolean nauseous;
     boolean forceSync = true;
     int sentThirst;
     int sentQuenched;
@@ -81,8 +82,8 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
     public PlayerThirst() {}
 
     /**
-     * Whether an active effect is in {@code blue_droplets:stops_thirst} or {@code blue_droplets:pauses_thirst}; read
-     * when effects change and every {@code MODIFIER_INTERVAL_TICKS}, not every tick.
+     * Whether an active effect is in {@code blue_droplets:stops_thirst} or {@code blue_droplets:pauses_thirst}, and
+     * whether the player has Nausea; read when effects change and every {@code MODIFIER_INTERVAL_TICKS}, not every tick.
      */
     private void readThirstEffects(Player player)
     {
@@ -96,6 +97,7 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
         }
         pausedByEffect = paused;
         stoppedByEffect = stopped;
+        nauseous = player.hasEffect(MobEffects.NAUSEA);
     }
 
     public int getThirst()
@@ -340,7 +342,7 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
         Difficulty difficulty = player.level().getDifficulty();
         boolean paused = pausedByEffect;
 
-        if(GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get() && player.hasEffect(MobEffects.NAUSEA))
+        if(nauseous && GameplayConfig.DEPLETES_WHEN_NAUSEOUS.get())
             exhaustion += GameplayConfig.NAUSEA_PER_TICK.get().floatValue() * exhaustionModifier(player);
 
         float activity;
