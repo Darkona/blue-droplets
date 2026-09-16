@@ -264,17 +264,18 @@ One list per purity: `contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `p
 
 | Key | Default |
 |---|---|
-| `contaminated` | `["minecraft:nausea,100,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,40,true"]` |
-| `dirty` | `["minecraft:nausea,100,0,60", "minecraft:hunger,600,0,60", "minecraft:poison,200,0,15,true"]` |
-| `murky` | `["minecraft:nausea,100,0,25", "minecraft:hunger,600,0,25"]` |
-| `acceptable` | `["minecraft:nausea,100,0,5", "minecraft:hunger,600,0,5"]` |
+| `contaminated` | `["minecraft:nausea,200,0,100", "minecraft:hunger,600,0,100", "minecraft:poison,200,0,40,true"]` |
+| `dirty` | `["minecraft:nausea,200,0,60", "minecraft:hunger,600,0,60", "minecraft:poison,200,0,15,true"]` |
+| `murky` | `["minecraft:nausea,200,0,25", "minecraft:hunger,600,0,25"]` |
+| `acceptable` | `["minecraft:nausea,200,0,5", "minecraft:hunger,600,0,5"]` |
 | `clean` | `[]` |
 | `pure` | `[]` |
 
 - Any mob effect id works, also from other mods, including `blue_droplets:dehydration` and `blue_droplets:hydrated` (for example `"blue_droplets:hydrated,600,0,100"` in `pure`). An unknown id is skipped and listed by `/blue_droplets config check`.
+- Nausea lasts 10 seconds (200 ticks) per drink by default. Vanilla only builds up the screen distortion while more than 3 seconds of Nausea are left, and needs 7.5 seconds to reach its full strength, so a shorter Nausea is barely a wobble. Drinking again resets it to 10 seconds; it does not add up.
 - One roll per drink is shared by the whole list: an entry applies when the roll is below its chance. So a 40% entry always comes together with the 100% ones.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
-- Old configs (Minecraft 1.x only): the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and durations. Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`, and `murky` and `clean` keep their defaults.
+- Old configs (Minecraft 1.x only): the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and the current durations. Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`, and `murky` and `clean` keep their defaults.
 
 ### `[hotDirtyWater]`
 
