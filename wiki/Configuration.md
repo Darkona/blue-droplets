@@ -127,8 +127,8 @@ In `OWN` mode these are the sources, with vanilla's hunger numbers. In `MIRROR_F
 | `sprintPerMeter` | `0.1` | OWN: per meter sprinted on the ground |
 | `swimPerMeter` | `0.01` | OWN: per meter swum or walked in water |
 | `jump` / `sprintJump` | `0.05` / `0.2` | OWN: per jump |
-| `attack` | `0.1` | OWN: per attack |
-| `blockBreak` | `0.005` | OWN: per block broken |
+| `attack` | `0.1` | OWN: per attack or spear stab that lands, as vanilla charges hunger (a swing at an invulnerable target, or one another mod cancels, costs nothing) |
+| `blockBreak` | `0.005` | OWN: per block broken (a break another mod cancels costs nothing) |
 | `damageMultiplier` | `1.0` | OWN: times the exhaustion of the damage type taken |
 | `healPerHealth` | `6.0` | OWN: per health point regenerated from food |
 | `ridingMultiplier` | `0.0` | Both modes: activity while riding (0 = none) |
