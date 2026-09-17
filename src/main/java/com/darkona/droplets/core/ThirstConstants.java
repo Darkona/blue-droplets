@@ -21,7 +21,7 @@ public final class ThirstConstants
     public static final int SAFETY_RESYNC_TICKS = 200;
 
     /** Nausea that comes with Overhydrated ({@code overhydration.nausea}). */
-    public static final int OVERHYDRATION_NAUSEA_TICKS = 100;
+    public static final int OVERHYDRATION_NAUSEA_TICKS = 200;
 
     /** {@code sprint.minThirst} on the client until the server sends its value. */
     public static final int SPRINT_MIN_THIRST = 6;
