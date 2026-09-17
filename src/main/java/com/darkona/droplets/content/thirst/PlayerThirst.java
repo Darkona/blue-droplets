@@ -320,8 +320,11 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
     }
 
     /**
-    * Method adapted from minecraft's Food Data class equivalent for hunger.
-    */
+     * Server tick, the thirst counterpart of vanilla's {@code FoodData#tick}: adds this tick's exhaustion (activity,
+     * basal, Nausea, regeneration), turns it into lost quenched and then thirst, and applies Peaceful regeneration,
+     * rain drinking, the full hydration bonus, the overflow decay and dehydration damage. Nothing for invulnerable
+     * players or with thirst disabled, and nothing past the effect check while an effect stops thirst.
+     */
     public void tick(Player player)
     {
         if(player.getAbilities().invulnerable || !shouldTickThirst)
