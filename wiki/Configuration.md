@@ -158,7 +158,7 @@ Thirst and quenched drunk past full (items, hand drinking, rain, `DropletsAPI.dr
 | `threshold` | `20` | Overflow that causes Overhydrated (1-1000). A water bottle (4/5) drunk while full adds 9 |
 | `decayPerSecond` | `1.0` | Overflow lost per second (0-100), applied once a second |
 | `durationTicks` | `400` | Duration of Overhydrated (20-12000) |
-| `nausea` | `true` | Also 5 seconds of Nausea when it is applied |
+| `nausea` | `true` | Also 10 seconds of Nausea when it is applied |
 
 The level is I, plus one per half threshold past it, or one more than the active Overhydrated; at most III. `OverhydrationEvent` can cancel it or change duration and level.
 
