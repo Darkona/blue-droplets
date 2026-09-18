@@ -54,6 +54,7 @@ import net.minecraftforge.event.level.BlockEvent;
 import java.util.UUID;
 
 import static com.darkona.droplets.gametest.TestSupport.player;
+import static com.darkona.droplets.gametest.TestSupport.set;
 import static com.darkona.droplets.gametest.TestSupport.thirst;
 import static com.darkona.droplets.gametest.TestSupport.assertValueEqual;
 
@@ -108,7 +109,7 @@ public class ThirstTests
         double basal = GameplayConfig.BASAL_PER_TICK.get();
         try
         {
-            GameplayConfig.BASAL_PER_TICK.set(0.0);
+            set(GameplayConfig.BASAL_PER_TICK, 0.0);
             FoodData food = player.getFoodData();
             food.setExhaustion(0.0F);
             thirst.tick(player);
@@ -123,7 +124,7 @@ public class ThirstTests
         }
         finally
         {
-            GameplayConfig.BASAL_PER_TICK.set(basal);
+            set(GameplayConfig.BASAL_PER_TICK, basal);
         }
         helper.succeed();
     }
@@ -432,8 +433,8 @@ public class ThirstTests
         double basal = GameplayConfig.BASAL_PER_TICK.get();
         try
         {
-            GameplayConfig.MODE.set(GameplayConfig.Mode.OWN);
-            GameplayConfig.BASAL_PER_TICK.set(0.0);
+            set(GameplayConfig.MODE, GameplayConfig.Mode.OWN);
+            set(GameplayConfig.BASAL_PER_TICK, 0.0);
             BlockPos pos = helper.absolutePos(BlockPos.ZERO);
             Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, BlockPos.ZERO.above());
             thirst.tick(player);
@@ -450,8 +451,8 @@ public class ThirstTests
         }
         finally
         {
-            GameplayConfig.MODE.set(mode);
-            GameplayConfig.BASAL_PER_TICK.set(basal);
+            set(GameplayConfig.MODE, mode);
+            set(GameplayConfig.BASAL_PER_TICK, basal);
         }
         helper.succeed();
     }
@@ -466,8 +467,8 @@ public class ThirstTests
         double basal = GameplayConfig.BASAL_PER_TICK.get();
         try
         {
-            GameplayConfig.MODE.set(GameplayConfig.Mode.OWN);
-            GameplayConfig.BASAL_PER_TICK.set(0.0);
+            set(GameplayConfig.MODE, GameplayConfig.Mode.OWN);
+            set(GameplayConfig.BASAL_PER_TICK, 0.0);
             Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, BlockPos.ZERO.above());
             zombie.setInvulnerable(true);
             thirst.tick(player);
@@ -482,8 +483,8 @@ public class ThirstTests
         }
         finally
         {
-            GameplayConfig.MODE.set(mode);
-            GameplayConfig.BASAL_PER_TICK.set(basal);
+            set(GameplayConfig.MODE, mode);
+            set(GameplayConfig.BASAL_PER_TICK, basal);
         }
         helper.succeed();
     }
