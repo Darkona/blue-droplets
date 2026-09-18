@@ -210,6 +210,7 @@ public class ThirstTests
         MobEffectInstance effect = player.getEffect(EffectInit.OVERHYDRATED);
         helper.assertTrue(effect != null && effect.getAmplifier() == 0, "two bottles past full give Overhydrated I");
         helper.assertTrue(player.hasEffect(MobEffects.NAUSEA), "Overhydrated comes with Nausea");
+        helper.assertTrue(player.getEffect(MobEffects.NAUSEA).getDuration() >= 200, "Overhydrated brings at least 10 seconds of Nausea");
         helper.succeed();
     }
 
