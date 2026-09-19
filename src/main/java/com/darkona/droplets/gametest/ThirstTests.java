@@ -36,6 +36,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -460,7 +461,11 @@ public class ThirstTests
         helper.succeed();
     }
 
-    /** OWN mode: an attack costs thirst only when it lands, as vanilla charges hunger; a swing at an invulnerable mob costs nothing. */
+    /**
+     * OWN mode: an attack costs thirst only when it lands, as vanilla charges hunger; a swing at an invulnerable target
+     * costs nothing. The target is a boat, not a mob: a hit on a mob fires {@code LivingDamageEvent}, and End's Delight
+     * 1.19.2-2.1 reads there a config it never registers, which throws in the development environment.
+     */
     @GameTest(template = "empty")
     public static void onlyLandedAttacksCostThirstInOwnMode(GameTestHelper helper)
     {
@@ -472,15 +477,15 @@ public class ThirstTests
         {
             set(GameplayConfig.MODE, GameplayConfig.Mode.OWN);
             set(GameplayConfig.BASAL_PER_TICK, 0.0);
-            Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, BlockPos.ZERO.above());
-            zombie.setInvulnerable(true);
+            Boat boat = helper.spawn(EntityType.BOAT, BlockPos.ZERO.above());
+            boat.setInvulnerable(true);
             thirst.tick(player);
             float start = thirst.getExhaustion();
-            player.attack(zombie);
+            player.attack(boat);
             thirst.tick(player);
-            assertValueEqual(helper, thirst.getExhaustion(), start, "exhaustion after an attack on an invulnerable mob");
-            zombie.setInvulnerable(false);
-            player.attack(zombie);
+            assertValueEqual(helper, thirst.getExhaustion(), start, "exhaustion after an attack on an invulnerable boat");
+            boat.setInvulnerable(false);
+            player.attack(boat);
             thirst.tick(player);
             assertTrue(helper, thirst.getExhaustion() > start, "an attack that landed added no exhaustion in OWN mode");
         }
