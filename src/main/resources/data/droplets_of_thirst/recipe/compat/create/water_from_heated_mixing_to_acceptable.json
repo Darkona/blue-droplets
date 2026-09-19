@@ -1,0 +1,32 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "create:mixing",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "fluids": "minecraft:water",
+      "components": {
+        "droplets_of_thirst:purity": 2
+      },
+      "amount": 250
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:water",
+      "amount": 250,
+      "components": {
+        "droplets_of_thirst:purity": 3
+      }
+    }
+  ]
+}

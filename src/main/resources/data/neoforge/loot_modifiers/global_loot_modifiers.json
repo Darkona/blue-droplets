@@ -1,25 +1,25 @@
 {
   "neoforge:conditions": [
     {
-      "type": "blue_droplets:loot_config"
+      "type": "droplets_of_thirst:loot_config"
     }
   ],
   "replace": false,
   "entries": [
-    "blue_droplets:add_loot_shipwreck_supply",
-    "blue_droplets:add_loot_shipwreck_supply_fr",
-    "blue_droplets:add_loot_shipwreck_supply_bc",
-    "blue_droplets:add_loot_abandoned_mineshaft",
-    "blue_droplets:add_loot_abandoned_mineshaft_fr",
-    "blue_droplets:add_loot_abandoned_mineshaft_bc",
-    "blue_droplets:add_loot_simple_dungeon",
-    "blue_droplets:add_loot_simple_dungeon_fr",
-    "blue_droplets:add_loot_simple_dungeon_bc",
-    "blue_droplets:add_loot_nether_bridge",
-    "blue_droplets:add_loot_nether_bridge_fr",
-    "blue_droplets:add_loot_nether_bridge_bc",
-    "blue_droplets:add_loot_bastion_other",
-    "blue_droplets:add_loot_bastion_other_fr",
-    "blue_droplets:add_loot_bastion_other_bc"
+    "droplets_of_thirst:add_loot_shipwreck_supply",
+    "droplets_of_thirst:add_loot_shipwreck_supply_fr",
+    "droplets_of_thirst:add_loot_shipwreck_supply_bc",
+    "droplets_of_thirst:add_loot_abandoned_mineshaft",
+    "droplets_of_thirst:add_loot_abandoned_mineshaft_fr",
+    "droplets_of_thirst:add_loot_abandoned_mineshaft_bc",
+    "droplets_of_thirst:add_loot_simple_dungeon",
+    "droplets_of_thirst:add_loot_simple_dungeon_fr",
+    "droplets_of_thirst:add_loot_simple_dungeon_bc",
+    "droplets_of_thirst:add_loot_nether_bridge",
+    "droplets_of_thirst:add_loot_nether_bridge_fr",
+    "droplets_of_thirst:add_loot_nether_bridge_bc",
+    "droplets_of_thirst:add_loot_bastion_other",
+    "droplets_of_thirst:add_loot_bastion_other_fr",
+    "droplets_of_thirst:add_loot_bastion_other_bc"
   ]
 }

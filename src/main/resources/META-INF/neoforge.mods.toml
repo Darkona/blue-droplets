@@ -286,7 +286,7 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="thirst"
 type="incompatible"
-reason="Blue Droplets is the continuation of Thirst Was Taken. Remove Thirst Was Taken / Thirst Was Reclaimed (mod id 'thirst'). Worlds and configs from Thirst Was Taken are migrated automatically."
+reason="Droplets of Thirst is the continuation of Thirst Was Taken. Remove Thirst Was Taken / Thirst Was Reclaimed (mod id 'thirst'). Worlds and configs from Thirst Was Taken are migrated automatically."
 versionRange="[0,)"
 ordering="NONE"
 side="BOTH"

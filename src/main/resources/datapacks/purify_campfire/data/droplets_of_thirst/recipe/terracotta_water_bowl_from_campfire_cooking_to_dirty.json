@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "minecraft:campfire_cooking",
+  "ingredient": [
+    {
+      "type": "neoforge:components",
+      "items": "droplets_of_thirst:terracotta_water_bowl",
+      "components": {
+        "droplets_of_thirst:purity": 0
+      }
+    }
+  ],
+  "result": {
+    "id": "droplets_of_thirst:terracotta_water_bowl",
+    "count": 1,
+    "components": {
+      "droplets_of_thirst:purity": 1
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 300
+}

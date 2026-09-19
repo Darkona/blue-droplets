@@ -26,7 +26,7 @@ def water_ingredient_strict(purity):
     return {
         "type": "neoforge:components",
         "items": "#c:buckets/water",
-        "components": {"blue_droplets:purity": purity},
+        "components": {"droplets_of_thirst:purity": purity},
         "strict": True
     }
 
@@ -36,7 +36,7 @@ def potion_ingredient_strict(purity):
     return {
         "type": "neoforge:components",
         "items": "minecraft:potion",
-        "components": {"minecraft:potion_contents": {"potion": "minecraft:water"}, "blue_droplets:purity": purity},
+        "components": {"minecraft:potion_contents": {"potion": "minecraft:water"}, "droplets_of_thirst:purity": purity},
         "strict": True
     }
 
@@ -46,7 +46,7 @@ def fluid_with_purity(purity):
     return {
         "amount": 1000,
         "id": "minecraft:water",
-        "components": {"blue_droplets:purity": purity}
+        "components": {"droplets_of_thirst:purity": purity}
     }
 
 
@@ -55,7 +55,7 @@ def potion_fluid_with_purity(purity):
     return {
         "amount": 250,
         "id": "minecraft:water",
-        "components": {"blue_droplets:purity": purity}
+        "components": {"droplets_of_thirst:purity": purity}
     }
 
 
@@ -64,7 +64,7 @@ def water_bucket_output_with_purity(purity):
     return {
         "count": 1,
         "id": "minecraft:water_bucket",
-        "components": {"blue_droplets:purity": purity}
+        "components": {"droplets_of_thirst:purity": purity}
     }
 
 
@@ -73,7 +73,7 @@ def potion_output_with_purity(purity):
     return {
         "components": {
             "minecraft:potion_contents": {"potion": "minecraft:water"},
-            "blue_droplets:purity": purity
+            "droplets_of_thirst:purity": purity
         },
         "count": 1,
         "id": "minecraft:potion"

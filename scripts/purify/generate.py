@@ -2,8 +2,8 @@
 """Regenerates the water purification recipes for the 6 purity levels (0-5).
 
 Outputs (all rewritten from scratch, stale files are deleted):
-  src/main/resources/datapacks/purify_{campfire,smelting,smoking,cooking_pot}/data/blue_droplets/recipe/
-  src/main/resources/data/blue_droplets/recipe/compat/create/  (splashing, heated mixing, cactus)
+  src/main/resources/datapacks/purify_{campfire,smelting,smoking,cooking_pot}/data/droplets_of_thirst/recipe/
+  src/main/resources/data/droplets_of_thirst/recipe/compat/create/  (splashing, heated mixing, cactus)
 
 Run:  python3 scripts/purify/generate.py          (rewrite files)
       python3 scripts/purify/generate.py --check  (fail if the files on disk differ)
@@ -25,14 +25,14 @@ MAX_PURITY = 5
 DEFAULT_PURITY = 3
 CAP_CREATE = 4
 LEVELS = ["contaminated", "dirty", "murky", "acceptable", "clean", "pure"]
-KEY = "blue_droplets:purity"
+KEY = "droplets_of_thirst:purity"
 
 POTION = {"potion_contents": {"potion": "minecraft:water"}}
 # name, item id, extra components, extra mod conditions
 ITEMS = [
     ("water_bottle", "minecraft:potion", POTION, []),
     ("water_bucket", "minecraft:water_bucket", {}, []),
-    ("terracotta_water_bowl", "blue_droplets:terracotta_water_bowl", {}, []),
+    ("terracotta_water_bowl", "droplets_of_thirst:terracotta_water_bowl", {}, []),
     ("filled_waterskin", "cold_sweat:filled_waterskin", {}, ["cold_sweat"]),
 ]
 # method: (recipe type, step, cooking time, ingredient key, pack, extra mod conditions)
@@ -43,7 +43,7 @@ METHODS = {
     "cooking_pot": ("farmersdelight:cooking", 1, 200, "ingredients", "purify_cooking_pot", ["farmersdelight"]),
 }
 
-C_ENABLED = {"type": "blue_droplets:purity_enabled"}
+C_ENABLED = {"type": "droplets_of_thirst:purity_enabled"}
 
 
 def mod_loaded(mod):
@@ -127,7 +127,7 @@ def build_cooking(name, item_id, extra, mods, method, r, srcs, state):
 def cooking_files():
     out = {}
     for method, (_, step, _, _, pack, _) in METHODS.items():
-        base = RES / "datapacks" / pack / "data/blue_droplets/recipe"
+        base = RES / "datapacks" / pack / "data/droplets_of_thirst/recipe"
         for name, item_id, extra, mods in ITEMS:
             for r, srcs, state in plans(step):
                 d = build_cooking(name, item_id, extra, mods, method, r, srcs, state)
@@ -146,14 +146,14 @@ def fluid_ing(p):
 
 
 def create_files():
-    base = RES / "data/blue_droplets/recipe/compat/create"
+    base = RES / "data/droplets_of_thirst/recipe/compat/create"
     cc = [mod_loaded("create"), C_ENABLED]
     out = {}
     for r in range(1, CAP_CREATE + 1):
         s = r - 1
         # splashing: bottle and bowl
         for name, item_id, extra in (("water_bottle", "minecraft:potion", POTION),
-                                     ("terracotta_water_bowl", "blue_droplets:terracotta_water_bowl", {})):
+                                     ("terracotta_water_bowl", "droplets_of_thirst:terracotta_water_bowl", {})):
             ing = item_ing(item_id, extra, s)
             out[base / f"{name}_from_splashing_to_{LEVELS[r]}.json"] = {
                 "neoforge:conditions": cc, "type": "create:splashing",
@@ -184,9 +184,9 @@ def main():
     # stale files: whole recipe dir of each purify pack, and the owned Create names
     stale = []
     for method, meta in METHODS.items():
-        d = RES / "datapacks" / meta[4] / "data/blue_droplets/recipe"
+        d = RES / "datapacks" / meta[4] / "data/droplets_of_thirst/recipe"
         stale += [p for p in d.glob("*.json") if p not in files]
-    cd = RES / "data/blue_droplets/recipe/compat/create"
+    cd = RES / "data/droplets_of_thirst/recipe/compat/create"
     stale += [p for p in cd.glob("*.json") if p not in files and p.name.startswith(CREATE_OWNED)]
     bad = [p for p, d in files.items() if not p.exists() or p.read_text() != json.dumps(d, indent=2) + "\n"]
     if check:
