@@ -1,0 +1,24 @@
+{
+  "conditions": [
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "type": "forge:partial_nbt",
+    "item": "droplets_of_thirst:terracotta_water_bowl",
+    "nbt": {
+      "droplets_of_thirst:purity": 1
+    }
+  },
+  "result": {
+    "item": "droplets_of_thirst:terracotta_water_bowl",
+    "count": 1,
+    "nbt": {
+      "droplets_of_thirst:purity": 3
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

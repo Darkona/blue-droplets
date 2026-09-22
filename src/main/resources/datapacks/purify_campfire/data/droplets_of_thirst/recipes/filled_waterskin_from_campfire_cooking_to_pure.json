@@ -1,0 +1,35 @@
+{
+  "conditions": [
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "cold_sweat"
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "create"
+      }
+    }
+  ],
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "type": "forge:partial_nbt",
+    "item": "cold_sweat:filled_waterskin",
+    "nbt": {
+      "droplets_of_thirst:purity": 4
+    }
+  },
+  "result": {
+    "item": "cold_sweat:filled_waterskin",
+    "count": 1,
+    "nbt": {
+      "droplets_of_thirst:purity": 5
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 300
+}

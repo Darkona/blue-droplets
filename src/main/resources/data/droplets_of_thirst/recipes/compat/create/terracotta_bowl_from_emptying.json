@@ -1,0 +1,23 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:emptying",
+  "ingredients": [
+    {
+      "item": "droplets_of_thirst:terracotta_water_bowl"
+    }
+  ],
+  "results": [
+    {
+      "item": "droplets_of_thirst:terracotta_bowl"
+    },
+    {
+      "fluid": "minecraft:water",
+      "amount": 250
+    }
+  ]
+}

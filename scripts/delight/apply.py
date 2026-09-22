@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Genera, de forma idempotente, los datos de Blue Droplets a partir de los CSV.
+"""Genera, de forma idempotente, los datos de Droplets of Thirst a partir de los CSV.
 
   datapacks/clean_water_cooking   una receta sobrescrita por fila activa de data/recipes.csv
   (los packs purify_* y las recetas de Create los genera scripts/purify/generate.py)
-  data/blue_droplets/data_maps/item/drinks.json   entradas de data/items.csv de TODOS los mods, vanilla y
-                    blue_droplets incluidos (sin condicion los dos ultimos, con mod_loaded el resto). Las claves
+  data/droplets_of_thirst/data_maps/item/drinks.json   entradas de data/items.csv de TODOS los mods, vanilla y
+                    droplets_of_thirst incluidos (sin condicion los dos ultimos, con mod_loaded el resto). Las claves
                     que no estan en el CSV (tags, mods no volcados) se dejan como estan
-  data/blue_droplets/tags/items/salty.json y no_thirst.json   desde data/items.csv
+  data/droplets_of_thirst/tags/items/salty.json y no_thirst.json   desde data/items.csv
 
 Formatos de Minecraft 1.20.1 (Forge 47): "conditions" en recetas, "forge:conditions" en drinks.json, forge:difference y
 forge:partial_nbt en los ingredientes, carpetas recipes/ y tags/items/.
@@ -22,7 +22,7 @@ import sys
 import common as c
 
 PACK_CLEAN = os.path.join(c.PACKS, "clean_water_cooking")
-MAIN_DATA = os.path.join(c.REPO, "src", "main", "resources", "data", "blue_droplets")
+MAIN_DATA = os.path.join(c.REPO, "src", "main", "resources", "data", "droplets_of_thirst")
 DRINKS = os.path.join(MAIN_DATA, "data_maps", "item", "drinks.json")
 TAG_SALTY = os.path.join(MAIN_DATA, "tags", "items", "salty.json")
 TAG_NO_THIRST = os.path.join(MAIN_DATA, "tags", "items", "no_thirst.json")
@@ -105,7 +105,7 @@ def build_clean(source, problems, info):
             src = os.path.join(dp, fn)
             with open(src, encoding="utf-8") as f:
                 files[os.path.relpath(src, static).replace(os.sep, "/")] = f.read()
-    files["pack.mcmeta"] = mcmeta("Blue Droplets: recipes of Farmer's Delight addons need clean water")
+    files["pack.mcmeta"] = mcmeta("Droplets of Thirst: recipes of Farmer's Delight addons need clean water")
     return files
 
 
@@ -139,7 +139,7 @@ def build_drinks(rows, problems):
         if th == 0 and qu == 0:
             continue
         entry = {}
-        if r["mod"] not in ("minecraft", "blue_droplets"):
+        if r["mod"] not in ("minecraft", "droplets_of_thirst"):
             entry["forge:conditions"] = [mod_loaded(r["mod"])]
         entry["thirst"], entry["quenched"] = th, qu
         for k, v in cur.get(r["item_id"], {}).items():  # campos que el CSV no maneja (por ejemplo purity)
@@ -257,11 +257,11 @@ def main():
         print(("diferencia: " if args.check else "escrito: ") + d)
     if not diffs:
         print("sin cambios")
-    java = os.path.join(c.REPO, "src", "main", "java", "com", "darkona", "droplets", "BlueDroplets.java")
+    java = os.path.join(c.REPO, "src", "main", "java", "com", "darkona", "dropletsofthirst", "DropletsOfThirst.java")
     src = open(java, encoding="utf-8").read() if os.path.exists(java) else ""
     missing = [p for p in ("clean_water_cooking", "purify_cooking_pot") if '"%s"' % p not in src]
     if missing:
-        print("\nFalta en Java (no lo toco): registrar en BlueDroplets.addPacks (PackSource.BUILT_IN): " + ", ".join(missing))
+        print("\nFalta en Java (no lo toco): registrar en DropletsOfThirst.addPacks (PackSource.BUILT_IN): " + ", ".join(missing))
     if problems or (args.check and diffs):
         return 1
     return 0

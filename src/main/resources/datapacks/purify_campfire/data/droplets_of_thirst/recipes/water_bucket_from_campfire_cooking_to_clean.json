@@ -1,0 +1,30 @@
+{
+  "conditions": [
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "minecraft:campfire_cooking",
+  "ingredient": [
+    {
+      "type": "forge:partial_nbt",
+      "item": "minecraft:water_bucket",
+      "nbt": {
+        "droplets_of_thirst:purity": 3
+      }
+    },
+    {
+      "type": "forge:nbt",
+      "item": "minecraft:water_bucket"
+    }
+  ],
+  "result": {
+    "item": "minecraft:water_bucket",
+    "count": 1,
+    "nbt": {
+      "droplets_of_thirst:purity": 4
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 300
+}

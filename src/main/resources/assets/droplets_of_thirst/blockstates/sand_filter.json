@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=down": { "model": "droplets_of_thirst:block/sand_filter" },
+    "facing=up": { "model": "droplets_of_thirst:block/sand_filter", "x": 180 },
+    "facing=north": { "model": "droplets_of_thirst:block/sand_filter", "x": 270 },
+    "facing=south": { "model": "droplets_of_thirst:block/sand_filter", "x": 90 },
+    "facing=east": { "model": "droplets_of_thirst:block/sand_filter", "x": 270, "y": 90 },
+    "facing=west": { "model": "droplets_of_thirst:block/sand_filter", "x": 270, "y": 270 }
+  }
+}

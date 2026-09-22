@@ -1,5 +1,5 @@
 item_id,mod,kind,craft_steps,thirst,quenched,salty,no_thirst,category,notes,rule,auto
-blue_droplets:terracotta_water_bowl,blue_droplets,drink,0,4,5,no,no,water,,manual (fijo por el codigo o por Javier),manual
+droplets_of_thirst:terracotta_water_bowl,droplets_of_thirst,drink,0,4,5,no,no,water,,manual (fijo por el codigo o por Javier),manual
 brewery:beer_barley,brewery,drink,0,1,0,no,no,alcohol,,cat:alcohol>alcohol_light,1/0/no/no
 brewery:beer_haley,brewery,drink,0,1,0,no,no,alcohol,,cat:alcohol>alcohol_light,1/0/no/no
 brewery:beer_hops,brewery,drink,0,1,0,no,no,alcohol,,cat:alcohol>alcohol_light,1/0/no/no

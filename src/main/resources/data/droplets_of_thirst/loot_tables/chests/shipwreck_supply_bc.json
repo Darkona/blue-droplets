@@ -1,0 +1,63 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "droplets_of_thirst:optional_item",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{\"droplets_of_thirst:purity\":5}",
+              "conditions": [
+                {
+                  "condition": "droplets_of_thirst:purity_enabled"
+                }
+              ]
+            },
+            {
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "brewinandchewin:mead",
+          "weight": 10
+        },
+        {
+          "type": "droplets_of_thirst:optional_item",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{\"droplets_of_thirst:purity\":5}",
+              "conditions": [
+                {
+                  "condition": "droplets_of_thirst:purity_enabled"
+                }
+              ]
+            },
+            {
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "brewinandchewin:salty_folly",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 20
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}
