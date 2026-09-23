@@ -329,7 +329,7 @@ def main():
     args = ap.parse_args()
 
     if not os.path.exists(args.raw):
-        sys.exit("falta %s (lo genera el comando /blue_droplets dev dump_items)" % args.raw)
+        sys.exit("falta %s (lo genera el comando /droplets_of_thirst dev dump_items)" % args.raw)
     R = c.load_json(os.path.join(c.RULES, "items.json"))
     wr = c.load_json(os.path.join(c.RULES, "water.json"))
     cfg, mods = c.load_mods()
@@ -344,7 +344,7 @@ def main():
     unknown = set()
     import json as _json
     try:
-        cur_map = _json.load(open(os.path.join(c.REPO, "src", "main", "resources", "data", "blue_droplets",
+        cur_map = _json.load(open(os.path.join(c.REPO, "src", "main", "resources", "data", "droplets_of_thirst",
                                                "data_maps", "item", "drinks.json"), encoding="utf-8"))["values"]
     except (OSError, ValueError, KeyError):
         cur_map = {}

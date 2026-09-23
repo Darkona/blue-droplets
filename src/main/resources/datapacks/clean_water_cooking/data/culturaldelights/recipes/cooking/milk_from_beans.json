@@ -19,7 +19,7 @@
             "minecraft:water_bucket"
           ],
           "nbt": {
-            "blue_droplets:purity": 0
+            "droplets_of_thirst:purity": 0
           }
         },
         {
@@ -28,7 +28,7 @@
             "minecraft:water_bucket"
           ],
           "nbt": {
-            "blue_droplets:purity": 1
+            "droplets_of_thirst:purity": 1
           }
         }
       ]

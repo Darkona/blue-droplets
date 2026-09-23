@@ -20,8 +20,8 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 java.withSourcesJar()
 
-// The public API (com.darkona.droplets.api) lives in its own source set and ships twice: inside the mod jar, and
-// alone as blue-droplets-api for other mods to compile against. It may only use Minecraft and Forge.
+// The public API (com.darkona.dropletsofthirst.api) lives in its own source set and ships twice: inside the mod jar, and
+// alone as droplets-of-thirst-api for other mods to compile against. It may only use Minecraft and Forge.
 sourceSets {
     api
 }
@@ -148,7 +148,7 @@ dependencies {
     modCompileOnly "maven.modrinth:miners-delight:${miners_delight_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
 
-    // ./gradlew runGameTestServer -PwithCompat: the optional mods Blue Droplets has code for, on the dev runtime.
+    // ./gradlew runGameTestServer -PwithCompat: the optional mods Droplets of Thirst has code for, on the dev runtime.
     // Create's slim jar does not bundle Flywheel and Registrate: they go in by hand.
     if (project.hasProperty('withCompat')) {
         modLocalRuntime("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }

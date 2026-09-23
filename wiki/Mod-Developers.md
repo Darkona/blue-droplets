@@ -1,8 +1,8 @@
 # Mod developers
 
-Blue Droplets has a small public API in `com.darkona.droplets.api`. It ships inside the mod jar and alone as
-`blue-droplets-api` (with sources) so you can compile against it without pulling in the mod's internals. Everything
-outside `com.darkona.droplets.api` is internal and may change in any version.
+Droplets of Thirst has a small public API in `com.darkona.dropletsofthirst.api`. It ships inside the mod jar and alone as
+`droplets-of-thirst-api` (with sources) so you can compile against it without pulling in the mod's internals. Everything
+outside `com.darkona.dropletsofthirst.api` is internal and may change in any version.
 
 `DropletsAPI` is the place to start; every public method is documented. `DropletsAPI.API_VERSION` goes up when the API
 changes incompatibly.
@@ -10,7 +10,7 @@ changes incompatibly.
 ## Dependency
 
 For now the artifacts are only published to the local Maven repository of the project (`mcmodsrepo`); a public Maven
-is still to be decided. Until then, build Blue Droplets and publish it locally (`./gradlew publishToMavenLocal`), or use
+is still to be decided. Until then, build Droplets of Thirst and publish it locally (`./gradlew publishToMavenLocal`), or use
 the jars from `build/libs/`.
 
 ```groovy
@@ -19,18 +19,18 @@ repositories {
 }
 
 dependencies {
-    // The API only: nothing of Blue Droplets' internals is on your compile classpath.
-    compileOnly "com.darkona.droplets:blue-droplets-api:${blue_droplets_version}"
+    // The API only: nothing of Droplets of Thirst's internals is on your compile classpath.
+    compileOnly "com.darkona.dropletsofthirst:droplets-of-thirst-api:${droplets_of_thirst_version}"
     // The whole mod, to run it in your dev environment (optional).
-    localRuntime "com.darkona.droplets:BlueDroplets:${blue_droplets_version}"
+    localRuntime "com.darkona.dropletsofthirst:droplets-of-thirst:${droplets_of_thirst_version}"
 }
 ```
 
-In `neoforge.mods.toml`, declare Blue Droplets as optional:
+In `neoforge.mods.toml`, declare Droplets of Thirst as optional:
 
 ```toml
 [[dependencies.yourmod]]
-modId = "blue_droplets"
+modId = "droplets_of_thirst"
 type = "optional"
 versionRange = "[0,)"
 ordering = "NONE"
@@ -39,10 +39,10 @@ side = "BOTH"
 
 ### Soft dependency
 
-Keep every call in a class that is only loaded when Blue Droplets is installed, and guard the entry point:
+Keep every call in a class that is only loaded when Droplets of Thirst is installed, and guard the entry point:
 
 ```java
-if (ModList.get().isLoaded(DropletsAPI.MOD_ID)) {   // or the literal "blue_droplets"
+if (ModList.get().isLoaded(DropletsAPI.MOD_ID)) {   // or the literal "droplets_of_thirst"
     DropletsCompat.init();
 }
 ```
@@ -63,7 +63,7 @@ DropletsView thirst = DropletsAPI.view(player);  // live view, no copy
 int points = thirst.thirst();                    // 0..20 (thirst.maxThirst())
 int quenched = thirst.quenched();                // like saturation, never above thirst
 float exhaustion = thirst.exhaustion();          // towards the next point lost
-boolean on = thirst.isEnabled();                 // /blue_droplets enable
+boolean on = thirst.isEnabled();                 // /droplets_of_thirst enable
 float multiplier = thirst.lastModifier();        // cached climate/armor/effects/mods multiplier
 ```
 
@@ -79,7 +79,7 @@ ItemStack pure = DropletsAPI.withPurity(stack, PurityLevel.PURE.level());  // a 
 int here = DropletsAPI.getWaterPurity(level, pos);       // server side; poured water keeps its purity
 ```
 
-Purity is an int from 0 to 5; `PurityLevel` names the levels and gives each its id (`contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `pure`, as in the config keys), its translation key (`blue_droplets.purity.<id>`) and the colour Blue Droplets uses for its name.
+Purity is an int from 0 to 5; `PurityLevel` names the levels and gives each its id (`contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `pure`, as in the config keys), its translation key (`droplets_of_thirst.purity.<id>`) and the colour Droplets of Thirst uses for its name.
 
 | Level | `PurityLevel` | Default effects when drunk |
 |---|---|---|
@@ -99,7 +99,7 @@ DropletsAPI.setThirst(player, 10);            // clamped; quenched follows down
 DropletsAPI.addThirst(player, -2, 0);         // not a drink: no effects, no drink events
 DropletsAPI.drink(player, 4, 2);              // like drinking: extra thirst may become quenched
 DropletsAPI.drink(player, 4, 2, PurityLevel.DIRTY.level());  // also rolls the purity effects
-DropletsAPI.addExhaustion(player, 0.5f);      // multiplied like Blue Droplets' own activities
+DropletsAPI.addExhaustion(player, 0.5f);      // multiplied like Droplets of Thirst's own activities
 ```
 
 All of these keep `0 <= quenched <= thirst <= 20`, post the events below and reach the client with the next sync.
@@ -108,9 +108,9 @@ All of these keep `0 <= quenched <= thirst <= 20`, post the events below and rea
 
 Call these once, from your mod constructor or common setup. Items are resolved each time the tables are built (world
 load and `/reload`), so `DeferredItem`s are fine. Players and modpacks keep the last word: `items.toml`, the
-`#blue_droplets:no_thirst` tag and the `blue_droplets:drinks` data map override what code registers (see
+`#droplets_of_thirst:no_thirst` tag and the `droplets_of_thirst:drinks` data map override what code registers (see
 [Modpack makers](Modpack-Makers#where-an-items-values-come-from)). If your values fit in a datapack, prefer shipping
-a `blue_droplets:drinks` data map entry instead.
+a `droplets_of_thirst:drinks` data map entry instead.
 
 ```java
 DropletsAPI.registerDrink(MyItems.LEMONADE, 6, 4);                          // thirst, quenched
@@ -164,7 +164,7 @@ Filling them from the world is up to your item; give the result a purity with `D
 
 ## Thirst loss
 
-Prefer the attribute `blue_droplets:thirst_drain` (a multiplier, base 1.0): equipment, effects and enchantments change
+Prefer the attribute `droplets_of_thirst:thirst_drain` (a multiplier, base 1.0): equipment, effects and enchantments change
 it with ordinary attribute modifiers and no code on your side.
 
 For rules the attribute can't express (additive terms, your own climate or seasons), register a modifier. It runs on the
@@ -179,7 +179,7 @@ DropletsAPI.registerExhaustionModifier(ResourceLocation.fromNamespaceAndPath("my
 DropletsAPI.refreshExhaustionModifier(player);
 ```
 
-`/blue_droplets debug exhaustion` shows the combined effect of registered modifiers as "other mods".
+`/droplets_of_thirst debug exhaustion` shows the combined effect of registered modifiers as "other mods".
 
 ## Thirst bar colour
 
@@ -205,14 +205,14 @@ DropletsAPI.registerWaveEffect(MyEffects.HYDRATED);
 
 ## Events
 
-All on `NeoForge.EVENT_BUS`, in `com.darkona.droplets.api.event`, posted on the server and only when something
+All on `NeoForge.EVENT_BUS`, in `com.darkona.dropletsofthirst.api.event`, posted on the server and only when something
 happens (never once per tick). Listen to `Pre`/`Post`, not to the abstract base classes.
 
 | Event | When | You can |
 |---|---|---|
 | `ThirstChangeEvent.Pre` | thirst or quenched is about to change; `getCause()`: `DEPLETION`, `DRINK`, `EAT`, `RAIN`, `PEACEFUL`, `DEATH`, `COMMAND`, `API` | cancel, `setNewThirst`, `setNewQuenched` |
 | `ThirstChangeEvent.Post` | after the change | read old and new values |
-| `EatEvent.Pre` | before food hydrates: food items (no drink animation, not a water container; also `Player#eat` called by other mods), block foods (`blue_droplets:hydrating_blocks`, `getItem()` empty) and `DropletsAPI.eat`; `getSaltiness()`/`isSalty()` | cancel, `setThirst`, `setQuenched` |
+| `EatEvent.Pre` | before food hydrates: food items (no drink animation, not a water container; also `Player#eat` called by other mods), block foods (`droplets_of_thirst:hydrating_blocks`, `getItem()` empty) and `DropletsAPI.eat`; `getSaltiness()`/`isSalty()` | cancel, `setThirst`, `setQuenched` |
 | `EatEvent.Post` | after it | read the values and `hydrated()` |
 | `DrinkEvent.Pre` | before a drink's purity effects and hydration: items with the drink animation (potions, milk, honey bottle, most modded drinks), water containers, hand drinking and `DropletsAPI.drink`; `getItem()` is empty for hand drinking and `DropletsAPI.drink`; `getSaltiness()`/`isSalty()` for values that remove thirst | cancel, `setThirst`, `setQuenched`, `setPurity` (negative values remove thirst) |
 | `DrinkEvent.Post` | after it | read the values and `hydrated()` |
@@ -251,8 +251,8 @@ public static void immuneToDirtyWater(PurityEffectEvent event) {
 Modpacks can use the API from KubeJS 7 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in `examples/kubejs` in the repository; the tests of `./gradlew runGameTestServer -PwithKubeJS` run them inside KubeJS 2101.7.2 (build 377).
 
 ```js
-var DropletsAPI = Java.loadClass('com.darkona.droplets.api.DropletsAPI')
-var PurityLevel = Java.loadClass('com.darkona.droplets.api.PurityLevel')
+var DropletsAPI = Java.loadClass('com.darkona.dropletsofthirst.api.DropletsAPI')
+var PurityLevel = Java.loadClass('com.darkona.dropletsofthirst.api.PurityLevel')
 
 // Read and change thirst (server scripts)
 ItemEvents.rightClicked('minecraft:clock', event => {
@@ -269,7 +269,7 @@ ItemEvents.foodEaten('minecraft:golden_carrot', event => {
 // Read purity: DropletsAPI.getItemPurity(stack), DropletsAPI.getWaterPurity(level, pos)
 
 // Events: nested classes are loaded with a $
-var DrinkPre = Java.loadClass('com.darkona.droplets.api.event.DrinkEvent$Pre')
+var DrinkPre = Java.loadClass('com.darkona.dropletsofthirst.api.event.DrinkEvent$Pre')
 NativeEvents.onEvent(DrinkPre, event => {
   if (event.purity <= PurityLevel.DIRTY.level() && event.entity.level.dimension.toString() == 'minecraft:the_nether')
     event.canceled = true
@@ -283,7 +283,7 @@ StartupEvents.postInit(() => {
 
 - Use `getItemPurity`, `getFluidPurity`, `withItemPurity` and `withFluidPurity` instead of the `getPurity` and `withPurity` overloads: KubeJS cannot choose between an `ItemStack` and a `FluidStack` and fails with "the choice of Java method is ambiguous".
 - Top level `const` and `let` are shared by all scripts of one type, so declare the loaded classes with `var` when several files load the same one.
-- Registered drinks belong in `startup_scripts` (`StartupEvents.postInit`, when the items exist). `items.toml`, the `blue_droplets:drinks` data map and `#blue_droplets:no_thirst` still win over them.
+- Registered drinks belong in `startup_scripts` (`StartupEvents.postInit`, when the items exist). `items.toml`, the `droplets_of_thirst:drinks` data map and `#droplets_of_thirst:no_thirst` still win over them.
 - Exhaustion modifiers take a JavaScript function and a string id: `DropletsAPI.registerExhaustionModifier('kubejs:night', (player, multiplier) => player.level.isNight() ? multiplier * 0.75 : multiplier)`.
 - In KubeJS, `entity.level` and `level.dimension` are properties, not methods.
 

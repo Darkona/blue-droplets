@@ -26,7 +26,7 @@
               "minecraft:water_bucket"
             ],
             "nbt": {
-              "blue_droplets:purity": 0
+              "droplets_of_thirst:purity": 0
             }
           },
           {
@@ -35,7 +35,7 @@
               "minecraft:water_bucket"
             ],
             "nbt": {
-              "blue_droplets:purity": 1
+              "droplets_of_thirst:purity": 1
             }
           },
           {
@@ -44,7 +44,7 @@
               "minecraft:water_bucket"
             ],
             "nbt": {
-              "blue_droplets:purity": 2
+              "droplets_of_thirst:purity": 2
             }
           }
         ]
@@ -61,7 +61,7 @@
               "miners_delight:water_cup"
             ],
             "nbt": {
-              "blue_droplets:purity": 0
+              "droplets_of_thirst:purity": 0
             }
           },
           {
@@ -70,7 +70,7 @@
               "miners_delight:water_cup"
             ],
             "nbt": {
-              "blue_droplets:purity": 1
+              "droplets_of_thirst:purity": 1
             }
           },
           {
@@ -79,7 +79,7 @@
               "miners_delight:water_cup"
             ],
             "nbt": {
-              "blue_droplets:purity": 2
+              "droplets_of_thirst:purity": 2
             }
           }
         ]

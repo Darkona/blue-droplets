@@ -1,0 +1,13 @@
+{
+  "type": "droplets_of_thirst:add_table",
+  "conditions": [
+    {
+      "condition": "droplets_of_thirst:loot_config"
+    },
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/shipwreck_supply"
+    }
+  ],
+  "table": "droplets_of_thirst:chests/shipwreck_supply_fr"
+}

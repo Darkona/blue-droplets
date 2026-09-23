@@ -24,7 +24,7 @@ has_food = false
 [[rule]]
 name = "water_container"
 category = "water"
-ids = ["minecraft:potion", "minecraft:water_bucket", "blue_droplets:terracotta_water_bowl", "cold_sweat:filled_waterskin"]
+ids = ["minecraft:potion", "minecraft:water_bucket", "droplets_of_thirst:terracotta_water_bowl", "cold_sweat:filled_waterskin"]
 
 [[rule]]
 name = "not_a_real_drink"

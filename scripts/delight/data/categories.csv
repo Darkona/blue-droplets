@@ -463,7 +463,7 @@ crabbersdelight:clawster,seafood,ids2_seafood
 crabbersdelight:clawster_barrel,non_food,no_food_no_drink
 minecraft:clay,non_food,no_food_no_drink
 minecraft:clay_ball,non_food,no_food_no_drink
-blue_droplets:clay_bowl,non_food,no_food_no_drink
+droplets_of_thirst:clay_bowl,non_food,no_food_no_drink
 create:clipboard,non_food,no_food_no_drink
 minecraft:clock,non_food,no_food_no_drink
 create:clockwork_bearing,non_food,no_food_no_drink
@@ -2309,7 +2309,7 @@ cookscollection:salt,non_food,no_food_no_drink
 cookscollection:salted_dripstone_block,non_food,no_food_no_drink
 brewinandchewin:salty_folly,drink_crafted,any_other_drink
 minecraft:sand,non_food,no_food_no_drink
-blue_droplets:sand_filter,non_food,no_food_no_drink
+droplets_of_thirst:sand_filter,non_food,no_food_no_drink
 create:sand_paper,non_food,no_food_no_drink
 minecraft:sandstone,non_food,no_food_no_drink
 minecraft:sandstone_slab,non_food,no_food_no_drink
@@ -2632,8 +2632,8 @@ miners_delight:tentacles,seafood,tag_raw_fish
 oceansdelight:tentacles,seafood,word_seafood
 culturaldelights:tequila,alcohol,word_alcohol
 minecraft:terracotta,non_food,no_food_no_drink
-blue_droplets:terracotta_bowl,non_food,no_food_no_drink
-blue_droplets:terracotta_water_bowl,water,water_container
+droplets_of_thirst:terracotta_bowl,non_food,no_food_no_drink
+droplets_of_thirst:terracotta_water_bowl,water,water_container
 cold_sweat:thermolith,non_food,no_food_no_drink
 cold_sweat:thermometer,non_food,no_food_no_drink
 create:tiled_glass,non_food,no_food_no_drink

@@ -1,5 +1,5 @@
 item_id,mod,kind,craft_steps,thirst,quenched,salty,no_thirst,category,notes,rule,auto
-blue_droplets:terracotta_water_bowl,blue_droplets,drink,0,4,5,no,no,water,,manual (fijo por el codigo o por Javier),manual
+droplets_of_thirst:terracotta_water_bowl,droplets_of_thirst,drink,0,4,5,no,no,water,,manual (fijo por el codigo o por Javier),manual
 brewinandchewin:beer,brewinandchewin,drink,1,1,0,no,no,alcohol,antes: 10/14; valores de 1.21.1 (en 1.20.1 la receta da otros pasos de crafteo),cat:alcohol>alcohol_light,1/0/no/no
 brewinandchewin:bloody_mary,brewinandchewin,drink,2,-1,-1,si,no,alcohol,antes: 12/22,cat:alcohol>alcohol_strong,-1/-1/si/no
 brewinandchewin:cheesy_pasta,brewinandchewin,food,2,0,0,no,no,meal,,cat:meal,0/0/no/no
