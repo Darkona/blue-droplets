@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "droplets_of_thirst:optional_item",
+          "name": "droplets_of_thirst:sand_filter"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

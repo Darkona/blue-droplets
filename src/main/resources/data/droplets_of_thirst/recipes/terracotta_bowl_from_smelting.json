@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "droplets_of_thirst:clay_bowl"
+  },
+  "result": {
+    "item": "droplets_of_thirst:terracotta_bowl",
+    "count": 1
+  },
+  "experience": 0.35,
+  "cookingtime": 200
+}

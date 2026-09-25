@@ -1,0 +1,47 @@
+{
+  "conditions": [
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "minecraft:smoking",
+  "ingredient": [
+    {
+      "type": "forge:partial_nbt",
+      "item": "minecraft:potion",
+      "nbt": {
+        "droplets_of_thirst:purity": 2,
+        "Potion": "minecraft:water"
+      }
+    },
+    {
+      "type": "forge:partial_nbt",
+      "item": "minecraft:potion",
+      "nbt": {
+        "droplets_of_thirst:purity": 3,
+        "Potion": "minecraft:water"
+      }
+    },
+    {
+      "type": "forge:nbt",
+      "item": "minecraft:potion",
+      "nbt": {
+        "Potion": "minecraft:water"
+      }
+    }
+  ],
+  "result": {
+    "item": "minecraft:potion",
+    "count": 1,
+    "nbt": {
+      "droplets_of_thirst:purity": 4,
+      "Potion": "minecraft:water"
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

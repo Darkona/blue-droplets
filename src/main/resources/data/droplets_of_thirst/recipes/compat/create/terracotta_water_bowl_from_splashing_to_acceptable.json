@@ -1,0 +1,29 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "forge:partial_nbt",
+      "item": "droplets_of_thirst:terracotta_water_bowl",
+      "nbt": {
+        "droplets_of_thirst:purity": 2
+      }
+    }
+  ],
+  "results": [
+    {
+      "item": "droplets_of_thirst:terracotta_water_bowl",
+      "nbt": {
+        "droplets_of_thirst:purity": 3
+      }
+    }
+  ]
+}

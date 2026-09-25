@@ -1,0 +1,33 @@
+{
+  "required": true,
+  "package": "com.darkona.dropletsofthirst.foundation.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "droplets_of_thirst.refmap.json",
+  "mixins": [
+    "BiomeAccessor",
+    "MixinAbstractCauldronBlock",
+    "MixinBottleItem",
+    "MixinBucketItem",
+    "MixinCampfireBlockEntity",
+    "MixinDispenserBlock",
+    "MixinDispenserBlockEntity",
+    "MixinFluidBucketWrapper",
+    "MixinFluidStack",
+    "MixinFluidUtil",
+    "MixinFluidAttributes",
+    "MixinFoodData",
+    "MixinItemStack",
+    "MixinItemUtils",
+    "MixinMinecraftServer",
+    "MixinPlayer",
+    "MixinPotionItem"
+  ],
+  "client": [
+    "MixinItemColors",
+    "MixinLocalPlayer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8.4"
+}

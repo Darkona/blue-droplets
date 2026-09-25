@@ -1,6 +1,6 @@
 {
   "_comment": "Mods de la compat con Farmer's Delight. 'source' por defecto: jar de Modrinth (version fijada, cache fuera del repo). 'repo' + 'data_roots' es la alternativa: repo clonado (extract_recipes.py --source repo).",
-  "cache_dir": "~/.cache/blue-droplets-delight",
+  "cache_dir": "~/.cache/droplets-of-thirst-delight",
   "mods": [
     {
       "id": "farmersdelight",

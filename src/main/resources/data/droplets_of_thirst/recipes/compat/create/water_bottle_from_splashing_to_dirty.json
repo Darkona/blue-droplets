@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "forge:partial_nbt",
+      "item": "minecraft:potion",
+      "nbt": {
+        "droplets_of_thirst:purity": 0,
+        "Potion": "minecraft:water"
+      }
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:potion",
+      "nbt": {
+        "droplets_of_thirst:purity": 1,
+        "Potion": "minecraft:water"
+      }
+    }
+  ]
+}

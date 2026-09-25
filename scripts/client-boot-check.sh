@@ -5,7 +5,7 @@
 # from the command line (no --quickPlaySingleplayer), so a dedicated server of its own (run/bootserver, a free port from
 # 25699) hosts the world and the client connects to it on startup (--server/--port).
 #
-# Usage: [GRADLE_ARGS="-PwithCompat"] [COMMANDS='blue_droplets set @s 7 2;effect give @s blue_droplets:quenchness 30']
+# Usage: [GRADLE_ARGS="-PwithCompat"] [COMMANDS='droplets_of_thirst set @s 7 2;effect give @s droplets_of_thirst:quenchness 30']
 #        scripts/client-boot-check.sh [TIMEOUT_SECONDS]
 #   GRADLE_ARGS  extra Gradle flags (see build.gradle); COMMANDS typed into chat after joining, ';'-separated.
 # Generates its own superflat world (run/bootserver/bootworld) the first time. Every run: noon, clear weather, no mob
@@ -127,7 +127,7 @@ xvfb-run -n $DISP -f "$XAUTH" -s "-screen 0 1920x1080x24" bash "$CLIENT_SH" > "$
 PID=$!
 logs() { cat "$LOG" "$GAME_LOG" "$SERVER_LOG" 2>/dev/null; }
 
-FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*blue_droplets|FileNotFoundException: .*blue_droplets'
+FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*droplets_of_thirst|FileNotFoundException: .*droplets_of_thirst'
 # The server let the client in (the client doesn't log chat on 1.18.2).
 OK_RE='BDBoot joined the game'
 verdict="TIMEOUT after ${TIMEOUT}s"

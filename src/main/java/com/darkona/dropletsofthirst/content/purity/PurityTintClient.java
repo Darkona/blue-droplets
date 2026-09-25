@@ -1,0 +1,24 @@
+package com.darkona.dropletsofthirst.content.purity;
+
+import com.darkona.dropletsofthirst.DropletsOfThirst;
+import com.darkona.dropletsofthirst.content.registry.ItemInit;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.client.event.ColorHandlerEvent;
+
+@EventBusSubscriber(modid = DropletsOfThirst.ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+public final class PurityTintClient
+{
+    /**
+     * The terracotta water bowl draws its liquid with a grey second layer (layer1 of its model), so it needs the vanilla water color by default;
+     * the purity color replaces it in the {@code ItemColors} mixin.
+     */
+    @SubscribeEvent
+    public static void registerItemColors(ColorHandlerEvent.Item event)
+    {
+        event.getItemColors().register((stack, tintIndex) -> tintIndex == 1 ? PurityTint.VANILLA_WATER : -1, ItemInit.TERRACOTTA_WATER_BOWL.get());
+    }
+
+    private PurityTintClient() {}
+}

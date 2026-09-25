@@ -96,7 +96,7 @@ ordering="NONE"
 side="CLIENT"
 
 # Thirst Was Taken and Thirst Was Reclaimed (mod id "thirst"): no version is accepted, so the game refuses to start with
-# both installed. Blue Droplets is its continuation and migrates its worlds and configs.
+# both installed. Droplets of Thirst is its continuation and migrates its worlds and configs.
 [[dependencies.${mod_id}]]
 modId="thirst"
 mandatory=false

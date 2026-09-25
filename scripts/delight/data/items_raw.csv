@@ -153,7 +153,7 @@ create:blaze_cake_base,create,false,,,,,,,create:upright_on_belt
 minecraft:blaze_powder,minecraft,false,,,,,,,
 minecraft:blaze_rod,minecraft,false,,,,,,,forge:rods;forge:rods/blaze
 minecraft:blaze_spawn_egg,minecraft,false,,,,,,,
-brewinandchewin:bloody_mary,brewinandchewin,true,0,0.00,"farmersdelight:comfort,6000,0,1.00",false,-1,-1,blue_droplets:salty;forge:food
+brewinandchewin:bloody_mary,brewinandchewin,true,0,0.00,"farmersdelight:comfort,6000,0,1.00",false,-1,-1,droplets_of_thirst:salty;forge:food
 minecraft:blue_banner,minecraft,false,,,,,,,minecraft:banners
 minecraft:blue_bed,minecraft,false,,,,,,,minecraft:beds
 minecraft:blue_candle,minecraft,false,,,,,,,minecraft:candles
@@ -188,7 +188,7 @@ miners_delight:bowl_of_stuffed_squid,miners_delight,false,10,16.00,"farmersdelig
 minecraft:brain_coral,minecraft,false,,,,,,,
 minecraft:brain_coral_block,minecraft,false,,,,,,,
 minecraft:brain_coral_fan,minecraft,false,,,,,,,
-oceansdelight:braised_sea_pickle,oceansdelight,false,8,8.00,,false,-2,-2,blue_droplets:salty;forge:food
+oceansdelight:braised_sea_pickle,oceansdelight,false,8,8.00,,false,-2,-2,droplets_of_thirst:salty;forge:food
 create:brass_bars,create,false,,,,,,,
 create:brass_block,create,false,,,,,,,forge:storage_blocks;forge:storage_blocks/brass
 create:brass_casing,create,false,,,,,,,create:casing
@@ -237,7 +237,7 @@ minecraft:bubble_coral_fan,minecraft,false,,,,,,,
 ends_delight:bubble_tea,ends_delight,true,8,8.00,,true,2,2,forge:food
 minecraft:bucket,minecraft,false,,,,,,,farmersdelight:serving_containers
 minecraft:budding_amethyst,minecraft,false,,,,,,,
-create:builders_tea,create,true,,,,,3,4,blue_droplets:purity_containers;create:upright_on_belt
+create:builders_tea,create,true,,,,,3,4,droplets_of_thirst:purity_containers;create:upright_on_belt
 reliquary:bullets/blaze_bullet,reliquary,false,,,,,,,
 reliquary:bullets/buster_bullet,reliquary,false,,,,,,,
 reliquary:bullets/concussive_bullet,reliquary,false,,,,,,,
@@ -347,7 +347,7 @@ crabbersdelight:clawster,crabbersdelight,false,3,3.00,,false,,,crabbersdelight:r
 crabbersdelight:clawster_barrel,crabbersdelight,false,,,,,,,
 minecraft:clay,minecraft,false,,,,,,,
 minecraft:clay_ball,minecraft,false,,,,,,,
-blue_droplets:clay_bowl,blue_droplets,false,,,,,,,
+droplets_of_thirst:clay_bowl,droplets_of_thirst,false,,,,,,,
 create:clipboard,create,false,,,,,,,
 minecraft:clock,minecraft,false,,,,,,,minecraft:piglin_loved
 create:clockwork_bearing,create,false,,,,,,,
@@ -750,7 +750,7 @@ ends_delight:dragon_tooth,ends_delight,false,,,,,,,
 ends_delight:dragon_tooth_knife,ends_delight,false,,,,,,,farmersdelight:straw_harvesters;farmersdelight:tools/knives;forge:tools;forge:tools/knives
 brewinandchewin:dread_nog,brewinandchewin,true,,,,,1,0,
 ends_delight:dried_chorus_flower,ends_delight,false,,,,,,,
-ends_delight:dried_endermite_meat,ends_delight,false,5,6.00,,false,-1,-1,blue_droplets:salty;forge:food
+ends_delight:dried_endermite_meat,ends_delight,false,5,6.00,,false,-1,-1,droplets_of_thirst:salty;forge:food
 minecraft:dried_kelp,minecraft,false,1,0.60,,false,,,forge:food
 minecraft:dried_kelp_block,minecraft,false,,,,,,,
 minecraft:dripstone_block,minecraft,false,,,,,,,create:stone_types/dripstone
@@ -759,7 +759,7 @@ minecraft:dropper,minecraft,false,,,,,,,create:contraption_controlled
 minecraft:drowned_spawn_egg,minecraft,false,,,,,,,
 farmersdelight:dumplings,farmersdelight,false,8,12.80,,false,,,forge:food
 minecraft:egg,minecraft,false,,,,,,,farmersdelight:cabbage_roll_ingredients;forge:eggs
-brewinandchewin:egg_grog,brewinandchewin,true,0,0.00,"minecraft:absorption,3600,0,1.00",false,-1,-1,blue_droplets:salty;forge:food
+brewinandchewin:egg_grog,brewinandchewin,true,0,0.00,"minecraft:absorption,3600,0,1.00",false,-1,-1,droplets_of_thirst:salty;forge:food
 farmersdelight:egg_sandwich,farmersdelight,false,8,12.80,,false,,,forge:food
 oceansdelight:elder_guardian_roll,oceansdelight,false,7,8.40,,false,,,forge:food
 oceansdelight:elder_guardian_slab,oceansdelight,false,9,7.20,,false,,,forge:food
@@ -833,7 +833,7 @@ reliquary:fertile_essence,reliquary,false,,,,,,,
 reliquary:fertile_lily_pad,reliquary,false,,,,,,,
 reliquary:fertile_potion,reliquary,false,,,,,,,
 minecraft:filled_map,minecraft,false,,,,,,,
-cold_sweat:filled_waterskin,cold_sweat,true,,,,,6,3,blue_droplets:purity_containers;cold_sweat:boiler_valid;cold_sweat:icebox_valid
+cold_sweat:filled_waterskin,cold_sweat,true,,,,,6,3,droplets_of_thirst:purity_containers;cold_sweat:boiler_valid;cold_sweat:icebox_valid
 create:filter,create,false,,,,,,,
 minecraft:fire_charge,minecraft,false,,,,,,,
 minecraft:fire_coral,minecraft,false,,,,,,,
@@ -845,7 +845,7 @@ farmersdelight:fish_stew,farmersdelight,false,12,19.20,"farmersdelight:comfort,3
 miners_delight:fish_stew_cup,miners_delight,false,12,19.20,"farmersdelight:comfort,3600,0,1.00;minecraft:haste,1800,0,1.00",false,2,2,forge:food
 crabbersdelight:fish_stick,crabbersdelight,false,5,6.00,,false,,,forge:food
 minecraft:fishing_rod,minecraft,false,,,,,,,
-brewinandchewin:flaxen_cheese_wedge,brewinandchewin,false,4,8.00,,false,-1,-1,blue_droplets:salty;forge:food
+brewinandchewin:flaxen_cheese_wedge,brewinandchewin,false,4,8.00,,false,-1,-1,droplets_of_thirst:salty;forge:food
 brewinandchewin:flaxen_cheese_wheel,brewinandchewin,false,,,,,,,
 minecraft:fletching_table,minecraft,false,,,,,,,
 minecraft:flint,minecraft,false,,,,,,,
@@ -983,7 +983,7 @@ oceansdelight:guardian_tail,oceansdelight,false,2,0.80,,false,,,forge:food
 minecraft:gunpowder,minecraft,false,,,,,,,forge:gunpowder
 ends_delight:half_dragon_egg_shell,ends_delight,false,,,,,,,
 farmersdelight:half_tatami_mat,farmersdelight,false,,,,,,,minecraft:carpets
-farmersdelight:ham,farmersdelight,false,5,3.00,,false,-2,-2,blue_droplets:salty;forge:food
+farmersdelight:ham,farmersdelight,false,5,3.00,,false,-2,-2,droplets_of_thirst:salty;forge:food
 brewinandchewin:ham_and_cheese_sandwich,brewinandchewin,false,9,18.00,,false,,,forge:food
 farmersdelight:hamburger,farmersdelight,false,11,17.60,,false,,,forge:food
 reliquary:hammer_assembly,reliquary,false,,,,,,,
@@ -1009,7 +1009,7 @@ minecraft:honey_block,minecraft,false,,,,,,,
 minecraft:honey_bottle,minecraft,true,6,1.20,,false,3,4,create:upright_on_belt;forge:food
 create:honey_bucket,create,false,,,,,,,forge:buckets/honey
 farmersdelight:honey_cookie,farmersdelight,false,2,0.40,,false,,,forge:food
-farmersdelight:honey_glazed_ham,farmersdelight,false,14,21.00,"farmersdelight:nourishment,6000,0,1.00",false,-2,-2,blue_droplets:salty;forge:food
+farmersdelight:honey_glazed_ham,farmersdelight,false,14,21.00,"farmersdelight:nourishment,6000,0,1.00",false,-2,-2,droplets_of_thirst:salty;forge:food
 farmersdelight:honey_glazed_ham_block,farmersdelight,false,,,,,,,
 minecraft:honeycomb,minecraft,false,,,,,,,
 minecraft:honeycomb_block,minecraft,false,,,,,,,
@@ -1071,7 +1071,7 @@ create:item_drain,create,false,,,,,,,
 minecraft:item_frame,minecraft,false,,,,,,,
 create:item_vault,create,false,,,,,,,
 minecraft:jack_o_lantern,minecraft,false,,,,,,,
-brewinandchewin:jerky,brewinandchewin,false,3,4.20,,false,-3,-3,blue_droplets:salty;forge:food
+brewinandchewin:jerky,brewinandchewin,false,3,4.20,,false,-3,-3,droplets_of_thirst:salty;forge:food
 minecraft:jigsaw,minecraft,false,,,,,,,
 minecraft:jukebox,minecraft,false,,,,,,,
 minecraft:jungle_boat,minecraft,false,,,,,,,minecraft:boats
@@ -1097,8 +1097,8 @@ minecraft:kelp,minecraft,false,,,,,,,
 farmersdelight:kelp_roll,farmersdelight,false,12,14.40,,false,,,forge:food
 farmersdelight:kelp_roll_slice,farmersdelight,false,6,6.00,,false,,,forge:food
 crabbersdelight:kelp_shake,crabbersdelight,true,0,0.00,"minecraft:dolphins_grace,300,0,1.00",true,2,2,forge:food
-brewinandchewin:kimchi,brewinandchewin,false,2,2.40,"brewinandchewin:satisfaction,2400,0,1.00",false,-2,-2,blue_droplets:salty;forge:food
-brewinandchewin:kippers,brewinandchewin,false,6,6.00,"minecraft:water_breathing,600,0,1.00",false,-3,-3,blue_droplets:salty;forge:food
+brewinandchewin:kimchi,brewinandchewin,false,2,2.40,"brewinandchewin:satisfaction,2400,0,1.00",false,-2,-2,droplets_of_thirst:salty;forge:food
+brewinandchewin:kippers,brewinandchewin,false,6,6.00,"minecraft:water_breathing,600,0,1.00",false,-3,-3,droplets_of_thirst:salty;forge:food
 minecraft:knowledge_book,minecraft,false,,,,,,,
 brewinandchewin:kombucha,brewinandchewin,true,0,0.00,"brewinandchewin:satisfaction,3600,0,1.00;minecraft:haste,6000,0,1.00",false,1,0,forge:food
 reliquary:kraken_shell,reliquary,false,,,,,,,
@@ -1311,7 +1311,7 @@ farmersdelight:mutton_wrap,farmersdelight,false,10,16.00,,false,,,forge:food
 minecraft:mycelium,minecraft,false,,,,,,,minecraft:dirt
 create:mysterious_cuckoo_clock,create,false,,,,,,,
 corn_delight:nachos_block,corn_delight,false,,,,,,,
-corn_delight:nachos_bowl,corn_delight,false,12,24.00,"farmersdelight:nourishment,6000,0,1.00",false,-2,-2,blue_droplets:salty;forge:food
+corn_delight:nachos_bowl,corn_delight,false,12,24.00,"farmersdelight:nourishment,6000,0,1.00",false,-2,-2,droplets_of_thirst:salty;forge:food
 minecraft:name_tag,minecraft,false,,,,,,,
 minecraft:nautilus_shell,minecraft,false,,,,,,,
 crabbersdelight:nautilus_shell_block,crabbersdelight,false,,,,,,,
@@ -1461,7 +1461,7 @@ minecraft:petrified_oak_slab,minecraft,false,,,,,,,minecraft:slabs
 minecraft:phantom_membrane,minecraft,false,,,,,,,
 minecraft:phantom_spawn_egg,minecraft,false,,,,,,,
 reliquary:phoenix_down,reliquary,false,,,,,,,
-brewinandchewin:pickled_pickles,brewinandchewin,false,4,2.40,"minecraft:night_vision,2400,0,1.00;minecraft:luck,6000,0,1.00",false,-2,-2,blue_droplets:salty;forge:food
+brewinandchewin:pickled_pickles,brewinandchewin,false,4,2.40,"minecraft:night_vision,2400,0,1.00;minecraft:luck,6000,0,1.00",false,-2,-2,droplets_of_thirst:salty;forge:food
 farmersdelight:pie_crust,farmersdelight,false,2,0.80,,false,,,create:upright_on_belt;forge:food
 minecraft:pig_spawn_egg,minecraft,false,,,,,,,
 minecraft:piglin_banner_pattern,minecraft,false,,,,,,,
@@ -1494,7 +1494,7 @@ create:placard,create,false,,,,,,,
 minecraft:player_head,minecraft,false,,,,,,,forge:heads
 minecraft:podzol,minecraft,false,,,,,,,minecraft:dirt
 minecraft:pointed_dripstone,minecraft,false,,,,,,,
-minecraft:poisonous_potato,minecraft,false,2,1.20,"minecraft:poison,100,0,0.60",false,-3,-3,blue_droplets:salty;forge:food
+minecraft:poisonous_potato,minecraft,false,2,1.20,"minecraft:poison,100,0,0.60",false,-3,-3,droplets_of_thirst:salty;forge:food
 minecraft:polar_bear_spawn_egg,minecraft,false,,,,,,,
 minecraft:polished_andesite,minecraft,false,,,,,,,forge:stone
 minecraft:polished_andesite_slab,minecraft,false,,,,,,,minecraft:slabs
@@ -1577,7 +1577,7 @@ minecraft:polished_granite,minecraft,false,,,,,,,forge:stone
 minecraft:polished_granite_slab,minecraft,false,,,,,,,minecraft:slabs
 minecraft:polished_granite_stairs,minecraft,false,,,,,,,minecraft:stairs
 create:polished_rose_quartz,create,false,,,,,,,
-corn_delight:popcorn,corn_delight,false,3,3.00,,false,-2,-2,blue_droplets:salty;forge:food;forge:popcorn
+corn_delight:popcorn,corn_delight,false,3,3.00,,false,-2,-2,droplets_of_thirst:salty;forge:food;forge:popcorn
 corn_delight:popcorn_box,corn_delight,false,,,,,,,
 minecraft:popped_chorus_fruit,minecraft,false,,,,,,,
 minecraft:poppy,minecraft,false,,,,,,,minecraft:flowers;minecraft:small_flowers
@@ -1607,7 +1607,7 @@ minecraft:prismarine_slab,minecraft,false,,,,,,,minecraft:slabs
 minecraft:prismarine_stairs,minecraft,false,,,,,,,minecraft:stairs
 minecraft:prismarine_wall,minecraft,false,,,,,,,minecraft:walls
 create:propeller,create,false,,,,,,,
-minecraft:pufferfish,minecraft,false,1,0.20,"minecraft:poison,1200,1,1.00;minecraft:hunger,300,2,1.00;minecraft:nausea,300,0,1.00",false,-3,-3,blue_droplets:salty;cold_sweat:chameleon/taming;crabbersdelight:crab_trap_bait;crabbersdelight:fish_baits;forge:food;minecraft:fishes
+minecraft:pufferfish,minecraft,false,1,0.20,"minecraft:poison,1200,1,1.00;minecraft:hunger,300,2,1.00;minecraft:nausea,300,0,1.00",false,-3,-3,droplets_of_thirst:salty;cold_sweat:chameleon/taming;crabbersdelight:crab_trap_bait;crabbersdelight:fish_baits;forge:food;minecraft:fishes
 minecraft:pufferfish_bucket,minecraft,false,,,,,,,
 minecraft:pufferfish_spawn_egg,minecraft,false,,,,,,,
 create:pulse_extender,create,false,,,,,,,
@@ -1687,7 +1687,7 @@ minecraft:red_nether_brick_slab,minecraft,false,,,,,,,minecraft:slabs
 minecraft:red_nether_brick_stairs,minecraft,false,,,,,,,minecraft:stairs
 minecraft:red_nether_brick_wall,minecraft,false,,,,,,,minecraft:walls
 minecraft:red_nether_bricks,minecraft,false,,,,,,,
-brewinandchewin:red_rum,brewinandchewin,true,0,0.00,"farmersdelight:comfort,9600,1,1.00",false,-1,-1,blue_droplets:salty;forge:food
+brewinandchewin:red_rum,brewinandchewin,true,0,0.00,"farmersdelight:comfort,9600,1,1.00",false,-1,-1,droplets_of_thirst:salty;forge:food
 minecraft:red_sand,minecraft,false,,,,,,,forge:sand;forge:sand/red;minecraft:sand
 create:red_sand_paper,create,false,,,,,,,create:sandpaper
 minecraft:red_sandstone,minecraft,false,,,,,,,forge:sandstone
@@ -1743,9 +1743,9 @@ create:rose_quartz_block,create,false,,,,,,,
 create:rose_quartz_lamp,create,false,,,,,,,
 create:rose_quartz_tiles,create,false,,,,,,,
 create:rotation_speed_controller,create,false,,,,,,,
-minecraft:rotten_flesh,minecraft,false,4,0.80,"minecraft:hunger,600,0,0.80",false,-3,-3,blue_droplets:salty;brewinandchewin:raw_meats;forge:food
+minecraft:rotten_flesh,minecraft,false,4,0.80,"minecraft:hunger,600,0,0.80",false,-3,-3,droplets_of_thirst:salty;brewinandchewin:raw_meats;forge:food
 farmersdelight:rotten_tomato,farmersdelight,false,,,,,,,createaddition:plant_foods
-brewinandchewin:saccharine_rum,brewinandchewin,true,6,1.20,"brewinandchewin:sweet_heart,9600,1,1.00",false,-1,-1,blue_droplets:salty;forge:food
+brewinandchewin:saccharine_rum,brewinandchewin,true,6,1.20,"brewinandchewin:sweet_heart,9600,1,1.00",false,-1,-1,droplets_of_thirst:salty;forge:food
 minecraft:saddle,minecraft,false,,,,,,,
 farmersdelight:safety_net,farmersdelight,false,,,,,,,
 create:sail_frame,create,false,,,,,,,
@@ -1757,7 +1757,7 @@ farmersdelight:salmon_slice,farmersdelight,false,1,0.20,,false,,,farmersdelight:
 minecraft:salmon_spawn_egg,minecraft,false,,,,,,,
 brewinandchewin:salty_folly,brewinandchewin,true,0,0.00,"minecraft:water_breathing,9600,0,1.00",false,1,0,forge:food
 minecraft:sand,minecraft,false,,,,,,,forge:sand;forge:sand/colorless;minecraft:sand
-blue_droplets:sand_filter,blue_droplets,false,,,,,,,
+droplets_of_thirst:sand_filter,droplets_of_thirst,false,,,,,,,
 create:sand_paper,create,false,,,,,,,create:sandpaper
 minecraft:sandstone,minecraft,false,,,,,,,forge:sandstone
 minecraft:sandstone_slab,minecraft,false,,,,,,,minecraft:slabs
@@ -1765,7 +1765,7 @@ minecraft:sandstone_stairs,minecraft,false,,,,,,,minecraft:stairs
 minecraft:sandstone_wall,minecraft,false,,,,,,,minecraft:walls
 farmersdelight:sandy_shrub,farmersdelight,false,,,,,,,createaddition:plants
 minecraft:scaffolding,minecraft,false,,,,,,,
-brewinandchewin:scarlet_cheese_wedge,brewinandchewin,false,4,8.00,,false,-1,-1,blue_droplets:salty;forge:food
+brewinandchewin:scarlet_cheese_wedge,brewinandchewin,false,4,8.00,,false,-1,-1,droplets_of_thirst:salty;forge:food
 brewinandchewin:scarlet_cheese_wheel,brewinandchewin,false,,,,,,,
 create:schedule,create,false,,,,,,,
 create:schematic,create,false,,,,,,,
@@ -1882,9 +1882,9 @@ create:small_veridium_bricks,create,false,,,,,,,create:stone_types/veridium
 create:smart_chute,create,false,,,,,,,
 create:smart_fluid_pipe,create,false,,,,,,,
 minecraft:smithing_table,minecraft,false,,,,,,,
-miners_delight:smoked_bat_wing,miners_delight,false,3,0.90,,false,-2,-2,blue_droplets:salty;forge:food
-ends_delight:smoked_dragon_leg,ends_delight,false,14,14.00,"minecraft:regeneration,200,1,1.00",false,-2,-2,blue_droplets:salty;forge:food
-farmersdelight:smoked_ham,farmersdelight,false,10,16.00,,false,-2,-2,blue_droplets:salty;forge:food
+miners_delight:smoked_bat_wing,miners_delight,false,3,0.90,,false,-2,-2,droplets_of_thirst:salty;forge:food
+ends_delight:smoked_dragon_leg,ends_delight,false,14,14.00,"minecraft:regeneration,200,1,1.00",false,-2,-2,droplets_of_thirst:salty;forge:food
+farmersdelight:smoked_ham,farmersdelight,false,10,16.00,,false,-2,-2,droplets_of_thirst:salty;forge:food
 minecraft:smoker,minecraft,false,,,,,,,
 cold_sweat:smokestack,cold_sweat,false,,,,,,,
 minecraft:smooth_basalt,minecraft,false,,,,,,,
@@ -1913,7 +1913,7 @@ cold_sweat:soulspring_lamp,cold_sweat,false,,,,,,,
 minecraft:spawner,minecraft,false,,,,,,,
 minecraft:spectral_arrow,minecraft,false,,,,,,,minecraft:arrows
 create:speedometer,create,false,,,,,,,
-minecraft:spider_eye,minecraft,false,2,3.20,"minecraft:poison,100,0,1.00",false,-3,-3,blue_droplets:salty;cold_sweat:chameleon/taming;forge:food
+minecraft:spider_eye,minecraft,false,2,3.20,"minecraft:poison,100,0,1.00",false,-3,-3,droplets_of_thirst:salty;cold_sweat:chameleon/taming;forge:food
 minecraft:spider_spawn_egg,minecraft,false,,,,,,,
 minecraft:splash_potion,minecraft,true,,,,,,,create:upright_on_belt
 reliquary:splash_potion,reliquary,false,,,,,,,
@@ -2028,8 +2028,8 @@ oceansdelight:tentacle_on_a_stick,oceansdelight,false,3,1.80,,false,,,forge:food
 miners_delight:tentacles,miners_delight,false,1,0.10,,false,,,forge:food
 oceansdelight:tentacles,oceansdelight,false,3,1.80,"minecraft:blindness,600,0,1.00",false,,,forge:food
 minecraft:terracotta,minecraft,false,,,,,,,minecraft:terracotta
-blue_droplets:terracotta_bowl,blue_droplets,false,,,,,,,
-blue_droplets:terracotta_water_bowl,blue_droplets,true,,,,,4,5,
+droplets_of_thirst:terracotta_bowl,droplets_of_thirst,false,,,,,,,
+droplets_of_thirst:terracotta_water_bowl,droplets_of_thirst,true,,,,,4,5,
 cold_sweat:thermolith,cold_sweat,false,,,,,,,
 cold_sweat:thermometer,cold_sweat,false,,,,,,,curios:charm;minecraft:piglin_loved
 create:tiled_glass,create,false,,,,,,,forge:glass;forge:glass/colorless
@@ -2045,7 +2045,7 @@ farmersdelight:tomato_sauce,farmersdelight,false,4,3.20,,false,,,forge:food
 farmersdelight:tomato_seeds,farmersdelight,false,,,,,,,forge:seeds;forge:seeds/tomato;sereneseasons:summer_crops
 minecraft:torch,minecraft,false,,,,,,,
 corn_delight:tortilla,corn_delight,false,3,2.40,,false,,,forge:food;forge:tortilla
-corn_delight:tortilla_chip,corn_delight,false,1,0.20,,false,-2,-2,blue_droplets:salty;forge:food
+corn_delight:tortilla_chip,corn_delight,false,1,0.20,,false,-2,-2,droplets_of_thirst:salty;forge:food
 corn_delight:tortilla_raw,corn_delight,false,1,0.40,,false,,,forge:food
 minecraft:totem_of_undying,minecraft,false,,,,,,,
 create:track,create,false,,,,,,,create:tracks
@@ -2093,7 +2093,7 @@ minecraft:vex_spawn_egg,minecraft,false,,,,,,,
 minecraft:villager_spawn_egg,minecraft,false,,,,,,,
 minecraft:vindicator_spawn_egg,minecraft,false,,,,,,,
 minecraft:vine,minecraft,false,,,,,,,
-brewinandchewin:vodka,brewinandchewin,true,,,,,-1,-1,blue_droplets:salty
+brewinandchewin:vodka,brewinandchewin,true,,,,,-1,-1,droplets_of_thirst:salty
 reliquary:void_tear,reliquary,false,,,,,,,
 create:wand_of_symmetry,create,false,,,,,,,
 minecraft:wandering_trader_spawn_egg,minecraft,false,,,,,,,
@@ -2118,7 +2118,7 @@ minecraft:warped_wart_block,minecraft,false,,,,,,,
 create:warped_window,create,false,,,,,,,
 create:warped_window_pane,create,false,,,,,,,forge:glass_panes
 minecraft:water_bucket,minecraft,true,,,,,4,5,
-miners_delight:water_cup,miners_delight,true,,,,,,,blue_droplets:purity_containers
+miners_delight:water_cup,miners_delight,true,,,,,,,droplets_of_thirst:purity_containers
 create:water_wheel,create,false,,,,,,,
 cold_sweat:waterskin,cold_sweat,false,,,,,,,cold_sweat:boiler_valid;cold_sweat:icebox_valid
 minecraft:waxed_copper_block,minecraft,false,,,,,,,
@@ -2173,7 +2173,7 @@ minecraft:weathered_cut_copper_slab,minecraft,false,,,,,,,minecraft:slabs
 minecraft:weathered_cut_copper_stairs,minecraft,false,,,,,,,minecraft:stairs
 minecraft:weeping_vines,minecraft,false,,,,,,,sereneseasons:autumn_crops;sereneseasons:spring_crops;sereneseasons:summer_crops;sereneseasons:winter_crops
 create:weighted_ejector,create,false,,,,,,,
-miners_delight:weird_caviar,miners_delight,false,5,1.50,,false,-2,-2,blue_droplets:salty;forge:food
+miners_delight:weird_caviar,miners_delight,false,5,1.50,,false,-2,-2,droplets_of_thirst:salty;forge:food
 minecraft:wet_sponge,minecraft,false,,,,,,,
 minecraft:wheat,minecraft,false,,,,,,,forge:crops;forge:crops/wheat;forge:grain;forge:grain/wheat
 farmersdelight:wheat_dough,farmersdelight,false,2,1.20,"minecraft:hunger,600,0,0.30",false,,,forge:dough;forge:dough/wheat;forge:food

@@ -15,8 +15,8 @@ REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 DATA = os.path.join(HERE, "data")
 RULES = os.path.join(HERE, "rules")
 PACKS = os.path.join(REPO, "src", "main", "resources", "datapacks")
-MOD_ID = "blue_droplets"
-PURITY = "blue_droplets:purity"
+MOD_ID = "droplets_of_thirst"
+PURITY = "droplets_of_thirst:purity"
 MAX_PURITY = 5      # niveles 0..5
 DEFAULT_PURITY = 3  # el agua sin componente cuenta como 3
 
@@ -98,7 +98,7 @@ def modrinth_jar(cfg, mod):
         return marker
     url = "https://api.modrinth.com/v2/project/%s/version?%s" % (
         slug, urllib.parse.urlencode({"loaders": '["forge"]', "game_versions": '["1.18.2"]'}))
-    req = urllib.request.Request(url, headers={"User-Agent": "blue-droplets-delight-tooling"})
+    req = urllib.request.Request(url, headers={"User-Agent": "droplets-of-thirst-delight-tooling"})
     versions = json.load(urllib.request.urlopen(req, timeout=60))
     hit = next((v for v in versions if v["version_number"] == version), None)
     if hit is None:
@@ -106,7 +106,7 @@ def modrinth_jar(cfg, mod):
             mod["id"], version, ", ".join(v["version_number"] for v in versions[:6])))
     f = next((x for x in hit["files"] if x.get("primary")), hit["files"][0])
     print("  bajando %s ..." % f["filename"], file=sys.stderr)
-    req = urllib.request.Request(f["url"], headers={"User-Agent": "blue-droplets-delight-tooling"})
+    req = urllib.request.Request(f["url"], headers={"User-Agent": "droplets-of-thirst-delight-tooling"})
     data = urllib.request.urlopen(req, timeout=120).read()
     want = f.get("hashes", {}).get("sha1")
     if want and hashlib.sha1(data).hexdigest() != want:
