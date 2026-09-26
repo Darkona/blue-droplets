@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "items": "minecraft:potion",
+      "components": {
+        "droplets_of_thirst:purity": 1,
+        "potion_contents": {
+          "potion": "minecraft:water"
+        }
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:potion",
+      "components": {
+        "droplets_of_thirst:purity": 2,
+        "potion_contents": {
+          "potion": "minecraft:water"
+        }
+      }
+    }
+  ]
+}

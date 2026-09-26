@@ -10,14 +10,14 @@
     "amount": 1000,
     "id": "minecraft:water",
     "components": {
-      "blue_droplets:purity": 4
+      "droplets_of_thirst:purity": 4
     }
   },
   "output": {
     "count": 1,
     "id": "minecraft:water_bucket",
     "components": {
-      "blue_droplets:purity": 4
+      "droplets_of_thirst:purity": 4
     }
   },
   "strict": true,

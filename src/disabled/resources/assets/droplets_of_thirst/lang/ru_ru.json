@@ -1,0 +1,7 @@
+{
+  "block.droplets_of_thirst.sand_filter": "Песочный фильтр",
+  "droplets_of_thirst.ponder.sand_filter.header": "Очищайте воду с помощью песочного фильтра",
+  "droplets_of_thirst.ponder.sand_filter.text_1": "Песочный фильтр за один этап очищает прокачиваемую через него воду",
+  "droplets_of_thirst.ponder.sand_filter.text_2": "Грязную воду нужно закачивать сверху...",
+  "droplets_of_thirst.ponder.sand_filter.text_3": "и очищенную воду, соответственно, снизу."
+}

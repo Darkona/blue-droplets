@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "items": "minecraft:water_bucket",
+    "components": {
+      "droplets_of_thirst:purity": 4
+    }
+  },
+  "result": {
+    "id": "minecraft:water_bucket",
+    "components": {
+      "droplets_of_thirst:purity": 5
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 300
+}

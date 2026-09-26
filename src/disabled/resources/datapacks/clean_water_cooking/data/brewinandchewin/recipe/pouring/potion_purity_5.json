@@ -14,7 +14,7 @@
     "amount": 250,
     "id": "minecraft:water",
     "components": {
-      "blue_droplets:purity": 5
+      "droplets_of_thirst:purity": 5
     }
   },
   "output": {
@@ -22,7 +22,7 @@
       "minecraft:potion_contents": {
         "potion": "minecraft:water"
       },
-      "blue_droplets:purity": 5
+      "droplets_of_thirst:purity": 5
     },
     "count": 1,
     "id": "minecraft:potion"
