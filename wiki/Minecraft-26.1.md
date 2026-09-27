@@ -1,6 +1,6 @@
 # Minecraft 26.1
 
-Blue Droplets for Minecraft 26.1 runs on **Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer** (branch `26.1`, jar `blue-droplets-beta-26.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
+Droplets of Thirst for Minecraft 26.1 runs on **Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer** (branch `26.1`, jar `droplets-of-thirst-beta-26.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
 
 ---
 
@@ -46,8 +46,8 @@ Tested with Jade 26.1.11, JEI 29.43.0.106, AppleSkin 3.0.9, Serene Seasons 26.1.
 Modpacks can use the API from KubeJS 8 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in [`examples/kubejs`](https://github.com/Darkona/blue-droplets/tree/26.1/examples/kubejs) on the `26.1` branch.
 
 ```js
-var DropletsAPI = Java.loadClass('com.darkona.droplets.api.DropletsAPI')
-var PurityLevel = Java.loadClass('com.darkona.droplets.api.PurityLevel')
+var DropletsAPI = Java.loadClass('com.darkona.dropletsofthirst.api.DropletsAPI')
+var PurityLevel = Java.loadClass('com.darkona.dropletsofthirst.api.PurityLevel')
 
 // Read and change thirst (server scripts)
 ItemEvents.rightClicked('minecraft:clock', event => {
@@ -57,7 +57,7 @@ ItemEvents.rightClicked('minecraft:clock', event => {
 })
 
 // Events: nested classes are loaded with a $
-var DrinkPre = Java.loadClass('com.darkona.droplets.api.event.DrinkEvent$Pre')
+var DrinkPre = Java.loadClass('com.darkona.dropletsofthirst.api.event.DrinkEvent$Pre')
 NativeEvents.onEvent(DrinkPre, event => {
   if (event.purity <= PurityLevel.DIRTY.level() && event.entity.level.dimension.toString() == 'minecraft:the_nether')
     event.canceled = true
@@ -73,7 +73,7 @@ StartupEvents.postInit(() => {
 - Use `getItemPurity`, `getFluidPurity`, `withItemPurity` and `withFluidPurity` instead of the `getPurity` and `withPurity` overloads. KubeJS cannot choose between an `ItemStack` and a `FluidStack` and fails with "the choice of Java method is ambiguous".
 - Top level `const` and `let` are shared by all scripts of one type, so declare the loaded classes with `var` when several files load the same one.
 - A player's tags are `entityTags()`, and night is `isDarkOutside()`.
-- Registered drinks belong in `startup_scripts`. `items.toml`, the `blue_droplets:drinks` data map and `#blue_droplets:no_thirst` still win over them.
+- Registered drinks belong in `startup_scripts`. `items.toml`, the `droplets_of_thirst:drinks` data map and `#droplets_of_thirst:no_thirst` still win over them.
 
 ---
 

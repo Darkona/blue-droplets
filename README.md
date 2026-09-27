@@ -1,8 +1,8 @@
-<p align="center"><img src="art/logo-placeholder-256.png" width="128" alt="Blue Droplets logo (temporary placeholder)"/></p>
+<p align="center"><img src="art/logo-placeholder-256.png" width="128" alt="Droplets of Thirst logo (temporary placeholder)"/></p>
 
-# Blue Droplets
+# Droplets of Thirst
 
-**Blue Droplets** adds thirst to Minecraft. Next to the hunger bar there is a thirst bar: activity and hot places make you thirsty, and you drink water to keep going.
+**Droplets of Thirst** adds thirst to Minecraft. Next to the hunger bar there is a thirst bar: activity and hot places make you thirsty, and you drink water to keep going.
 
 Water is not all the same. Water from a swamp or a puddle can make you sick, and you have to clean it before it is safe to drink. If you only want thirst, the water purity part can be turned off.
 
@@ -17,4 +17,4 @@ This is the **Minecraft 26.3** version, for **NeoForge 26.3.0.36-beta** (NeoForg
 - **Mikul** ([MikulDev](https://github.com/MikulDev)) made the NeoForge 1.21.1 port this mod starts from.
 - Maintained by **Darkona**.
 
-Blue Droplets is released under the [MIT license](LICENSE), which keeps the original Thirst Was Taken copyright notice.
+Droplets of Thirst is released under the [MIT license](LICENSE), which keeps the original Thirst Was Taken copyright notice.

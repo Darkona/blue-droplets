@@ -3,7 +3,7 @@
 # whether it joined, ran the commands and left the log without errors. No screenshot: the check is the log.
 # Adapted from Green Feathers' scripts/client-boot-check.sh.
 #
-# Usage: [GRADLE_ARGS="-PwithCompat"] [COMMANDS='blue_droplets set @s 7 2;effect give @s blue_droplets:quenchness 30']
+# Usage: [GRADLE_ARGS="-PwithCompat"] [COMMANDS='droplets_of_thirst set @s 7 2;effect give @s droplets_of_thirst:quenchness 30']
 #        scripts/client-boot-check.sh [TIMEOUT_SECONDS]
 #   GRADLE_ARGS  extra Gradle flags (see build.gradle); COMMANDS typed into chat after joining, ';'-separated.
 # Generates its own superflat world (run/bootworld) the first time, with a dedicated server run. Every run: noon, clear
@@ -85,7 +85,7 @@ logs() { cat "$LOG" "$GAME_LOG" 2>/dev/null; }
 X="env DISPLAY=:$DISPLAY_NUM XAUTHORITY=$XAUTH xdotool"
 
 # Fatal log lines, including a chat command the game rejected: the setup and COMMANDS must all run.
-FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*blue_droplets|FileNotFoundException: .*blue_droplets|ClientModLoader/LOADING\]: Mod blue_droplets |\[CHAT\] (Incorrect argument for command|Unknown or incomplete command)'
+FAIL_RE='InvalidInjectionException|Mixin apply failed|Preparing crash report|Exception in thread "Render thread"|Failed to load .*droplets_of_thirst|FileNotFoundException: .*droplets_of_thirst|ClientModLoader/LOADING\]: Mod droplets_of_thirst |\[CHAT\] (Incorrect argument for command|Unknown or incomplete command)'
 OK_RE='joined the game'
 verdict="TIMEOUT after ${TIMEOUT}s"
 for _ in $(seq 1 "$TIMEOUT"); do

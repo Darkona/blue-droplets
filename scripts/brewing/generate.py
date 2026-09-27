@@ -2,7 +2,7 @@
 """Regenerates the brewing recipes of the Potion of Quenchness, Minecraft 26.3 format (minecraft:brewing).
 
 Output (rewritten from scratch, stale files are deleted):
-  src/main/resources/data/blue_droplets/recipe/brewing/
+  src/main/resources/data/droplets_of_thirst/recipe/brewing/
 
 Run:  python3 scripts/brewing/generate.py          (rewrite files)
       python3 scripts/brewing/generate.py --check  (fail if the files on disk differ)
@@ -10,24 +10,24 @@ Run:  python3 scripts/brewing/generate.py          (rewrite files)
 Minecraft 26.3 has no brewing registration in code: each mix is a recipe for one container, and each container
 change (gunpowder, dragon's breath) is a recipe for one potion, like vanilla's data/minecraft/recipe/brewing. Names
 follow vanilla: <input container>_<input potion>_<reagent>. Every recipe loads only with gameplay.toml
-effects.quenchnessPotion (load condition blue_droplets:quenchness_potion).
+effects.quenchnessPotion (load condition droplets_of_thirst:quenchness_potion).
 """
 import json
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "src/main/resources/data/blue_droplets/recipe/brewing"
+OUT = ROOT / "src/main/resources/data/droplets_of_thirst/recipe/brewing"
 
-CONDITIONS = [{"type": "blue_droplets:quenchness_potion"}]
+CONDITIONS = [{"type": "droplets_of_thirst:quenchness_potion"}]
 CONTAINERS = ["potion", "splash_potion", "lingering_potion"]
 # input potion, reagent, output potion
 MIXES = [
-    ("minecraft:awkward", "minecraft:prismarine_crystals", "blue_droplets:quenchness"),
-    ("blue_droplets:quenchness", "minecraft:redstone", "blue_droplets:long_quenchness"),
-    ("blue_droplets:quenchness", "minecraft:glowstone_dust", "blue_droplets:strong_quenchness"),
+    ("minecraft:awkward", "minecraft:prismarine_crystals", "droplets_of_thirst:quenchness"),
+    ("droplets_of_thirst:quenchness", "minecraft:redstone", "droplets_of_thirst:long_quenchness"),
+    ("droplets_of_thirst:quenchness", "minecraft:glowstone_dust", "droplets_of_thirst:strong_quenchness"),
 ]
-POTIONS = ["blue_droplets:quenchness", "blue_droplets:long_quenchness", "blue_droplets:strong_quenchness"]
+POTIONS = ["droplets_of_thirst:quenchness", "droplets_of_thirst:long_quenchness", "droplets_of_thirst:strong_quenchness"]
 # input container, reagent, output container
 CONVERSIONS = [
     ("potion", "minecraft:gunpowder", "splash_potion"),

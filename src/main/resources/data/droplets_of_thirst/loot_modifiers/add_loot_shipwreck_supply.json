@@ -1,0 +1,13 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:loot_config"
+    }
+  ],
+  "type": "neoforge:add_table",
+  "condition": {
+    "type": "neoforge:loot_table_id",
+    "loot_table_id": "minecraft:chests/shipwreck_supply"
+  },
+  "table": "droplets_of_thirst:chests/shipwreck_supply"
+}

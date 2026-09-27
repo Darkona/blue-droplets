@@ -1,0 +1,36 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:loot_config"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "brewinandchewin"
+    }
+  ],
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {"droplets_of_thirst:purity":5},
+              "conditions": [{"condition": "droplets_of_thirst:purity_enabled"}]
+            }
+          ],
+          "name": "brewinandchewin:vodka",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 10
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}

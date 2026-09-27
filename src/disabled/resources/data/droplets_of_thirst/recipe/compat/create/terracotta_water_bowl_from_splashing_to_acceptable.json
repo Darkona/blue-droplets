@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "items": "droplets_of_thirst:terracotta_water_bowl",
+      "components": {
+        "droplets_of_thirst:purity": 2
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "droplets_of_thirst:terracotta_water_bowl",
+      "components": {
+        "droplets_of_thirst:purity": 3
+      }
+    }
+  ]
+}

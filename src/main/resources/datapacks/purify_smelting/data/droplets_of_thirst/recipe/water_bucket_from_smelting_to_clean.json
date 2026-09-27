@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "items": "minecraft:water_bucket",
+    "components": {
+      "droplets_of_thirst:purity": 2
+    }
+  },
+  "result": {
+    "id": "minecraft:water_bucket",
+    "components": {
+      "droplets_of_thirst:purity": 4
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 200
+}

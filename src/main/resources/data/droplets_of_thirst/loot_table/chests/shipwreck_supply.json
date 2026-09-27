@@ -1,0 +1,76 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:loot_config"
+    }
+  ],
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "droplets_of_thirst:purity": 3
+              },
+              "condition": {
+                "type": "droplets_of_thirst:purity_enabled"
+              }
+            },
+            {
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "type": "minecraft:set_count"
+            },
+            {
+              "type": "set_potion",
+              "id": "water"
+            }
+          ],
+          "name": "minecraft:potion",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "droplets_of_thirst:purity": 5
+              },
+              "condition": {
+                "type": "droplets_of_thirst:purity_enabled"
+              }
+            },
+            {
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "type": "minecraft:set_count"
+            },
+            {
+              "type": "set_potion",
+              "id": "water"
+            }
+          ],
+          "name": "minecraft:potion",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 20
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}

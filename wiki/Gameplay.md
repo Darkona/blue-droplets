@@ -108,7 +108,7 @@ Water taken from the world gets its purity from where it is:
 - **Running water** is one level better than still water.
 - **Height** helps: water 30 blocks above sea level is one level better, 60 blocks two, 100 blocks three. Deep underground works the same way: 16, 48 and 80 blocks below sea level.
 
-`/blue_droplets debug purity` (operators) shows the purity of the water you look at and why.
+`/droplets_of_thirst debug purity` (operators) shows the purity of the water you look at and why.
 
 Water you pour keeps its purity. Pouring a bucket of sea water into a mountain lake and filling it again gives sea water back, and an infinite source made from poured water takes the worst purity beside it.
 
@@ -120,7 +120,7 @@ Water you pour keeps its purity. Pouring a bucket of sea water into a mountain l
 | Water cauldron over a heat source (campfire, fire, magma block, lava) | Clean (4) |
 | Campfire | One level up per cook |
 | Furnace | Two levels up per cook |
-| Smoker | Two levels up per cook, twice as fast. Off by default: turn on the datapack `mod/blue_droplets:datapacks/purify_smoking` |
+| Smoker | Two levels up per cook, twice as fast. Off by default: turn on the datapack `mod/droplets_of_thirst:datapacks/purify_smoking` |
 
 Cooking works on water bottles, water buckets and terracotta water bowls, and it reaches pure (5). The cauldron never gives pure water.
 
@@ -140,7 +140,7 @@ If purity is turned off by the server, all water is the same, and only thirst ma
 | Terracotta bowl | Clay bowl in a furnace or on a campfire | Fill it with water like a glass bottle, from the world or a cauldron |
 | Terracotta water bowl | Terracotta bowl filled with water | Drink it like a water bottle. It can be purified like a bottle |
 
-Everything is also in the Blue Droplets creative tab, where the water containers are listed once per purity.
+Everything is also in the Droplets of Thirst creative tab, where the water containers are listed once per purity.
 
 ---
 
@@ -167,10 +167,10 @@ Gunpowder turns them into splash potions and dragon's breath into lingering poti
 
 - **Jade**: shows the purity of a water cauldron (the purity its water comes out with) and of water in tanks.
 - **JEI**: a "Hydration" page lists every item that changes thirst, and a "Water Purification" page shows the cauldron.
-- **AppleSkin**: turning off one of AppleSkin's food visuals also turns off its thirst counterpart. Blue Droplets draws its own quenched outline, drink preview and tooltip icons, with or without AppleSkin.
+- **AppleSkin**: turning off one of AppleSkin's food visuals also turns off its thirst counterpart. Droplets of Thirst draws its own quenched outline, drink preview and tooltip icons, with or without AppleSkin.
 - **Serene Seasons**: the season changes the climate of thirst loss.
 - **Traveler's Backpack**: drinking water through the hose hydrates like a water bottle, with the purity of the water in the tank. Water the hose sucks from the world keeps its purity.
 
-Tough As Nails, Legendary Survival Overhaul, Homeostatic, Survive and Thirst Was Taken 2 have their own thirst. With one of them installed the game starts with a warning, and both thirst systems run until one is turned off. On Minecraft 1.x, Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) cannot be installed together with Blue Droplets; on 26.x, where Thirst Was Taken has no build, Thirst Was Reclaimed only gets the warning too.
+Tough As Nails, Legendary Survival Overhaul, Homeostatic, Survive and Thirst Was Taken 2 have their own thirst. With one of them installed the game starts with a warning, and both thirst systems run until one is turned off. On Minecraft 1.x, Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) cannot be installed together with Droplets of Thirst; on 26.x, where Thirst Was Taken has no build, Thirst Was Reclaimed only gets the warning too.
 
-Other versions of Blue Droplets work with more mods, Create and Farmer's Delight among them. See the version table on the [home page](Home).
+Other versions of Droplets of Thirst work with more mods, Create and Farmer's Delight among them. See the version table on the [home page](Home).

@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "blue_droplets:item/terracotta_bowl",
-    "layer1": "blue_droplets:item/terracotta_water_bowl_liquid"
-  }
-}

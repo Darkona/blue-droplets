@@ -1,6 +1,6 @@
 # Minecraft 26.2
 
-Blue Droplets for Minecraft 26.2 runs on **NeoForge 26.2.0.88 or newer** (branch `26.2`, jar `blue-droplets-beta-26.2-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
+Droplets of Thirst for Minecraft 26.2 runs on **NeoForge 26.2.0.88 or newer** (branch `26.2`, jar `droplets-of-thirst-beta-26.2-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
 
 ---
 
@@ -26,15 +26,15 @@ Blue Droplets for Minecraft 26.2 runs on **NeoForge 26.2.0.88 or newer** (branch
 ## Modpack makers
 
 - **Pack format**: datapacks declare `"min_format": 107, "max_format": 107` in `pack.mcmeta`. Recipe ingredients use the same format as 26.3 (`"neoforge:ingredient_type": "neoforge:components"`).
-- **Brewing**: the Potion of Quenchness mixes are registered in code, not as `minecraft:brewing` recipes, so a datapack cannot change them and there is no `blue_droplets:quenchness_potion` condition. To use another ingredient, set `effects.quenchnessPotion = false` and add your own mix through a mod that registers brewing mixes. Gunpowder and dragon's breath turn the potions into splash and lingering ones, as for vanilla potions.
+- **Brewing**: the Potion of Quenchness mixes are registered in code, not as `minecraft:brewing` recipes, so a datapack cannot change them and there is no `droplets_of_thirst:quenchness_potion` condition. To use another ingredient, set `effects.quenchnessPotion = false` and add your own mix through a mod that registers brewing mixes. Gunpowder and dragon's breath turn the potions into splash and lingering ones, as for vanilla potions.
 - **Loot**: loot tables and global loot modifiers use the loot format before 26.3: a `functions` list with `"function"` as the key of each function, and a `conditions` list with `"condition"` as the key. A chest loot modifier:
 
   ```json
   {
-    "neoforge:conditions": [{ "type": "blue_droplets:loot_config" }],
+    "neoforge:conditions": [{ "type": "droplets_of_thirst:loot_config" }],
     "type": "neoforge:add_table",
     "conditions": [{ "condition": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/simple_dungeon" }],
-    "table": "blue_droplets:chests/simple_dungeon"
+    "table": "droplets_of_thirst:chests/simple_dungeon"
   }
   ```
 
@@ -42,13 +42,13 @@ Blue Droplets for Minecraft 26.2 runs on **NeoForge 26.2.0.88 or newer** (branch
 
   ```json
   "functions": [
-    { "function": "minecraft:set_components", "components": { "blue_droplets:purity": 3 }, "conditions": [{ "condition": "blue_droplets:purity_enabled" }] },
+    { "function": "minecraft:set_components", "components": { "droplets_of_thirst:purity": 3 }, "conditions": [{ "condition": "droplets_of_thirst:purity_enabled" }] },
     { "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 3 } },
     { "function": "minecraft:set_potion", "id": "minecraft:water" }
   ]
   ```
 
-- **Drink values**: the `blue_droplets:drinks` data map also has `reliquary:emperor_chalice` (4, 5, purity 5) and `reliquary:potion` (2, 3), each with a `neoforge:mod_loaded` condition.
+- **Drink values**: the `droplets_of_thirst:drinks` data map also has `reliquary:emperor_chalice` (4, 5, purity 5) and `reliquary:potion` (2, 3), each with a `neoforge:mod_loaded` condition.
 
 ---
 

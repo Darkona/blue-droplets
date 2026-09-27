@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:quenchness_potion"
+    }
+  ],
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "droplets_of_thirst:quenchness"
+    }
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  },
+  "output": {
+    "id": "minecraft:splash_potion",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "droplets_of_thirst:strong_quenchness"
+      }
+    }
+  }
+}

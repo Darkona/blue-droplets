@@ -1,6 +1,6 @@
 # Minecraft 1.21.1
 
-Blue Droplets for Minecraft 1.21.1 runs on **NeoForge 21.1.219 or newer** (branch `1.21.1-neoforge`, jar `blue-droplets-beta-1.21.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3.
+Droplets of Thirst for Minecraft 1.21.1 runs on **NeoForge 21.1.219 or newer** (branch `1.21.1-neoforge`, jar `droplets-of-thirst-beta-1.21.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3.
 
 1.21.1 is the version with the most integrations: Create, Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary and KubeJS, besides the Jade, JEI, AppleSkin, Serene Seasons and Traveler's Backpack support that 26.3 has. Most of those mods have no 26.x version yet. This page describes those integrations and the other differences from 26.3.
 
@@ -10,7 +10,7 @@ Blue Droplets for Minecraft 1.21.1 runs on **NeoForge 21.1.219 or newer** (branc
 
 - **Sprinting**: with 3 droplets or less you cannot start a sprint. A sprint already in progress goes on.
 - **The Nether**: the Nether multiplier and the hot climate of dirty water apply in dimensions whose type is ultra-warm, as the Nether.
-- **Thirst Was Taken worlds** load with the players' thirst and the purity of their water. The four purity levels of Thirst Was Taken move to the six of Blue Droplets. Cauldrons do not keep their purity, since cauldrons no longer store one.
+- **Thirst Was Taken worlds** load with the players' thirst and the purity of their water. The four purity levels of Thirst Was Taken move to the six of Droplets of Thirst. Cauldrons do not keep their purity, since cauldrons no longer store one.
 - **With Create installed**, cooking stops at clean (4), and pure water (5) only comes from the Sand Filter. Without Create, cooking reaches pure as on 26.3.
 
 ### Create
@@ -54,7 +54,7 @@ A vampire gets thirsty like anyone else, but only blood quenches its thirst. Its
 - Blood has no purity, so it never makes a vampire sick, and it never counts towards Overhydrated.
 - **Vampirism**: every drink of blood restores thirst: biting a creature, blood bottles, blood containers and blood food. One point of blood gives `vampirism.thirstPerBlood` thirst (1.0: the blood bar and the thirst bar are both 20, so a full blood refill is a full thirst bar) and quenched by the blood's saturation (`vampirism.quenchedPerBlood`). Altars and commands that fill the blood bar do not count. Vampirism stops a vampire from drinking a bottle while its blood bar is full, so blood and thirst usually go down together.
 - **Supernatural**: its blood bottle gives thirst 6 and quenched 6. Supernatural has no bite, so bottles are the way to drink blood.
-- Items in the item tag `blue_droplets:blood` hydrate vampires with their values in the drinks data map. By default it holds `#supernatural:blood`.
+- Items in the item tag `droplets_of_thirst:blood` hydrate vampires with their values in the drinks data map. By default it holds `#supernatural:blood`.
 
 ### Reliquary
 
@@ -78,7 +78,7 @@ These keys exist on 1.21.1 and not on 26.3.
 | `coldsweat.bodyTemperatureCurve` | `["-100,0.8", "0,1.0", "50,1.3", "100,2.0", "150,3.0"]` | `"bodyTemperature,multiplier"` points in ascending order (Cold Sweat units: 0 comfortable, 100 burning, -100 freezing), straight lines between them, flat beyond the ends, times `depletion.multiplier` |
 | `coldsweat.drinkCooling` | `0.0` | How much drinking water (containers, by hand, the Traveler's Backpack hose) cools the body, in Cold Sweat units. `0` = off. Cold Sweat's own waterskin is left alone: it already changes the temperature by its water |
 | `coldsweat.drinkCoolingTicks` | `0` | `0`: `drinkCooling` lowers the body temperature once, and it drifts back with the surroundings. More: it lowers the base temperature for that many ticks instead, like Cold Sweat's cold foods (another drink restarts it) |
-| `delight.kettleMinPurity` | `2` | Lowest water purity that kettles take (0-5): the HerbalBrews tea kettle, the Brewery brewing stations and any block in `blue_droplets:rejects_dirty_water`. `0` = any water |
+| `delight.kettleMinPurity` | `2` | Lowest water purity that kettles take (0-5): the HerbalBrews tea kettle, the Brewery brewing stations and any block in `droplets_of_thirst:rejects_dirty_water`. `0` = any water |
 | `delight.worldPurityWaterSources` | `true` | Taps and sinks of Extra Delight, the Let's Do sink and the Farm & Charm timber well give water with the world's purity where they stand. `false` = water without a purity, read as `defaultPurity` |
 | `reliquary.emperorChaliceCooldown` | `0` | Ticks before the Emperor's Chalice can be used again after a drink. `0` = no cooldown |
 | `vampirism.thirstPerBlood` | `1.0` | Thirst a Vampirism vampire gets per point of blood it drinks (0-20). `1.0` = a full blood refill fills the thirst bar |
@@ -106,23 +106,23 @@ These keys exist on 1.21.1 and not on 26.3.
 ### Data formats
 
 - **Pack format**: datapacks declare `"pack_format": 48` in `pack.mcmeta`.
-- **Recipe ingredients**: NeoForge custom ingredients use `"type"`, not `"neoforge:ingredient_type"`: `{"type": "neoforge:components", "items": "minecraft:potion", "components": {"minecraft:potion_contents": {"potion": "minecraft:water"}, "blue_droplets:purity": 3}}`. Results are `{"id": ..., "count": 1, "components": {...}}`.
+- **Recipe ingredients**: NeoForge custom ingredients use `"type"`, not `"neoforge:ingredient_type"`: `{"type": "neoforge:components", "items": "minecraft:potion", "components": {"minecraft:potion_contents": {"potion": "minecraft:water"}, "droplets_of_thirst:purity": 3}}`. Results are `{"id": ..., "count": 1, "components": {...}}`.
 - **Brewing**: the Potion of Quenchness mixes are registered in code (NeoForge's `RegisterBrewingRecipesEvent`), not as data. To use another ingredient, set `effects.quenchnessPotion = false` and add your own mix with KubeJS or a mod.
-- **Loot**: loot tables and modifiers use the loot format before 26.3 (`functions` and `conditions` lists, `"function"` and `"condition"` keys), as shown on [Minecraft 26.2](Minecraft-26.2#modpack-makers). The chest loot modifiers are listed in `data/neoforge/loot_modifiers/global_loot_modifiers.json`, which carries the `blue_droplets:loot_config` condition. The ones for Brewin' and Chewin' and Farmer's Respite drinks (`add_loot_*_bc`, `add_loot_*_fr`) load only with those mods.
+- **Loot**: loot tables and modifiers use the loot format before 26.3 (`functions` and `conditions` lists, `"function"` and `"condition"` keys), as shown on [Minecraft 26.2](Minecraft-26.2#modpack-makers). The chest loot modifiers are listed in `data/neoforge/loot_modifiers/global_loot_modifiers.json`, which carries the `droplets_of_thirst:loot_config` condition. The ones for Brewin' and Chewin' and Farmer's Respite drinks (`add_loot_*_bc`, `add_loot_*_fr`) load only with those mods.
 - **Attributes**: the `minecraft:attribute_modifiers` component is `{"modifiers": [...]}`, and Overhydrated modifies `minecraft:generic.movement_speed`.
 
 ### Defaults with other mods
 
 | Tag | Default on 1.21.1 |
 |---|---|
-| `blue_droplets:purity_containers` (item) | Create builder's tea, Collector's Reap teas, Cold Sweat filled waterskin, Miner's Delight water cup |
-| `blue_droplets:salty` (item) | The four vanilla items, plus the salty, pickled and strong alcoholic items of the Delight addons |
-| `blue_droplets:blood` (item) | `#supernatural:blood`. The only items that hydrate a vampire (Vampirism, Supernatural), with their drinks data map values |
-| `blue_droplets:carries_purity` (fluid) | `#minecraft:water`, Create tea. Fluids made in a Create basin from water keep the water's purity |
-| `blue_droplets:rejects_dirty_water` (block) | Brewery wooden, copper and netherite brewing stations. Blocks filled by clicking with water that boil it: water below `delight.kettleMinPurity` is refused |
-| `blue_droplets:pauses_thirst` (mob_effect) | Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated |
+| `droplets_of_thirst:purity_containers` (item) | Create builder's tea, Collector's Reap teas, Cold Sweat filled waterskin, Miner's Delight water cup |
+| `droplets_of_thirst:salty` (item) | The four vanilla items, plus the salty, pickled and strong alcoholic items of the Delight addons |
+| `droplets_of_thirst:blood` (item) | `#supernatural:blood`. The only items that hydrate a vampire (Vampirism, Supernatural), with their drinks data map values |
+| `droplets_of_thirst:carries_purity` (fluid) | `#minecraft:water`, Create tea. Fluids made in a Create basin from water keep the water's purity |
+| `droplets_of_thirst:rejects_dirty_water` (block) | Brewery wooden, copper and netherite brewing stations. Blocks filled by clicking with water that boil it: water below `delight.kettleMinPurity` is refused |
+| `droplets_of_thirst:pauses_thirst` (mob_effect) | Farmer's Delight Nourishment, Let's Do Bakery Stuffed, Let's Do Brewery Saturated |
 
-The `blue_droplets:drinks` data map ships entries for the mods listed under [Farmer's Delight](#farmers-delight-and-its-addons), Create, Cold Sweat and Reliquary, each with a `neoforge:mod_loaded` condition.
+The `droplets_of_thirst:drinks` data map ships entries for the mods listed under [Farmer's Delight](#farmers-delight-and-its-addons), Create, Cold Sweat and Reliquary, each with a `neoforge:mod_loaded` condition.
 
 On 1.21.1 the tag folders are singular, as on 26.3: `tags/item/`, `tags/block/`, `tags/fluid/`, `tags/mob_effect/`.
 
@@ -130,16 +130,16 @@ On 1.21.1 the tag folders are singular, as on 26.3: `tags/item/`, `tags/block/`,
 
 | Pack id | Default | Recipes |
 |---|---|---|
-| `mod/blue_droplets:datapacks/purify_smelting` | enabled | Furnace: two levels up per cook, up to clean (4) with Create and up to pure (5) without it |
-| `mod/blue_droplets:datapacks/purify_campfire` | enabled | Campfire: one level up per cook, with the same caps |
-| `mod/blue_droplets:datapacks/purify_smoking` | disabled | Smoker: as the furnace, twice as fast |
-| `mod/blue_droplets:datapacks/purify_cooking_pot` | enabled | Farmer's Delight cooking pot and Miner's Delight copper pot: one level up per cook, with the campfire caps, for bottles, buckets, terracotta bowls and, with Cold Sweat, waterskins. Loads only with Farmer's Delight |
-| `mod/blue_droplets:datapacks/clean_water_cooking` | enabled | Recipes of Farmer's Delight addons that use water accept only water of a minimum purity: 2 for boiled water, 3 for cold. It overwrites the addon recipes under their own ids (`extradelight:vat/kimchi_item`, `farm_and_charm:pot_cooking/nettle_tea`, …), each loaded only with its mod |
+| `mod/droplets_of_thirst:datapacks/purify_smelting` | enabled | Furnace: two levels up per cook, up to clean (4) with Create and up to pure (5) without it |
+| `mod/droplets_of_thirst:datapacks/purify_campfire` | enabled | Campfire: one level up per cook, with the same caps |
+| `mod/droplets_of_thirst:datapacks/purify_smoking` | disabled | Smoker: as the furnace, twice as fast |
+| `mod/droplets_of_thirst:datapacks/purify_cooking_pot` | enabled | Farmer's Delight cooking pot and Miner's Delight copper pot: one level up per cook, with the campfire caps, for bottles, buckets, terracotta bowls and, with Cold Sweat, waterskins. Loads only with Farmer's Delight |
+| `mod/droplets_of_thirst:datapacks/clean_water_cooking` | enabled | Recipes of Farmer's Delight addons that use water accept only water of a minimum purity: 2 for boiled water, 3 for cold. It overwrites the addon recipes under their own ids (`extradelight:vat/kimchi_item`, `farm_and_charm:pot_cooking/nettle_tea`, …), each loaded only with its mod |
 
 - Where a recipe changes with Create, its id ends in `_with_create` (result capped at 4, loads only with Create) or `_without_create` (loads only without Create, reaches 5), as in `water_bottle_from_smelting_to_clean_with_create`. The `pure` recipes exist only without Create and have no suffix. Recipes that exist only without Create carry `{"type": "neoforge:not", "value": {"type": "neoforge:mod_loaded", "modid": "create"}}`.
 - The `purify_cooking_pot` recipes end in `_manual_only`, so Slice & Dice does not turn them into Create basin recipes.
-- The Create recipes live in the mod's own data (`blue_droplets:compat/create/...`) and load only with Create and with purity on: fan washing (`create:splashing`), heated mixing (`create:mixing`, `heat_requirement: heated`), cactus compacting, and the Item Drain for terracotta bowls. Cactus compacting has a second copy, `blue_droplets:compat/create/cactus_without_purity`, with `{"type": "neoforge:not", "value": {"type": "blue_droplets:purity_enabled"}}`, so it still gives plain water with purity off.
-- The cooking packs also purify Cold Sweat's filled waterskin (`blue_droplets:filled_waterskin_from_smelting_to_murky`, …), loaded only with Cold Sweat. There is no recipe for a waterskin with no purity stored, but waterskins filled with Blue Droplets installed always get one.
+- The Create recipes live in the mod's own data (`droplets_of_thirst:compat/create/...`) and load only with Create and with purity on: fan washing (`create:splashing`), heated mixing (`create:mixing`, `heat_requirement: heated`), cactus compacting, and the Item Drain for terracotta bowls. Cactus compacting has a second copy, `droplets_of_thirst:compat/create/cactus_without_purity`, with `{"type": "neoforge:not", "value": {"type": "droplets_of_thirst:purity_enabled"}}`, so it still gives plain water with purity off.
+- The cooking packs also purify Cold Sweat's filled waterskin (`droplets_of_thirst:filled_waterskin_from_smelting_to_murky`, …), loaded only with Cold Sweat. There is no recipe for a waterskin with no purity stored, but waterskins filled with Droplets of Thirst installed always get one.
 - With JEI, the "Water Purification" page also shows the Sand Filter, one step per purity with the `compat.toml` amount and maximum.
 
 ---
@@ -159,8 +159,8 @@ Minimum versions when installed: Create 6.0.6, Farmer's Delight 1.3, Cold Sweat 
 Modpacks can use the API from KubeJS 7 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in [`examples/kubejs`](https://github.com/Darkona/blue-droplets/tree/1.21.1-neoforge/examples/kubejs) on the `1.21.1-neoforge` branch, tested with KubeJS 2101.7.2.
 
 ```js
-var DropletsAPI = Java.loadClass('com.darkona.droplets.api.DropletsAPI')
-var PurityLevel = Java.loadClass('com.darkona.droplets.api.PurityLevel')
+var DropletsAPI = Java.loadClass('com.darkona.dropletsofthirst.api.DropletsAPI')
+var PurityLevel = Java.loadClass('com.darkona.dropletsofthirst.api.PurityLevel')
 
 // Read and change thirst (server scripts)
 ItemEvents.rightClicked('minecraft:clock', event => {
@@ -175,7 +175,7 @@ ItemEvents.foodEaten('minecraft:golden_carrot', event => {
 })
 
 // Events: nested classes are loaded with a $
-var DrinkPre = Java.loadClass('com.darkona.droplets.api.event.DrinkEvent$Pre')
+var DrinkPre = Java.loadClass('com.darkona.dropletsofthirst.api.event.DrinkEvent$Pre')
 NativeEvents.onEvent(DrinkPre, event => {
   if (event.purity <= PurityLevel.DIRTY.level() && event.entity.level.dimension.toString() == 'minecraft:the_nether')
     event.canceled = true
@@ -189,7 +189,7 @@ StartupEvents.postInit(() => {
 
 - Use `getItemPurity`, `getFluidPurity`, `withItemPurity` and `withFluidPurity` instead of the `getPurity` and `withPurity` overloads. KubeJS cannot choose between an `ItemStack` and a `FluidStack` and fails with "the choice of Java method is ambiguous".
 - Top level `const` and `let` are shared by all scripts of one type, so declare the loaded classes with `var` when several files load the same one.
-- Registered drinks belong in `startup_scripts` (`StartupEvents.postInit`, when the items exist). `items.toml`, the `blue_droplets:drinks` data map and `#blue_droplets:no_thirst` still win over them.
+- Registered drinks belong in `startup_scripts` (`StartupEvents.postInit`, when the items exist). `items.toml`, the `droplets_of_thirst:drinks` data map and `#droplets_of_thirst:no_thirst` still win over them.
 - Exhaustion modifiers take a JavaScript function and a string id: `DropletsAPI.registerExhaustionModifier('kubejs:night', (player, multiplier) => player.level.isNight() ? multiplier * 0.75 : multiplier)`.
 - In KubeJS, `entity.level` and `level.dimension` are properties, not methods.
 

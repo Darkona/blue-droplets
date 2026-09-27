@@ -1,6 +1,6 @@
 # Configuration
 
-All TOML files live in `config/blue_droplets/`. They are NeoForge configs: missing keys are added with their default and a comment, values out of range go back to the default, invalid list entries are removed, and edits are picked up while the game runs. When a server's file changes, the server rebuilds the drink tables, recomputes every player's thirst loss and sends the new values to all players, with no `/reload` or relog.
+All TOML files live in `config/droplets_of_thirst/`. They are NeoForge configs: missing keys are added with their default and a comment, values out of range go back to the default, invalid list entries are removed, and edits are picked up while the game runs. When a server's file changes, the server rebuilds the drink tables, recomputes every player's thirst loss and sends the new values to all players, with no `/reload` or relog.
 
 Values that belong to an item, biome or dimension live in datapacks instead: see [Modpack makers](Modpack-Makers).
 
@@ -24,29 +24,29 @@ The gameplay files are common configs, not per-world server configs: they exist 
 
 ## Commands
 
-All commands need operator rights (permission level 2). `/thirst` is an alias of `/blue_droplets`.
+All commands need operator rights (permission level 2). `/thirst` is an alias of `/droplets_of_thirst`.
 
 | Command | What it does |
 |---|---|
-| `/blue_droplets query <player>` | Shows the player's thirst and quenched |
-| `/blue_droplets set <player> <thirst> <quenched>` | Sets them (0-20; quenched is capped at thirst) |
-| `/blue_droplets enable <players> <true\|false>` | Turns thirst on or off for those players. Off, their thirst does not change |
-| `/blue_droplets debug exhaustion [player]` | Mode, every factor of the thirst loss multiplier, the `thirst_drain` attribute, the total, exhaustion, thirst and quenched |
-| `/blue_droplets debug purity` | Purity of the water you look at (or the block at your feet): poured water, salt water rule, base and where it comes from, altitude, still/running and biome deltas, cap |
-| `/blue_droplets config check` | Every config problem found, or "no problems found" |
-| `/blue_droplets infer <item>` | How recipe inference estimates the item: each recipe, each ingredient's value, multiplier, result count, the estimate and why it would not be used |
+| `/droplets_of_thirst query <player>` | Shows the player's thirst and quenched |
+| `/droplets_of_thirst set <player> <thirst> <quenched>` | Sets them (0-20; quenched is capped at thirst) |
+| `/droplets_of_thirst enable <players> <true\|false>` | Turns thirst on or off for those players. Off, their thirst does not change |
+| `/droplets_of_thirst debug exhaustion [player]` | Mode, every factor of the thirst loss multiplier, the `thirst_drain` attribute, the total, exhaustion, thirst and quenched |
+| `/droplets_of_thirst debug purity` | Purity of the water you look at (or the block at your feet): poured water, salt water rule, base and where it comes from, altitude, still/running and biome deltas, cap |
+| `/droplets_of_thirst config check` | Every config problem found, or "no problems found" |
+| `/droplets_of_thirst infer <item>` | How recipe inference estimates the item: each recipe, each ingredient's value, multiplier, result count, the estimate and why it would not be used |
 
-<!-- SCREENSHOT: chat output of /blue_droplets debug exhaustion in a desert at noon -->
+<!-- SCREENSHOT: chat output of /droplets_of_thirst debug exhaustion in a desert at noon -->
 
 ### Checking a config
 
-Problems that a single key cannot show (unknown effect or item ids, overlapping altitude bands, curve points out of order, invalid keyword patterns, `slowRegenMinThirst` above `fullRegenMinThirst`) are logged as one warning each time the world loads, after `/reload` and after a config file changes. Bad entries are skipped and nothing crashes. `/blue_droplets config check` lists the same problems.
+Problems that a single key cannot show (unknown effect or item ids, overlapping altitude bands, curve points out of order, invalid keyword patterns, `slowRegenMinThirst` above `fullRegenMinThirst`) are logged as one warning each time the world loads, after `/reload` and after a config file changes. Bad entries are skipped and nothing crashes. `/droplets_of_thirst config check` lists the same problems.
 
 ---
 
 ## Moving from Thirst Was Taken
 
-This section is for Minecraft 1.x. Thirst Was Taken has no build for Minecraft 26.x, so the 26.x versions of Blue Droplets do not move any old files, worlds or configs.
+This section is for Minecraft 1.x. Thirst Was Taken has no build for Minecraft 26.x, so the 26.x versions of Droplets of Thirst do not move any old files, worlds or configs.
 
 On first start, if a new file does not exist yet, its values are copied from the old files (`common.toml`, `item_settings.toml`, `container.toml`, `keyword.toml`, also from Thirst Was Taken's `config/thirst/`). The old files are then renamed to `*.toml.old` and no longer read. A warning in the log lists what was moved. Modpacks that ship `defaultconfigs/` must use the new file names and keys.
 
@@ -73,7 +73,7 @@ On first start, if a new file does not exist yet, its values are copied from the
 | `container.toml` `Containers` | `items.toml` `containers.containers` |
 | `keyword.toml` (all keys) | `items.toml` `keywords.*` (`enabled`, `drinkThirst`, `drinkQuenched`, `soupThirst`, …, `blacklist`, `drink`, `soup`, `fruit`) |
 
-On Minecraft 1.x, Thirst Was Taken had four purity levels. Its purity values move to the six of Blue Droplets: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
+On Minecraft 1.x, Thirst Was Taken had four purity levels. Its purity values move to the six of Droplets of Thirst: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
 
 ---
 
@@ -81,11 +81,11 @@ On Minecraft 1.x, Thirst Was Taken had four purity levels. Its purity values mov
 
 ### `[depletion]`
 
-Thirst loss per tick is `activity × M`, where `M = climate × fire protection × fire resistance × rain/thunder × day/night × sun × altitude × water × Hydrated × blue_droplets:thirst_drain`. Every `exhaustionPerPoint` (4.0) of exhaustion removes one quenched point, or one thirst point when quenched is 0. `M` (except the attribute) is recomputed once a second per player and right away after armor, effect, dimension or config changes. `/blue_droplets debug exhaustion` shows each factor.
+Thirst loss per tick is `activity × M`, where `M = climate × fire protection × fire resistance × rain/thunder × day/night × sun × altitude × water × Hydrated × droplets_of_thirst:thirst_drain`. Every `exhaustionPerPoint` (4.0) of exhaustion removes one quenched point, or one thirst point when quenched is 0. `M` (except the attribute) is recomputed once a second per player and right away after armor, effect, dimension or config changes. `/droplets_of_thirst debug exhaustion` shows each factor.
 
 | Key | Default | Meaning |
 |---|---|---|
-| `mode` | `MIRROR_FOOD` | Where activity comes from. `MIRROR_FOOD`: the exhaustion vanilla adds to hunger, including what other mods add. `OWN`: Blue Droplets counts the activities of `[depletion.activity]` itself, with vanilla's numbers by default, without reading hunger |
+| `mode` | `MIRROR_FOOD` | Where activity comes from. `MIRROR_FOOD`: the exhaustion vanilla adds to hunger, including what other mods add. `OWN`: Droplets of Thirst counts the activities of `[depletion.activity]` itself, with vanilla's numbers by default, without reading hunger |
 | `basalPerTick` | `0.0` | Exhaustion added every tick, even idle (0-1) |
 | `exhaustionPerPoint` | `4.0` | Exhaustion that removes one point (0.1-100) |
 | `nauseaPerTick` | `0.06` | Exhaustion per tick while nauseous |
@@ -116,7 +116,7 @@ Thirst loss per tick is `activity × M`, where `M = climate × fire protection �
 
 The temperature is vanilla's biome temperature at the player's position, which gets colder with height, as vanilla uses it for snow. With Serene Seasons it is the temperature of the current season (`compat.toml` `[sereneseasons]`).
 
-A dimension type can replace the whole climate factor with `thirst_multiplier` in the `blue_droplets:dimension_water` data map (see [Modpack makers](Modpack-Makers#blue_dropletsdimension_water)). Blue Droplets sets the End to `0.6`, as cold as a snowy biome.
+A dimension type can replace the whole climate factor with `thirst_multiplier` in the `droplets_of_thirst:dimension_water` data map (see [Modpack makers](Modpack-Makers#droplets_of_thirstdimension_water)). Droplets of Thirst sets the End to `0.6`, as cold as a snowy biome.
 
 ### `[depletion.activity]`
 
@@ -183,7 +183,7 @@ The maximum thirst stays 20: the HUD, its overlays and the commands assume it.
 |---|---|---|
 | `dehydrationMultiplier` | `1.0` | Multiplier (0-10) of the exhaustion the Dehydration effect adds every tick (0.005 per level) |
 | `quenchnessIntervalTicks` | `40` | Quenchness restores (level) thirst and (level) quenched every this many ticks (1-1200) |
-| `quenchnessPotion` | `true` | Brewing recipes of the Potion of Quenchness. It is the load condition `blue_droplets:quenchness_potion` of those recipes: a change applies when datapacks load (a restart or `/reload`), and only the server's value counts |
+| `quenchnessPotion` | `true` | Brewing recipes of the Potion of Quenchness. It is the load condition `droplets_of_thirst:quenchness_potion` of those recipes: a change applies when datapacks load (a restart or `/reload`), and only the server's value counts |
 | `hydratedMultiplier` | `0.5` | Thirst loss with Hydrated, applied once per level (0.5: Hydrated I halves it, II quarters it; 0-1) |
 | `waterBreathingReducesThirst` | `false` | While fully underwater with Water Breathing or Conduit Power, thirst loss is also multiplied by `underwaterBreathingMultiplier` |
 | `underwaterBreathingMultiplier` | `0.5` | See above (0-10), on top of `climate.underwater` |
@@ -199,7 +199,7 @@ The maximum thirst stays 20: the HUD, its overlays and the commands assume it.
 
 ### `[overhydration]`
 
-Thirst and quenched drunk past full (items, hand drinking, rain, `DropletsAPI.drink`, but not the Quenchness effect) add up as overflow. At the threshold the player gets `blue_droplets:overhydrated` (10% slower movement per level) and the overflow starts over.
+Thirst and quenched drunk past full (items, hand drinking, rain, `DropletsAPI.drink`, but not the Quenchness effect) add up as overflow. At the threshold the player gets `droplets_of_thirst:overhydrated` (10% slower movement per level) and the overflow starts over.
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -243,7 +243,7 @@ Water poured into the world keeps its purity, so sea water poured into a meadow 
 - Anything that takes or drinks water there reads that purity: bottles, bowls, buckets, drinking by hand, dispensers, the Traveler's Backpack hose.
 - The infinite source that forms between two poured sources takes the worst purity beside it. Picking up a poured source hands its purity to the water sources beside it, so the one that refills its place is not clean either.
 - A remembered position that no longer holds a water source is ignored, and forgotten when read. Water placed in other ways (commands, mods that place the block directly) has the world's purity, unless it is next to poured water.
-- It is stored per chunk with the world and never sent to clients. `/blue_droplets debug purity` shows "poured water" when it applies.
+- It is stored per chunk with the world and never sent to clients. `/droplets_of_thirst debug purity` shows "poured water" when it applies.
 
 ### Thirst only (purity off)
 
@@ -254,7 +254,7 @@ For the thirst bar alone, set `general.enabled = false`. The server's value is s
 - Drinking any water restores thirst and never gives purity effects, including the Dehydration of `hotDirtyWater`. `DrinkEvent` reports `NO_PURITY`.
 - The purification recipes are not loaded, and the JEI "Water Purification" page is hidden. Recipes are checked when datapacks load, so this part applies after `/reload` or a restart.
 - The terracotta bowls stay, as plain water containers, because registered items cannot depend on a config.
-- `/blue_droplets debug purity` only says that purity is off. For other mods, `DropletsAPI.isPurityEnabled()` returns `false` and `withPurity` returns an unchanged copy.
+- `/droplets_of_thirst debug purity` only says that purity is off. For other mods, `DropletsAPI.isPurityEnabled()` returns `false` and `withPurity` returns an unchanged copy.
 - The other keys of this file do nothing.
 - Purity already stored on items from before is ignored and not shown. Such items may not stack with new water until they are used up.
 
@@ -271,7 +271,7 @@ One list per purity: `contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `p
 | `clean` | `[]` |
 | `pure` | `[]` |
 
-- Any mob effect id works, also from other mods, including `blue_droplets:dehydration` and `blue_droplets:hydrated` (for example `"blue_droplets:hydrated,600,0,100"` in `pure`). An unknown id is skipped and listed by `/blue_droplets config check`.
+- Any mob effect id works, also from other mods, including `droplets_of_thirst:dehydration` and `droplets_of_thirst:hydrated` (for example `"droplets_of_thirst:hydrated,600,0,100"` in `pure`). An unknown id is skipped and listed by `/droplets_of_thirst config check`.
 - Nausea lasts 10 seconds (200 ticks) per drink by default. Vanilla only builds up the screen distortion while more than 3 seconds of Nausea are left, and needs 7.5 seconds to reach its full strength, so a shorter Nausea is barely a wobble. Drinking again resets it to 10 seconds; it does not add up.
 - One roll per drink is shared by the whole list: an entry applies when the roll is below its chance. So a 40% entry always comes together with the 100% ones.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
@@ -279,7 +279,7 @@ One list per purity: `contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `p
 
 ### `[hotDirtyWater]`
 
-Drinking water of low purity (a container or by hand) in a hot climate also gives `blue_droplets:dehydration`, on top of the `[effects]` list. It is decided when drinking.
+Drinking water of low purity (a container or by hand) in a hot climate also gives `droplets_of_thirst:dehydration`, on top of the `[effects]` list. It is decided when drinking.
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -314,8 +314,8 @@ Only read with Serene Seasons installed.
 |---|---|---|
 | `overrides.drinks` / `overrides.foods` | `[]` | `[["namespace:item" or "#tag", thirst, quenched], ...]`. They win over datapacks and other mods. Thirst -20 to 20, quenched -20 or more. Negative values remove them (salty) |
 | `overrides.blacklist` | `[]` | Items that never restore thirst |
-| `containers.containers` | `[]` | Drinks that carry a water purity, added to the item tag `blue_droplets:purity_containers` |
-| `salty.thirstPenalty` / `salty.quenchedPenalty` | `-2` / `-2` | Values (-20 to 20) of items in the item tag `blue_droplets:salty` that get none from overrides, datapacks or other mods |
+| `containers.containers` | `[]` | Drinks that carry a water purity, added to the item tag `droplets_of_thirst:purity_containers` |
+| `salty.thirstPenalty` / `salty.quenchedPenalty` | `-2` / `-2` | Values (-20 to 20) of items in the item tag `droplets_of_thirst:salty` that get none from overrides, datapacks or other mods |
 | `keywords.enabled` | `false` | Give values to items whose translation key matches a pattern |
 | `keywords.drinkThirst` / `drinkQuenched` | `10` / `14` | Values of items matching `keywords.drink` |
 | `keywords.soupThirst` / `soupQuenched` | `4` / `5` | Values of items matching `keywords.soup` |
@@ -340,7 +340,7 @@ Off by default. When on, the server gives values to items that have none from an
 - Loops (ingot to block to ingot) are cut, and so is anything deeper than `maxDepth`.
 - Items that are drunk go to the drink table and the rest to the food table. Tooltips show "(est.)". The values are sent to clients like the rest of the table.
 
-It runs when the world loads, after `/reload` and when `items.toml` changes, never while playing. The log shows one line with how many items were estimated and how long it took. Recipes that could not be read are listed in the config warning and in `/blue_droplets config check`.
+It runs when the world loads, after `/reload` and when `items.toml` changes, never while playing. The log shows one line with how many items were estimated and how long it took. Recipes that could not be read are listed in the config warning and in `/droplets_of_thirst config check`.
 
 ---
 

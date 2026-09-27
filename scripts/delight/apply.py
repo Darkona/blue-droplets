@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Genera, de forma idempotente, los datos de Blue Droplets a partir de los CSV.
+"""Genera, de forma idempotente, los datos de Droplets of Thirst a partir de los CSV.
 
   datapacks/clean_water_cooking   una receta sobrescrita por fila activa de data/recipes.csv
   (los packs purify_* y las recetas de Create los genera scripts/purify/generate.py)
-  data/blue_droplets/data_maps/item/drinks.json   entradas de data/items.csv de TODOS los mods, vanilla y
-                    blue_droplets incluidos (sin condicion los dos ultimos, con mod_loaded el resto). Las claves
+  data/droplets_of_thirst/data_maps/item/drinks.json   entradas de data/items.csv de TODOS los mods, vanilla y
+                    droplets_of_thirst incluidos (sin condicion los dos ultimos, con mod_loaded el resto). Las claves
                     que no estan en el CSV (tags, mods no volcados) se dejan como estan
-  data/blue_droplets/tags/item/salty.json y no_thirst.json   desde data/items.csv
+  data/droplets_of_thirst/tags/item/salty.json y no_thirst.json   desde data/items.csv
 
   --check          no escribe: compara y sale con 1 si algo difiere
   --source jar|repo  de donde salen las recetas originales (por defecto jar en cache)
@@ -20,19 +20,19 @@ import common as c
 import generate_keg_pouring as keg
 
 PACK_CLEAN = os.path.join(c.PACKS, "clean_water_cooking")
-MAIN_DATA = os.path.join(c.REPO, "src", "main", "resources", "data", "blue_droplets")
+MAIN_DATA = os.path.join(c.REPO, "src", "main", "resources", "data", "droplets_of_thirst")
 DRINKS = os.path.join(MAIN_DATA, "data_maps", "item", "drinks.json")
 TAG_SALTY = os.path.join(MAIN_DATA, "tags", "item", "salty.json")
 TAG_NO_THIRST = os.path.join(MAIN_DATA, "tags", "item", "no_thirst.json")
 # Datos de mods sin version para esta version de Minecraft: fuera del jar, en src/disabled (no es un source set)
-DISABLED_DATA = os.path.join(c.REPO, "src", "disabled", "resources", "data", "blue_droplets")
+DISABLED_DATA = os.path.join(c.REPO, "src", "disabled", "resources", "data", "droplets_of_thirst")
 DISABLED = {path: os.path.join(DISABLED_DATA, os.path.relpath(path, MAIN_DATA)) for path in (DRINKS, TAG_SALTY, TAG_NO_THIRST)}
 
 
 def active_namespaces():
     """Namespaces cuyos datos van al jar: mods.json active_namespaces (los mods con version para esta Minecraft)."""
     cfg, _ = c.load_mods()
-    return set(cfg.get("active_namespaces", ["minecraft", "blue_droplets"]))
+    return set(cfg.get("active_namespaces", ["minecraft", "droplets_of_thirst"]))
 
 
 def is_active(key, active):
@@ -123,7 +123,7 @@ def build_clean(source, problems, info):
     if not files:
         # sin recetas (ningun mod de mods.json en esta version) no hay pack: sync_dir lo borra
         return files
-    files["pack.mcmeta"] = mcmeta("Blue Droplets: recipes of Farmer's Delight addons need clean water")
+    files["pack.mcmeta"] = mcmeta("Droplets of Thirst: recipes of Farmer's Delight addons need clean water")
     return files
 
 
@@ -160,7 +160,7 @@ def build_drinks(rows, problems, active):
         if th == 0 and qu == 0:
             continue
         entry = {}
-        if r["mod"] not in ("minecraft", "blue_droplets"):
+        if r["mod"] not in ("minecraft", "droplets_of_thirst"):
             entry["neoforge:conditions"] = [mod_loaded(r["mod"])]
         entry["thirst"], entry["quenched"] = th, qu
         for k, v in cur.get(r["item_id"], {}).items():  # campos que el CSV no maneja (por ejemplo purity)
@@ -287,11 +287,11 @@ def main():
         print(("diferencia: " if args.check else "escrito: ") + d)
     if not diffs:
         print("sin cambios")
-    java = os.path.join(c.REPO, "src", "main", "java", "com", "darkona", "droplets", "BlueDroplets.java")
+    java = os.path.join(c.REPO, "src", "main", "java", "com", "darkona", "dropletsofthirst", "DropletsOfThirst.java")
     src = open(java, encoding="utf-8").read() if os.path.exists(java) else ""
     missing = [p for p in ("clean_water_cooking",) if clean and '"%s"' % p not in src]
     if missing:
-        print("\nFalta en Java (no lo toco): registrar en BlueDroplets.addPacks (PackSource.BUILT_IN): " + ", ".join(missing))
+        print("\nFalta en Java (no lo toco): registrar en DropletsOfThirst.addPacks (PackSource.BUILT_IN): " + ", ".join(missing))
     if problems or (args.check and diffs):
         return 1
     return 0

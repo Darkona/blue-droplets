@@ -1,6 +1,6 @@
-# Blue Droplets
+# Droplets of Thirst
 
-Blue Droplets adds a thirst bar and water purity to Minecraft. Activity and heat make you thirsty, and the water you find is not always safe: swamp or sea water makes you sick until you clean it. It is built for modpacks, with every number in config files or datapacks, and it continues [Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod) by ghen.
+Droplets of Thirst adds a thirst bar and water purity to Minecraft. Activity and heat make you thirsty, and the water you find is not always safe: swamp or sea water makes you sick until you clean it. It is built for modpacks, with every number in config files or datapacks, and it continues [Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod) by ghen.
 
 <!-- SCREENSHOT: the HUD in survival, thirst bar (blue droplets) above the hunger bar, player holding a water bottle -->
 

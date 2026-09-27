@@ -10,7 +10,7 @@ aplican). En cada objeto, de forma recursiva:
 
 "neoforge:conditions" (condiciones de carga del fichero entero) no cambia.
 
-  python3 scripts/loot/convert.py FICHERO_O_CARPETA...   (sin argumentos: los datos de Blue Droplets)
+  python3 scripts/loot/convert.py FICHERO_O_CARPETA...   (sin argumentos: los datos de Droplets of Thirst)
   --check   no escribe: sale con 1 si algun fichero cambiaria
 """
 import argparse
@@ -19,7 +19,7 @@ import os
 import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DEFAULT = [os.path.join(REPO, "src", "main", "resources", "data", "blue_droplets", d) for d in ("loot_table", "loot_modifiers")]
+DEFAULT = [os.path.join(REPO, "src", "main", "resources", "data", "droplets_of_thirst", d) for d in ("loot_table", "loot_modifiers")]
 
 
 def convert(node):

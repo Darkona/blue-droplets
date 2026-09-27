@@ -1,0 +1,27 @@
+{
+  "values": {
+    "droplets_of_thirst:terracotta_water_bowl": {"thirst": 4, "quenched": 5},
+    "minecraft:apple": {"thirst": 2, "quenched": 2},
+    "minecraft:beetroot": {"thirst": 1, "quenched": 1},
+    "minecraft:beetroot_soup": {"thirst": 3, "quenched": 3},
+    "minecraft:carrot": {"thirst": 1, "quenched": 1},
+    "minecraft:chorus_fruit": {"thirst": 2, "quenched": 2},
+    "minecraft:enchanted_golden_apple": {"thirst": 2, "quenched": 2},
+    "minecraft:glow_berries": {"thirst": 2, "quenched": 2},
+    "minecraft:golden_apple": {"thirst": 2, "quenched": 2},
+    "minecraft:golden_carrot": {"thirst": 1, "quenched": 1},
+    "minecraft:honey_bottle": {"thirst": 3, "quenched": 4},
+    "minecraft:melon_slice": {"thirst": 4, "quenched": 4},
+    "minecraft:milk_bucket": {"thirst": 4, "quenched": 4},
+    "minecraft:mushroom_stew": {"thirst": 2, "quenched": 2},
+    "minecraft:poisonous_potato": {"thirst": -3, "quenched": -3},
+    "minecraft:potato": {"thirst": 2, "quenched": 2},
+    "minecraft:potion": {"thirst": 4, "quenched": 5},
+    "minecraft:pufferfish": {"thirst": -3, "quenched": -3},
+    "minecraft:rabbit_stew": {"thirst": 2, "quenched": 2},
+    "minecraft:rotten_flesh": {"thirst": -3, "quenched": -3},
+    "minecraft:spider_eye": {"thirst": -3, "quenched": -3},
+    "minecraft:suspicious_stew": {"thirst": 2, "quenched": 2},
+    "minecraft:sweet_berries": {"thirst": 2, "quenched": 2}
+  }
+}

@@ -1,4 +1,4 @@
-# Blue Droplets "casual" preset: copy these keys into config/blue_droplets/purity.toml.
+# Droplets of Thirst "casual" preset: copy these keys into config/droplets_of_thirst/purity.toml.
 
 [effects]
 contaminated = ["minecraft:nausea,200,0,50", "minecraft:hunger,600,0,50"]

@@ -1,0 +1,31 @@
+package com.darkona.dropletsofthirst.foundation.common.effect;
+
+import com.darkona.dropletsofthirst.api.event.ThirstChangeEvent;
+import com.darkona.dropletsofthirst.foundation.common.capability.ModAttachment;
+import com.darkona.dropletsofthirst.foundation.config.GameplayConfig;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+
+/**
+ * Every {@code effects.quenchnessIntervalTicks}, restores (level) thirst and quenched, like Regeneration for health.
+ */
+public class QuenchnessEffect extends MobEffect {
+    public QuenchnessEffect(MobEffectCategory category, int color) {
+        super(category, color);
+    }
+
+    @Override
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
+        if (entity instanceof Player player)
+            player.getData(ModAttachment.PLAYER_THIRST).hydrate(player, amplifier + 1, amplifier + 1, false, ThirstChangeEvent.Cause.DRINK);
+        return true;
+    }
+
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+        return duration % GameplayConfig.QUENCHNESS_INTERVAL_TICKS.get() == 0;
+    }
+}

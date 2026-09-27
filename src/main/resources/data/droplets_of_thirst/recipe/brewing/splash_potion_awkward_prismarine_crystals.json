@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:quenchness_potion"
+    }
+  ],
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "reagent": {
+    "item": "minecraft:prismarine_crystals"
+  },
+  "output": {
+    "id": "minecraft:splash_potion",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "droplets_of_thirst:quenchness"
+      }
+    }
+  }
+}

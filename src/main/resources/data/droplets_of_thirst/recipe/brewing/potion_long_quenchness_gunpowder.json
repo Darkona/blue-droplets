@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:quenchness_potion"
+    }
+  ],
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "droplets_of_thirst:long_quenchness"
+    }
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  },
+  "output": {
+    "id": "minecraft:splash_potion",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "droplets_of_thirst:long_quenchness"
+      }
+    }
+  }
+}
