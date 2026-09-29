@@ -3,7 +3,7 @@ modLoader="javafml" #mandatory
 loaderVersion="${loader_version_range}" #mandatory
 license="${mod_license}"
 
-issueTrackerURL="https://github.com/Darkona/blue-droplets/issues"
+issueTrackerURL="https://github.com/Darkona/droplets-of-thirst/issues"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
@@ -12,7 +12,7 @@ displayName="${mod_name}"
 # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 
-displayURL="https://github.com/Darkona/blue-droplets"
+displayURL="https://github.com/Darkona/droplets-of-thirst"
 logoFile="logo.png"
 credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka, Mikul (NeoForge 1.21.1 port) and the Thirst Was Taken contributors. Optional integrations use the public APIs of Jade, JEI, Serene Seasons, Traveler's Backpack and others; none of their code or assets is included."
 authors="${mod_authors}"

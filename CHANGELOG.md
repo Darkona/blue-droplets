@@ -2,9 +2,9 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
-## 1.0.0 beta (Minecraft 26.1, NeoForge), unreleased
+## 26.1-1.0.0 (Minecraft 26.1, NeoForge), unreleased
 
-The 26.1 port has every feature of 1.0.0 for 1.21.1 (next section) that does not depend on a mod without a 26.1 build, with the differences below. The jar is `droplets-of-thirst-beta-26.1-1.0.0.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer.
+The 26.1 port has every feature of 1.21.1-1.0.0 (next section) that does not depend on a mod without a 26.1 build, with the differences below. The jar is `droplets-of-thirst-26.1-1.0.0.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer.
 
 ### Minecraft 26.1
 
@@ -43,12 +43,12 @@ These mods have no NeoForge build for Minecraft 26.1. Their integration code, mi
 - API: the same classes and methods as on 1.21.1, with `Identifier` in place of `ResourceLocation`. The HUD layer is still `droplets_of_thirst:thirst_level`. `[26.1]`
 - Game tests (`./gradlew runGameTestServer`): 53 without optional mods, 61 with `-PwithCompat` and 59 with `-PwithKubeJS`. Minecraft 26.1 has no `@GameTestHolder`: each test method is registered as a test function and a test instance, and the game test server runs `--tests droplets_of_thirst:*`. Tests of the fluid capability use NeoForge's transfer API; a new test eats an apple through its food component. `scripts/client-boot-check.sh` takes no screenshot: it passes when the client joins, runs the commands and leaves the log clean. `[26.1]`
 
-## 1.0.0 beta (Minecraft 1.21.1, NeoForge), unreleased
+## 1.21.1-1.0.0 (Minecraft 1.21.1, NeoForge), unreleased
 
 ### Rebrand: Droplets of Thirst
 
 - Renamed from Blue Droplets to **Droplets of Thirst**: mod id `blue_droplets` is now `droplets_of_thirst`, package `com.darkona.droplets` is now `com.darkona.dropletsofthirst`, and the jar and Maven artifacts are `droplets-of-thirst` and `droplets-of-thirst-api` (group `com.darkona.dropletsofthirst`). There is no migration from the Blue Droplets test builds: `blue_droplets:` items, blocks, effects, components and player data in their worlds are lost, `config/blue_droplets/` is not read (copy the files to `config/droplets_of_thirst/` by hand), and datapacks, resource packs and KubeJS scripts that use `blue_droplets:` ids or the `com.darkona.droplets` classes need updating. Saves and configs from Thirst Was Taken still migrate as before. `[1.21.1]`
-- The mod is now **Droplets of Thirst** (mod id `droplets_of_thirst`, package `com.darkona.dropletsofthirst`), a continuation of ghen's Thirst Was Taken. The jar is `droplets-of-thirst-beta-1.21.1-1.0.0.jar` (`modid-[alpha|beta]-<minecraft>-<version>`, with a hyphen: mod ids cannot have one). `[1.21.1]`
+- The mod is now **Droplets of Thirst** (mod id `droplets_of_thirst`, package `com.darkona.dropletsofthirst`), a continuation of ghen's Thirst Was Taken. The jar is `droplets-of-thirst-1.21.1-1.0.0.jar` (`modid-<minecraft>-<version>`, with a hyphen: mod ids cannot have one). `[1.21.1]`
 - All ids moved from `thirst:` to `droplets_of_thirst:` (items, blocks, effects, recipes, loot tables, loot modifiers, damage type, the `loot_config` condition, translation keys). Datapacks and resource packs that target `thirst:` ids need updating. `[1.21.1]`
 - The command is now `/droplets_of_thirst`; `/thirst` still works as an alias. `[1.21.1]`
 - Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) are marked incompatible: the game refuses to start with both installed and explains why. `[1.21.1]`
@@ -274,7 +274,7 @@ These mods have no NeoForge build for Minecraft 26.1. Their integration code, mi
 - New Spanish translation (`es_es`). Removed the translation of the Wooden Water Bowl, an item that no longer exists. `[1.21.1]`
 - `loot.enabled` (`gameplay.toml`) documents that it is checked when datapacks load: a change applies after `/reload` or on the next world load. `[1.21.1]`
 - Removed the empty access transformer file and its declaration (thirst#234). `[1.21.1]`
-- Issue tracker and homepage links now point to https://github.com/Darkona/blue-droplets. `[1.21.1]`
+- Issue tracker and homepage links now point to https://github.com/Darkona/droplets-of-thirst. `[1.21.1]`
 - Added this changelog. `[1.21.1]`
 
 ### For developers
