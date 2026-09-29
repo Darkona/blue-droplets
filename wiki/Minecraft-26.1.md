@@ -1,6 +1,6 @@
 # Minecraft 26.1
 
-Droplets of Thirst for Minecraft 26.1 runs on **Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer** (branch `26.1`, jar `droplets-of-thirst-beta-26.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
+Droplets of Thirst for Minecraft 26.1 runs on **Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer** (branch `26.1`, jar `droplets-of-thirst-26.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
 
 ---
 
@@ -43,7 +43,7 @@ Tested with Jade 26.1.11, JEI 29.43.0.106, AppleSkin 3.0.9, Serene Seasons 26.1.
 
 ## KubeJS
 
-Modpacks can use the API from KubeJS 8 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in [`examples/kubejs`](https://github.com/Darkona/blue-droplets/tree/26.1/examples/kubejs) on the `26.1` branch.
+Modpacks can use the API from KubeJS 8 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in [`examples/kubejs`](https://github.com/Darkona/droplets-of-thirst/tree/26.1/examples/kubejs) on the `26.1` branch.
 
 ```js
 var DropletsAPI = Java.loadClass('com.darkona.dropletsofthirst.api.DropletsAPI')
@@ -80,5 +80,5 @@ StartupEvents.postInit(() => {
 ## Mod developers
 
 - Declare the dependency in `neoforge.mods.toml` with `type = "optional"`.
-- The Maven version is `beta-26.1-1.0.0`.
+- The Maven version is `26.1-1.0.0`.
 - The API is the same as on 26.3.

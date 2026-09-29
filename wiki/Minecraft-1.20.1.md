@@ -1,6 +1,6 @@
 # Minecraft 1.20.1
 
-Droplets of Thirst for Minecraft 1.20.1 is one jar, `droplets-of-thirst-beta-1.20.1-1.0.0.jar` (branch `1.20.1`), that runs on **Forge 47.1.3 or newer** and on **NeoForge 47.1**. Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
+Droplets of Thirst for Minecraft 1.20.1 is one jar, `droplets-of-thirst-1.20.1-1.0.0.jar` (branch `1.20.1`), that runs on **Forge 47.1.3 or newer** and on **NeoForge 47.1**. Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
 
 It has most integrations of the 1.21.1 version (Create, Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary), which 26.3 does not have. What they do and their config keys are on [Minecraft 1.21.1](Minecraft-1.21.1). This page lists what is different from 26.3 and from 1.21.1.
 
@@ -86,4 +86,4 @@ Not on 1.20.1:
 - The API has the same classes and methods, with Forge types: events are `@Cancelable` Forge events on `MinecraftForge.EVENT_BUS`, `FluidStack` is `net.minecraftforge.fluids.FluidStack`, names use `ResourceLocation`, and `DropletsAPI.registerWaveEffect` takes a `MobEffect`.
 - Declare the dependency in `mods.toml` with `mandatory = false` (FML 47 has no `type`).
 - The thirst bar is the GUI overlay `droplets_of_thirst:thirst_level`, right above `food_level`. Cancel it with `RenderGuiOverlayEvent.Pre`.
-- The Maven version is `beta-1.20.1-1.0.0`.
+- The Maven version is `1.20.1-1.0.0`.

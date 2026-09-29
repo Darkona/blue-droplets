@@ -1,6 +1,6 @@
 # Minecraft 1.19.2
 
-Droplets of Thirst for Minecraft 1.19.2 runs on **Forge 43.5.2 or newer** (branch `1.19.2`, jar `droplets-of-thirst-beta-1.19.2-1.0.0.jar`). Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
+Droplets of Thirst for Minecraft 1.19.2 runs on **Forge 43.5.2 or newer** (branch `1.19.2`, jar `droplets-of-thirst-1.19.2-1.0.0.jar`). Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
 
 It works like the [1.20.1 version](Minecraft-1.20.1): purity is NBT, recipes and loot use the Forge formats, and it has most integrations of [1.21.1](Minecraft-1.21.1). This page lists what is different from 1.20.1.
 
@@ -55,4 +55,4 @@ Not on 1.19.2:
 - The API is the same as on 1.20.1: Forge events on `MinecraftForge.EVENT_BUS`, Forge's `FluidStack`, `ResourceLocation`.
 - The thirst bar is the GUI overlay `droplets_of_thirst:thirst_level`, above the food bar, drawn with a `PoseStack`. Cancel it with `RenderGuiOverlayEvent.Pre`.
 - Network: one `SimpleChannel`, `droplets_of_thirst:main`.
-- Declare the dependency in `mods.toml` with `mandatory = false`. The Maven version is `beta-1.19.2-1.0.0`.
+- Declare the dependency in `mods.toml` with `mandatory = false`. The Maven version is `1.19.2-1.0.0`.

@@ -326,7 +326,7 @@ Two optional presets change the balance. The default is Droplets of Thirst's own
 | Part | casual | hardcore |
 |---|---|---|
 | Built-in datapack, disabled by default: enable it when creating the world or with `/datapack enable` | `mod/droplets_of_thirst:datapacks/preset_casual`: Nether climate factor 1.5 instead of 3 | `mod/droplets_of_thirst:datapacks/preset_hardcore`: Nether climate factor 4 |
-| TOML keys to copy into `config/droplets_of_thirst/` ([`examples/presets/`](https://github.com/Darkona/blue-droplets/tree/main/examples/presets) in the repository) | `multiplier` 0.8, riding ×0.5, dehydration stops at 5 hearts on Normal and never kills, drinking by hand on, no poison: contaminated water 50% nausea and hunger, dirty 25%, murky 10% | `multiplier` 1.6, weather, day, sun and water multipliers, riding ×1, a rain sip every 2 s, drinking by hand with a 1 s cooldown, no running water bonus, world water starts contaminated, contaminated water 60% poison |
+| TOML keys to copy into `config/droplets_of_thirst/` ([`examples/presets/`](https://github.com/Darkona/droplets-of-thirst/tree/main/examples/presets) in the repository) | `multiplier` 0.8, riding ×0.5, dehydration stops at 5 hearts on Normal and never kills, drinking by hand on, no poison: contaminated water 50% nausea and hunger, dirty 25%, murky 10% | `multiplier` 1.6, weather, day, sun and water multipliers, riding ×1, a rain sip every 2 s, drinking by hand with a 1 s cooldown, no running water bonus, world water starts contaminated, contaminated water 60% poison |
 
 The TOML files only list the keys they change. Droplets of Thirst adds the rest with their defaults.
 

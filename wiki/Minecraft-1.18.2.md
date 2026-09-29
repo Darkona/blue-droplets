@@ -1,6 +1,6 @@
 # Minecraft 1.18.2
 
-Droplets of Thirst for Minecraft 1.18.2 runs on **Forge 40.2.3 or newer** (branch `1.18.2`, jar `droplets-of-thirst-beta-1.18.2-1.0.0.jar`). 40.2.3 is the first Forge 40 that applies the mixins of the bundled MixinExtras. Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
+Droplets of Thirst for Minecraft 1.18.2 runs on **Forge 40.2.3 or newer** (branch `1.18.2`, jar `droplets-of-thirst-1.18.2-1.0.0.jar`). 40.2.3 is the first Forge 40 that applies the mixins of the bundled MixinExtras. Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
 
 It works like the [1.19.2 version](Minecraft-1.19.2), which works like [1.20.1](Minecraft-1.20.1): purity is NBT, recipes and loot use the Forge formats, and it has most integrations of [1.21.1](Minecraft-1.21.1). This page lists what is different from 1.19.2.
 
@@ -53,4 +53,4 @@ Not on 1.18.2, besides what 1.19.2 lacks (Supernatural vampires, Farm & Charm, H
 - The API is the same as on 1.19.2, with Forge 40 names. The events are Forge 40 `PlayerEvent`s: `getPlayer()` gives the player.
 - The thirst bar is the overlay "Droplets of Thirst Thirst" of Forge's `OverlayRegistry`, right above the food bar. Hide it with `OverlayRegistry.enableOverlay` or cancel it in `RenderGameOverlayEvent.PreLayer`.
 - The loot modifier `droplets_of_thirst:add_table` has a JSON serializer (Forge 40 has no codecs for loot modifiers). Its files are the same as on 1.20.1.
-- Declare the dependency in `mods.toml` with `mandatory = false`. The Maven version is `beta-1.18.2-1.0.0`.
+- Declare the dependency in `mods.toml` with `mandatory = false`. The Maven version is `1.18.2-1.0.0`.

@@ -31,4 +31,4 @@ Every version has the same thirst, water purity, effects, config files and comma
 | [1.19.2](Minecraft-1.19.2) | Forge 43.5.2 or newer | `1.19.2` | Purity in NBT, Create 0.5.1, fewer addons, no Supernatural vampires |
 | [1.18.2](Minecraft-1.18.2) | Forge 40.2.3 or newer | `1.18.2` | As 1.19.2, with Forge 40 biome tags and fewer addons |
 
-Downloads, the changelog and the source code are on the [GitHub repository](https://github.com/Darkona/blue-droplets).
+Downloads, the changelog and the source code are on the [GitHub repository](https://github.com/Darkona/droplets-of-thirst).

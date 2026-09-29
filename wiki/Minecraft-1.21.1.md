@@ -1,6 +1,6 @@
 # Minecraft 1.21.1
 
-Droplets of Thirst for Minecraft 1.21.1 runs on **NeoForge 21.1.219 or newer** (branch `1.21.1-neoforge`, jar `droplets-of-thirst-beta-1.21.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3.
+Droplets of Thirst for Minecraft 1.21.1 runs on **NeoForge 21.1.219 or newer** (branch `1.21.1-neoforge`, jar `droplets-of-thirst-1.21.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3.
 
 1.21.1 is the version with the most integrations: Create, Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary and KubeJS, besides the Jade, JEI, AppleSkin, Serene Seasons and Traveler's Backpack support that 26.3 has. Most of those mods have no 26.x version yet. This page describes those integrations and the other differences from 26.3.
 
@@ -156,7 +156,7 @@ Minimum versions when installed: Create 6.0.6, Farmer's Delight 1.3, Cold Sweat 
 
 ## KubeJS
 
-Modpacks can use the API from KubeJS 7 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in [`examples/kubejs`](https://github.com/Darkona/blue-droplets/tree/1.21.1-neoforge/examples/kubejs) on the `1.21.1-neoforge` branch, tested with KubeJS 2101.7.2.
+Modpacks can use the API from KubeJS 7 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in [`examples/kubejs`](https://github.com/Darkona/droplets-of-thirst/tree/1.21.1-neoforge/examples/kubejs) on the `1.21.1-neoforge` branch, tested with KubeJS 2101.7.2.
 
 ```js
 var DropletsAPI = Java.loadClass('com.darkona.dropletsofthirst.api.DropletsAPI')
@@ -201,4 +201,4 @@ StartupEvents.postInit(() => {
 - Fluids go through `IFluidHandler` and `FluidStack`. A water cauldron seen through NeoForge's fluid capability reports its water with the cauldron purity.
 - `EatEvent` is also posted when another mod calls `Player#eat` directly.
 - Built-in bar styles include the vampire style (priority 400).
-- The Maven version is `beta-1.21.1-1.0.0`. Declare the dependency in `neoforge.mods.toml` with `type = "optional"`.
+- The Maven version is `1.21.1-1.0.0`. Declare the dependency in `neoforge.mods.toml` with `type = "optional"`.

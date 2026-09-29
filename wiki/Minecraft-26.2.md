@@ -1,6 +1,6 @@
 # Minecraft 26.2
 
-Droplets of Thirst for Minecraft 26.2 runs on **NeoForge 26.2.0.88 or newer** (branch `26.2`, jar `droplets-of-thirst-beta-26.2-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
+Droplets of Thirst for Minecraft 26.2 runs on **NeoForge 26.2.0.88 or newer** (branch `26.2`, jar `droplets-of-thirst-26.2-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
 
 ---
 
@@ -65,5 +65,5 @@ Tested with Jade 26.2.10, JEI 30.38.0.231, AppleSkin 3.0.10, Serene Seasons 26.1
 ## Mod developers
 
 - Declare the dependency in `neoforge.mods.toml` with `type = "optional"`. FML for 26.2 is version 11.
-- The Maven version is `beta-26.2-1.0.0`.
+- The Maven version is `26.2-1.0.0`.
 - The API is the same as on 26.3.
