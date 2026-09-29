@@ -1,0 +1,7 @@
+{
+  "block.droplets_of_thirst.sand_filter": "砂濾器",
+  "droplets_of_thirst.ponder.sand_filter.header": "用砂濾器淨化水",
+  "droplets_of_thirst.ponder.sand_filter.text_1": "砂濾器會淨化鄰近泵入的水",
+  "droplets_of_thirst.ponder.sand_filter.text_2": "髒水需要從上方泵入...",
+  "droplets_of_thirst.ponder.sand_filter.text_3": "淨化後的水會從底部泵出"
+}

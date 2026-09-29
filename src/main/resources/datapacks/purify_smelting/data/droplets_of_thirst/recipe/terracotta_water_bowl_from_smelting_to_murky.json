@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:purity_enabled"
+    }
+  ],
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "items": "droplets_of_thirst:terracotta_water_bowl",
+    "components": {
+      "droplets_of_thirst:purity": 0
+    }
+  },
+  "result": {
+    "id": "droplets_of_thirst:terracotta_water_bowl",
+    "components": {
+      "droplets_of_thirst:purity": 2
+    }
+  },
+  "experience": 0.35,
+  "cookingtime": 200
+}

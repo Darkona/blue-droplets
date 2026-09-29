@@ -1,0 +1,12 @@
+{
+  "block.droplets_of_thirst.sand_filter": "Filtro de arena",
+  "droplets_of_thirst.ponder.tag.purification": "Purificación",
+  "droplets_of_thirst.ponder.tag.purification.description": "Componentes que purifican el agua",
+  "droplets_of_thirst.ponder.sand_filter.header": "Purificar agua con un filtro de arena",
+  "droplets_of_thirst.ponder.sand_filter.text_1": "Un filtro de arena purifica un nivel el agua que se bombea a través de él",
+  "droplets_of_thirst.ponder.sand_filter.text_2": "El agua sucia se bombea por arriba...",
+  "droplets_of_thirst.ponder.sand_filter.text_3": "y el agua purificada se saca por abajo",
+  "droplets_of_thirst.ponder.sand_filter.text_4": "Una llave inglesa gira el filtro: el agua siempre sale por el lado hacia el que mira la base",
+  "droplets_of_thirst.ponder.sand_filter.text_5": "Los filtros en fila mirando hacia el mismo lado se pasan el agua, un nivel más pura en cada uno",
+  "droplets_of_thirst.jei.purification.sand_filter": "Cada filtro suma %s, hasta %s"
+}

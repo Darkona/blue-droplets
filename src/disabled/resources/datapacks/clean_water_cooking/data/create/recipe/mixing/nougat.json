@@ -40,7 +40,7 @@
               "minecraft:water"
             ],
             "components": {
-              "blue_droplets:purity": 0
+              "droplets_of_thirst:purity": 0
             }
           },
           {
@@ -49,7 +49,7 @@
               "minecraft:water"
             ],
             "components": {
-              "blue_droplets:purity": 1
+              "droplets_of_thirst:purity": 1
             }
           },
           {
@@ -58,7 +58,7 @@
               "minecraft:water"
             ],
             "components": {
-              "blue_droplets:purity": 2
+              "droplets_of_thirst:purity": 2
             }
           }
         ]

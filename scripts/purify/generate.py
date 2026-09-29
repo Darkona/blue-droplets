@@ -2,7 +2,7 @@
 """Regenerates the water purification recipes for the 6 purity levels (0-5), Minecraft 26.1 formats.
 
 Outputs (all rewritten from scratch, stale files are deleted):
-  src/main/resources/datapacks/purify_{campfire,smelting,smoking}/data/blue_droplets/recipe/
+  src/main/resources/datapacks/purify_{campfire,smelting,smoking}/data/droplets_of_thirst/recipe/
 
 Run:  python3 scripts/purify/generate.py          (rewrite files)
       python3 scripts/purify/generate.py --check  (fail if the files on disk differ)
@@ -22,14 +22,14 @@ RES = ROOT / "src/main/resources"
 MAX_PURITY = 5
 DEFAULT_PURITY = 3
 LEVELS = ["contaminated", "dirty", "murky", "acceptable", "clean", "pure"]
-KEY = "blue_droplets:purity"
+KEY = "droplets_of_thirst:purity"
 
 POTION = {"minecraft:potion_contents": {"potion": "minecraft:water"}}
 # name, item id, extra components
 ITEMS = [
     ("water_bottle", "minecraft:potion", POTION),
     ("water_bucket", "minecraft:water_bucket", {}),
-    ("terracotta_water_bowl", "blue_droplets:terracotta_water_bowl", {}),
+    ("terracotta_water_bowl", "droplets_of_thirst:terracotta_water_bowl", {}),
 ]
 # method: (recipe type, step, cooking time, pack)
 METHODS = {
@@ -38,7 +38,7 @@ METHODS = {
     "smoking": ("minecraft:smoking", 2, 100, "purify_smoking"),
 }
 
-C_ENABLED = {"type": "blue_droplets:purity_enabled"}
+C_ENABLED = {"type": "droplets_of_thirst:purity_enabled"}
 
 
 def with_purity(extra, p):
@@ -87,7 +87,7 @@ def build_cooking(item_id, extra, method, r, srcs):
 def cooking_files():
     out = {}
     for method, (_, step, _, pack) in METHODS.items():
-        base = RES / "datapacks" / pack / "data/blue_droplets/recipe"
+        base = RES / "datapacks" / pack / "data/droplets_of_thirst/recipe"
         for name, item_id, extra in ITEMS:
             for r, srcs in sorted(groups(step).items()):
                 out[base / (rid(name, method, r) + ".json")] = build_cooking(item_id, extra, method, r, srcs)
@@ -100,7 +100,7 @@ def main():
     # stale files: whole recipe dir of each purify pack
     stale = []
     for method, meta in METHODS.items():
-        d = RES / "datapacks" / meta[3] / "data/blue_droplets/recipe"
+        d = RES / "datapacks" / meta[3] / "data/droplets_of_thirst/recipe"
         stale += [p for p in d.glob("*.json") if p not in files]
     bad = [p for p, d in files.items() if not p.exists() or p.read_text() != json.dumps(d, indent=2) + "\n"]
     if check:

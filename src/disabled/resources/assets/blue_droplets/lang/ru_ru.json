@@ -1,7 +1,0 @@
-{
-  "block.blue_droplets.sand_filter": "Песочный фильтр",
-  "blue_droplets.ponder.sand_filter.header": "Очищайте воду с помощью песочного фильтра",
-  "blue_droplets.ponder.sand_filter.text_1": "Песочный фильтр за один этап очищает прокачиваемую через него воду",
-  "blue_droplets.ponder.sand_filter.text_2": "Грязную воду нужно закачивать сверху...",
-  "blue_droplets.ponder.sand_filter.text_3": "и очищенную воду, соответственно, снизу."
-}

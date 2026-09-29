@@ -569,7 +569,7 @@
   "manual_ids": [
     "minecraft:potion",
     "minecraft:water_bucket",
-    "blue_droplets:terracotta_water_bowl",
+    "droplets_of_thirst:terracotta_water_bowl",
     "cold_sweat:filled_waterskin"
   ]
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "droplets_of_thirst:item/terracotta_bowl"
+  }
+}

@@ -1,7 +1,0 @@
-{
-  "block.blue_droplets.sand_filter": "砂濾器",
-  "blue_droplets.ponder.sand_filter.header": "用砂濾器淨化水",
-  "blue_droplets.ponder.sand_filter.text_1": "砂濾器會淨化鄰近泵入的水",
-  "blue_droplets.ponder.sand_filter.text_2": "髒水需要從上方泵入...",
-  "blue_droplets.ponder.sand_filter.text_3": "淨化後的水會從底部泵出"
-}

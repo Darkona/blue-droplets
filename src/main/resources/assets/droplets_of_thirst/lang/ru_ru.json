@@ -1,0 +1,19 @@
+{
+  "death.attack.dehydrate": "%1$s умер от обезвоживания",
+  "death.attack.dehydrate.player": "%1$s умер от обезвоживания, пока сражался с %2$s",
+  "item.droplets_of_thirst.terracotta_water_bowl": "Обожжённая глиняная миска с водой",
+  "item.droplets_of_thirst.terracotta_bowl": "Обожённая глиняная миска",
+  "item.droplets_of_thirst.clay_bowl": "Глиняная миска",
+  "itemGroup.droplets_of_thirst": "Droplets of Thirst",
+  "droplets_of_thirst.purity.dirty": "Грязная",
+  "droplets_of_thirst.purity.acceptable": "Приемлемая",
+  "droplets_of_thirst.tooltip.estimated": "Thirst %1$s, quenched %2$s (est.)",
+  "effect.droplets_of_thirst.dehydration": "Dehydration",
+  "effect.droplets_of_thirst.quenchness": "Quenchness",
+  "item.minecraft.potion.effect.quenchness": "Potion of Quenchness",
+  "item.minecraft.splash_potion.effect.quenchness": "Splash Potion of Quenchness",
+  "item.minecraft.lingering_potion.effect.quenchness": "Lingering Potion of Quenchness",
+  "item.minecraft.tipped_arrow.effect.quenchness": "Arrow of Quenchness",
+  "effect.droplets_of_thirst.hydrated": "Hydrated",
+  "effect.droplets_of_thirst.overhydrated": "Overhydrated"
+}

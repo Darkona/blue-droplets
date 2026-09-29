@@ -1,7 +1,0 @@
-{
-  "block.blue_droplets.sand_filter": "Filtr Piaskowy",
-  "blue_droplets.ponder.sand_filter.header": "Oczyszczanie wody Filtrem Piaskowym",
-  "blue_droplets.ponder.sand_filter.text_1": "Filter Piaskowy oczyszcza w jednym stopniu pompowaną przez niego wodę",
-  "blue_droplets.ponder.sand_filter.text_2": "Brudna Woda musi być pompowana z góry...",
-  "blue_droplets.ponder.sand_filter.text_3": "a Oczyszczona Woda może być wypompowywana z dołu"
-}
