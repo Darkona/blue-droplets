@@ -11,7 +11,7 @@ import com.darkona.dropletsofthirst.foundation.config.ClientConfig;
 import com.darkona.dropletsofthirst.foundation.config.GameplayConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -52,7 +52,7 @@ public final class ThirstBarRenderer
         event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, LAYER, ThirstBarRenderer::render);
     }
 
-    private static void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker)
+    private static void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker)
     {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
@@ -137,13 +137,13 @@ public final class ThirstBarRenderer
     }
 
     /** One 9x9 droplet of the 25x9 droplet sheet, multiplied by {@code color} (ARGB). */
-    private static void droplet(GuiGraphicsExtractor guiGraphics, Identifier texture, int x, int y, int u, int color)
+    private static void droplet(GuiGraphics guiGraphics, Identifier texture, int x, int y, int u, int color)
     {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, u, 0, 9, 9, ICONS_WIDTH, ICONS_HEIGHT, color);
     }
 
     /** A 9-high piece of the 256x256 quenched sheet, multiplied by {@code color} (ARGB). */
-    private static void quenched(GuiGraphicsExtractor guiGraphics, Identifier texture, int x, int y, int u, int v, int width, int color)
+    private static void quenched(GuiGraphics guiGraphics, Identifier texture, int x, int y, int u, int v, int width, int color)
     {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, u, v, width, 9, QUENCHED_SIZE, QUENCHED_SIZE, color);
     }
@@ -172,7 +172,7 @@ public final class ThirstBarRenderer
 
     private static @Nullable ThirstValues drinkValues(Player player, ItemStack stack)
     {
-        if (stack.isEmpty())
+        if (stack.isEmpty() || !ThirstHelper.playerRestoresThirst(stack, player))
             return null;
         FoodProperties food = stack.get(DataComponents.FOOD);
         if (food != null && !player.canEat(food.canAlwaysEat()))

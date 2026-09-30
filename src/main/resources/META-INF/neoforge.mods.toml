@@ -14,7 +14,7 @@ displayName="${mod_name}"
 
 displayURL="https://github.com/Darkona/droplets-of-thirst"
 logoFile="logo.png"
-credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka, Mikul (NeoForge 1.21.1 port) and the Thirst Was Taken contributors. Optional integrations use the public APIs of Jade, JEI, Serene Seasons, Traveler's Backpack and others; none of their code or assets is included."
+credits="Based on Thirst Was Taken by ghen (MIT), with contributions from mlus-asuka, Mikul (NeoForge 1.21.1 port) and the Thirst Was Taken contributors. Optional integrations use the public APIs of Jade, JEI, Serene Seasons, Traveler's Backpack, Supernatural and others; none of their code or assets is included."
 authors="${mod_authors}"
 
 # Display Test controls the display for your mod in the server connection screen
@@ -77,23 +77,30 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="sereneseasons"
 type="optional"
-versionRange="[26.1.2.0.0,)"
+versionRange="[21.11.0.0,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="travelersbackpack"
 type="optional"
-versionRange="[11.2.8,)"
+versionRange="[10.11.5,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="jei"
 type="optional"
-versionRange="[29.43,)"
+versionRange="[27.44,)"
 ordering="NONE"
 side="CLIENT"
+
+[[dependencies.${mod_id}]]
+modId="supernatural"
+type="optional"
+versionRange="[3.3,)"
+ordering="NONE"
+side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="toughasnails"

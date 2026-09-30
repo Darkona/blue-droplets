@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * A game test: a public static method taking a {@code GameTestHelper}, in a class listed in {@link DropletsGameTests}.
- * Minecraft 26.1 has no annotation for this any more; {@link DropletsGameTests} registers each method as a test
+ * Minecraft 1.21.11 has no annotation for this any more; {@link DropletsGameTests} registers each method as a test
  * function and a test of the same id.
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -6,7 +6,7 @@ import com.darkona.dropletsofthirst.content.thirst.ThirstHelper;
 import com.darkona.dropletsofthirst.foundation.config.ClientConfig;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -106,7 +106,7 @@ public final class DrinkTooltip implements TooltipComponent, ClientTooltipCompon
     }
 
     @Override
-    public void extractImage(Font font, int x, int y, int w, int h, GuiGraphicsExtractor guiGraphics)
+    public void renderImage(Font font, int x, int y, int w, int h, GuiGraphics guiGraphics)
     {
         getWidth(font);
         boolean saltyThirst = values.thirst() < 0;
@@ -126,9 +126,9 @@ public final class DrinkTooltip implements TooltipComponent, ClientTooltipCompon
         }
         int textX = x + thirstIcons * 9 + GAP;
         if (thirstText != null)
-            guiGraphics.text(font, thirstText, textX, y + 1, saltyThirst ? SALTY_TEXT_COLOR : TEXT_COLOR);
+            guiGraphics.drawString(font, thirstText, textX, y + 1, saltyThirst ? SALTY_TEXT_COLOR : TEXT_COLOR);
         if (estimatedText != null)
-            guiGraphics.text(font, estimatedText, textX + thirstTextWidth, y + 1, TEXT_COLOR);
+            guiGraphics.drawString(font, estimatedText, textX + thirstTextWidth, y + 1, TEXT_COLOR);
 
         if (quenchedIcons == 0)
             return;
@@ -144,6 +144,6 @@ public final class DrinkTooltip implements TooltipComponent, ClientTooltipCompon
             offsetX -= 7;
         }
         if (quenchedText != null)
-            guiGraphics.text(font, quenchedText, x + quenchedIcons * 7 + GAP, y + 10, saltyQuenched ? SALTY_TEXT_COLOR : TEXT_COLOR);
+            guiGraphics.drawString(font, quenchedText, x + quenchedIcons * 7 + GAP, y + 10, saltyQuenched ? SALTY_TEXT_COLOR : TEXT_COLOR);
     }
 }

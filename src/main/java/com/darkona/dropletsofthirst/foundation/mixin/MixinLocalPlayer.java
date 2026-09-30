@@ -13,7 +13,7 @@ public class MixinLocalPlayer{
     /**
      * Prevents sprinting when thirsty, using the server's rule from the last sync: the player counts as having too
      * little food to sprint while thirst is too low. Riding and flying still allow it, as vanilla checks them first.
-     * Minecraft 26.1 checks this every tick while sprinting too, so thirst stops a sprint as hunger does.
+     * Minecraft 1.21.11 checks this every tick while sprinting too, so thirst stops a sprint as hunger does.
      */
     @ModifyExpressionValue(method = "isSprintingPossible", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;hasEnoughFoodToDoExhaustiveManoeuvres()Z"))
     private boolean hasEnoughThirstToSprint(boolean food){

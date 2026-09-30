@@ -21,17 +21,16 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.core.RegistryAccess;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
@@ -50,8 +49,7 @@ import java.util.stream.Stream;
 @EventBusSubscriber
 public class PlayerThirstManager {
     /** The data reload in progress, between its {@code TagsUpdatedEvent} and the binding of item components. */
-    private static RecipeManager reloadingRecipes;
-    private static RegistryAccess reloadingRegistries;
+    private static volatile RecipeManager reloadingRecipes;
     /**
      * Block foods of {@code droplets_of_thirst:hydrating_blocks} (a cake slice): vanilla feeds the player straight from the
      * block, so a bite is detected after the interaction as a higher food level.
@@ -189,14 +187,14 @@ public class PlayerThirstManager {
      * hunger in vanilla.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onBlockBreak(BreakBlockEvent event) {
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getPlayer() instanceof ServerPlayer player)
             activity(player, GameplayConfig.BLOCK_BREAK, 1.0F);
     }
 
     @SubscribeEvent
     public static void onDamaged(LivingDamageEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer player && event.getHealthDamage() > 0)
+        if (event.getEntity() instanceof ServerPlayer player && event.getNewDamage() > 0)
             activity(player, GameplayConfig.DAMAGE_MULTIPLIER, event.getSource().getFoodExhaustion());
     }
 
@@ -209,27 +207,25 @@ public class PlayerThirstManager {
     }
 
     /**
-     * Lowest priority: NeoForge applies the reloaded data maps in its own {@code TagsUpdatedEvent} listener. On a
-     * server data load, items have no components yet at this point (Minecraft 26.1 binds them right after the tags), so
-     * the rebuild waits for {@link #rebuildDrinksWithComponents}, posted next in the same call.
+     * The recipes of the data reload in progress: its {@code TagsUpdatedEvent} comes before the server exists on world load.
+     */
+    @SubscribeEvent
+    public static void captureRecipes(AddServerReloadListenersEvent event){
+        reloadingRecipes = event.getServerResources().getRecipeManager();
+    }
+
+    /**
+     * Lowest priority: NeoForge applies the reloaded data maps in its own {@code TagsUpdatedEvent} listener.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void rebuildDrinks(TagsUpdatedEvent event){
-        if (event instanceof TagsUpdatedEvent.ServerDataLoad load) {
-            reloadingRecipes = load.getServerResources().getRecipeManager();
-            reloadingRegistries = event.getRegistries();
+        if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
+            RecipeManager recipes = reloadingRecipes;
+            reloadingRecipes = null;
+            ThirstHelper.rebuild(recipes, event.getLookupProvider());
         }
         else if (event.shouldUpdateStaticData() && !ThirstHelper.hasServerTables())
             ThirstHelper.rebuild(null, null);
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void rebuildDrinksWithComponents(DefaultDataComponentsBoundEvent event){
-        if (event.getUpdateCause() != DefaultDataComponentsBoundEvent.UpdateCause.SERVER_DATA_LOAD || reloadingRecipes == null)
-            return;
-        ThirstHelper.rebuild(reloadingRecipes, reloadingRegistries);
-        reloadingRecipes = null;
-        reloadingRegistries = null;
     }
 
     /**

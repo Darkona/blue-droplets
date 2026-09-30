@@ -433,6 +433,11 @@ public class ThirstHelper
         return valuesOf(itemStack) != null;
     }
 
+    public static boolean playerRestoresThirst(ItemStack itemStack, Player player)
+    {
+        return VampireThirst.canHydrate(itemStack, player);
+    }
+
     /** For other mods, as in Thirst Was Taken; this mod reads the tables directly. */
     @SuppressWarnings("unused")
     public static boolean isDrink(ItemStack itemStack)
@@ -622,7 +627,7 @@ public class ThirstHelper
     }
 
     /**
-     * Whether water evaporates at {@code pos}, as in the Nether: Minecraft 26.1's replacement for the dimension type's
+     * Whether water evaporates at {@code pos}, as in the Nether: Minecraft 1.21.11's replacement for the dimension type's
      * {@code ultrawarm} flag, now the environment attribute {@code minecraft:gameplay/water_evaporates} (which a biome
      * can also set), read the way buckets do.
      */

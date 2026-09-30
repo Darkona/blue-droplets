@@ -23,11 +23,13 @@ import java.util.function.Predicate;
  */
 public final class ThirstBarStyles
 {
+    public static final int VAMPIRE_PRIORITY = 400;
     public static final int DEHYDRATION_PRIORITY = 300;
     public static final int OVERHYDRATED_PRIORITY = 250;
     public static final int POISON_PRIORITY = 200;
     public static final int QUENCHNESS_PRIORITY = 100;
     public static final int HYDRATED_PRIORITY = 50;
+    public static final IntSupplier VAMPIRE_COLOR = color(ClientConfig.VAMPIRE_COLOR);
 
     private record Style(Identifier id, Predicate<Player> active, IntSupplier rgb, int priority) {}
 

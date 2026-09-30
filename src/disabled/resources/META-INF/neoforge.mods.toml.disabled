@@ -7,13 +7,6 @@ versionRange="[6.0.6,)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.${mod_id}]]
-modId="supernatural"
-type="optional"
-versionRange="[0,)"
-ordering="NONE"
-side="BOTH"
-
 # Farmer's Delight and its addons: data (drink values, recipes) for all of them, code for the ones with a higher minimum.
 
 [[dependencies.${mod_id}]]

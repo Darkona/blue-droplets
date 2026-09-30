@@ -211,7 +211,7 @@ public class PurityTests
             for (RecipeHolder<? extends AbstractCookingRecipe> holder : helper.getLevel().getServer().getRecipeManager().recipeMap().byType(type))
                 if (holder.id().identifier().getNamespace().equals(DropletsOfThirst.ID))
                 {
-                    Integer purity = holder.value().assemble(new SingleRecipeInput(ItemStack.EMPTY)).get(ThirstComponent.PURITY);
+                    Integer purity = holder.value().assemble(new SingleRecipeInput(ItemStack.EMPTY), helper.getLevel().registryAccess()).get(ThirstComponent.PURITY);
                     if (purity != null)
                         max = Math.max(max, purity);
                 }

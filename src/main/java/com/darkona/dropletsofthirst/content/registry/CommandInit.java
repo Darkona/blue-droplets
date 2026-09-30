@@ -109,7 +109,7 @@ public class CommandInit {
                                 .executes(context -> configCheck(context.getSource()))))
                 .then(Commands.literal("infer")
                         .then(Commands.argument("item", ItemArgument.item(event.getBuildContext()))
-                                .executes(context -> infer(context.getSource(), ItemArgument.getItem(context, "item").item().value()))))
+                                .executes(context -> infer(context.getSource(), ItemArgument.getItem(context, "item").getItem()))))
         );
         dispatcher.register(Commands.literal("thirst").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)).redirect(root));
         if (!FMLEnvironment.isProduction())

@@ -57,7 +57,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.RegisterCauldronInteractionEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -92,11 +91,12 @@ public class WaterPurity
     }
 
     /**
-     * Mod bus: the terracotta bowl fills from a water cauldron like a bottle.
+     * The terracotta bowl fills from a water cauldron like a bottle. Main thread only: the interaction maps are not
+     * thread-safe.
      */
-    public static void registerCauldronInteractions(RegisterCauldronInteractionEvent.Interaction event)
+    public static void registerCauldronInteractions()
     {
-        event.register(Identifier.withDefaultNamespace("water"), ItemInit.TERRACOTTA_BOWL.get(), fillFromCauldron(() -> new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), SoundEvents.BUCKET_FILL));
+        CauldronInteraction.WATER.map().put(ItemInit.TERRACOTTA_BOWL.get(), fillFromCauldron(() -> new ItemStack(ItemInit.TERRACOTTA_WATER_BOWL.get()), SoundEvents.BUCKET_FILL));
     }
 
     /**

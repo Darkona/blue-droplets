@@ -46,7 +46,7 @@ public class JadePlugin implements IWailaPlugin
         registration.registerBlockComponent(PurityTooltip.INSTANCE, Block.class);
     }
 
-    /** Server side: the purities of the block's tanks. Jade 26.1 wants data and tooltip in separate providers. */
+    /** Server side: the purities of the block's tanks. Jade 21 wants data and tooltip in separate providers. */
     private enum PurityData implements IServerDataProvider<BlockAccessor>
     {
         INSTANCE;

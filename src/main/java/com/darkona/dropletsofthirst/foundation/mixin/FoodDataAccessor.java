@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
- * The hunger exhaustion, which {@code thirst.mode = MIRROR_FOOD} follows; Minecraft 26.1 has no getter for it.
+ * The hunger exhaustion, which {@code thirst.mode = MIRROR_FOOD} follows; Minecraft 1.21.11 has no getter for it.
  */
 @Mixin(FoodData.class)
 public interface FoodDataAccessor

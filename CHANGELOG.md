@@ -2,6 +2,36 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
+## 1.21.11-1.0.0 (Minecraft 1.21.11, NeoForge), unreleased
+
+The 1.21.11 version is the 26.1 port (next section) brought back to Minecraft 1.21.11, the last 1.21 release, with the Supernatural integration of 1.21.1 back in. The jar is `droplets-of-thirst-1.21.11-1.0.0.jar`, for Minecraft 1.21.11 and NeoForge 21.11.42 or newer. `[1.21.11]`
+
+### Minecraft 1.21.11
+
+- Thirst, quenched, dehydration, hand drinking, water purity, poured water, cauldrons, cooking purification, effects, config, data maps, commands and the API behave as on 26.1, with the same config keys and data formats, plus the vampire colour of the thirst bar (below). `[1.21.11]`
+- Datapacks declare `"min_format": 94, "max_format": 94` in `pack.mcmeta`. `[1.21.11]`
+- The chest loot modifiers are listed in `neoforge:loot_modifiers/global_loot_modifiers.json` again, under the `droplets_of_thirst:loot_config` condition: NeoForge 21.11 loads only the modifiers in that list. `[1.21.11]`
+- The drink tables rebuild when the server tags reload, as on 1.21.1: items carry their components from the start on 1.21.11. `[1.21.11]`
+- The terracotta bowl fills from a water cauldron through vanilla's water cauldron interactions, added at common setup (NeoForge 21.11 has no cauldron interaction event). `[1.21.11]`
+- Water placed through NeoForge's older `FluidUtil.tryPlaceFluid`, which mods written for the previous fluid API still call, is registered as poured water of its purity, as water placed through the transfer API is. `[1.21.11]`
+
+### Mod compatibility (1.21.11)
+
+- Built and tested with Jade 21.1.7, JEI 27.44.0.104, AppleSkin 3.0.8, Serene Seasons 21.11.0.5 (with GlitchCore 21.11.0.4), Traveler's Backpack 10.11.7, Reliquary 2.0.84 and Supernatural 3.3.4, all for Minecraft 1.21.11. Minimum versions when installed: JEI 27.44, Serene Seasons 21.11, Traveler's Backpack 10.11.5, Reliquary 2.0, Supernatural 3.3. `[1.21.11]`
+- Supernatural: vampires work as on 1.21.1. A vampire loses thirst like anyone, but only blood hydrates it: Supernatural's blood bottle gives thirst 6 and quenched 6, and items in the item tag `droplets_of_thirst:blood` (by default `#supernatural:blood`) hydrate with their values in the drinks data map. Water, other drinks, food, rain, Quenchness and drinking by hand give a vampire nothing. The thirst bar turns blood red while Supernatural's Vampirism effect is active; the colour is `client.toml` `Bar Colors.vampire` (`#B3121B`). `[1.21.11]`
+- Traveler's Backpack 10.11: the hose still gives the water it sucks from the world its purity. `[1.21.11]`
+
+### Not in this version (1.21.11)
+
+- Create, Farmer's Delight and its addons, Cold Sweat and Vampirism have no NeoForge build for Minecraft 1.21.11 on Modrinth or CurseForge. Their code stays in `src/disabled` as on 26.1, outside the jar, and their config keys are gone as on 26.1. `[1.21.11]`
+- KubeJS has no build for Minecraft 1.21.11, so there are no KubeJS game tests and no `-PwithKubeJS`. The API classes and events are the same, so the scripts in `examples/kubejs` apply to a later KubeJS for 1.21.11 with at most small changes. `[1.21.11]`
+
+### For developers (1.21.11)
+
+- Built with ModDevGradle 2.0.148 on NeoForge 21.11.45, Java 21 and Parchment 2025.12.20 for 1.21.11. The Maven version is `1.21.11-1.0.0` (`com.darkona.dropletsofthirst:droplets-of-thirst` and `droplets-of-thirst-api`). `[1.21.11]`
+- API: the same classes and methods as on 26.1. `[1.21.11]`
+- Game tests (`./gradlew runGameTestServer`): 64 without optional mods and 73 with `-PwithCompat`, which adds a Supernatural test. `scripts/test-summary.py` condenses a game test or boot log. `[1.21.11]`
+
 ## 26.1-1.0.0 (Minecraft 26.1, NeoForge), unreleased
 
 The 26.1 port has every feature of 1.21.1-1.0.0 (next section) that does not depend on a mod without a 26.1 build, with the differences below. The jar is `droplets-of-thirst-26.1-1.0.0.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer.

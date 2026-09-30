@@ -2,7 +2,7 @@
   "required": false,
   "package": "com.darkona.dropletsofthirst.foundation.mixin",
   "plugin": "com.darkona.dropletsofthirst.foundation.mixin.CompatMixinPlugin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "travelersbackpack.MixinHoseItem"
   ],

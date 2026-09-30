@@ -46,7 +46,7 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.UUID;
 
@@ -71,19 +71,19 @@ public class ThirstTests
     {
         NeoForge.EVENT_BUS.addListener((ThirstChangeEvent.Post event) -> lastCause = event.getCause());
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, (LivingDeathEvent event) -> {
-            if (event.getEntity().entityTags().contains(IMMORTAL_TAG))
+            if (event.getEntity().getTags().contains(IMMORTAL_TAG))
                 event.setCanceled(true);
         });
-        NeoForge.EVENT_BUS.addListener(EventPriority.LOW, (BreakBlockEvent event) -> {
-            if (event.getPlayer().entityTags().contains(PROTECTED_TAG))
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOW, (BlockEvent.BreakEvent event) -> {
+            if (event.getPlayer().getTags().contains(PROTECTED_TAG))
                 event.setCanceled(true);
         });
         NeoForge.EVENT_BUS.addListener(EventPriority.LOW, (AttackEntityEvent event) -> {
-            if (event.getEntity().entityTags().contains(PROTECTED_TAG))
+            if (event.getEntity().getTags().contains(PROTECTED_TAG))
                 event.setCanceled(true);
         });
         NeoForge.EVENT_BUS.addListener((ThirstChangeEvent.Pre event) -> {
-            if (event.getEntity().entityTags().contains(FROZEN_TAG))
+            if (event.getEntity().getTags().contains(FROZEN_TAG))
                 event.setCanceled(true);
         });
     }
@@ -146,7 +146,7 @@ public class ThirstTests
         helper.succeed();
     }
 
-    /** Minecraft 26.1 eats through the food component of the consumed stack: the hydration hook is there now. */
+    /** Minecraft 1.21.11 eats through the food component of the consumed stack: the hydration hook is there now. */
     @GameTest(template = "empty")
     public static void eatingAnAppleHydratesOnce(GameTestHelper helper)
     {
@@ -418,12 +418,12 @@ public class ThirstTests
             thirst.tick(player);
             float start = thirst.getExhaustion();
             player.addTag(PROTECTED_TAG);
-            NeoForge.EVENT_BUS.post(new BreakBlockEvent(helper.getLevel(), pos, helper.getLevel().getBlockState(pos), player));
+            NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(helper.getLevel(), pos, helper.getLevel().getBlockState(pos), player));
             player.attack(zombie);
             thirst.tick(player);
             helper.assertValueEqual(thirst.getExhaustion(), start, "exhaustion after a cancelled block break and attack");
             player.removeTag(PROTECTED_TAG);
-            NeoForge.EVENT_BUS.post(new BreakBlockEvent(helper.getLevel(), pos, helper.getLevel().getBlockState(pos), player));
+            NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(helper.getLevel(), pos, helper.getLevel().getBlockState(pos), player));
             thirst.tick(player);
             helper.assertTrue(thirst.getExhaustion() > start, "a block break added no exhaustion in OWN mode");
         }

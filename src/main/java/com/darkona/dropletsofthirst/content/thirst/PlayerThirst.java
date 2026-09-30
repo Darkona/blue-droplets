@@ -206,8 +206,9 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
     public boolean getShouldTickThirst(){return shouldTickThirst;}
 
     /**
-     * Drinking or eating an item with thirst values; nothing for other items. Drunk when it has the drink animation or
-     * is a water container, eaten otherwise. Pure water gets the {@code pureWater} bonus.
+     * Drinking or eating an item with thirst values; nothing for other items, nor for a vampire and anything but blood.
+     * Drunk when it has the drink animation or is a water container, eaten otherwise. Pure water gets the
+     * {@code pureWater} bonus.
      */
     public static void consume(ItemStack item, Player player)
     {
@@ -233,13 +234,14 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
 
     /**
      * Every bite (food items, block foods, the API), server side only: {@link EatEvent.Pre}, hydration,
-     * {@link EatEvent.Post}. No purity effects. {@code item} is empty for block foods and the API.
+     * {@link EatEvent.Post}. No purity effects. {@code item} is empty for block foods and the API. Nothing for a vampire
+     * unless the item is blood.
      *
      * @return whether thirst or quenched changed
      */
     public static boolean eat(Player player, ItemStack item, int thirst, int quenched)
     {
-        if (player.level().isClientSide())
+        if (player.level().isClientSide() || !VampireThirst.canHydrate(item, player))
             return false;
         EatEvent.Pre pre = NeoForge.EVENT_BUS.post(new EatEvent.Pre(player, item, thirst, quenched));
         if (pre.isCanceled())
@@ -252,13 +254,13 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
     /**
      * Every drink (items, hand drinking, the API), server side only: {@link DrinkEvent.Pre}, purity effects, which may
      * prevent hydration, hydration, {@link DrinkEvent.Post}. {@code item} is empty for hand drinking and the API. With
-     * purity off the events carry {@code NO_PURITY}.
+     * purity off the events carry {@code NO_PURITY}. Nothing for a vampire unless the item is blood.
      *
      * @return whether thirst or quenched changed
      */
     public static boolean drink(Player player, ItemStack item, int thirst, int quenched, int purity)
     {
-        if (player.level().isClientSide())
+        if (player.level().isClientSide() || !VampireThirst.canHydrate(item, player))
             return false;
         if (!WaterPurity.enabled())
             purity = DropletsAPI.NO_PURITY;
@@ -397,7 +399,8 @@ public class PlayerThirst implements IThirst, DropletsView, ValueIOSerializable
             change(player, thirst + GameplayConfig.PEACEFUL_REGEN_AMOUNT.get(), quenched, ThirstChangeEvent.Cause.PEACEFUL);
 
         if(GameplayConfig.RAIN_DRINKING.get() && player.tickCount % GameplayConfig.RAIN_INTERVAL_TICKS.get() == 0
-                && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above()))
+                && Mth.wrapDegrees(player.getXRot()) <= GameplayConfig.RAIN_MAX_PITCH.get() && player.level().isRainingAt(player.blockPosition().above())
+                && !VampireThirst.isVampire(player))
         {
             int rainThirst = GameplayConfig.RAIN_THIRST.get();
             int rainQuenched = GameplayConfig.RAIN_QUENCHED.get();

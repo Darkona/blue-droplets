@@ -163,7 +163,7 @@ public class PouredWaterTests
     {
         BlockPos pos = helper.absolutePos(new BlockPos(2, 2, 2));
         worldPurity(helper, pos);
-        helper.assertTrue(FluidUtil.tryPlaceFluid(WaterPurity.waterResource(CONTAMINATED), null, helper.getLevel(), pos, false), "FluidUtil did not place the water");
+        helper.assertTrue(FluidUtil.tryPlaceFluid(WaterPurity.waterResource(CONTAMINATED), null, helper.getLevel(), InteractionHand.MAIN_HAND, pos), "FluidUtil did not place the water");
         helper.assertTrue(registered(helper, pos), "water placed by FluidUtil is not registered");
         helper.assertValueEqual(WaterPurity.getBlockPurity(helper.getLevel(), pos), CONTAMINATED, "purity of water placed by FluidUtil");
         helper.succeed();

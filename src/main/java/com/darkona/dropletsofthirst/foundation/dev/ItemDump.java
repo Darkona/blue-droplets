@@ -98,7 +98,7 @@ public final class ItemDump
         ThirstValues values = ThirstHelper.valuesOf(stack);
         boolean drink = stack.getUseAnimation() == ItemUseAnimation.DRINK || WaterPurity.isWaterFilledContainer(stack);
         String effects = food == null || consumable == null ? "" : consumable.onConsumeEffects().stream().flatMap(ItemDump::effects).collect(Collectors.joining(";"));
-        String tags = stack.tags().map(TagKey::location).map(Identifier::toString).sorted().collect(Collectors.joining(";"));
+        String tags = stack.getTags().map(TagKey::location).map(Identifier::toString).sorted().collect(Collectors.joining(";"));
         return String.join(",",
                 id.toString(),
                 id.getNamespace(),
@@ -112,7 +112,7 @@ public final class ItemDump
                 quote(tags));
     }
 
-    /** Effects of eating: in 26.1 they are the food's consume effects that apply status effects. */
+    /** Effects of eating: on 1.21.11 they are the food's consume effects that apply status effects. */
     private static Stream<String> effects(ConsumeEffect consumeEffect)
     {
         if (!(consumeEffect instanceof ApplyStatusEffectsConsumeEffect apply))

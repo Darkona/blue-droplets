@@ -24,6 +24,7 @@
     "minecraft:suspicious_stew": {"thirst": 2, "quenched": 2},
     "minecraft:sweet_berries": {"thirst": 2, "quenched": 2},
     "reliquary:emperor_chalice": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "reliquary"}], "thirst": 4, "quenched": 5, "purity": 5},
-    "reliquary:potion": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "reliquary"}], "thirst": 2, "quenched": 3}
+    "reliquary:potion": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "reliquary"}], "thirst": 2, "quenched": 3},
+    "supernatural:blood_bottle": {"neoforge:conditions": [{"type": "neoforge:mod_loaded", "modid": "supernatural"}], "thirst": 6, "quenched": 6}
   }
 }

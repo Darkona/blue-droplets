@@ -2,6 +2,7 @@ package com.darkona.dropletsofthirst;
 
 import com.darkona.dropletsofthirst.api.DropletsAPI;
 import com.darkona.dropletsofthirst.compat.reliquary.ReliquaryCompat;
+import com.darkona.dropletsofthirst.compat.supernatural.SupernaturalCompat;
 import com.darkona.dropletsofthirst.content.DropletsServiceImpl;
 import com.darkona.dropletsofthirst.content.data.DropletsDataMaps;
 import com.darkona.dropletsofthirst.content.purity.WaterPurity;
@@ -48,7 +49,6 @@ public class DropletsOfThirst
         DropletsAPI.setService(DropletsServiceImpl.INSTANCE);
         modBus.addListener(this::commonSetup);
         modBus.addListener(DropletsDataMaps::register);
-        modBus.addListener(WaterPurity::registerCauldronInteractions);
         modBus.addListener(PlayerThirstManager::onConfigReloaded);
         modBus.addListener(DropletsOfThirst::addPacks);
         modBus.addListener(ThirstModPacketHandler::register);
@@ -62,6 +62,7 @@ public class DropletsOfThirst
         {
             modBus.addListener(ThirstBarRenderer::registerLayer);
             ThirstBarStyles.registerBuiltIns();
+            SupernaturalCompat.initClient();
             modBus.addListener(DrinkTooltip::registerFactory);
             NeoForge.EVENT_BUS.addListener(EventPriority.LOW, DrinkTooltip::gather);
             NeoForge.EVENT_BUS.addListener(WaterPurity::renderPurityTooltip);
@@ -85,6 +86,7 @@ public class DropletsOfThirst
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         WaterPurity.init();
+        event.enqueueWork(WaterPurity::registerCauldronInteractions);
     }
 
     /**

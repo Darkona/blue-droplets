@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "droplets_of_thirst:loot_config"
+    }
+  ],
+  "replace": false,
+  "entries": [
+    "droplets_of_thirst:add_loot_shipwreck_supply",
+    "droplets_of_thirst:add_loot_abandoned_mineshaft",
+    "droplets_of_thirst:add_loot_simple_dungeon",
+    "droplets_of_thirst:add_loot_nether_bridge",
+    "droplets_of_thirst:add_loot_bastion_other"
+  ]
+}

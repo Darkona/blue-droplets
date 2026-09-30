@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.darkona.dropletsofthirst.foundation.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BiomeAccessor",
     "FoodDataAccessor",
@@ -18,6 +18,7 @@
     "MixinFoodProperties",
     "MixinItemStack",
     "MixinItemUtils",
+    "MixinLegacyFluidUtil",
     "MixinPlayer"
   ],
   "client": [

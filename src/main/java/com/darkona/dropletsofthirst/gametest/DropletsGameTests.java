@@ -56,8 +56,8 @@ public final class DropletsGameTests
             classes.add(ReliquaryTests.class);
         if (ModList.get().isLoaded("sereneseasons"))
             classes.add(SereneSeasonsTests.class);
-        if (ModList.get().isLoaded("kubejs"))
-            classes.add(KubeJSTests.class);
+        if (ModList.get().isLoaded("supernatural"))
+            classes.add(SupernaturalTests.class);
         return classes;
     }
 
@@ -87,11 +87,11 @@ public final class DropletsGameTests
 
     private static void registerTests(RegisterGameTestsEvent event)
     {
-        Holder<TestEnvironmentDefinition<?>> environment = event.registerEnvironment(ENVIRONMENT, new TestEnvironmentDefinition.AllOf(List.of()));
+        Holder<TestEnvironmentDefinition> environment = event.registerEnvironment(ENVIRONMENT, new TestEnvironmentDefinition.AllOf(List.of()));
         for (Test test : tests())
         {
             Identifier structure = Identifier.fromNamespaceAndPath(test.spec().templateNamespace(), test.spec().template());
-            TestData<Holder<TestEnvironmentDefinition<?>>> data = new TestData<>(environment, structure, test.spec().timeoutTicks(), 0, true);
+            TestData<Holder<TestEnvironmentDefinition>> data = new TestData<>(environment, structure, test.spec().timeoutTicks(), 0, true);
             event.registerTest(test.id(), new FunctionGameTestInstance(ResourceKey.create(Registries.TEST_FUNCTION, test.id()), data));
         }
     }
