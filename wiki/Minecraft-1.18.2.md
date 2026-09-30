@@ -8,7 +8,7 @@ It works like the [1.19.2 version](Minecraft-1.19.2), which works like [1.20.1](
 
 ## Players
 
-- Everything on the [1.19.2 page](Minecraft-1.19.2#players) applies: dehydration damage is a plain damage source, the Sand Filter is only in the Droplets of Thirst tab, and the opt-in datapacks stay off until turned on.
+- Everything on the [1.19.2 page](Minecraft-1.19.2#players) applies: dehydration damage is a plain damage source, the Sand Filter is only in the Droplets of Thirst tab, and the opt-in datapacks stay off until you turn them on.
 - **Thirst Was Taken worlds** (1.18.2, version 1.3.x) load with the players' thirst and the purity of their water.
 - There are no mangrove swamps in 1.18.2.
 
@@ -37,7 +37,7 @@ Tested with Create 0.5.1.i, Jade 5.3.2, JEI 10.2.1, AppleSkin 2.5.1, Cold Sweat 
 - **Jade 5** still uses the Waila API: the purity lines are the same, with their switch in Jade's plugin settings.
 - **JEI**: Droplets of Thirst is built against the JEI 9.7 API and runs on JEI 9.7.2 and 10.2.1. The hydration and purification pages are the same.
 - **Farmer's Delight addons**, as data (drink values and, where a recipe uses water, the clean water rule): Brewin' and Chewin' 1.0.1, Ocean's Delight 1.0.0, Ender's Delight 1.2.1, Miner's Delight 1.1.1, Corn Delight 1.0.6, Crabber's Delight 1.1.2 and End's Delight 1.2.1. Farmer's Delight's cooking pot and wheat dough, Miner's Delight's copper pot and Corn Delight's raw tortilla need acceptable water or better (3). Miner's Delight's water cup carries a purity like a bottle.
-- **Serene Seasons** 7.0.0.15 reports its version as `0.0NONE`, so any version is accepted.
+- **Serene Seasons** 7.0.0.15 reports its version as `0.0NONE`, so the mod accepts any version.
 - **Vampirism** vampires work as on 1.21.1: their thirst goes down, only blood quenches it, and every drink of blood counts, with the same `compat.toml` `vampirism` keys. Vampirism 1.8.8 has no event for drinking blood, so Droplets of Thirst reads it with a small hook of its own. The item tag `droplets_of_thirst:blood` is empty here: add items to it, with drinks data map values, to let vampires drink them.
 
 Not on 1.18.2, besides what 1.19.2 lacks (Supernatural vampires, Farm & Charm, HerbalBrews, Brewery, Extra Delight, Expanded Delight, KubeJS):

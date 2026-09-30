@@ -1,6 +1,6 @@
 # Droplets of Thirst
 
-Droplets of Thirst adds a thirst bar and water purity to Minecraft. Activity and heat make you thirsty, and the water you find is not always safe: swamp or sea water makes you sick until you clean it. It is built for modpacks, with every number in config files or datapacks, and it continues [Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod) by ghen.
+Droplets of Thirst adds a thirst bar and water purity to Minecraft. Activity and heat make you thirsty, and the water you find can make you sick: swamp or sea water is unsafe until you clean it. The mod is made for modpacks, so every number is in a config file or a datapack. It continues [Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod) by ghen.
 
 <!-- SCREENSHOT: the HUD in survival, thirst bar (blue droplets) above the hunger bar, player holding a water bottle -->
 
@@ -19,7 +19,7 @@ This wiki describes the current version, **Minecraft 26.3 on NeoForge 26.3.0.36-
 
 ## Versions
 
-Every version has the same thirst, water purity, effects, config files and commands. They differ in the loader, in the data formats of their Minecraft version and in which other mods they work with. Minecraft 1.21.1 has the most integrations (Create, Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary, KubeJS). Most of those mods have no 26.x version yet, so the 26.x versions do not have those integrations.
+Every version has the same thirst, water purity, effects, config files and commands. The versions differ in the loader, in the data formats of their Minecraft version and in the other mods they work with. Minecraft 1.21.1 has the most integrations: Create, Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary and KubeJS. Most of those mods have no 26.x version yet, so the 26.x versions do not have those integrations.
 
 | Minecraft | Loader | Branch | Notable differences from 26.3 |
 |---|---|---|---|
@@ -32,4 +32,4 @@ Every version has the same thirst, water purity, effects, config files and comma
 | [1.19.2](Minecraft-1.19.2) | Forge 43.5.2 or newer | `1.19.2` | Purity in NBT, Create 0.5.1, fewer addons, no Supernatural vampires |
 | [1.18.2](Minecraft-1.18.2) | Forge 40.2.3 or newer | `1.18.2` | As 1.19.2, with Forge 40 biome tags and fewer addons |
 
-Downloads, the changelog and the source code are on the [GitHub repository](https://github.com/Darkona/droplets-of-thirst).
+The [GitHub repository](https://github.com/Darkona/droplets-of-thirst) has the downloads, the changelog and the source code.

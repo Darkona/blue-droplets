@@ -8,7 +8,7 @@ Droplets of Thirst for Minecraft 1.21.11 runs on **Minecraft 1.21.11 and NeoForg
 
 ### Vampires (Supernatural)
 
-A Supernatural vampire gets thirsty like anyone else, but only blood quenches its thirst. Its thirst bar has blood-red droplets.
+A Supernatural vampire gets thirsty like anyone else, and only blood quenches its thirst. Its thirst bar has blood-red droplets.
 
 - Thirst goes down with the same activity and climate rules as for other players.
 - Water, other drinks, food, rain, Quenchness and drinking by hand give a vampire nothing: no thirst, no quenched and no purity effects. Hand drinking is off for vampires. The HUD shows no preview for these items.
@@ -43,7 +43,7 @@ Other keys that exist on 1.21.11 and not on 26.3:
 The data formats are those of [Minecraft 26.2](Minecraft-26.2#modpack-makers): brewing in code, the loot format with `functions` and `conditions` lists, and the Reliquary drink values. The differences:
 
 - **Pack format**: datapacks declare `"min_format": 94, "max_format": 94` in `pack.mcmeta`.
-- **Loot modifiers**: NeoForge 21.11 loads only the loot modifiers listed in `neoforge:loot_modifiers/global_loot_modifiers.json`. A datapack that adds its own modifiers lists them there. `gameplay.toml` `loot.enabled` turns the Droplets of Thirst chest loot off as on 26.3.
+- **Loot modifiers**: NeoForge 21.11 loads only the loot modifiers listed in `neoforge:loot_modifiers/global_loot_modifiers.json`. A datapack that adds its own modifiers must list them there. `gameplay.toml` `loot.enabled` turns the Droplets of Thirst chest loot off as on 26.3.
 - **Blood**: the item tag `droplets_of_thirst:blood` and the drink value of `supernatural:blood_bottle`.
 
 ---
@@ -52,7 +52,7 @@ The data formats are those of [Minecraft 26.2](Minecraft-26.2#modpack-makers): b
 
 Tested with Jade 21.1.7, JEI 27.44.0.104, AppleSkin 3.0.8, Serene Seasons 21.11.0.5, Traveler's Backpack 10.11.7, Reliquary 2.0.84 and Supernatural 3.3.4, all for Minecraft 1.21.11. Minimum versions when installed: JEI 27.44, Serene Seasons 21.11, Traveler's Backpack 10.11.5, Reliquary 2.0, Supernatural 3.3.
 
-- Create, Farmer's Delight and its addons, Cold Sweat and Vampirism have no Minecraft 1.21.11 version, so their integrations are not in this version. See [Minecraft 1.21.1](Minecraft-1.21.1) for what these integrations do there.
+- Create, Farmer's Delight and its addons, Cold Sweat and Vampirism have no Minecraft 1.21.11 version, so this version does not have their integrations. [Minecraft 1.21.1](Minecraft-1.21.1) tells what these integrations do there.
 - KubeJS has no Minecraft 1.21.11 version.
 
 ---
