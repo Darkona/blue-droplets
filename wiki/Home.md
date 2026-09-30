@@ -7,4 +7,4 @@
 - [Mod developers](Mod-Developers): the public API and events.
 - [Minecraft 1.20.1](Minecraft-1.20.1): what is different in the 1.20.1 version.
 
-Downloads, the changelog and the source code are on the [GitHub repository](https://github.com/Darkona/blue-droplets).
+Downloads, the changelog and the source code are on the [GitHub repository](https://github.com/Darkona/droplets-of-thirst).
