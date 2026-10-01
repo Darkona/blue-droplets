@@ -23,7 +23,7 @@ Droplets of Thirst for Minecraft 1.20.1 is one jar that runs on **Forge 47.1.3 o
 
 - Tested with Create 6.0.8, Jade 11.13.3, JEI 15.56, AppleSkin 2.5.1, Cold Sweat 2.4.3.2, Serene Seasons 9.1.0.3, Traveler's Backpack 9.1.57, Reliquary 2.0.65, Farmer's Delight 1.3.4 and the Farmer's Delight addons in the changelog, all for 1.20.1. Some of these mods need a newer Forge than 47.1 on their own (Serene Seasons asks for 47.3), so they do not run on NeoForge 47.1.
 - Not on 1.20.1: KubeJS (1.20.1's KubeJS is a different API; use the Java API), Extra Delight (no 1.20.1 version) and Farm & Charm's timber well (not in the 1.20.1 version of Farm & Charm).
-- Not yet on 1.20.1: the second batch of Farmer's Delight addons (Fruits, Cultural, Expanded, Corn, Rustic, Crabber's, End's and My Nether's Delight).
+- Expanded Delight has no version for Minecraft 1.20.1 Forge, so it is not covered.
 - Brewin' and Chewin' kegs on 1.20.1: their fluid ingredients cannot leave out low purities, so the clean water rule does not apply to keg recipes, and water that carries a purity does not ferment in the keg.
 - Miner's Delight's mod id on 1.20.1 is `miners_delight`: its water cup is `miners_delight:water_cup`.
 

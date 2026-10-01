@@ -9,9 +9,7 @@ changes incompatibly.
 
 ## Dependency
 
-For now the artifacts are only published to the local Maven repository of the project (`mcmodsrepo`); a public Maven
-is still to be decided. Until then, build Droplets of Thirst and publish it locally (`./gradlew publishToMavenLocal`), or use
-the jars from `build/libs/`.
+There is no public Maven repository. Each [GitHub release](https://github.com/Darkona/droplets-of-thirst/releases) has the mod jar and the API jar, each with a sources jar. Use those jars as files, or build Droplets of Thirst from the tag of your version and publish it locally (`./gradlew publishToMavenLocal`). The version is `<minecraft>-<mod version>`, for example `1.21.1-1.0.0`, as in the jar name.
 
 ```groovy
 repositories {
