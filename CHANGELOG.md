@@ -18,7 +18,7 @@ The 1.19.2 port has every feature of the 1.20.1 port (next section) and so of 1.
 
 ### Mod compatibility (1.19.2)
 
-- Works with Create 0.5.1.i, Jade 8.9.2, JEI 11.39, AppleSkin 2.4.2, Cold Sweat 2.4.3, Serene Seasons 8.1.0.24, Traveler's Backpack 8.2.41, Reliquary 2.0.40 and Farmer's Delight 1.2.4 for 1.19.2, and Vampirism 1.9.5. `[1.19.2]`
+- Works with Create 0.5.1.i, Jade 8.9.2, JEI 11.39, AppleSkin 2.4.2, Cold Sweat 2.4.3, Serene Seasons 8.1.0.24, Traveler's Backpack 8.2.41, Reliquary 2.0.40 and Farmer's Delight 1.2.4 for 1.19.2. It also loads with Vampirism 1.9.5, but the red thirst bar for vampires has not been checked in game on 1.19.2. `[1.19.2]`
 - Create 0.5.1: the Sand Filter, its Ponder scene, fan and basin purification, spouts, drains, pipes and goggles work as with Create 6. The Ponder scene is registered in Create's own Ponder, which is inside Create in 0.5.1. `[1.19.2]`
 - Farmer's Delight addons, data only (drink values and, where a recipe uses water, the clean water rule): Brewin' and Chewin' 1.19-2.0, Ocean's Delight 1.0.2, Ender's Delight 1.2.2, Miner's Delight 1.1.1, Fruits Delight 0.5.9, Cultural Delights 0.16.0, Corn Delight 1.0.3, Rustic Delight 1.3.0, Crabber's Delight 1.1.4, End's Delight 2.1 and My Nether's Delight 1.7.6. The clean water rule: Farmer's Delight's cooking pot and wheat dough, Miner's Delight's copper pot, Cultural Delights' corn dough and Corn Delight's raw tortilla need acceptable water or better (3), and Cultural Delights' bean milk, which is cooked, murky water or better (2). Miner's Delight's water cup carries a purity like a bottle. `[1.19.2]`
 - Serene Seasons 8.1.0.24 for 1.19.2 reports its version as `0.0NONE`, so Droplets of Thirst accepts any version of it. `[1.19.2]`
