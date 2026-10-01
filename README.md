@@ -8,7 +8,7 @@ Water from a swamp or a puddle can make you sick. Clean it first, and then it is
 
 It is made for modpacks and works with many popular mods. It continues **[Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod)** by **ghen**.
 
-This is the **Minecraft 1.18.2** version, for **Forge 40.2.3 or newer**. The [wiki](https://github.com/Darkona/droplets-of-thirst/wiki) describes the newest version of the mod. Thirst, water purity, effects, config files and commands are the same in this version. The wiki page [Minecraft 1.18.2](https://github.com/Darkona/droplets-of-thirst/wiki/Minecraft-1.18.2) lists what is different here. The [changelog](CHANGELOG.md) lists the changes.
+This is the **Minecraft 1.18.2** version, for **Forge 40.2.4 or newer**. The [wiki](https://github.com/Darkona/droplets-of-thirst/wiki) describes the newest version of the mod. Thirst, water purity, effects, config files and commands are the same in this version. The wiki page [Minecraft 1.18.2](https://github.com/Darkona/droplets-of-thirst/wiki/Minecraft-1.18.2) lists what is different here. The [changelog](CHANGELOG.md) lists the changes.
 
 ## Mod compatibility
 
