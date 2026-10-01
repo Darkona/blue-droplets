@@ -46,7 +46,7 @@ Some problems do not show in a single key: unknown effect or item ids, overlappi
 
 ## Moving from Thirst Was Taken
 
-This section is for Minecraft 1.x. Thirst Was Taken has no build for Minecraft 26.x, so the 26.x versions of Droplets of Thirst do not move any old files, worlds or configs.
+This section is for Minecraft 1.18.2 to 1.21.1. The 1.21.11 and 26.x versions of Droplets of Thirst do not move any old files, worlds or configs: Thirst Was Taken has no build for 26.x, and on 1.21.11 the mod only shows a warning when Thirst Was Taken is installed.
 
 On first start, if a new file does not exist yet, the mod copies its values from the old files (`common.toml`, `item_settings.toml`, `container.toml`, `keyword.toml`, also from Thirst Was Taken's `config/thirst/`). Then it renames the old files to `*.toml.old` and stops reading them. A warning in the log lists what moved. Modpacks that ship `defaultconfigs/` must use the new file names and keys.
 
@@ -73,7 +73,7 @@ On first start, if a new file does not exist yet, the mod copies its values from
 | `container.toml` `Containers` | `items.toml` `containers.containers` |
 | `keyword.toml` (all keys) | `items.toml` `keywords.*` (`enabled`, `drinkThirst`, `drinkQuenched`, `soupThirst`, …, `blacklist`, `drink`, `soup`, `fruit`) |
 
-On Minecraft 1.x, Thirst Was Taken had four purity levels. Its purity values move to the six of Droplets of Thirst: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
+On Minecraft 1.18.2 to 1.21.1, Thirst Was Taken had four purity levels. Its purity values move to the six of Droplets of Thirst: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
 
 ---
 
@@ -275,7 +275,7 @@ One list per purity: `contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `p
 - Nausea lasts 10 seconds (200 ticks) per drink by default. Vanilla builds up the screen distortion only while more than 3 seconds of Nausea are left, and it needs 7.5 seconds to reach full strength. A shorter Nausea is barely a wobble. Drinking again resets it to 10 seconds. It does not add up.
 - The whole list shares one roll per drink. An entry applies when the roll is below its chance, so a 40% entry always comes together with the 100% ones.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
-- Old configs (Minecraft 1.x only): the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and the current durations. Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`, and `murky` and `clean` keep their defaults.
+- Old configs (Minecraft 1.18.2 to 1.21.1 only): the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and the current durations. Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`, and `murky` and `clean` keep their defaults.
 
 ### `[hotDirtyWater]`
 
