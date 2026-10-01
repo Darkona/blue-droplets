@@ -2,9 +2,9 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
-## 1.18.2-1.0.0 (Minecraft 1.18.2, Forge 40), unreleased
+## 1.18.2-1.0.0 (Minecraft 1.18.2, Forge 40), 2026-10-01
 
-The 1.18.2 port has every feature of the 1.19.2 port (next section) and so of 1.21.1-1.0.0, with the differences below. The jar, `droplets-of-thirst-1.18.2-1.0.0.jar`, runs on Forge 40.2.3 or newer for Minecraft 1.18.2 (40.2.3 is the first Forge 40 that applies the mixins of the bundled MixinExtras).
+The 1.18.2 port has every feature of the 1.19.2 port (next section) and so of 1.21.1-1.0.0, with the differences below. The jar, `droplets-of-thirst-1.18.2-1.0.0.jar`, runs on Forge 40.3.12 or newer for Minecraft 1.18.2.
 
 ### Minecraft 1.18.2
 
@@ -39,7 +39,7 @@ The 1.18.2 port has every feature of the 1.19.2 port (next section) and so of 1.
 - The loot modifier `droplets_of_thirst:add_table` has a JSON serializer (Forge 40 has no codecs for loot modifiers); its files are the same. `[1.18.2]`
 - Game tests (`./gradlew runGameTestServer`): 54 without optional mods, 83 with `-PwithCompat`, 59 with `-PwithDelight` and 88 with both, the same tests as on 1.19.2. The swamp purity test no longer checks the mangrove swamp, and the test of a config default reads it from the spec, since `ConfigValue#getDefault` does not exist in Forge 40. `[1.18.2]`
 
-## 1.19.2-1.0.0 (Minecraft 1.19.2, Forge 43), unreleased
+## 1.19.2-1.0.0 (Minecraft 1.19.2, Forge 43), 2026-10-01
 
 The 1.19.2 port has every feature of the 1.20.1 port (next section) and so of 1.21.1-1.0.0, with the differences below. The jar, `droplets-of-thirst-1.19.2-1.0.0.jar`, runs on Forge 43.5.2 or newer for Minecraft 1.19.2.
 
@@ -74,7 +74,7 @@ The 1.19.2 port has every feature of the 1.20.1 port (next section) and so of 1.
 - API: the same as on 1.20.1. The thirst bar is the GUI overlay `droplets_of_thirst:thirst_level`, drawn with a `PoseStack`. `[1.19.2]`
 - Game tests (`./gradlew runGameTestServer`): 54 without optional mods, 83 with `-PwithCompat`, 59 with `-PwithDelight` and 88 with both. Changes from 1.20.1: `assertTrue` and `assertFalse` are in `TestSupport`, since `GameTestHelper` of 1.19.2 has neither; a new test checks that the opt-in packs stay off; the Sand Filter tab test checks the Droplets of Thirst tab only; the Delight tests cover Farmer's Delight's recipes; the Miner's Delight tests with Create are gone. `[1.19.2]`
 
-## 1.20.1-1.0.0 (Minecraft 1.20.1, Forge 47 and NeoForge 47.1), unreleased
+## 1.20.1-1.0.0 (Minecraft 1.20.1, Forge 47 and NeoForge 47.1), 2026-10-01
 
 The 1.20.1 port has every feature of 1.21.1-1.0.0 (next section), with the differences below. One jar, `droplets-of-thirst-1.20.1-1.0.0.jar`, runs on Forge 47.1.3 or newer and on NeoForge 47.1 for Minecraft 1.20.1.
 
@@ -119,7 +119,7 @@ The 1.20.1 port has every feature of 1.21.1-1.0.0 (next section), with the diffe
 - Network: one `SimpleChannel`, `droplets_of_thirst:main`, protocol `0.1.12`. `[1.20.1]`
 - Game tests (`./gradlew runGameTestServer`): 53 without optional mods, 82 with `-PwithCompat`, 61 with `-PwithDelight` and 92 with both (the same 53 and 61 pass with `-PonNeoForge`), in their own folder (`run/gametest`) with a new world every run. Changes from 1.21.1: the cauldron fluid capability test is gone (see above); the Thirst Was Taken tests read the 1.20.1 formats (item and fluid NBT, the `thirst:thirst` capability); dispenser tests use a real dispense; tests change config values without saving the file, because Forge 1.20.1's config watcher reloads a saved file on another thread while other tests run; the poured water tests turn off the salt water rule, since 1.20.1's game test world can be an ocean; the smoker fan test checks that a smoking fan leaves water alone when the smoker pack is off, since Forge's game test server only enables the packs that are on by default. `[1.20.1]`
 
-## 1.21.1-1.0.0 (Minecraft 1.21.1, NeoForge), unreleased
+## 1.21.1-1.0.0 (Minecraft 1.21.1, NeoForge), 2026-10-01
 
 ### Rebrand: Droplets of Thirst
 
@@ -361,15 +361,11 @@ The 1.20.1 port has every feature of 1.21.1-1.0.0 (next section), with the diffe
 - Boot checks: `scripts/server-boot-check.sh` starts a dedicated server in `run/bootcheck-server` (superflat world, random port), stops it with the shutdown hook and fails on any error in the log that `scripts/boot-check-known.txt` does not list; `scripts/client-boot-check.sh` boots the client headless (Xvfb + Mesa) into a copy of a superflat world, types optional commands and takes a screenshot of the HUD. Both take `GRADLE_ARGS="-PwithCompat"` and only ever stop processes they started (tagged environment, no `pkill`). New Gradle runs `runServerBootCheck` and `runBootCheck`. `[1.21.1]`
 - GameTests (`./gradlew runGameTestServer`, 52 tests; with `-PwithCompat` 79): drinking and eating, quenched and salty limits, overhydration, purity effects, command results, the player save, the purity component on disk and on the network, the drinks data map codec, the sync payloads, cauldron purity and boiling, bucket purity through the fluid capability, dispensers, filling from the world, optional mods present or absent, the effect tag that pauses thirst (with Farmer's Delight), everything with `purity.enabled=false`, the content of the recipe viewer pages, the End's cold climate, the purity condition on every purity recipe, the six purity levels (effect tables, altitude bands, Thirst Was Taken mapping), poured water (buckets, bottles, dispensers, `FluidUtil`, the infinite source between two poured ones, stale entries, the chunk save), and with Create the open pipe end (also pouring), the Sand Filter (sides, stages, maximum purity), fan washing and smoking, the heated basin, spout filling and emptying, and the creative tabs, and with Cold Sweat the waterskin (drink, purity when filled, cooking), drinking cooling and the body temperature curve, and with Serene Seasons winter, the tropical dry season, biomes without seasons and the switch, and with the Delight mods (`-PwithDelight`, 58 tests) the kettles, taps, sinks, the timber well, Extra Delight bottles, the Miner's Delight water cup (with Create too, its spout and drain recipes) and the Cultural Delights vat recipes; also the pure water bonus and the item dump. They ship in the jar under `com.darkona.dropletsofthirst.gametest` and only run when `neoforge.enabledGameTestNamespaces` includes `droplets_of_thirst`. `[1.21.1]`
 - Mixins no longer replace whole methods of Minecraft, NeoForge or Create, so they combine with other mods that hook the same code: bucket purity through the NeoForge fluid capability is added to the result of `FluidBucketWrapper.getFluid` and `FluidType.getBucket(FluidStack)` instead of overwriting `getFluid` and `FluidUtil.getFilledBucket`; dispensers give water containers the purity of the water in front of them from `DefaultDispenseItemBehavior.consumeWithRemainder`, so the vanilla bucket and glass bottle dispenser behaviours are no longer replaced (other mods that register their own keep working in any load order) and containers dispensed through NeoForge's `DispenseFluidContainer` get it too. The `@Redirect`s on regeneration in `FoodData.tick`, on the empty bottle in `PotionItem.finishUsingItem` and on the food level in `LocalPlayer.hasEnoughFoodToStartSprinting` are now `@WrapOperation`/`@ModifyExpressionValue`, with the same behaviour. Filling a bucket or a glass bottle from water in the world is hooked into `BucketItem.use` and `BottleItem.use` (the filled item gets the purity) instead of cancelling every right click with those items and doing vanilla's work again, so other mods' buckets and bottles that extend them get purity too; the terracotta bowl has its own item class. Drinking a terracotta water bowl hands back the empty bowl through vanilla's `ItemUtils.createFilledResult`, like a glass bottle; in creative mode you now get an empty bowl if you have none, as with bottles. Create goggles show the purity by wrapping the one call that names the fluid in `IHaveGoggleInformation.containedFluidTooltip`, instead of overwriting the whole method; the rest of the tooltip is Create's own again. `[1.21.1]`
-- Build moved from NeoGradle to ModDevGradle 2.0.141 on Gradle 9.7.1, built against NeoForge 21.1.252; the minimum NeoForge version is now 21.1.219. `[1.21.1]`
+- Build moved from NeoGradle to ModDevGradle 2.0.141 on Gradle 9.7.1, built against NeoForge 21.1.252. The jar needs Minecraft 1.21.1 and NeoForge 21.1.252 or newer. `[1.21.1]`
 
 ## Planned
 
 Ports start once the previous version in the chain is stable:
 
-1. 26.3 (NeoForge)
-2. 1.20.1 (one jar for Forge 47.x and NeoForge 47.1)
-3. 1.19.2 (Forge)
-4. 1.18.2 (Forge)
-5. 1.12.2 (Forge)
-6. 1.7.10 (Forge)
+1. 1.12.2 (Forge)
+2. 1.7.10 (Forge)
