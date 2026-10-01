@@ -2,6 +2,10 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
+## 26.1.2-1.0.1 (Minecraft 26.1.2, NeoForge)
+
+- The Minecraft 26.1.2 build is now labeled 26.1.2: the jar is `droplets-of-thirst-26.1.2-1.0.1.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.112 or newer. It has the same features as 26.1-1.0.0 (next section). `[26.1.2]`
+
 ## 26.1-1.0.0 (Minecraft 26.1, NeoForge), unreleased
 
 The 26.1 port has every feature of 1.21.1-1.0.0 (next section) that does not depend on a mod without a 26.1 build, with the differences below. The jar is `droplets-of-thirst-26.1-1.0.0.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer.

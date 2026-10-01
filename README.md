@@ -10,7 +10,7 @@
 
 ![A bottle of dirty water: drinking it makes you sick](https://raw.githubusercontent.com/Darkona/droplets-of-thirst/main/wiki/images/dirty-water.png)
 
-**Minecraft versions:** 26.3, 26.2, 26.1, 1.21.11 and 1.21.1 on NeoForge, and 1.20.1, 1.19.2 and 1.18.2 on Forge. The [wiki](https://github.com/Darkona/droplets-of-thirst/wiki) has the details and what changes from one version to another.
+**Minecraft versions:** 26.3, 26.2, 26.1.2, 1.21.11 and 1.21.1 on NeoForge, and 1.20.1, 1.19.2 and 1.18.2 on Forge. The [wiki](https://github.com/Darkona/droplets-of-thirst/wiki) has the details and what changes from one version to another.
 
 ## Credits and license
 
