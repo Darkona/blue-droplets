@@ -1,6 +1,6 @@
 # Minecraft 26.1.2
 
-Droplets of Thirst for Minecraft 26.1.2 runs on **NeoForge 26.1.2.112 or newer** (branch `26.1.2`, jar `droplets-of-thirst-26.1.2-1.0.1.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
+Droplets of Thirst for Minecraft 26.1.2 runs on **NeoForge 26.1.2.109 or newer** (branch `26.1.2`, jar `droplets-of-thirst-26.1.2-1.0.2.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
 
 ---
 
@@ -36,7 +36,7 @@ The data formats are those of [Minecraft 26.2](Minecraft-26.2#modpack-makers): b
 Tested with Jade 26.1.11, JEI 29.43.0.106, AppleSkin 3.0.9, Serene Seasons 26.1.2.0.4, Traveler's Backpack 11.2.8, Reliquary 2.0.92 and KubeJS 8.0.6, all for Minecraft 26.1.2. Minimum versions when installed: JEI 29.43, Traveler's Backpack 11.2.8, Reliquary 2.0.
 
 - **Serene Seasons 26.1.2.0.7** crashes the client on its own, in any world. Use 26.1.2.0.4 until Serene Seasons fixes it.
-- **KubeJS 8.0.6** does not load on NeoForge 26.1.2.112, the oldest NeoForge this version runs on. The KubeJS integration was tested on NeoForge 26.1.2.109.
+- **KubeJS 8.0.6** works with this version on NeoForge 26.1.2.109, where the KubeJS integration was tested. KubeJS 8.0.6 does not load on NeoForge 26.1.2.112, so a modpack with KubeJS stays on 26.1.2.109.
 - Create, Farmer's Delight and its addons, Cold Sweat, Supernatural and Vampirism have no Minecraft 26.1 version, so this version does not have their integrations. Vampirism has a 26.1 alpha, but it needs a library that nobody has published. [Minecraft 1.21.1](Minecraft-1.21.1) tells what these integrations do there.
 
 ---
@@ -80,5 +80,5 @@ StartupEvents.postInit(() => {
 ## Mod developers
 
 - Declare the dependency in `neoforge.mods.toml` with `type = "optional"`.
-- The Maven version is `26.1.2-1.0.1`.
+- The Maven version is `26.1.2-1.0.2`.
 - The API is the same as on 26.3.
