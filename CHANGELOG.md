@@ -2,6 +2,10 @@
 
 Changes by feature, newest version first. Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod).
 
+## 26.1.2-1.0.2 (Minecraft 26.1.2, NeoForge), 2026-10-01
+
+- The minimum NeoForge is back to 26.1.2.109, so KubeJS 8 works with the released jar: KubeJS 8.0.6 does not load on NeoForge 26.1.2.112, and 1.0.1 required 26.1.2.112. The jar is `droplets-of-thirst-26.1.2-1.0.2.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer. The content is the same as 26.1.2-1.0.1. `[26.1.2]`
+
 ## 26.1.2-1.0.1 (Minecraft 26.1.2, NeoForge), 2026-10-01
 
 - The Minecraft 26.1.2 build is now labeled 26.1.2: the jar is `droplets-of-thirst-26.1.2-1.0.1.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.112 or newer. It has the same features as 26.1-1.0.0 (next section). `[26.1.2]`
