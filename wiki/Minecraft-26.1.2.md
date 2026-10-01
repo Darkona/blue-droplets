@@ -1,6 +1,6 @@
-# Minecraft 26.1
+# Minecraft 26.1.2
 
-Droplets of Thirst for Minecraft 26.1 runs on **Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer** (branch `26.1`, jar `droplets-of-thirst-26.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
+Droplets of Thirst for Minecraft 26.1.2 runs on **NeoForge 26.1.2.112 or newer** (branch `26.1.2`, jar `droplets-of-thirst-26.1.2-1.0.1.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
 
 ---
 
@@ -19,7 +19,7 @@ Droplets of Thirst for Minecraft 26.1 runs on **Minecraft 26.1.2 and NeoForge 26
 |---|---|---|
 | `reliquary.emperorChaliceCooldown` | `0` | Ticks (20 = 1 second) before the Emperor's Chalice can be used again after a drink. `0` = no cooldown (0-72000) |
 
-`gameplay.toml` `effects.quenchnessPotion` switches the brewing mixes, which are registered in code. It is not synced: keep the same value on the server and the clients, or the brewing stand may not accept prismarine crystals on the client.
+`gameplay.toml` `effects.quenchnessPotion` switches the brewing mixes, which the mod registers in code. The server does not sync this key. Keep the same value on the server and the clients, or the brewing stand can refuse prismarine crystals on the client.
 
 ---
 
@@ -36,14 +36,14 @@ The data formats are those of [Minecraft 26.2](Minecraft-26.2#modpack-makers): b
 Tested with Jade 26.1.11, JEI 29.43.0.106, AppleSkin 3.0.9, Serene Seasons 26.1.2.0.4, Traveler's Backpack 11.2.8, Reliquary 2.0.92 and KubeJS 8.0.6, all for Minecraft 26.1.2. Minimum versions when installed: JEI 29.43, Traveler's Backpack 11.2.8, Reliquary 2.0.
 
 - **Serene Seasons 26.1.2.0.7** crashes the client on its own, in any world. Use 26.1.2.0.4 until Serene Seasons fixes it.
-- **KubeJS 8.0.6** does not load on NeoForge 26.1.2.112. It works on 26.1.2.109.
-- Create, Farmer's Delight and its addons, Cold Sweat, Supernatural and Vampirism have no Minecraft 26.1 version, so their integrations are not in this version. Vampirism has a 26.1 alpha, but it needs a library that is not published. See [Minecraft 1.21.1](Minecraft-1.21.1) for what these integrations do there.
+- **KubeJS 8.0.6** does not load on NeoForge 26.1.2.112, the oldest NeoForge this version runs on. The KubeJS integration was tested on NeoForge 26.1.2.109.
+- Create, Farmer's Delight and its addons, Cold Sweat, Supernatural and Vampirism have no Minecraft 26.1 version, so this version does not have their integrations. Vampirism has a 26.1 alpha, but it needs a library that nobody has published. [Minecraft 1.21.1](Minecraft-1.21.1) tells what these integrations do there.
 
 ---
 
 ## KubeJS
 
-Modpacks can use the API from KubeJS 8 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in [`examples/kubejs`](https://github.com/Darkona/droplets-of-thirst/tree/26.1/examples/kubejs) on the `26.1` branch.
+Modpacks can use the API from KubeJS 8 scripts, with no Java. Load the classes with `Java.loadClass` and listen to the events with `NativeEvents.onEvent`. Working scripts are in [`examples/kubejs`](https://github.com/Darkona/droplets-of-thirst/tree/26.1.2/examples/kubejs) on the `26.1.2` branch.
 
 ```js
 var DropletsAPI = Java.loadClass('com.darkona.dropletsofthirst.api.DropletsAPI')
@@ -71,7 +71,7 @@ StartupEvents.postInit(() => {
 
 - Minecraft 26.1 cannot build item stacks in startup scripts: look the item up with `Item.getItem('id')` instead of `Item.of`.
 - Use `getItemPurity`, `getFluidPurity`, `withItemPurity` and `withFluidPurity` instead of the `getPurity` and `withPurity` overloads. KubeJS cannot choose between an `ItemStack` and a `FluidStack` and fails with "the choice of Java method is ambiguous".
-- Top level `const` and `let` are shared by all scripts of one type, so declare the loaded classes with `var` when several files load the same one.
+- All scripts of one type share their top level `const` and `let`, so declare the loaded classes with `var` when several files load the same one.
 - A player's tags are `entityTags()`, and night is `isDarkOutside()`.
 - Registered drinks belong in `startup_scripts`. `items.toml`, the `droplets_of_thirst:drinks` data map and `#droplets_of_thirst:no_thirst` still win over them.
 
@@ -80,5 +80,5 @@ StartupEvents.postInit(() => {
 ## Mod developers
 
 - Declare the dependency in `neoforge.mods.toml` with `type = "optional"`.
-- The Maven version is `26.1-1.0.0`.
+- The Maven version is `26.1.2-1.0.1`.
 - The API is the same as on 26.3.

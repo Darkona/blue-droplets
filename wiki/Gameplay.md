@@ -6,7 +6,7 @@ This page describes the defaults. A modpack can change every number here through
 
 ## The thirst bar
 
-The thirst bar sits right above the hunger bar: 10 droplets, 20 points of thirst. Like hunger, thirst has a hidden reserve, **quenched**, that is used up before the droplets start to empty. Quenched is never higher than thirst.
+The thirst bar sits right above the hunger bar: 10 droplets, 20 points of thirst. Like hunger, thirst has a hidden reserve, **quenched**. The droplets start to empty only when quenched runs out. Quenched is never higher than thirst.
 
 <!-- SCREENSHOT: close-up of the HUD: full hunger bar and a half-empty thirst bar, with the quenched outline visible on the droplets -->
 
@@ -18,13 +18,13 @@ Holding something that restores thirst makes the droplets it would fill flash on
 
 ## What makes you thirsty
 
-Thirst goes down with the same activity that makes you hungry (sprinting, jumping, fighting, breaking blocks, healing), a little faster than hunger. The climate scales it:
+The same activity that makes you hungry makes you thirsty: sprinting, jumping, fighting, breaking blocks, healing. Thirst drops a little faster than hunger, and the climate scales it:
 
-- **Hot and dry biomes** (desert, badlands, savanna) drain thirst faster. **Cold and wet ones** drain it slower. High ground is colder, so it drains a bit slower too.
+- **Hot and dry biomes** (desert, badlands, savanna) drain thirst faster. **Cold and wet ones** drain it slower. High ground is colder, so thirst drains a bit slower there too.
 - **The Nether** drains thirst three times faster. **The End** counts as cold, about like a snowy biome.
 - **Fire Resistance** stops the loss, and **Fire Protection** on armor lowers it.
 - **Nausea** drains thirst.
-- **Peaceful**: thirst does not go down, and slowly fills up.
+- **Peaceful**: thirst does not go down. It slowly fills up.
 
 With [Serene Seasons](#other-mods) installed, the season changes the biome temperature, so winter lowers the loss where it cools the biome.
 
@@ -36,7 +36,7 @@ With [Serene Seasons](#other-mods) installed, the season changes the biome tempe
 - **Not full**: health regenerates slower. Fast regeneration needs a full bar, and normal regeneration needs at least 19 points (9.5 droplets).
 - **Empty**: you take damage every 2 seconds. On Easy it stops at 5 hearts, on Normal at half a heart, and on Hard it can kill you.
 
-After respawning, thirst is full.
+You respawn with full thirst.
 
 ---
 
@@ -51,7 +51,7 @@ After respawning, thirst is full.
 | Milk bucket | 4 | 4 | |
 | Honey bottle | 3 | 4 | |
 
-Glass bottles and terracotta bowls also fill from flowing water, not only from source blocks. Buckets still need a source.
+Glass bottles and terracotta bowls also fill from flowing water. Buckets still need a source block.
 
 Chests in dungeons, mineshafts, shipwrecks, Nether fortresses and bastions can hold a few water bottles, acceptable or pure.
 
@@ -74,7 +74,7 @@ Some food hydrates a little and some makes you thirstier. Plain food (bread, mea
 
 ### Drinking too much
 
-Drinking while full is not free. What does not fit adds up, and three bottles drunk past full in a short time give you **Overhydrated**: 10% slower movement and a few seconds of Nausea. The extra drains off at one point per second.
+What you drink past full adds up. Three bottles past full in a short time give you **Overhydrated**: 10% slower movement and a few seconds of Nausea. The extra drains off at one point per second.
 
 ---
 
@@ -93,7 +93,7 @@ Water has one of six purity levels. Bottles, bowls and buckets of water show it 
 
 Poisoned water still hydrates by default. A server can make Poison cancel the drink instead (`purity.toml` `general.quenchWhenDebuffed`).
 
-Water of level 2 or worse drunk in a hot climate (a desert, a savanna, badlands, the Nether) also gives **Dehydration**, which makes thirst drop faster for 30 seconds.
+Water of level 2 or worse, drunk in a hot climate (a desert, a savanna, badlands, the Nether), also gives **Dehydration**. Thirst then drops faster for 30 seconds.
 
 <!-- SCREENSHOT: six water bottles in a row in the inventory, one per purity, showing the tint from brown to near white -->
 
@@ -110,7 +110,7 @@ Water taken from the world gets its purity from where it is:
 
 `/droplets_of_thirst debug purity` (operators) shows the purity of the water you look at and why.
 
-Water you pour keeps its purity. Pouring a bucket of sea water into a mountain lake and filling it again gives sea water back, and an infinite source made from poured water takes the worst purity beside it.
+Water you pour keeps its purity. Pour a bucket of sea water into a mountain lake, fill the bucket again, and you get sea water back. An infinite source made from poured water takes the worst purity beside it.
 
 ### Cleaning water
 
@@ -126,9 +126,9 @@ Cooking works on water bottles, water buckets and terracotta water bowls, and it
 
 <!-- SCREENSHOT: water cauldron on a lit campfire, player filling a bottle from it (tooltip "Clean") -->
 
-With JEI installed, the "Water Purification" page shows the cauldron and its heat sources, and the cooking recipes show in their own pages.
+With JEI installed, the "Water Purification" page shows the cauldron and its heat sources. The cooking recipes show in their own pages.
 
-If purity is turned off by the server, all water is the same, and only thirst matters.
+If the server turns purity off, all water is the same and only thirst matters.
 
 ---
 
@@ -140,7 +140,7 @@ If purity is turned off by the server, all water is the same, and only thirst ma
 | Terracotta bowl | Clay bowl in a furnace or on a campfire | Fill it with water like a glass bottle, from the world or a cauldron |
 | Terracotta water bowl | Terracotta bowl filled with water | Drink it like a water bottle. It can be purified like a bottle |
 
-Everything is also in the Droplets of Thirst creative tab, where the water containers are listed once per purity.
+Everything is also in the Droplets of Thirst creative tab. The tab lists each water container once per purity.
 
 ---
 
@@ -159,7 +159,7 @@ Everything is also in the Droplets of Thirst creative tab, where the water conta
 | Long | Quenchness I, 1:30 | Potion of Quenchness + redstone |
 | Strong | Quenchness II, 0:22 | Potion of Quenchness + glowstone dust |
 
-Gunpowder turns them into splash potions and dragon's breath into lingering potions, as for vanilla potions.
+Gunpowder makes splash potions and dragon's breath makes lingering potions, as with vanilla potions.
 
 ---
 
@@ -171,6 +171,6 @@ Gunpowder turns them into splash potions and dragon's breath into lingering poti
 - **Serene Seasons**: the season changes the climate of thirst loss.
 - **Traveler's Backpack**: drinking water through the hose hydrates like a water bottle, with the purity of the water in the tank. Water the hose sucks from the world keeps its purity.
 
-Tough As Nails, Legendary Survival Overhaul, Homeostatic, Survive and Thirst Was Taken 2 have their own thirst. With one of them installed the game starts with a warning, and both thirst systems run until one is turned off. On Minecraft 1.x, Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) cannot be installed together with Droplets of Thirst; on 26.x, where Thirst Was Taken has no build, Thirst Was Reclaimed only gets the warning too.
+Tough As Nails, Legendary Survival Overhaul, Homeostatic, Survive and Thirst Was Taken 2 have their own thirst. With one of them installed, the game starts with a warning, and both thirst systems run until you turn one off. On Minecraft 1.x, Thirst Was Taken and Thirst Was Reclaimed (mod id `thirst`) cannot be installed together with Droplets of Thirst. On 26.x, Thirst Was Taken has no build, and Thirst Was Reclaimed also gets only the warning.
 
-Other versions of Droplets of Thirst work with more mods, Create and Farmer's Delight among them. See the version table on the [home page](Home).
+Other versions of Droplets of Thirst work with more mods, among them Create and Farmer's Delight. The version table is on the [home page](Home).

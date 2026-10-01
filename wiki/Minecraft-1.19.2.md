@@ -9,7 +9,7 @@ It works like the [1.20.1 version](Minecraft-1.20.1): purity is NBT, recipes and
 ## Players
 
 - **Dehydration damage** is a plain damage source (`dehydrate`), with the same rules as starving: it goes through armor, enchantments and Resistance. Minecraft 1.19.2 has no damage types, so datapacks cannot change it.
-- **Creative tab**: the Sand Filter is only in the Droplets of Thirst tab, not in Create's.
+- **Creative tab**: the Sand Filter is only in the Droplets of Thirst tab. Create's tab does not list it.
 - **Optional datapacks**: the presets and the smoker purification pack stay off until you turn them on, when creating the world or with `/datapack enable`. The others are on by default, also in existing worlds.
 - **Thirst Was Taken worlds** (1.19.2, version 1.3.x) load with the players' thirst and the purity of their water, as on 1.20.1.
 
@@ -17,7 +17,7 @@ It works like the [1.20.1 version](Minecraft-1.20.1): purity is NBT, recipes and
 
 ## Configuration
 
-Same keys as on 1.20.1 and 1.21.1. `delight.kettleMinPurity` stays, although no kettle mod exists for 1.19.2: it applies to blocks a modpack adds to `droplets_of_thirst:rejects_dirty_water`.
+Same keys as on 1.20.1 and 1.21.1. `delight.kettleMinPurity` stays, although no kettle mod exists for 1.19.2. It applies to blocks that a modpack adds to `droplets_of_thirst:rejects_dirty_water`.
 
 ---
 
@@ -37,7 +37,7 @@ Tested with Create 0.5.1.i, Jade 8.9.2, JEI 11.39, AppleSkin 2.4.2, Cold Sweat 2
 - **Create 0.5.1**: the Sand Filter, its Ponder scene, fan and basin purification, spouts, drains, pipes and goggles work as with Create 6.
 - **Farmer's Delight addons**, as data (drink values and, where a recipe uses water, the clean water rule): Brewin' and Chewin' 1.19-2.0, Ocean's Delight 1.0.2, Ender's Delight 1.2.2, Miner's Delight 1.1.1, Fruits Delight 0.5.9, Cultural Delights 0.16.0, Corn Delight 1.0.3, Rustic Delight 1.3.0, Crabber's Delight 1.1.4, End's Delight 2.1 and My Nether's Delight 1.7.6. Farmer's Delight's cooking pot and wheat dough, Miner's Delight's copper pot, Cultural Delights' corn dough and Corn Delight's raw tortilla need acceptable water or better (3). Cultural Delights' bean milk, which is cooked, needs murky or better (2).
 - **Miner's Delight**'s water cup carries a purity like a bottle.
-- **Serene Seasons** 8.1.0.24 reports its version as `0.0NONE`, so any version is accepted.
+- **Serene Seasons** 8.1.0.24 reports its version as `0.0NONE`, so the mod accepts any version.
 - **Vampirism** vampires work as on 1.21.1: their thirst goes down, only blood quenches it, and every drink of blood counts, with the same `compat.toml` `vampirism` keys. Vampirism 1.9.5 has no event for drinking blood, so Droplets of Thirst reads it with a small hook of its own. The item tag `droplets_of_thirst:blood` is empty here: add items to it, with drinks data map values, to let vampires drink them.
 
 Not on 1.19.2:

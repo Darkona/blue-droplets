@@ -2,13 +2,13 @@
 
 Droplets of Thirst for Minecraft 1.20.1 is one jar, `droplets-of-thirst-1.20.1-1.0.0.jar` (branch `1.20.1`), that runs on **Forge 47.1.3 or newer** and on **NeoForge 47.1**. Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
 
-It has most integrations of the 1.21.1 version (Create, Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary), which 26.3 does not have. What they do and their config keys are on [Minecraft 1.21.1](Minecraft-1.21.1). This page lists what is different from 26.3 and from 1.21.1.
+It has most integrations of the 1.21.1 version, which 26.3 does not have: Create, Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural and Reliquary. [Minecraft 1.21.1](Minecraft-1.21.1) tells what they do and lists their config keys. This page lists what is different from 26.3 and from 1.21.1.
 
 ---
 
 ## Players
 
-- **As on 1.21.1**: with 3 droplets or less you cannot start a sprint, but a sprint in progress goes on. The Nether multiplier applies in ultra-warm dimensions. With Create installed, cooking stops at clean (4) and pure water only comes from the Sand Filter.
+- **As on 1.21.1**: with 3 droplets or less you cannot start a sprint, and a sprint in progress goes on. The Nether multiplier applies in ultra-warm dimensions. With Create installed, cooking stops at clean (4) and only the Sand Filter makes pure water.
 - **Thirst Was Taken worlds** (1.20.1) load with the players' thirst and the purity of their water. Thirst Was Taken's four levels move to the six of Droplets of Thirst: dirty to contaminated, slightly dirty to dirty, acceptable to acceptable, purified to pure.
 - **Other thirst mods**: Thirst Was Taken or Thirst Was Reclaimed next to Droplets of Thirst stops the game at the loading screen. Tough As Nails, Legendary Survival Overhaul, Homeostatic and Survive only show a warning on the loading screen and in the log, and both thirst systems run.
 - **Dispensers**: a vanilla bucket that a full dispenser drops after filling comes out with no purity. Buckets that go back into the dispenser keep it.
@@ -19,8 +19,8 @@ It has most integrations of the 1.21.1 version (Create, Farmer's Delight and its
 
 The config files have the same keys as on 1.21.1, including the `compat.toml` sections `create`, `coldsweat`, `delight`, `reliquary` and `vampirism`, `hotDirtyWater.useColdSweat`, `hotDirtyWater.coldSweatMinBodyTemp` and `Bar Colors.vampire` (see [Minecraft 1.21.1](Minecraft-1.21.1#configuration)). Two keys behave differently:
 
-- `gameplay.toml` `loot.enabled` is checked on every loot roll, so turning it off applies at once, without `/reload`.
-- `gameplay.toml` `effects.quenchnessPotion` is read by one Forge brewing recipe each time a potion brews.
+- The mod checks `gameplay.toml` `loot.enabled` on every loot roll, so a change applies at once, without `/reload`.
+- One Forge brewing recipe reads `gameplay.toml` `effects.quenchnessPotion` each time a potion brews.
 
 ---
 
@@ -53,8 +53,8 @@ The player's thirst is a capability (`droplets_of_thirst:player_thirst`), kept o
   }
   ```
 
-- **Create fluid ingredients** match NBT as "at least these keys": `{"fluid": "minecraft:water", "amount": 250, "nbt": {"droplets_of_thirst:purity": 3}}`. They cannot ask for water without a purity, so Create's heated mixing does not purify water that has none. Water drawn by Create's pumps, pipes and hose pulleys always has one.
-- **Brewing**: the Potion of Quenchness is brewed through one Forge brewing recipe, not data. Splash and lingering potions work as in vanilla.
+- **Create fluid ingredients** match NBT as "at least these keys": `{"fluid": "minecraft:water", "amount": 250, "nbt": {"droplets_of_thirst:purity": 3}}`. They cannot ask for water without a purity, so Create's heated mixing does not purify water that has none. Water that Create's pumps, pipes and hose pulleys draw always has one.
+- **Brewing**: one Forge brewing recipe in code brews the Potion of Quenchness. It is not data. Splash and lingering potions work as in vanilla.
 - **Chest loot**: the loot modifiers are `droplets_of_thirst:add_table`, listed in `data/forge/loot_modifiers/global_loot_modifiers.json`, and carry the loot condition `droplets_of_thirst:loot_config`, checked on every roll. Drinks of optional mods use the loot entry type `droplets_of_thirst:optional_item`, which gives nothing when the item does not exist, because Forge 1.20.1 cannot skip loot tables by condition. The purity of a loot bottle is a `minecraft:set_nbt` function: `{"function": "minecraft:set_nbt", "tag": "{\"droplets_of_thirst:purity\":3}", "conditions": [{"condition": "droplets_of_thirst:purity_enabled"}]}`.
 - **Attributes**: items carry `droplets_of_thirst:thirst_drain` modifiers in their `AttributeModifiers` NBT. Enchantments are not data in 1.20.1, so a datapack cannot give them the attribute.
 - **Poured water** is remembered per dimension in the world's saved data (`data/droplets_of_thirst_poured_water.dat`), with the same rules.

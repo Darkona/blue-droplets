@@ -19,14 +19,14 @@ Droplets of Thirst for Minecraft 26.2 runs on **NeoForge 26.2.0.88 or newer** (b
 |---|---|---|
 | `reliquary.emperorChaliceCooldown` | `0` | Ticks (20 = 1 second) before the Emperor's Chalice can be used again after a drink. `0` = no cooldown (0-72000) |
 
-`gameplay.toml` `effects.quenchnessPotion` switches the brewing mixes, which are registered in code. It is not synced: keep the same value on the server and the clients, or the brewing stand may not accept prismarine crystals on the client.
+`gameplay.toml` `effects.quenchnessPotion` switches the brewing mixes, which the mod registers in code. The server does not sync this key. Keep the same value on the server and the clients, or the brewing stand can refuse prismarine crystals on the client.
 
 ---
 
 ## Modpack makers
 
 - **Pack format**: datapacks declare `"min_format": 107, "max_format": 107` in `pack.mcmeta`. Recipe ingredients use the same format as 26.3 (`"neoforge:ingredient_type": "neoforge:components"`).
-- **Brewing**: the Potion of Quenchness mixes are registered in code, not as `minecraft:brewing` recipes, so a datapack cannot change them and there is no `droplets_of_thirst:quenchness_potion` condition. To use another ingredient, set `effects.quenchnessPotion = false` and add your own mix through a mod that registers brewing mixes. Gunpowder and dragon's breath turn the potions into splash and lingering ones, as for vanilla potions.
+- **Brewing**: the mod registers the Potion of Quenchness mixes in code. They are not `minecraft:brewing` recipes, so a datapack cannot change them, and the `droplets_of_thirst:quenchness_potion` condition does not exist. To use another ingredient, set `effects.quenchnessPotion = false` and add your own mix through a mod that registers brewing mixes. Gunpowder and dragon's breath make splash and lingering potions, as with vanilla potions.
 - **Loot**: loot tables and global loot modifiers use the loot format before 26.3: a `functions` list with `"function"` as the key of each function, and a `conditions` list with `"condition"` as the key. A chest loot modifier:
 
   ```json
@@ -58,7 +58,7 @@ Tested with Jade 26.2.10, JEI 30.38.0.231, AppleSkin 3.0.10, Serene Seasons 26.1
 
 - **Serene Seasons** numbers its Minecraft 26.2 versions 26.1.2.0.4 to 26.1.2.0.6. All of them work.
 - **KubeJS** has no version for Minecraft 26.2.
-- Create, Farmer's Delight and its addons, Cold Sweat, Supernatural and Vampirism have no Minecraft 26.2 version, so their integrations are not in this version either. See [Minecraft 1.21.1](Minecraft-1.21.1) for what they do there.
+- Create, Farmer's Delight and its addons, Cold Sweat, Supernatural and Vampirism have no Minecraft 26.2 version, so this version does not have their integrations either. [Minecraft 1.21.1](Minecraft-1.21.1) tells what they do there.
 
 ---
 

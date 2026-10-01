@@ -1,10 +1,10 @@
 # Configuration
 
-All TOML files live in `config/droplets_of_thirst/`. They are NeoForge configs: missing keys are added with their default and a comment, values out of range go back to the default, invalid list entries are removed, and edits are picked up while the game runs. When a server's file changes, the server rebuilds the drink tables, recomputes every player's thirst loss and sends the new values to all players, with no `/reload` or relog.
+All TOML files are in `config/droplets_of_thirst/`. They are NeoForge configs. NeoForge adds missing keys with their default and a comment, resets values out of range to the default, removes invalid list entries and reads edits while the game runs. When a server's file changes, the server rebuilds the drink tables, recomputes the thirst loss of every player and sends the new values to all players. No `/reload` or relog is necessary.
 
-Values that belong to an item, biome or dimension live in datapacks instead: see [Modpack makers](Modpack-Makers).
+Values that belong to an item, a biome or a dimension are in datapacks. See [Modpack makers](Modpack-Makers).
 
-This page lists the keys of Minecraft 26.3. Older versions have more keys, for the mods they work with: see the page of your version on the [home page](Home).
+This page lists the keys of Minecraft 26.3. Older versions have more keys, for the mods they work with. The [home page](Home) links the page of your version.
 
 ---
 
@@ -18,7 +18,7 @@ This page lists the keys of Minecraft 26.3. Older versions have more keys, for t
 | `compat.toml` | common | One section per optional mod (on 26.3, `[sereneseasons]`) |
 | `client.toml` | client | HUD and tooltips; each player's own |
 
-The gameplay files are common configs, not per-world server configs: they exist before a world loads (tooltips and stack sizes need them) and one file serves every world. On a dedicated server the server's values win. The ones the client needs (sprint rule, hand drinking and its two-hands rule, drink tables, purity containers, `purity.enabled`, `defaultPurity`, the pure water bonus, filling from flowing water, water bottle stack size) are sent to each player on join, after `/reload` and after a config change.
+The gameplay files are common configs. They exist before a world loads, because tooltips and stack sizes need them, and one file serves every world. On a dedicated server, the server's values win. The server sends the values the client needs to each player on join, after `/reload` and after a config change: the sprint rule, hand drinking and its two-hands rule, the drink tables, the purity containers, `purity.enabled`, `defaultPurity`, the pure water bonus, filling from flowing water and the water bottle stack size.
 
 ---
 
@@ -40,15 +40,15 @@ All commands need operator rights (permission level 2). `/thirst` is an alias of
 
 ### Checking a config
 
-Problems that a single key cannot show (unknown effect or item ids, overlapping altitude bands, curve points out of order, invalid keyword patterns, `slowRegenMinThirst` above `fullRegenMinThirst`) are logged as one warning each time the world loads, after `/reload` and after a config file changes. Bad entries are skipped and nothing crashes. `/droplets_of_thirst config check` lists the same problems.
+Some problems do not show in a single key: unknown effect or item ids, overlapping altitude bands, curve points out of order, invalid keyword patterns, `slowRegenMinThirst` above `fullRegenMinThirst`. The mod logs them as one warning each time the world loads, after `/reload` and after a config file changes. It skips the bad entries, and nothing crashes. `/droplets_of_thirst config check` lists the same problems.
 
 ---
 
 ## Moving from Thirst Was Taken
 
-This section is for Minecraft 1.x. Thirst Was Taken has no build for Minecraft 26.x, so the 26.x versions of Droplets of Thirst do not move any old files, worlds or configs.
+This section is for Minecraft 1.18.2 to 1.21.1. The 1.21.11 and 26.x versions of Droplets of Thirst do not move any old files, worlds or configs: Thirst Was Taken has no build for 26.x, and on 1.21.11 the mod only shows a warning when Thirst Was Taken is installed.
 
-On first start, if a new file does not exist yet, its values are copied from the old files (`common.toml`, `item_settings.toml`, `container.toml`, `keyword.toml`, also from Thirst Was Taken's `config/thirst/`). The old files are then renamed to `*.toml.old` and no longer read. A warning in the log lists what was moved. Modpacks that ship `defaultconfigs/` must use the new file names and keys.
+On first start, if a new file does not exist yet, the mod copies its values from the old files (`common.toml`, `item_settings.toml`, `container.toml`, `keyword.toml`, also from Thirst Was Taken's `config/thirst/`). Then it renames the old files to `*.toml.old` and stops reading them. A warning in the log lists what moved. Modpacks that ship `defaultconfigs/` must use the new file names and keys.
 
 | Old file and key | New file and key |
 |---|---|
@@ -73,7 +73,7 @@ On first start, if a new file does not exist yet, its values are copied from the
 | `container.toml` `Containers` | `items.toml` `containers.containers` |
 | `keyword.toml` (all keys) | `items.toml` `keywords.*` (`enabled`, `drinkThirst`, `drinkQuenched`, `soupThirst`, …, `blacklist`, `drink`, `soup`, `fruit`) |
 
-On Minecraft 1.x, Thirst Was Taken had four purity levels. Its purity values move to the six of Droplets of Thirst: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
+On Minecraft 1.18.2 to 1.21.1, Thirst Was Taken had four purity levels. Its purity values move to the six of Droplets of Thirst: 0 to 0, 1 to 1, 2 to 3, 3 to 5.
 
 ---
 
@@ -114,7 +114,7 @@ Thirst loss per tick is `activity × M`, where `M = climate × fire protection �
 | `inWater` / `underwater` | `1.0` / `1.0` | In water with the head out / fully underwater |
 | `altitude` | `[]` | `"minY,maxY,multiplier"` from the dimension's sea level. The first band that contains the player applies |
 
-The temperature is vanilla's biome temperature at the player's position, which gets colder with height, as vanilla uses it for snow. With Serene Seasons it is the temperature of the current season (`compat.toml` `[sereneseasons]`).
+The temperature is vanilla's biome temperature at the player's position. It gets colder with height, as vanilla uses it for snow. With Serene Seasons, it is the temperature of the current season (`compat.toml` `[sereneseasons]`).
 
 A dimension type can replace the whole climate factor with `thirst_multiplier` in the `droplets_of_thirst:dimension_water` data map (see [Modpack makers](Modpack-Makers#droplets_of_thirstdimension_water)). Droplets of Thirst sets the End to `0.6`, as cold as a snowy biome.
 
@@ -237,26 +237,26 @@ Every purity value in the config files is one of these six levels:
 
 ### Poured water
 
-Water poured into the world keeps its purity, so sea water poured into a meadow is not clean when you fill a bucket there again. There is no key for it: it follows `general.enabled`.
+Water poured into the world keeps its purity. Sea water poured into a meadow stays sea water when you fill a bucket there again. No key controls it: it follows `general.enabled`.
 
 - A water source left by a bucket (a player's or a dispenser's) or by NeoForge's `FluidUtil.tryPlaceFluid` (the fluid containers of many mods) is remembered with the purity of the water poured. Water without a stored purity counts as `defaultPurity`.
 - Anything that takes or drinks water there reads that purity: bottles, bowls, buckets, drinking by hand, dispensers, the Traveler's Backpack hose.
 - The infinite source that forms between two poured sources takes the worst purity beside it. Picking up a poured source hands its purity to the water sources beside it, so the one that refills its place is not clean either.
-- A remembered position that no longer holds a water source is ignored, and forgotten when read. Water placed in other ways (commands, mods that place the block directly) has the world's purity, unless it is next to poured water.
-- It is stored per chunk with the world and never sent to clients. `/droplets_of_thirst debug purity` shows "poured water" when it applies.
+- The mod ignores a remembered position that no longer holds a water source, and forgets it when it reads it. Water placed in other ways (commands, mods that place the block directly) has the world's purity, unless it is next to poured water.
+- The data is saved per chunk with the world and never goes to clients. `/droplets_of_thirst debug purity` shows "poured water" when it applies.
 
 ### Thirst only (purity off)
 
-For the thirst bar alone, set `general.enabled = false`. The server's value is sent to clients, so players do not change their own file. With it off:
+For the thirst bar alone, set `general.enabled = false`. The server sends its value to clients, so players do not change their own file. With purity off:
 
 - No item or fluid gets a purity. Buckets, glass bottles and terracotta bowls filled from the world, a cauldron or a dispenser hold plain water, and chest loot drinks come without one.
 - Nothing shows a purity: tooltips, Jade, the water tint. The creative tab lists each water container once instead of once per purity.
 - Drinking any water restores thirst and never gives purity effects, including the Dehydration of `hotDirtyWater`. `DrinkEvent` reports `NO_PURITY`.
-- The purification recipes are not loaded, and the JEI "Water Purification" page is hidden. Recipes are checked when datapacks load, so this part applies after `/reload` or a restart.
+- The purification recipes do not load, and the JEI "Water Purification" page is hidden. Minecraft checks recipes when datapacks load, so this part applies after `/reload` or a restart.
 - The terracotta bowls stay, as plain water containers, because registered items cannot depend on a config.
 - `/droplets_of_thirst debug purity` only says that purity is off. For other mods, `DropletsAPI.isPurityEnabled()` returns `false` and `withPurity` returns an unchanged copy.
 - The other keys of this file do nothing.
-- Purity already stored on items from before is ignored and not shown. Such items may not stack with new water until they are used up.
+- The mod ignores and hides purity that items already have from before. These items may not stack with new water until they are used up.
 
 ### `[effects]`
 
@@ -272,10 +272,10 @@ One list per purity: `contaminated`, `dirty`, `murky`, `acceptable`, `clean`, `p
 | `pure` | `[]` |
 
 - Any mob effect id works, also from other mods, including `droplets_of_thirst:dehydration` and `droplets_of_thirst:hydrated` (for example `"droplets_of_thirst:hydrated,600,0,100"` in `pure`). An unknown id is skipped and listed by `/droplets_of_thirst config check`.
-- Nausea lasts 10 seconds (200 ticks) per drink by default. Vanilla only builds up the screen distortion while more than 3 seconds of Nausea are left, and needs 7.5 seconds to reach its full strength, so a shorter Nausea is barely a wobble. Drinking again resets it to 10 seconds; it does not add up.
-- One roll per drink is shared by the whole list: an entry applies when the roll is below its chance. So a 40% entry always comes together with the 100% ones.
+- Nausea lasts 10 seconds (200 ticks) per drink by default. Vanilla builds up the screen distortion only while more than 3 seconds of Nausea are left, and it needs 7.5 seconds to reach full strength. A shorter Nausea is barely a wobble. Drinking again resets it to 10 seconds. It does not add up.
+- The whole list shares one roll per drink. An entry applies when the roll is below its chance, so a 40% entry always comes together with the 100% ones.
 - `blocksHydration` (`true`/`false`, default `false`): when that entry applies, the drink restores no thirst, unless `general.quenchWhenDebuffed` is `true` (the default).
-- Old configs (Minecraft 1.x only): the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and the current durations. Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`, and `murky` and `clean` keep their defaults.
+- Old configs (Minecraft 1.18.2 to 1.21.1 only): the eight `*Percentage` values of Thirst Was Taken are turned into these lists once, with the old effects and the current durations. Its four levels go to `contaminated`, `dirty`, `acceptable` and `pure`, and `murky` and `clean` keep their defaults.
 
 ### `[hotDirtyWater]`
 
@@ -332,15 +332,15 @@ Only read with Serene Seasons installed.
 
 ### Recipe inference
 
-Off by default. When on, the server gives values to items that have none from any other source (blacklist, overrides, datapacks, other mods' code and keywords always win), by looking at the recipes that make them:
+Off by default. When it is on, the server looks at the recipes that make an item and gives values to items that have none from any other source. The blacklist, overrides, datapacks, other mods' code and keywords always win.
 
 - An ingredient is worth the average thirst and quenched of the items it accepts that have values, explicit or estimated. Ingredients worth nothing (a bowl, a glass bottle) add nothing, and salty ones count as 0.
 - A recipe is worth the sum of its ingredients times the multiplier of its category, divided by how many items it makes, capped by `maxThirst`/`maxQuenched`. When several recipes make the item, the highest one wins.
-- Any recipe type works, also other mods' machines, as long as the recipe lists its item ingredients and result the standard way. Fluids used by recipes are not seen. Special recipes (suspicious stew, fireworks) are skipped.
-- Loops (ingot to block to ingot) are cut, and so is anything deeper than `maxDepth`.
+- Any recipe type works, also other mods' machines, if the recipe lists its item ingredients and result the standard way. Inference does not see the fluids of a recipe. It skips special recipes (suspicious stew, fireworks).
+- Inference cuts loops (ingot to block to ingot) and anything deeper than `maxDepth`.
 - Items that are drunk go to the drink table and the rest to the food table. Tooltips show "(est.)". The values are sent to clients like the rest of the table.
 
-It runs when the world loads, after `/reload` and when `items.toml` changes, never while playing. The log shows one line with how many items were estimated and how long it took. Recipes that could not be read are listed in the config warning and in `/droplets_of_thirst config check`.
+It runs when the world loads, after `/reload` and when `items.toml` changes. It never runs during play. The log shows one line with the number of estimated items and the time it took. The config warning and `/droplets_of_thirst config check` list the recipes that inference could not read.
 
 ---
 
@@ -365,6 +365,6 @@ It runs when the world loads, after `/reload` and when `items.toml` changes, nev
 | `Bar Colors.quenchness` | `#5FE3FF` | Droplet colour while Quenchness is active |
 | `Bar Colors.hydrated` | `#7FE0C0` | Droplet colour while Hydrated is active |
 
-Colours are `#RRGGBB`. An invalid value is reset to its default with a warning in the log. When several apply, the first in the list above wins.
+Colours are `#RRGGBB`. An invalid value goes back to its default, with a warning in the log. When several colours apply, the first in the list above wins.
 
 <!-- SCREENSHOT: thirst bar with showExhaustionUnderlay on, next to the hunger bar with AppleSkin's underlay -->
