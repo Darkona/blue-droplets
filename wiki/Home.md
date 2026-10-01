@@ -2,7 +2,7 @@
 
 Droplets of Thirst adds a thirst bar and water purity to Minecraft. Activity and heat make you thirsty, and the water you find can make you sick: swamp or sea water is unsafe until you clean it. The mod is made for modpacks, so every number is in a config file or a datapack. It continues [Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod) by ghen.
 
-<!-- SCREENSHOT: the HUD in survival, thirst bar (blue droplets) above the hunger bar, player holding a water bottle -->
+![The droplets above the food bar, with a water bottle in hand](images/hud.png)
 
 This wiki describes the current version, **Minecraft 26.3 on NeoForge 26.3.0.36-beta**. If you play another version, read these pages together with the page of your version in the table below.
 
