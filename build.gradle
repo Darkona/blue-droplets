@@ -59,9 +59,17 @@ var forgeVersion = project.hasProperty('withCompat') ? forge_compat_version : fo
 
 legacyForge {
     if (project.hasProperty('onNeoForge'))
-        enable { neoForgeVersion = project.property('onNeoForge') }
+        enable {
+            neoForgeVersion = project.property('onNeoForge')
+            disableRecompilation = false
+        }
     else
-        version = "${minecraft_version}-${forgeVersion}"
+        enable {
+            setForgeVersion("${minecraft_version}-${forgeVersion}")   // setter: a plain assignment would hit the local forgeVersion
+            // ModDevGradle skips recompiling Minecraft when the CI variable is set, and javac then fails on anonymous
+            // subclasses of Minecraft classes (variable o is already defined). Recompile everywhere, as on a dev machine.
+            disableRecompilation = false
+        }
     addModdingDependenciesTo(sourceSets.api)
 
     parchment {
