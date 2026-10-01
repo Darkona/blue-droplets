@@ -31,3 +31,6 @@ __pycache__/
 # Working documents and generated reports stay local
 /notes/
 /scripts/delight/data/REPORT*
+
+# Sibling mods cloned by .github/ci-deps.sh
+/deps/
