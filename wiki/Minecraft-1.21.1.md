@@ -1,6 +1,6 @@
 # Minecraft 1.21.1
 
-Droplets of Thirst for Minecraft 1.21.1 runs on **NeoForge 21.1.219 or newer** (branch `1.21.1`, jar `droplets-of-thirst-1.21.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3.
+Droplets of Thirst for Minecraft 1.21.1 runs on **Minecraft 1.21.1 and NeoForge 21.1.252 or newer** (branch `1.21.1`, jar `droplets-of-thirst-1.21.1-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3.
 
 1.21.1 has the most integrations: Create, Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary and KubeJS. It also has the Jade, JEI, AppleSkin, Serene Seasons and Traveler's Backpack support of 26.3. Most of those mods have no 26.x version yet. This page describes those integrations and the other differences from 26.3.
 

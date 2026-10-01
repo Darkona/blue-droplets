@@ -36,7 +36,7 @@ The data formats are those of [Minecraft 26.2](Minecraft-26.2#modpack-makers): b
 Tested with Jade 26.1.11, JEI 29.43.0.106, AppleSkin 3.0.9, Serene Seasons 26.1.2.0.4, Traveler's Backpack 11.2.8, Reliquary 2.0.92 and KubeJS 8.0.6, all for Minecraft 26.1.2. Minimum versions when installed: JEI 29.43, Traveler's Backpack 11.2.8, Reliquary 2.0.
 
 - **Serene Seasons 26.1.2.0.7** crashes the client on its own, in any world. Use 26.1.2.0.4 until Serene Seasons fixes it.
-- **KubeJS 8.0.6** does not load on NeoForge 26.1.2.112. It works on 26.1.2.109.
+- **KubeJS 8.0.6** does not load on NeoForge 26.1.2.112, the oldest NeoForge this version runs on. The KubeJS integration was tested on NeoForge 26.1.2.109.
 - Create, Farmer's Delight and its addons, Cold Sweat, Supernatural and Vampirism have no Minecraft 26.1 version, so this version does not have their integrations. Vampirism has a 26.1 alpha, but it needs a library that nobody has published. [Minecraft 1.21.1](Minecraft-1.21.1) tells what these integrations do there.
 
 ---

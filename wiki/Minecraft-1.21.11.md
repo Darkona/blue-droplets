@@ -1,6 +1,6 @@
 # Minecraft 1.21.11
 
-Droplets of Thirst for Minecraft 1.21.11 runs on **Minecraft 1.21.11 and NeoForge 21.11.42 or newer** (branch `1.21.11`, jar `droplets-of-thirst-1.21.11-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
+Droplets of Thirst for Minecraft 1.21.11 runs on **Minecraft 1.21.11 and NeoForge 21.11.45 or newer** (branch `1.21.11`, jar `droplets-of-thirst-1.21.11-1.0.0.jar`). Thirst, water purity, effects, config files, data maps, commands and the API work as the rest of this wiki describes for 26.3. This page lists what is different.
 
 ---
 

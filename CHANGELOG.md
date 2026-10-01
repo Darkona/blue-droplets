@@ -2,13 +2,20 @@
 
 All notable changes to Droplets of Thirst are in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and each entry starts with the date of the change.
 
-Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod). The tag at the end of each entry, such as `[1.21.1]` or `[26.3]`, names the Minecraft port of the change. None of these ports is released yet.
+Upstream issues are cited as `thirst#NN` (ghen-git/Thirst-Mod). The tag at the end of each entry, such as `[1.21.1]` or `[26.3]`, names the Minecraft port of the change. Version 1.0.0 of these ports was released on 2026-10-01, with the 26.3 port as 1.0.0-beta.1 because NeoForge for Minecraft 26.3 is in beta.
 
-The 1.21.1 port (`droplets-of-thirst-1.21.1-1.0.0.jar`) is the base. The 26.1 port (`droplets-of-thirst-26.1-1.0.0.jar`, Minecraft 26.1.2 and NeoForge 26.1.2.109 or newer) has every feature of 1.21.1 that does not depend on a mod without a 26.1 build. The 26.2 port (`droplets-of-thirst-26.2-1.0.0.jar`, NeoForge 26.2.0.88 or newer) has every feature of the 26.1 port. The 26.3 port (`droplets-of-thirst-26.3-1.0.0.jar`, Minecraft 26.3 and NeoForge 26.3.0.36-beta only) has every feature of the 26.2 port except the Reliquary integration.
+The 1.21.1 port (`droplets-of-thirst-1.21.1-1.0.0.jar`, Minecraft 1.21.1 and NeoForge 21.1.252 or newer) is the base. The 26.1 port (`droplets-of-thirst-26.1-1.0.0.jar`, relabeled `droplets-of-thirst-26.1.2-1.0.1.jar` in 1.0.1, for Minecraft 26.1.2 and NeoForge 26.1.2.112 or newer) has every feature of 1.21.1 that does not depend on a mod without a 26.1 build. The 26.2 port (`droplets-of-thirst-26.2-1.0.0.jar`, NeoForge 26.2.0.88 or newer) has every feature of the 26.1 port. The 26.3 port (`droplets-of-thirst-26.3-1.0.0-beta.1.jar`, Minecraft 26.3 and NeoForge 26.3.0.36-beta only) has every feature of the 26.2 port except the Reliquary integration.
 
-Planned ports, each one after the previous version in the chain is stable: 26.3 (NeoForge), 1.20.1 (one jar for Forge 47.x and NeoForge 47.1), 1.19.2 (Forge), 1.18.2 (Forge), 1.12.2 (Forge) and 1.7.10 (Forge).
+The 1.21.11, 1.20.1 (one jar for Forge 47.x and NeoForge 47.1), 1.19.2 (Forge) and 1.18.2 (Forge) ports were released on the same day. Their changes are in the `CHANGELOG.md` of their branches.
 
-## [1.0.0] - 2026-09-28
+Planned ports, each one after the previous version in the chain is stable: 1.12.2 (Forge) and 1.7.10 (Forge).
+
+## [1.0.1] - 2026-10-01
+
+### Changed
+- 2026-10-01: The Minecraft 26.1.2 build is now labeled 26.1.2: the jar is `droplets-of-thirst-26.1.2-1.0.1.jar`, for Minecraft 26.1.2 and NeoForge 26.1.2.112 or newer. It has the same content as `droplets-of-thirst-26.1-1.0.0.jar`. `[26.1.2]`
+
+## [1.0.0] - 2026-10-01
 
 ### Added
 - 2026-08-11: `scripts/loot/convert.py` converts loot tables and global loot modifiers to the 26.3 format. `[26.3]`
@@ -97,6 +104,8 @@ Planned ports, each one after the previous version in the chain is stable: 26.3 
 - 2026-05-01: This changelog. `[1.21.1]`
 
 ### Changed
+- 2026-10-01: The minimum versions are the ones the game tests run on: Minecraft 1.21.1 only (was 1.21 to 1.21.2) and NeoForge 21.1.252 or newer (was 21.1.219). `[1.21.1]`
+- 2026-10-01: The minimum NeoForge version is 26.1.2.112 (was 26.1.2.109), the version the game tests run on. `[26.1]`
 - 2026-09-28: The jar is `droplets-of-thirst-1.21.1-1.0.0.jar` (`modid-<minecraft>-<version>`, with a hyphen, because mod ids cannot have one). `[1.21.1]`
 - 2026-09-28: The issue tracker and homepage links now point to https://github.com/Darkona/droplets-of-thirst. `[1.21.1]`
 - 2026-09-19: The mod is now **Droplets of Thirst**, renamed from Blue Droplets: mod id `blue_droplets` becomes `droplets_of_thirst`, package `com.darkona.droplets` becomes `com.darkona.dropletsofthirst`, and the jar and Maven artifacts are `droplets-of-thirst` and `droplets-of-thirst-api` (group `com.darkona.dropletsofthirst`). Nothing migrates from the Blue Droplets test builds: their worlds lose the `blue_droplets:` items, blocks, effects, components and player data. The mod does not read `config/blue_droplets/` (copy the files to `config/droplets_of_thirst/` by hand). Datapacks, resource packs and KubeJS scripts that use `blue_droplets:` ids or the `com.darkona.droplets` classes need an update. Saves and configs from Thirst Was Taken still migrate as before. `[1.21.1]`

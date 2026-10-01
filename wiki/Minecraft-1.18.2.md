@@ -1,6 +1,6 @@
 # Minecraft 1.18.2
 
-Droplets of Thirst for Minecraft 1.18.2 runs on **Forge 40.2.3 or newer** (branch `1.18.2`, jar `droplets-of-thirst-1.18.2-1.0.0.jar`). 40.2.3 is the first Forge 40 that applies the mixins of the bundled MixinExtras. Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
+Droplets of Thirst for Minecraft 1.18.2 runs on **Forge 40.3.12 or newer** (branch `1.18.2`, jar `droplets-of-thirst-1.18.2-1.0.0.jar`). Thirst, water purity, effects, config files, data maps and commands work as the rest of this wiki describes for 26.3.
 
 It works like the [1.19.2 version](Minecraft-1.19.2), which works like [1.20.1](Minecraft-1.20.1): purity is NBT, recipes and loot use the Forge formats, and it has most integrations of [1.21.1](Minecraft-1.21.1). This page lists what is different from 1.19.2.
 

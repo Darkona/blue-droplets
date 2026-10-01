@@ -10,7 +10,7 @@ This page shows the API on Minecraft 26.3 (NeoForge, Mojang names, `Identifier`)
 
 ## Dependency
 
-For now, the build publishes the artifacts only to the project's local Maven repository (`mcmodsrepo`). The public Maven is not decided yet. Until then, build Droplets of Thirst and publish it locally (`./gradlew publishToMavenLocal`), or use the jars from `build/libs/`. The version is `26.3-1.0.0`.
+There is no public Maven repository. Each [GitHub release](https://github.com/Darkona/droplets-of-thirst/releases) has the mod jar and the API jar, each with a sources jar. Use those jars as files, or build Droplets of Thirst from the tag of your version and publish it locally (`./gradlew publishToMavenLocal`). The version is `26.3-1.0.0-beta.1`.
 
 ```groovy
 repositories {
@@ -19,9 +19,9 @@ repositories {
 
 dependencies {
     // The API only: nothing of Droplets of Thirst's internals is on your compile classpath.
-    compileOnly "com.darkona.dropletsofthirst:droplets-of-thirst-api:26.3-1.0.0"
+    compileOnly "com.darkona.dropletsofthirst:droplets-of-thirst-api:26.3-1.0.0-beta.1"
     // The whole mod, to run it in your dev environment (optional).
-    localRuntime "com.darkona.dropletsofthirst:droplets-of-thirst:26.3-1.0.0"
+    localRuntime "com.darkona.dropletsofthirst:droplets-of-thirst:26.3-1.0.0-beta.1"
 }
 ```
 

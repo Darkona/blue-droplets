@@ -26,10 +26,10 @@ Every version has the same thirst, water purity, effects, config files and comma
 | **26.3** (this wiki) | NeoForge 26.3.0.36-beta only | `26.3` | Works with Jade, JEI, AppleSkin, Serene Seasons and Traveler's Backpack |
 | [26.2](Minecraft-26.2) | NeoForge 26.2.0.88 or newer | `26.2` | Reliquary. Loot tables in the old format, Quenchness brewing in code, pack format 107 |
 | [26.1.2](Minecraft-26.1.2) | NeoForge 26.1.2.112 or newer | `26.1.2` | Reliquary and KubeJS 8. Same data formats as 26.2, pack format 101 |
-| [1.21.11](Minecraft-1.21.11) | NeoForge 21.11.42 or newer | `1.21.11` | Reliquary and Supernatural vampires. Same data formats as 26.2, pack format 94, loot modifiers listed in `global_loot_modifiers.json` |
-| [1.21.1](Minecraft-1.21.1) | NeoForge 21.1.219 or newer | `1.21.1` | All integrations: Create (Sand Filter), Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary, KubeJS 7 |
+| [1.21.11](Minecraft-1.21.11) | NeoForge 21.11.45 or newer | `1.21.11` | Reliquary and Supernatural vampires. Same data formats as 26.2, pack format 94, loot modifiers listed in `global_loot_modifiers.json` |
+| [1.21.1](Minecraft-1.21.1) | NeoForge 21.1.252 or newer | `1.21.1` | All integrations: Create (Sand Filter), Farmer's Delight and its addons, Cold Sweat, Vampirism, Supernatural, Reliquary, KubeJS 7 |
 | [1.20.1](Minecraft-1.20.1) | Forge 47.1.3 or newer, and NeoForge 47.1 (one jar) | `1.20.1` | Purity in NBT. Most 1.21.1 integrations, no KubeJS |
 | [1.19.2](Minecraft-1.19.2) | Forge 43.5.2 or newer | `1.19.2` | Purity in NBT, Create 0.5.1, fewer addons, no Supernatural vampires |
-| [1.18.2](Minecraft-1.18.2) | Forge 40.2.3 or newer | `1.18.2` | As 1.19.2, with Forge 40 biome tags and fewer addons |
+| [1.18.2](Minecraft-1.18.2) | Forge 40.3.12 or newer | `1.18.2` | As 1.19.2, with Forge 40 biome tags and fewer addons |
 
 The [GitHub repository](https://github.com/Darkona/droplets-of-thirst) has the downloads, the changelog and the source code.
