@@ -1,38 +1,22 @@
-<p align="center"><img src="art/logo-placeholder-256.png" width="128" alt="Droplets of Thirst logo (temporary placeholder)"/></p>
-
 # Droplets of Thirst
 
-**Droplets of Thirst** adds thirst to Minecraft. A thirst bar sits next to the hunger bar. Activity and hot places make you thirsty, and you drink water to keep going.
+**Thirst for Minecraft, as a row of droplets above the food bar.** Activity and heat make you thirsty, and you drink to keep going. Not all water is safe: water from a swamp, the sea or a puddle can make you sick until you clean it.
 
-Water from a swamp or a puddle can make you sick. Clean it first, and then it is safe to drink. If you only want thirst, you can turn water purity off.
+![The droplets above the food bar, with a water bottle in hand](https://raw.githubusercontent.com/Darkona/droplets-of-thirst/main/wiki/images/hud.png)
 
-It is made for modpacks. It continues **[Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod)** by **ghen**.
+- **Thirst**: sprinting, jumping, fighting and hot, dry biomes drain the droplets. Drinking fills them back.
+- **Water purity**: every bottle, bowl and bucket shows the purity of its water. Boil dirty water before you drink it: in a cauldron over a fire, on a campfire or in a furnace. Purity can be turned off if you only want thirst.
+- **Made for modpacks**: every number lives in a config file or a datapack, and it works with many popular mods.
 
-This is the **Minecraft 1.21.11** version, for **NeoForge 21.11.42 or newer**. The [wiki](https://github.com/Darkona/droplets-of-thirst/wiki) describes the newest version of the mod. Thirst, water purity, effects, config files, commands and the API are the same in this version. The wiki page [Minecraft 1.21.11](https://github.com/Darkona/droplets-of-thirst/wiki/Minecraft-1.21.11) lists what is different here. The [changelog](CHANGELOG.md) lists the changes.
+![A bottle of dirty water: drinking it makes you sick](https://raw.githubusercontent.com/Darkona/droplets-of-thirst/main/wiki/images/dirty-water.png)
 
-## Mod compatibility
-
-All of these mods are optional.
-
-- **Supernatural** 3.3 or newer: vampires get thirsty, and only blood quenches their thirst.
-- **Reliquary** 2.0 or newer: the Emperor's Chalice hydrates like a drink of pure water.
-- **Serene Seasons** 21.11 or newer: the season changes the climate of thirst loss.
-- **Jade**: shows the purity of water in cauldrons and tanks.
-- **JEI** 27.44 or newer: pages that show what each item hydrates and how to purify water.
-- **AppleSkin**: its food visuals and the thirst visuals turn on and off together.
-- **Traveler's Backpack** 10.11.5 or newer: the hose drinks water with the purity of the tank.
-
-Create, Farmer's Delight, Cold Sweat, Vampirism and KubeJS have no version for Minecraft 1.21.11, so this version has no integration with them. Without Create, cooking purifies water all the way to pure.
-
-## Other thirst mods
-
-Tough As Nails, Legendary Survival Overhaul, Homeostatic, Survive, Thirst Was Taken, Thirst Was Reclaimed and Thirst Was Taken 2 have their own thirst. With one of them installed, the game shows a warning, and both thirst systems run. This version does not load worlds or config files from Thirst Was Taken.
+**Minecraft versions:** 26.3, 26.2, 26.1, 1.21.11 and 1.21.1 on NeoForge, and 1.20.1, 1.19.2 and 1.18.2 on Forge. The [wiki](https://github.com/Darkona/droplets-of-thirst/wiki) has the details and what changes from one version to another.
 
 ## Credits and license
 
-- **ghen** created Thirst Was Taken. This mod is built on its code.
+- **ghen** created [Thirst Was Taken](https://github.com/ghen-git/Thirst-Mod). Droplets of Thirst is built on its code and continues it.
 - **mlus-asuka** and the other Thirst Was Taken contributors ported and maintained it for 1.21.
 - **Mikul** ([MikulDev](https://github.com/MikulDev)) made the NeoForge 1.21.1 port this mod starts from.
 - Maintained by **Darkona**.
 
-Droplets of Thirst is released under the [MIT license](LICENSE), which keeps the original Thirst Was Taken copyright notice.
+Released under the [MIT license](LICENSE), which keeps the original Thirst Was Taken copyright notice.
