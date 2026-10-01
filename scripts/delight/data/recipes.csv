@@ -1,9 +1,0 @@
-mod,recipe_id,recipe_type,water_form,water_amount,result_id,result_count,heat,min_purity,enabled,notes,recipe_sha
-brewinandchewin,brewinandchewin:fermenting/beer,brewinandchewin:fermenting,bucket,1000,brewinandchewin:beer,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,c40d872e9374
-brewinandchewin,brewinandchewin:fermenting/glittering_grenadine,brewinandchewin:fermenting,bucket,1000,brewinandchewin:glittering_grenadine,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,ed2bbbbb8534
-brewinandchewin,brewinandchewin:fermenting/rice_wine,brewinandchewin:fermenting,bucket,1000,brewinandchewin:rice_wine,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,268ddec2e266
-brewinandchewin,brewinandchewin:fermenting/vodka,brewinandchewin:fermenting,bucket,1000,brewinandchewin:vodka,1,cold,3,0,tipo de receta sin verificar: no se sobrescribe,4e967f8cdcb3
-corn_delight,corn_delight:tortilla_raw,minecraft:crafting_shaped,bucket,1000,corn_delight:tortilla_raw,3,cold,3,1,,2ac293b393eb
-farmersdelight,farmersdelight:cooking_pot,minecraft:crafting_shaped,bucket,1000,farmersdelight:cooking_pot,1,cold,3,1,,42324a2dcda8
-farmersdelight,farmersdelight:wheat_dough_from_water,minecraft:crafting_shapeless,bucket,1000,farmersdelight:wheat_dough,3,cold,3,1,,d57a213e7774
-miners_delight,miners_delight:copper_pot,minecraft:crafting_shaped,bucket,2000,miners_delight:copper_pot,1,cold,3,1,,dccf7e51a9b6
