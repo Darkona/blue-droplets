@@ -50,7 +50,12 @@ repositories {
 }
 
 legacyForge {
-    version = "${minecraft_version}-${forge_version}"
+    enable {
+        forgeVersion = "${minecraft_version}-${forge_version}"
+        // ModDevGradle skips recompiling Minecraft when the CI variable is set, and javac then fails on anonymous
+        // subclasses of Minecraft classes (variable o is already defined). Recompile everywhere, as on a dev machine.
+        disableRecompilation = false
+    }
     addModdingDependenciesTo(sourceSets.api)
 
     parchment {
